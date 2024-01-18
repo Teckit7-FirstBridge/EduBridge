@@ -16,11 +16,11 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional
-    public void write(Member author, String title, String body, boolean published) {
+    public void write(Member author, String title, String content, boolean published) {
         Post post = Post.builder()
-                .author(author)
+                // .author(author)
                 .title(title)
-                .body(body)
+                .content(content)
                 .published(published)
                 .build();
 

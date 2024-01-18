@@ -1,15 +1,13 @@
 package com.ll.edubridge.domain.member.member.entity;
 
-import com.ll.edubridge.global.jpa.entity.BaseTime;
+import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
+import com.ll.edubridge.global.jpa.entity.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
+import jakarta.persistence.OneToMany;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -18,15 +16,31 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PROTECTED)
 @Builder
-@Getter
 @Setter
-public class Member extends BaseTime {
-    @Column(unique = true)
+@Getter
+@ToString(callSuper = true)
+public class Member extends BaseEntity {
+
+    @Column(unique = true, length = 50)
     private String username;
+
+    @Column(length = 72)
     private String password;
+
+    @Column(length = 20)
+    private String nickname;
+
+    private int point = 0;
+
+    private boolean report = false;
+
     @Column(unique = true)
     private String refreshToken;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<CourseEnroll> courseEnrollList;
+
+    /*
     @Transient
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getAuthoritiesAsStringList()
@@ -51,4 +65,5 @@ public class Member extends BaseTime {
     public String getName() {
         return username;
     }
+     */
 }

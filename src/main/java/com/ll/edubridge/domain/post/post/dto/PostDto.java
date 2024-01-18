@@ -26,10 +26,9 @@ public class PostDto {
     public PostDto(Post post) {
         this.id = post.getId();
         this.createDate = post.getCreateDate();
-        this.modifyDate = post.getModifyDate();
-        this.authorId = post.getAuthor().getId();
-        this.authorName = post.getAuthor().getName();
+        this.authorId = post.getWriter().getId();
+        this.authorName = post.getWriter().getUsername();
         this.title = post.getTitle();
-        this.body = post.getBody();
+        this.body = post.getContent();
     }
 }
