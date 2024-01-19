@@ -12,8 +12,7 @@
     "lint": "prettier --check ../../../Downloads/rest-sveltekit-24-01-17-main/rest-sveltekit-24-01-17-main/front && eslint .",
     "format": "prettier --write ../../../Downloads/rest-sveltekit-24-01-17-main/rest-sveltekit-24-01-17-main/front",
     "test:integration": "playwright test",
-    "test:unit": "vitest",
-    "test:ts": "tsc --noEmit"
+    "test:unit": "vitest"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
