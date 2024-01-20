@@ -4,10 +4,50 @@
   const { children } = $props();
 </script>
 
-<header>
-  <a href="/">slog</a>
-  <a href="/member/login">로그인</a>
-  <a href="/member/join">회원가입</a>
+<header class="fixed top-0 flex items-center justify-between w-full">
+  <!--
+// v0 by Vercel.
+// https://v0.dev/t/dOIGk7KZf4B
+-->
+  <div
+    class="flex items-center justify-between p-4 bg-gray-300 rounded-sm dark:bg-gray-800 w-full h-12"
+  >
+    <a
+      class="flex gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+      href="#"
+    >
+      <div>Community</div>
+    </a>
+    <a
+      class="text-gray-500 text-3xl hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 text-lg font-bold italic"
+      href="#"
+      rel="ugc"
+    >
+      EduBridge
+    </a>
+    <button
+      class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10"
+      type="button"
+      id="radix-:rj:"
+      aria-haspopup="menu"
+      aria-expanded="false"
+      data-state="closed"
+      ><svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="h-6 w-6"
+        ><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"
+        ></circle></svg
+      ><span class="sr-only">Toggle user menu</span></button
+    >
+  </div>
 </header>
 <main>{@render children()}</main>
 <!--
