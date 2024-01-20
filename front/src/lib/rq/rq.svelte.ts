@@ -114,23 +114,23 @@ class Rq {
     return !this.isLogin();
   }
 
-  // public async initAuth() {
-  //   const { data } = await this.apiEndPoints().GET('/api/v1/members/me');
+  public async initAuth() {
+    const { data } = await this.apiEndPoints().GET('/api/v1/members/me');
 
-  //   if (data) {
-  //     this.setLogined(data.data.item);
-  //   }
+    if (data) {
+      this.setLogined(data.data.item);
+    }
 
-  //   this.checkAuth();
-  // }
+    this.checkAuth();
+  }
 
-  // public async logout() {
-  //   const {} = await this.apiEndPoints().POST('/api/v1/members/logout');
+  public async logout() {
+    const {} = await this.apiEndPoints().POST('/api/v1/members/logout');
 
-  //   this.setLogout();
+    this.setLogout();
 
-  //   this.goToMain();
-  // }
+    this.goToMain();
+  }
 
   public shouldLogoutPage() {
     return this.shouldLogoutPagePaths.includes(window.location.pathname);
