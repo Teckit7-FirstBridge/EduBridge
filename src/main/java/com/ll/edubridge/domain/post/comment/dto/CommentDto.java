@@ -28,6 +28,6 @@ public class CommentDto {
         this.createDate = comment.getCreateDate();
         this.authorId = comment.getWriter().getId();
         this.authorName = comment.getWriter().getUsername();
-        this.body = comment.getContent()
+        this.body = comment.getContent();
     }
 }
