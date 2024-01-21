@@ -40,3 +40,7 @@ src/main/resources/application-secret.yml
 db_dev.mv.db
 db_dev.trace.db
 src/main/generated
+
+### github & records
+.github/ISSUE_TEMPLATE/
+Weekly_Log/
