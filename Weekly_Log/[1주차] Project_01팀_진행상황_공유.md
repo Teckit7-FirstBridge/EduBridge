@@ -1,18 +1,14 @@
-# [1주차] Project_n팀 진행상황 공유
-
-### 파일 명: [1주차] Project_01팀 진행상황 공유
+# [1주차] EduBridge_01팀 진행상황 공유
 
 <br>
 
 ## 팀 구성원, 개인 별 역할
 
 > 팀장
-> 
 
  **윤영주** - DB 세팅, 글 , 댓글 CRUD 
 
 > 팀원
-> 
 
 **강찬우** - 스벨트 베이스, 회원 공통
 
@@ -43,15 +39,6 @@
 
 ## 현재까지 개발 과정 요약 (최소 500자 이상)
 
-
-현재까지 진행하고 있는 개발 현황을 기능별 목표, 목표달성률, 성과자체평가(상세히) 작성해주세요.
-
-- 성과자체평가는 ‘기술적으로 새로 알게 된 점, 어려웠던 점, 아쉬운 점, 시도해볼 점' 등을 작성해 주시면 됩니다 🙂
-- 팀원 각자 현재 구현하고 있는 것을 적어주세요. :)
-- ex) 기능별 목표: 암기장 삭제하기 기능 추가 / 목표달성률: 50% - 마켓에서 등록해제는 가능, 내 암기장 삭제는 아직 미구현 / 지속적으로 수정사항이 발생하여 완성도를 올리는 중, 현재 관련 문서 참고 중
-
----
-
 - 프로젝트 세팅 및 기획
     - 프로덕트 설계
     - GitHub Project
@@ -65,12 +52,11 @@
     - 글  CRUD
     - 댓글 CRUD
 
- <br><br>
 
 ### 공동 작업
 
 - 프로젝트 주제 선정
-    - LMS 플랫폼 제작
+    - LMS(Learning Management System) 플랫폼 제작
 - 프로젝트명 정하기
     - EduBridge
 - 팀 명 정하기
@@ -92,6 +78,10 @@
 ---
 
 - 프론트 페이지 구성(스벨트 ) - 10%
+- 소셜 로그인 구현 준비(구글)
+- git에 대한 학습 필요
+
+<br>
 
 ### 박제욱
 
@@ -100,11 +90,15 @@
 - GitHub 매니징 회의
     
      → 브랜치 사용법, 플로우 전략
+
+     → git fork 및 git clone 방법 숙지
     
 - 강좌 CRUD 관련 회의
     
-    → 우선 각자 하다 하나로 합치기로 함.
-    
+    → 우선 각자 하다 하나로 합치기로 함. (좀 더 고민할 여지가 존재)
+
+- 강좌 관련 Controller, Service, Repository 구현할 예정
+
 <br>
 
 ### 박종욱
@@ -113,8 +107,8 @@
 
 - 1차 종합 프로젝트 팀 노션 페이지 꾸준히 만들고 있는 중 - 50%
 - 회의록 작성 중 - 50%
-- DB 설계 - 100%
-- 소셜 로그인 구현 준비 중 - 0%
+- ERD 설계 - 100%
+- 소셜 로그인 구현 준비 중 - 0% ⇒ 스벨트 킷, Rest API 복습 필요 !!! 
 - 기술적으로 git Fork 에 대해 알아봐서 좋았고 , Rest API 공부 좀 할걸….. 후회되는 중입니다…….
     
 <br>
@@ -123,15 +117,14 @@
 
 ---
 
-- GitHub Organization 및 GitHub Project - 목표달성률: 100% / 처음이라 어설프지만 그냥 하는중
-    - Issue template / label / milestone 세팅
+- GitHub Organization 및 GitHub Project - 목표달성률: 100% / 처음이라 어설프지만 계속 공부중
+    - Issue template / labels / milestones 세팅
     - team repo 생성, 팀 초대 및 초기 세팅
     - GitHub flow, git flow 전략 설정
-- 아이디어톤 준비; PPT 제작 - 목표달성률: 100% / 아이디어 톤 종료
 - 강좌/강의 CRUD 구현 - 목표달성률: 0% / 수행 예정
     - 페어 프로그래밍 방법 고민 필요 (꼭 필요할지, 한다면 어떻게 할지 등)
     - 강사님 코드 분석 필요 (이전 미션에서 해당 방식으로 하지 않아서 익숙해질 필요 있음)
-    - Controller - Service - Repository 구현 예정
+    - REST API 공부 필요
 
 <br>
 
@@ -154,7 +147,6 @@
 - 1차 종합 프로젝트 팀 노션 페이지 작성중 - 50%
 - 회의록 작성 중 - 50%
 - 글, 댓글 CRUD - 예정
-
   - rest api에 대한 학습이 필요함
 
 <br><br>
@@ -167,16 +159,13 @@
     - 현재 글자수 200자 이상으로 임시 설정, 구체적 사항 미확정.
     - 후보 : Ctrl V 방지, 강의 키워드 체크, chatGPT 채점(강사님 제안) 등
 - 프로젝트 fork & pull 시 java파일이 클래스로 인식 안되는 문제
-    - settings.gradle의 [rootProject.name](http://rootProject.name) 수정 후 해결
+    - `settings.gradle`의 `rootProject.name` 수정 후 해결
 
 <br><br>
 
 ## 개발 결과물 공유
 
 Github Repository URL: https://github.com/Teckit7-FirstBridge/EduBridge
-
-- 필수) 팀원들과 함께 찍은 인증샷(온라인 만남시 스크린 캡쳐)도 함께 업로드 해주세요 🙂
     
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/c69962b0-3951-485b-b10a-5bb29576bba8/94aa00ec-e5c6-4f80-b1fe-c0d53bb339aa/Untitled.png)
-    
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/c69962b0-3951-485b-b10a-5bb29576bba8/7991f470-ab29-4b24-8362-7f4cb75394b7/Untitled.png)
+![img](https://i.imgur.com/Y4fBmJn.png)
+![img](https://i.imgur.com/GB8WJTN.png)
