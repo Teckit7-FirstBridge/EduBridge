@@ -2,6 +2,7 @@ package com.ll.edubridge.domain.post.post.service;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
+import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import com.ll.edubridge.global.rq.Rq;
@@ -20,7 +21,7 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     private final Rq rq;
 
@@ -87,11 +88,9 @@ public class PostService {
 
         post.setReport(true);
 
-        member.setReport(true);
+        memberService.isReported(member);
 
         postRepository.save(post);
-
-        memberRepository.save(member);
     }
 
     public Page<Post> getReport(Pageable pageable){
