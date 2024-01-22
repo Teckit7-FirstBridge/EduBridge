@@ -139,7 +139,17 @@ public class PostService {
         return post.getWriter().equals(member);
     }
 
-    public List<Post> findByPublished(boolean published) {
+    public boolean canRead(Post post){
+        Member member=rq.getMember();
+
+        if(rq.isAdmin()) return true;
+
+        if(post.isPublished()) return false;
+
+        return member.equals(post.getWriter());
+    }
+
+    public Page<Post> findByPublished(boolean published, Pageable pageable) {
         return postRepository.findByPublishedOrderByIdDesc(published);
     }
 }

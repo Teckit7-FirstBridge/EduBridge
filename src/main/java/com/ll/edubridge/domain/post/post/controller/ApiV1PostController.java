@@ -4,9 +4,14 @@ import com.ll.edubridge.domain.post.post.dto.PostDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.service.PostService;
 import com.ll.edubridge.global.rsData.RsData;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,21 +33,25 @@ public class ApiV1PostController {
         @NonNull
         private final List<PostDto> items;
 
-        public GetPostsResponseBody(List<Post> items) {
-            this.items = items.stream()
+        public GetPostsResponseBody(Page<Post> page) {
+            this.items = page.getContent().stream()
                     .map(PostDto::new)
                     .toList();
         }
     }
 
     @GetMapping("")
-    public RsData<GetPostsResponseBody> getPosts() {
-        List<Post> items = postService.findByPublished(true);
+    @Operation(summary = "글 리스트")
+    public RsData<GetPostsResponseBody> getPosts(
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<Post> page = postService.findByPublished(true, pageable);
+        GetPostsResponseBody responseBody = new GetPostsResponseBody(page);
 
         return RsData.of(
                 "200-1",
                 "성공",
-                new GetPostsResponseBody(items)
+                responseBody
         );
     }
 }
