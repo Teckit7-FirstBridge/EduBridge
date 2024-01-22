@@ -107,7 +107,7 @@ public class ApiV1PostController {
         return RsData.of("200-3", "삭제 성공");
     }
 
-    @PostMapping("/{id}/vote")
+    @PostMapping("/{id}/like")
     @Operation(summary = "글 추천")
     public RsData<Void> vote(@PathVariable Long id) {
         Member member = rq.getMember();
@@ -121,7 +121,7 @@ public class ApiV1PostController {
         return RsData.of("200-4", "추천 성공");
     }
 
-    @DeleteMapping("/{id}/vote")
+    @DeleteMapping("/{id}/like")
     @Operation(summary = "글 추천 취소")
     public RsData<Void> deleteVote(@PathVariable Long id) {
         Member member = rq.getMember();
