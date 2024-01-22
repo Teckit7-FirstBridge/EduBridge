@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.post.post.controller;
 
+import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.dto.PostDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.service.PostService;
@@ -104,6 +105,34 @@ public class ApiV1PostController {
         postService.delete(id);
 
         return RsData.of("200-3", "삭제 성공");
+    }
+
+    @PostMapping("/{id}/vote")
+    @Operation(summary = "글 추천")
+    public RsData<Void> vote(@PathVariable Long id) {
+        Member member = rq.getMember();
+
+        if (!postService.canLike(member, postService.getPost(id))) {
+            throw new GlobalException("400-1", "이미 추천하셨습니다.");
+        }
+
+        postService.vote(id, member);
+
+        return RsData.of("200-4", "추천 성공");
+    }
+
+    @DeleteMapping("/{id}/vote")
+    @Operation(summary = "글 추천 취소")
+    public RsData<Void> deleteVote(@PathVariable Long id) {
+        Member member = rq.getMember();
+
+        if (!postService.canCancelLike(member, postService.getPost(id))) {
+            throw new GlobalException("400-2", "추천을 하지 않았습니다.");
+        }
+
+        postService.deleteVote(id, member);
+
+        return RsData.of("200-5", "추천 취소 성공");
     }
 
 }

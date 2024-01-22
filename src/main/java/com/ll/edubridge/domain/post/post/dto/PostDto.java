@@ -21,6 +21,8 @@ public class PostDto {
     @NonNull
     private String body;
 
+    private int voteCount;
+
     public PostDto(Post post) {
         this.id = post.getId();
         this.createDate = post.getCreateDate();
@@ -28,5 +30,6 @@ public class PostDto {
         this.authorName = post.getWriter().getNickname();
         this.title = post.getTitle();
         this.body = post.getContent();
+        this.voteCount = post.getVoteCount();
     }
 }
