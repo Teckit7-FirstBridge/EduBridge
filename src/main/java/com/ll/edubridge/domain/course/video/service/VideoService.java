@@ -26,7 +26,7 @@ public class VideoService {
     private final VideoRepository videoRepository;
 
     @Transactional
-    public void create(String url, String overView, Course course, List<SummaryNote> summaryNotes){
+    public void create(String url, String overView, Course course, List<SummaryNote> summaryNotes) {
         Video video = Video.builder()
                 .url(url)
                 .overView(overView)
@@ -37,22 +37,22 @@ public class VideoService {
     }
 
     @Transactional
-    public void modify(){
+    public void modify() {
 
     }
 
     @Transactional
-    public void delete(){
+    public void delete() {
 
     }
 
     @Transactional
-    public Optional<Video> findByID(long id){
+    public Optional<Video> findByID(long id) {
         return Optional.ofNullable(videoRepository.findById(id));
     }
 
     @Transactional
-    public void save(Video video){
+    public void save(Video video) {
         videoRepository.save(video);
     }
 
@@ -65,9 +65,9 @@ public class VideoService {
     }
 
     @Transactional
-    public boolean haveAuthority(){
+    public boolean haveAuthority() {
         Member member = rq.getMember();
-        if(member.getUsername().equals("admin")) return true;
+        if (member.getUsername().equals("admin")) return true;
         return false;
     }
 }
