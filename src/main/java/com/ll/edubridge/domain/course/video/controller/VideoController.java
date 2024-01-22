@@ -15,7 +15,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(value = "/api/v1/videos", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@Tag(name = "ApiV1PostController", description = "강의 CRUD 컨트롤러")
+@Tag(name = "VideoController", description = "강의 CRUD 컨트롤러")
 public class VideoController {
     private final VideoService videoService;
 
@@ -39,7 +39,7 @@ public class VideoController {
     @GetMapping("/api/v1/courses/{id}/videos")
     public RsData<com.ll.edubridge.domain.course.video.controller.VideoController.GetVideosResponseBody> getVideos(@PathVariable("id") Integer id,
                                                                                                                    @RequestParam(value = "page", defaultValue = "0") int page) {
-        int courseId = id; // TODO : course.getId();
+        int courseId = id;
         Page<Video> videos = videoService.findAll(page, courseId); // findByCourseId
 
         return RsData.of(
