@@ -8,10 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -39,9 +36,10 @@ public class VideoController {
     }
 
     @Operation(summary = "강의 리스트")
-    @GetMapping("")
-    public RsData<com.ll.edubridge.domain.course.video.controller.VideoController.GetVideosResponseBody> getVideos(@RequestParam(value="page", defaultValue="0") int page) {
-        int courseId =  0; // TODO : course.getId();
+    @GetMapping("/api/v1/courses/{id}/videos")
+    public RsData<com.ll.edubridge.domain.course.video.controller.VideoController.GetVideosResponseBody> getVideos(@PathVariable("id") Integer id,
+                                                                                                                   @RequestParam(value = "page", defaultValue = "0") int page) {
+        int courseId = id; // TODO : course.getId();
         Page<Video> videos = videoService.findAll(page, courseId); // findByCourseId
 
         return RsData.of(
