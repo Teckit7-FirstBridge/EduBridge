@@ -1,8 +1,8 @@
 <script lang="ts">
 </script>
 
-<div class="flex h-screen bg-gray-100 dark:bg-gray-900">
-  <div class="flex flex-col w-64 border-r border-gray-200 dark:border-gray-800">
+<div class="flex h-screen dark:bg-gray-900">
+  <div class="flex flex-col w-64 border-r bg-gray-100/40 border-gray-200 dark:border-gray-800">
     <div class="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-800">
       <a class="flex items-center gap-2 font-semibold" href="#"
         ><svg
@@ -21,7 +21,7 @@
         ><span class="">EduBridge</span></a
       >
     </div>
-    <ul class="menu bg-base-200 w-56 rounded-box">
+    <ul class="menu w-56 rounded-box">
       <li>
         <a
           class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
