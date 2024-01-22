@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.post.post.service;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import com.ll.edubridge.global.rq.Rq;
@@ -18,6 +19,8 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+
+    private final MemberRepository memberRepository;
 
     private final Rq rq;
 
@@ -77,6 +80,24 @@ public class PostService {
         post.getVoter().remove(member);
         postRepository.save(post);
     }
+
+    @Transactional
+    public void isReported(Post post){
+        Member member=post.getWriter();
+
+        post.setReport(true);
+
+        member.setReport(true);
+
+        postRepository.save(post);
+
+        memberRepository.save(member);
+    }
+
+    public Page<Post> getReport(Pageable pageable){
+        return postRepository.findByReport(pageable, true);
+    }
+
 
     public boolean canLike(Member member, Post post){
         if(member==null) {
