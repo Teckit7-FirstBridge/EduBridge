@@ -52,6 +52,7 @@
     }
 
     const { data, error } = await rq.apiEndPoints().PUT('/api/v1/posts/{id}', {
+      // url 설정
       params: { path: { id: parseInt($page.params.id) } },
       body: { body: newBody }
     });
@@ -61,7 +62,7 @@
     saveToLocalStorage(parseInt($page.params.id), newBody);
 
     if (data) {
-      rq.msgInfo(data.msg);
+      rq.msgInfo(data.msg); //msg
     }
   };
 </script>

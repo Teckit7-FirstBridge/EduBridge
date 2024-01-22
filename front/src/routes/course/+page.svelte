@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Coursenav from '../../components/coursenav.svelte';
+  import Coursenav from '../../components/CourseNav.svelte';
 </script>
 
 <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
