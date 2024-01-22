@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.course.video.controller;
 
+import com.ll.edubridge.domain.course.video.dto.VideoDto;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.global.rsData.RsData;
@@ -8,7 +9,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -22,16 +26,13 @@ public class VideoController {
     @Getter
     public static class GetVideosResponseBody {
 
-//        @NonNull
-//        private final List<VideoDto> videos;
-//
-//        public GetVidoesResponseBody(List<Post> items) {
-//            this.videos = items.stream()
-//                    .map(VideoDto::new)
-//                    .toList();
-//        }
+        @NonNull
+        private final List<VideoDto> videos;
 
-        public GetVideosResponseBody() {
+        public GetVideosResponseBody(Page<Video> items) {
+            this.videos = items.stream()
+                    .map(VideoDto::new)
+                    .toList();
         }
     }
 
@@ -45,7 +46,7 @@ public class VideoController {
         return RsData.of(
                 "200-1",
                 "성공",
-                new com.ll.edubridge.domain.course.video.controller.VideoController.GetVideosResponseBody()
+                new com.ll.edubridge.domain.course.video.controller.VideoController.GetVideosResponseBody(videos)
         );
     }
 }
