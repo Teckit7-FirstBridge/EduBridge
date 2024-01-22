@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 public class VideoDto {
     @NonNull
-    private long id;
+    private Long id;
 
     @Size(max = 150)
     @NotBlank

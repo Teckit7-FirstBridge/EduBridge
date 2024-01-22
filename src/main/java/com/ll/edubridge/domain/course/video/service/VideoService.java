@@ -47,7 +47,7 @@ public class VideoService {
     }
 
     @Transactional
-    public Optional<Video> findByID(long id) {
+    public Optional<Video> findByID(Long id) {
         return Optional.ofNullable(videoRepository.findById(id));
     }
 
@@ -57,7 +57,7 @@ public class VideoService {
     }
 
     @Transactional
-    public Page<Video> findAll(int page, long courseId) {
+    public Page<Video> findAll(int page, Long courseId) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.asc("id"));
         Pageable pageable = PageRequest.of(page, 5, Sort.by(sorts));

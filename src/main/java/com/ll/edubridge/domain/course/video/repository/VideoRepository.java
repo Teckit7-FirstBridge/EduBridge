@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VideoRepository extends JpaRepository<Video, Integer> {
-    Video findById(long id);
+    Video findById(Long id);
 
-    Page<Video> findByCourseId(Pageable pageable, long courseId); // SQL 문 필요할 수 있음
+    Page<Video> findByCourseId(Pageable pageable, Long courseId); // SQL 문 필요할 수 있음
 }
