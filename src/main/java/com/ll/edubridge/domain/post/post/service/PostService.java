@@ -26,6 +26,18 @@ public class PostService {
         postRepository.save(post);
     }
 
+    @Transactional
+    public void createQna(Member author, String title, String content) {
+        Post post = Post.builder()
+                .writer(author)
+                .title(title)
+                .content(content)
+                .published(false)
+                .build();
+
+        postRepository.save(post);
+    }
+
     public List<Post> findByPublished(boolean published) {
         return postRepository.findByPublishedOrderByIdDesc(published);
     }
