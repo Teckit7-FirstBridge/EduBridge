@@ -19,9 +19,6 @@ import static com.ll.edubridge.domain.course.course.entity.QCourse.course;
 public class CourseService {
     private Rq rq;
 
-    public static List<Course> findAll() {
-    }
-
     public boolean haveAuthority(Comment comment){
 
         Member member=rq.getMember();
