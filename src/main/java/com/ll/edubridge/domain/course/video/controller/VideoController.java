@@ -36,16 +36,17 @@ public class VideoController {
         }
     }
 
-    @Operation(summary = "강의 리스트")
     @GetMapping("/courses/{id}/videos")
-    public RsData<com.ll.edubridge.domain.course.video.controller.VideoController.GetVideosResponseBody> getVideos(@PathVariable("id") Long courseId,
-                                                                                                                   @RequestParam(value = "page", defaultValue = "0") int page) {
+    @Operation(summary = "강의 리스트")
+    public RsData<GetVideosResponseBody> getVideos(@PathVariable("id") Long courseId,
+                                                   @RequestParam(value = "page", defaultValue = "0") int page) {
         Page<Video> videos = videoService.findAll(page, courseId); // findByCourseId
+        GetVideosResponseBody responseBody = new GetVideosResponseBody(videos);
 
         return RsData.of(
                 "200-1",
                 "성공",
-                new com.ll.edubridge.domain.course.video.controller.VideoController.GetVideosResponseBody(videos)
+                responseBody
         );
     }
 }
