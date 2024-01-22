@@ -3,7 +3,6 @@ package com.ll.edubridge.domain.post.comment.service;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.comment.repository.CommentRepository;
-import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
@@ -30,19 +29,19 @@ public class CommentService {
     }
 
     // 댓글 추천 권한 검사
-    public boolean canLike(Member member, Post post){
+    public boolean canLike(Member member, Comment comment){
         if(member==null) {
             return false;
         }
-        return !post.getVoter().contains(member);
+        return !comment.getVoter().contains(member);
     }
 
     // 댓글 취소 권한 검사
-    public boolean canCancelLike(Member member, Post post){
+    public boolean canCancelLike(Member member, Comment comment){
         if(member==null){
             return false;
         }
-        return post.getVoter().contains(member);
+        return comment.getVoter().contains(member);
     }
 
     // 댓글 작성 기능
@@ -56,17 +55,11 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    // 댓글 조회 기능
-    public Comment get(Long commentId) {
-        return commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다. commentId: " + commentId));
-    }
-
     // 댓글 수정 기능
     @Transactional
     public void modify(Long commentId, String newContent) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다. commentId: " + commentId));
+                .orElseThrow(() -> new GlobalException("404-1", "댓글을 찾을 수 없습니다.");
 
         comment.setContent(newContent);
     }
@@ -75,7 +68,7 @@ public class CommentService {
     @Transactional
     public void delete(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다. commentId: " + commentId));
+                .orElseThrow(() -> new GlobalException("404-1", "댓글을 찾을 수 없습니다.");
 
         commentRepository.delete(comment);
     }
@@ -95,7 +88,7 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    // 댓글 존재 여부 검사
+    // 댓글 조회 기능
     private Comment getComment(Long id) {
         Optional<Comment> comment = this.commentRepository.findById(id);
         if(comment.isPresent()) {
