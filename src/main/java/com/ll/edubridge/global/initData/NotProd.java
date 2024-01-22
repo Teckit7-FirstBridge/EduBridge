@@ -41,16 +41,16 @@ public class NotProd {
                 Member memberUser4 = memberService.join("user4", "1234").getData();
                 memberUser4.setRefreshToken("user4");
 
-                postService.create(memberUser1, "제목 1", "내용 1", true);
-                postService.create(memberUser1, "제목 2", "내용 2", true);
-                postService.create(memberUser1, "제목 3", "내용 3", false);
-                postService.create(memberUser1, "제목 4", "내용 4", true);
+                postService.create(memberUser1, "제목 1", "내용 1");
+                postService.create(memberUser1, "제목 2", "내용 2");
+                postService.create(memberUser1, "제목 3", "내용 3");
+                postService.create(memberUser1, "제목 4", "내용 4");
 
-                postService.create(memberUser2, "제목 5", "내용 5", true);
-                postService.create(memberUser2, "제목 6", "내용 6", false);
+                postService.create(memberUser2, "제목 5", "내용 5");
+                postService.create(memberUser2, "제목 6", "내용 6");
 
                 IntStream.rangeClosed(7, 150).forEach(i -> {
-                    postService.create(memberUser3, "제목 " + i, "내용 " + i, true);
+                    postService.create(memberUser3, "제목 " + i, "내용 " + i);
                 });
             }
         };
