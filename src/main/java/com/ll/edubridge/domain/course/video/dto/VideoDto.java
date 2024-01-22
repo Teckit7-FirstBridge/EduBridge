@@ -7,11 +7,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 
 @Getter
 public class VideoDto {
+    @NonNull
+    private long id;
 
     @Size(max = 150)
     @NotBlank
@@ -26,6 +29,7 @@ public class VideoDto {
     private List<SummaryNote> summaryNotes;
 
     public VideoDto(Video video) {
+        this.id = video.getId();
         this.url = video.getUrl();
         this.overView = video.getOverView();
         this.course = video.getCourse();
