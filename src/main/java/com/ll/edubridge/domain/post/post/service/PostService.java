@@ -2,6 +2,7 @@ package com.ll.edubridge.domain.post.post.service;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
+import com.ll.edubridge.domain.post.post.dto.PostDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import com.ll.edubridge.global.exceptions.GlobalException;
@@ -12,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,14 +27,14 @@ public class PostService {
     private final Rq rq;
 
     @Transactional
-    public void create(Member author, String title, String content) {
+    public Post create(Member member, PostDto postDto) {
         Post post = Post.builder()
-                .writer(author)
-                .title(title)
-                .content(content)
+                .writer(member)
+                .title(postDto.getTitle())
+                .content(postDto.getBody())
                 .build();
 
-        postRepository.save(post);
+        return postRepository.save(post);
     }
 
     @Transactional
@@ -50,14 +50,18 @@ public class PostService {
     }
 
     @Transactional
-    public void modify(Post post, String title, String content) {
-        post.setTitle(title);
-        post.setContent(content);
-        postRepository.save(post);
+    public Post modify(Long id, PostDto postDto) {
+        Post post=this.getPost(id);
+
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getTitle());
+
+        return postRepository.save(post);
     }
 
     @Transactional
-    public void delete(Post post) {
+    public void delete(Long id) {
+        Post post = this.getPost(id);
         postRepository.delete(post);
     }
 
@@ -85,8 +89,8 @@ public class PostService {
         postRepository.save(post);
     }
 
-    private Post getPost(Long id) {
-        Optional<Post> comment = this.postRepository.findById(id);
+    public Post getPost(Long id) {
+        Optional<Post> comment = this.findById(id);
         if (comment.isPresent()) {
             return comment.get();
         } else {
@@ -95,7 +99,7 @@ public class PostService {
     }
 
 
-    private Optional<Post> findById(Long id) {
+    public Optional<Post> findById(Long id) {
         return postRepository.findById(id);
     }
 
@@ -129,8 +133,10 @@ public class PostService {
         return post.getVoter().contains(member);
     }
 
-    public boolean haveAuthority(Post post) {
+    public boolean haveAuthority(Long id) {
         Member member = rq.getMember();
+
+        Post post = this.getPost(id);
 
         if (member == null) return false;
 

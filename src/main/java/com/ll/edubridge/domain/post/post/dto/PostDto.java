@@ -25,7 +25,7 @@ public class PostDto {
         this.id = post.getId();
         this.createDate = post.getCreateDate();
         this.authorId = post.getWriter().getId();
-        this.authorName = post.getWriter().getUsername();
+        this.authorName = post.getWriter().getNickname();
         this.title = post.getTitle();
         this.body = post.getContent();
     }

@@ -3,7 +3,10 @@ package com.ll.edubridge.domain.post.post.controller;
 import com.ll.edubridge.domain.post.post.dto.PostDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.service.PostService;
+import com.ll.edubridge.global.exceptions.GlobalException;
+import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
+import com.ll.edubridge.standard.base.Empty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
@@ -13,9 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Tag(name = "ApiV1PostController", description = "글 CRUD 컨트롤러")
 public class ApiV1PostController {
     private final PostService postService;
+    private final Rq rq;
 
     @Getter
     public static class GetPostsResponseBody {
@@ -54,4 +56,54 @@ public class ApiV1PostController {
                 responseBody
         );
     }
+
+    @PostMapping("")
+    @Operation(summary = "글 등록")
+    public RsData<PostDto> createPost(@RequestBody PostDto postDto) {
+        Post post = postService.create(rq.getMember(), postDto);
+        PostDto createdPostDto = new PostDto(post);
+
+        return RsData.of("200-0", "등록 성공", createdPostDto);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "글 상세 정보")
+    public RsData<PostDto> getDetail(@PathVariable Long id) {
+        Post post = postService.getPost(id);
+
+        if(!postService.canRead(post))
+            throw new GlobalException("403-1", "권한이 없습니다.");
+
+        PostDto postDto = new PostDto(post);
+        return RsData.of("200-1", "성공", postDto);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "글 수정")
+    public RsData<PostDto> modify(
+            @PathVariable Long id,
+            @RequestBody PostDto postDto) {
+
+        if(!postService.haveAuthority(id))
+            throw new GlobalException("403-1", "권한이 없습니다.");
+
+        Post modifyPost = postService.modify(id, postDto);
+
+        PostDto modifyPostDto = new PostDto(modifyPost);
+
+        return RsData.of("200-2", "수정 성공", modifyPostDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "글 삭제")
+    public RsData<Empty> delete(@PathVariable Long id) {
+
+        if(!postService.haveAuthority(id))
+            throw new GlobalException("403-1", "권한이 없습니다.");
+
+        postService.delete(id);
+
+        return RsData.of("200-3", "삭제 성공");
+    }
+
 }
