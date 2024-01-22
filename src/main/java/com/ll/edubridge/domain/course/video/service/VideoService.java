@@ -52,6 +52,7 @@ public class VideoService {
         videoRepository.delete(video);
     }
 
+    @Transactional
     public Video getVideo(Long id) {
         Optional<Video> video = this.findById(id);
         if (video.isPresent()) {
