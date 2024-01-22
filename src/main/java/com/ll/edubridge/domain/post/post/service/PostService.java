@@ -16,9 +16,9 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional
-    public void write(Member author, String title, String content, boolean published) {
+    public void create(Member author, String title, String content, boolean published) {
         Post post = Post.builder()
-                // .author(author)
+                .writer(author)
                 .title(title)
                 .content(content)
                 .published(published)

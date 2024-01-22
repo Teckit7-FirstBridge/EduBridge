@@ -13,8 +13,6 @@ public class PostDto {
     @NonNull
     private LocalDateTime createDate;
     @NonNull
-    private LocalDateTime modifyDate;
-    @NonNull
     private long authorId;
     @NonNull
     private String authorName;
