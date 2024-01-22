@@ -90,7 +90,7 @@ public class PostService {
         if (comment.isPresent()) {
             return comment.get();
         } else {
-            throw new GlobalException("404", "post를 찾을 수 없습니다." );
+            throw new GlobalException("404-1", "post를 찾을 수 없습니다.");
         }
     }
 
@@ -116,16 +116,16 @@ public class PostService {
 
 
     public boolean canLike(Member member, Post post) {
-        if (member == null) {
-            return false;
-        }
+        if (member == null) return false;
+        if (post == null) return false;
+
         return !post.getVoter().contains(member);
     }
 
     public boolean canCancelLike(Member member, Post post) {
-        if (member == null) {
-            return false;
-        }
+        if (member == null) return false;
+        if (post == null) return false;
+
         return post.getVoter().contains(member);
     }
 
@@ -133,6 +133,8 @@ public class PostService {
         Member member = rq.getMember();
 
         if (member == null) return false;
+
+        if (rq.isAdmin()) return true;
 
         return post.getWriter().equals(member);
     }
