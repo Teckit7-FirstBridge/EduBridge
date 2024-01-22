@@ -3,22 +3,12 @@ package com.ll.edubridge.domain.post.comment.service;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.comment.repository.CommentRepository;
-import com.ll.edubridge.domain.post.post.dto.PostDto;
-import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
-import com.ll.edubridge.global.rsData.RsData;
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,7 +59,7 @@ public class CommentService {
     @Transactional
     public void modify(Long commentId, String newContent) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new GlobalException("404-1", "댓글을 찾을 수 없습니다.");
+                .orElseThrow(() -> new GlobalException("404-1", "댓글을 찾을 수 없습니다."));
 
         comment.setContent(newContent);
     }
@@ -78,7 +68,7 @@ public class CommentService {
     @Transactional
     public void delete(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new GlobalException("404-1", "댓글을 찾을 수 없습니다.");
+                .orElseThrow(() -> new GlobalException("404-1", "댓글을 찾을 수 없습니다."));
 
         commentRepository.delete(comment);
     }
@@ -111,5 +101,7 @@ public class CommentService {
     public Optional<Comment> findById(Long id) {
         return commentRepository.findById(id);
     }
+
+
 }
 
