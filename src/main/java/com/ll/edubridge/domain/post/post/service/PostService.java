@@ -2,6 +2,7 @@ package com.ll.edubridge.domain.post.post.service;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
+import com.ll.edubridge.domain.post.post.dto.CreateDto;
 import com.ll.edubridge.domain.post.post.dto.PostDto;
 import com.ll.edubridge.domain.post.post.dto.QnaDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
@@ -29,11 +30,11 @@ public class PostService {
     private final Rq rq;
 
     @Transactional
-    public Post create(Member member, PostDto postDto) {
+    public Post create(Member member, CreateDto createDto) {
         Post post = Post.builder()
                 .writer(member)
-                .title(postDto.getTitle())
-                .content(postDto.getBody())
+                .title(createDto.getTitle())
+                .content(createDto.getBody())
                 .build();
 
         return postRepository.save(post);

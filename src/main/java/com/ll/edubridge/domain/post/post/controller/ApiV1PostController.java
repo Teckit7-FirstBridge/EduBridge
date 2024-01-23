@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.post.post.controller;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.post.post.dto.CreateDto;
 import com.ll.edubridge.domain.post.post.dto.PostDto;
 import com.ll.edubridge.domain.post.post.dto.QnaDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
@@ -66,10 +67,10 @@ public class ApiV1PostController {
 
     @PostMapping("")
     @Operation(summary = "글 등록")
-    public RsData<PostDto> createPost(@RequestBody PostDto postDto) {
-        Post post = postService.create(rq.getMember(), postDto);
+    public RsData<CreateDto> createPost(@RequestBody CreateDto createDto) {
+        Post post = postService.create(rq.getMember(), createDto);
 
-        PostDto createdPostDto = new PostDto(post,rq.getMember());
+        CreateDto createdPostDto = new CreateDto(post);
 
         return RsData.of("200-0", "등록 성공", createdPostDto);
     }
