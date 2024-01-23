@@ -22,7 +22,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = "/api/v1", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "VideoController", description = "강의 CRUD 컨트롤러")
-public class VideoController {
+public class ApiV1VideoController {
     private final VideoService videoService;
 
     @Getter
