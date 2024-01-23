@@ -1,4 +1,4 @@
-package com.ll.edubridge.global.rq.Rq;
+package com.ll.edubridge.global.rq;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;

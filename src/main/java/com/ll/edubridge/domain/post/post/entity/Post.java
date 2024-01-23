@@ -29,7 +29,7 @@ public class Post extends BaseEntity {
     private String content;
 
     //  1대1 문의는 자동 으로 비밀글 설정
-    private boolean published;
+    private boolean published=true;
 
     private boolean report = false;
 
