@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
 
 
 @Getter
-public class CreateDto {
+public class CreatePostDto {
 
     @NonNull
     @Size(max = 200)
@@ -15,7 +15,7 @@ public class CreateDto {
     @NonNull
     private String body;
 
-    public CreateDto(Post post) {
+    public CreatePostDto(Post post) {
         this.title = post.getTitle();
         this.body = post.getContent();
     }
