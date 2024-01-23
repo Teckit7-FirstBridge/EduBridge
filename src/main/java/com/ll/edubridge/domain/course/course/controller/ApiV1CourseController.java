@@ -6,8 +6,6 @@ import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.post.post.dto.PostDto;
-import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
@@ -86,18 +84,18 @@ public class ApiV1CourseController {
 
     @PutMapping("/{id}")
     @Operation(summary = "강좌 수정")
-    public RsData<PostDto> modify(
+    public RsData<CourseDto> modify(
             @PathVariable("id") Long id,
-            @RequestBody PostDto postDto) {
+            @RequestBody CourseDto courseDto) {
 
         if(!courseService.haveAuthority(id))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
-        Post modifyPost = courseService.modify(id, courseDto);
+        Course modifyCourse = courseService.modify(id, courseDto);
 
-        PostDto modifyPostDto = new PostDto(modifyPost, rq.getMember());
+        CourseDto modifyCourseDto = new CourseDto(modifyCourse);
 
-        return RsData.of("200-2", "수정 성공", modifyPostDto);
+        return RsData.of("200-2", "수정 성공", modifyCourseDto);
     }
 
     @DeleteMapping("/{id}")

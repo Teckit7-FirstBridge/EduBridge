@@ -10,7 +10,6 @@ import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +37,7 @@ public class CourseService {
                 .notice(createCourseDto.getNotice())
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
+                .owner(member)
                 .build();
         return courseRepository.save(course);
     }
@@ -46,8 +46,8 @@ public class CourseService {
     public Course modify(Long id, CourseDto courseDto) {
         Course course = this.getCourse(id);
 
-        course.setImgUrl(CourseDto.getImgUrl());
-        course.setOverView(CourseDto.getOverView());
+        course.setImgUrl(courseDto.getImgUrl());
+        course.setOverView(courseDto.getOverView());
 
         return courseRepository.save(course);
     }
