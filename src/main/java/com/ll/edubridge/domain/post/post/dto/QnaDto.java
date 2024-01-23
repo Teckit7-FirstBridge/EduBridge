@@ -1,6 +1,5 @@
 package com.ll.edubridge.domain.post.post.dto;
 
-import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
@@ -8,7 +7,7 @@ import org.springframework.lang.NonNull;
 import java.time.LocalDateTime;
 
 @Getter
-public class PostDto {
+public class QnaDto {
     @NonNull
     private long id;
     @NonNull
@@ -22,18 +21,14 @@ public class PostDto {
     @NonNull
     private String body;
 
-    private int voteCount;
 
-    private boolean likedByCurrentUser;
 
-    public PostDto(Post post, Member member) {
+    public QnaDto(Post post) {
         this.id = post.getId();
         this.createDate = post.getCreateDate();
         this.authorId = post.getWriter().getId();
         this.authorName = post.getWriter().getNickname();
         this.title = post.getTitle();
         this.body = post.getContent();
-        this.voteCount = post.getVoteCount();
-        this.likedByCurrentUser = post.getVoter().contains(member);
     }
 }
