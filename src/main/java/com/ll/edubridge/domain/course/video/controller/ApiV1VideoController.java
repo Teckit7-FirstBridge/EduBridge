@@ -74,18 +74,21 @@ public class ApiV1VideoController {
     @Operation(summary = "강의 등록")
     public RsData<VideoDto> createVideo(@PathVariable("courseId") Long courseId,
                                         @RequestBody VideoDto videoDto) {
+
+        if (!videoService.haveAuthority())
+            throw new GlobalException("403-1", "권한이 없습니다.");
+
         Video video = videoService.create(videoDto);
         VideoDto createdVideoDto = new VideoDto(video);
 
         return RsData.of("200-0", "등록 성공", createdVideoDto);
     }
 
-    @PutMapping("/admin/{courseId}/videos")
+    @PutMapping("/admin/{courseId}/videos/{id}")
     @Operation(summary = "강의 수정")
-    public RsData<VideoDto> modify(
-            @PathVariable("courseId") Long courseId,
-            @PathVariable Long id,
-            @RequestBody VideoDto videoDto) {
+    public RsData<VideoDto> modify(@PathVariable("courseId") Long courseId,
+                                   @PathVariable("id") Long id,
+                                   @RequestBody VideoDto videoDto) {
 
         if (!videoService.haveAuthority())
             throw new GlobalException("403-1", "권한이 없습니다.");
@@ -97,9 +100,10 @@ public class ApiV1VideoController {
         return RsData.of("200-2", "수정 성공", modifyVideoDto);
     }
 
-    @DeleteMapping("/admin/{courseId}/videos")
+    @DeleteMapping("/admin/{courseId}/videos/{id}")
     @Operation(summary = "강의 삭제")
-    public RsData<Empty> delete(@PathVariable("courseId") Long courseId, @PathVariable Long id) {
+    public RsData<Empty> delete(@PathVariable("courseId") Long courseId,
+                                @PathVariable("id") Long id) {
 
         if (!videoService.haveAuthority())
             throw new GlobalException("403-1", "권한이 없습니다.");
