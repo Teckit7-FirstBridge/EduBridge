@@ -37,9 +37,9 @@ public class ApiV1PostController {
         @NonNull
         private final List<PostDto> items;
 
-        public GetPostsResponseBody(Page<Post> page) {
+        public GetPostsResponseBody(Page<Post> page, Member currentUser) {
             this.items = page.getContent().stream()
-                    .map(PostDto::new)
+                    .map(post -> new PostDto(post, currentUser))
                     .toList();
         }
     }
@@ -53,7 +53,7 @@ public class ApiV1PostController {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 
         Page<Post> postPage = postService.findByPublished(true, pageable);
-        GetPostsResponseBody responseBody = new GetPostsResponseBody(postPage);
+        GetPostsResponseBody responseBody = new GetPostsResponseBody(postPage,rq.getMember());
 
         return RsData.of(
                 "200-1",
@@ -66,7 +66,8 @@ public class ApiV1PostController {
     @Operation(summary = "글 등록")
     public RsData<PostDto> createPost(@RequestBody PostDto postDto) {
         Post post = postService.create(rq.getMember(), postDto);
-        PostDto createdPostDto = new PostDto(post);
+
+        PostDto createdPostDto = new PostDto(post,rq.getMember());
 
         return RsData.of("200-0", "등록 성공", createdPostDto);
     }
@@ -79,7 +80,7 @@ public class ApiV1PostController {
         if(!postService.canRead(post))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
-        PostDto postDto = new PostDto(post);
+        PostDto postDto = new PostDto(post, rq.getMember());
         return RsData.of("200-1", "성공", postDto);
     }
 
@@ -94,7 +95,7 @@ public class ApiV1PostController {
 
         Post modifyPost = postService.modify(id, postDto);
 
-        PostDto modifyPostDto = new PostDto(modifyPost);
+        PostDto modifyPostDto = new PostDto(modifyPost, rq.getMember());
 
         return RsData.of("200-2", "수정 성공", modifyPostDto);
     }

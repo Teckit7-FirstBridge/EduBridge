@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.post.post.dto;
 
+import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
@@ -23,7 +24,9 @@ public class PostDto {
 
     private int voteCount;
 
-    public PostDto(Post post) {
+    private boolean likedByCurrentUser;
+
+    public PostDto(Post post, Member member) {
         this.id = post.getId();
         this.createDate = post.getCreateDate();
         this.authorId = post.getWriter().getId();
@@ -31,5 +34,6 @@ public class PostDto {
         this.title = post.getTitle();
         this.body = post.getContent();
         this.voteCount = post.getVoteCount();
+        this.likedByCurrentUser = post.getVoter().contains(member);
     }
 }
