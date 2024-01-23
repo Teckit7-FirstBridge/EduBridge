@@ -7,7 +7,7 @@
   let div: HTMLDivElement;
   let editor: Editor;
   let oldBody: string = '';
-  let title = '';
+  let title = '안녕';
 
   $effect(() => {
     editor = new Editor({
@@ -47,15 +47,17 @@
 
   const Post__save = async () => {
     const newBody = editor.getMarkdown().trim();
+    console.log(newBody);
+    console.log(title);
     if (oldBody === newBody) {
       return;
     }
 
-    const { data, error } = await rq.apiEndPoints().PUT('/api/v1/posts/{id}', {
-      // url 설정
-      params: { path: { id: parseInt($page.params.id) } },
-      body: { body: newBody }
-    });
+    // const { data, error } = await rq.apiEndPoints().PUT('/api/v1/posts/{id}', {
+    //   // url 설정
+    //   params: { path: { id: parseInt($page.params.id) } },
+    //   body: { body: newBody }
+    // });
 
     oldBody = newBody;
 
@@ -81,6 +83,7 @@
         class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         id="post-title"
         placeholder="Enter title"
+        bind:value={title}
       />
     </div>
     <div class="space-y-2">
@@ -91,6 +94,7 @@
       <div bind:this={div} id="post-body"></div>
     </div>
     <button
+      on:click={Post__save}
       class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
       >Save</button
     >
