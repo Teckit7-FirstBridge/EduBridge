@@ -13,5 +13,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByReport(Pageable pageable, boolean report);
 
-    List<Post> findByWriterAndIsPublished(Member member, boolean isPublished);
+    List<Post> findByWriterAndPublished(Member member, boolean isPublished);
 }

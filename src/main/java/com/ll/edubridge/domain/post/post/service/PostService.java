@@ -166,6 +166,6 @@ public class PostService {
     public List<Post> getMyQna() {
         Member member = rq.getMember();
 
-        return postRepository.findByWriterAndIsPublished(member, false);
+        return postRepository.findByWriterAndPublished(member, false);
     }
 }
