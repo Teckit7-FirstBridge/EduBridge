@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.course.video.controller;
 
+import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
 import com.ll.edubridge.domain.course.video.dto.VideoDto;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.course.video.service.VideoService;
@@ -72,16 +73,16 @@ public class ApiV1VideoController {
 
     @PostMapping("/admin/{courseId}/videos")
     @Operation(summary = "강의 등록")
-    public RsData<VideoDto> createVideo(@PathVariable("courseId") Long courseId,
-                                        @RequestBody VideoDto videoDto) {
+    public RsData<CreateVideoDto> createVideo(@PathVariable("courseId") Long courseId,
+                                              @RequestBody CreateVideoDto createVideoDto) {
 
         if (!videoService.haveAuthority(courseId))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
-        Video video = videoService.create(videoDto);
+        Video video = videoService.create(createVideoDto);
         VideoDto createdVideoDto = new VideoDto(video);
 
-        return RsData.of("200-0", "등록 성공", createdVideoDto);
+        return RsData.of("200-0", "등록 성공", createVideoDto);
     }
 
     @PutMapping("/admin/{courseId}/videos/{id}")
