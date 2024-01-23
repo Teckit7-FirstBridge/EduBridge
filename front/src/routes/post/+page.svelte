@@ -1,4 +1,12 @@
 <script lang="ts">
+  import type { components } from '$lib/types/api/v1/schema';
+
+  const { data } = $props<{ data: { post: components['schemas']['GetPostsResponseBody'] } }>();
+  const { post } = data;
+  const { items } = post;
+  console.log(post);
+  console.log(items);
+
   function closeDropdown() {
     document.getElementById('dropdownButton')!.tabIndex = -1;
     setTimeout(() => {
@@ -64,6 +72,26 @@
     </button>
   </div>
   <div class="space-y-4">
+    {#each items as item}
+      <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+        <a href="/board/1">
+          <div class="flex flex-col space-y-1.5 p-6">
+            <h3 class="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight">
+              {item.title}
+            </h3>
+          </div>
+          <div class="p-6">
+            <p class="text-sm">{item.body}</p>
+          </div>
+          <div class="flex items-center p-6">
+            <div class="flex items-center justify-between">
+              <p class="text-sm text-gray-500 dark:text-gray-400">{item.authorName}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    {/each}
+
     <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
       <a href="/board/1">
         <div class="flex flex-col space-y-1.5 p-6">
