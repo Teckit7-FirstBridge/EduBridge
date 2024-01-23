@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.post.comment.service;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.post.comment.dto.CreateCommentDto;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.comment.repository.CommentRepository;
 import com.ll.edubridge.global.exceptions.GlobalException;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,9 +21,11 @@ public class CommentService {
     private final Rq rq;
 
     // 권한 검사 기능
-    public boolean haveAuthority(Comment comment){
+    public boolean haveAuthority(Long id){
 
         Member member=rq.getMember();
+
+        Comment comment = this.getComment(id);
 
         if(member==null) return false;
 
@@ -46,22 +50,23 @@ public class CommentService {
 
     // 댓글 작성 기능
     @Transactional
-    public void create(Member author, String content) {
+    public Comment create(Member author, CreateCommentDto createCommentDto) {
         Comment comment = Comment.builder()
                 .writer(author)
-                .content(content)
+                .content(createCommentDto.getBody())
                 .build();
 
-        commentRepository.save(comment);
+        return commentRepository.save(comment);
     }
 
     // 댓글 수정 기능
     @Transactional
-    public void modify(Long commentId, String newContent) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new GlobalException("404-1", "댓글을 찾을 수 없습니다."));
+    public Comment modify(Long commentId, CreateCommentDto createCommentDto) {
+        Comment comment = this.getComment(commentId);
 
-        comment.setContent(newContent);
+        comment.setContent(createCommentDto.getBody());
+
+        return commentRepository.save(comment);
     }
 
     // 댓글 삭제 기능
@@ -103,5 +108,8 @@ public class CommentService {
     }
 
 
+    public List<Comment> findByPostId(Long postId) {
+        return commentRepository.findByPostId(postId);
+    }
 }
 
