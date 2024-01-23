@@ -2,6 +2,7 @@ package com.ll.edubridge.domain.post.post.controller;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.dto.PostDto;
+import com.ll.edubridge.domain.post.post.dto.QnaDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.service.PostService;
 import com.ll.edubridge.global.app.AppConfig;
@@ -21,6 +22,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -138,6 +140,54 @@ public class ApiV1PostController {
         postService.deleteVote(id, member);
 
         return RsData.of("200-5", "추천 취소 성공");
+    }
+
+    @PostMapping("/qna")
+    @Operation(summary = "1대1 문의 등록")
+    public RsData<QnaDto> createQna(@RequestBody QnaDto qnaDto) {
+        Post post = postService.createQna(rq.getMember(), qnaDto);
+
+        QnaDto createdQnaDto = new QnaDto(post);
+
+        return RsData.of("200-0", "등록 성공", createdQnaDto);
+    }
+
+    @GetMapping("/qna")
+    @Operation(summary = "1대1 문의 목록")
+    public RsData<List<QnaDto>> getMyQna() {
+        // PostService에서 모든 QnA 게시물을 가져오기
+        List<Post> qnaPosts = postService.getMyQna();
+
+        // Post 객체를 QnaDto로 변환
+        List<QnaDto> qnaDtoList = qnaPosts.stream()
+                .map(QnaDto::new)
+                .collect(Collectors.toList());
+
+        return RsData.of("200-1", "조회 성공", qnaDtoList);
+    }
+
+    @GetMapping("/qna/{id}")
+    @Operation(summary = "1대1 문의 상세 정보")
+    public RsData<QnaDto> getQnaDetail(@PathVariable("id") Long id) {
+        Post post = postService.getPost(id);
+
+        if(!postService.canRead(post))
+            throw new GlobalException("403-1", "권한이 없습니다.");
+
+        QnaDto qnaDto = new QnaDto(post);
+        return RsData.of("200-1", "성공", qnaDto);
+    }
+
+    @DeleteMapping("/qna/{id}")
+    @Operation(summary = "1대1 문의 삭제")
+    public RsData<Empty> deleteQna(@PathVariable("id") Long id) {
+
+        if(!postService.haveAuthority(id))
+            throw new GlobalException("403-1", "권한이 없습니다.");
+
+        postService.delete(id);
+
+        return RsData.of("200-3", "삭제 성공");
     }
 
 }

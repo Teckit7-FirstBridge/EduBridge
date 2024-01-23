@@ -3,6 +3,7 @@ package com.ll.edubridge.domain.post.post.service;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.domain.post.post.dto.PostDto;
+import com.ll.edubridge.domain.post.post.dto.QnaDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import com.ll.edubridge.global.exceptions.GlobalException;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,15 +40,15 @@ public class PostService {
     }
 
     @Transactional
-    public void createQna(Member author, String title, String content) {
+    public Post createQna(Member member, QnaDto qnaDto) {
         Post post = Post.builder()
-                .writer(author)
-                .title(title)
-                .content(content)
+                .writer(member)
+                .title(qnaDto.getTitle())
+                .content(qnaDto.getBody())
                 .published(false)
                 .build();
 
-        postRepository.save(post);
+        return postRepository.save(post);
     }
 
     @Transactional
@@ -159,5 +161,11 @@ public class PostService {
 
     public Page<Post> findByPublished(boolean published, Pageable pageable) {
         return postRepository.findByPublishedOrderByIdDesc(published, pageable);
+    }
+
+    public List<Post> getMyQna() {
+        Member member = rq.getMember();
+
+        return postRepository.findByWriterAndIsPublished(member, false);
     }
 }
