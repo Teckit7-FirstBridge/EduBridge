@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.course.video.service;
 
+import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
 import com.ll.edubridge.domain.course.video.dto.VideoDto;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.course.video.repository.VideoRepository;
@@ -22,12 +23,12 @@ public class VideoService {
     // private final CourseService courseService;
 
     @Transactional
-    public Video create(VideoDto videoDto) {
+    public Video create(CreateVideoDto createVideoDto) {
         Video video = Video.builder()
-                .url(videoDto.getUrl())
-                .overView(videoDto.getOverView())
-                .course(videoDto.getCourse())
-                .summaryNotes(videoDto.getSummaryNotes())
+                .url(createVideoDto.getUrl())
+                .overView(createVideoDto.getOverView())
+                .course(createVideoDto.getCourse())
+                .summaryNotes(createVideoDto.getSummaryNotes())
                 .build();
         return videoRepository.save(video);
     }
