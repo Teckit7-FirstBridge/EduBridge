@@ -4,14 +4,12 @@ import com.ll.edubridge.domain.course.video.dto.VideoDto;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.global.exceptions.GlobalException;
-import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +23,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Tag(name = "VideoController", description = "강의 CRUD 컨트롤러")
 public class VideoController {
     private final VideoService videoService;
-    private final Rq rq;
 
     @Getter
     public static class GetVideosResponseBody {
@@ -33,7 +30,7 @@ public class VideoController {
         @NonNull
         private final List<VideoDto> videos;
 
-        public GetVideosResponseBody(Page<Video> items) {
+        public GetVideosResponseBody(List<Video> items) {
             this.videos = items.stream()
                     .map(VideoDto::new)
                     .toList();
@@ -42,9 +39,8 @@ public class VideoController {
 
     @GetMapping("/courses/{courseId}/videos")
     @Operation(summary = "강의 리스트")
-    public RsData<GetVideosResponseBody> getVideos(@PathVariable("courseId") Long courseId,
-                                                   @RequestParam(value = "page", defaultValue = "0") int page) {
-        Page<Video> videos = videoService.findAll(page, courseId); // findByCourseId
+    public RsData<GetVideosResponseBody> getVideos(@PathVariable("courseId") Long courseId) {
+        List<Video> videos = videoService.findAll(courseId); // findByCourseId
         GetVideosResponseBody responseBody = new GetVideosResponseBody(videos);
 
         return RsData.of(

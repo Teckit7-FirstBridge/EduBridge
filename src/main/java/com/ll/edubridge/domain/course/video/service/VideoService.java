@@ -7,14 +7,10 @@ import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,11 +64,10 @@ public class VideoService {
     }
 
     @Transactional
-    public Page<Video> findAll(int page, Long courseId) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.asc("id"));
-        Pageable pageable = PageRequest.of(page, 5, Sort.by(sorts));
-        return this.videoRepository.findByCourseId(pageable, courseId);
+    public List<Video> findAll(Long courseId) {
+        List<Video> videoList = videoRepository.findByCourseId(courseId);
+        Collections.sort(videoList, (v1, v2) -> v1.getId().compareTo(v2.getId()));
+        return videoList;
     }
 
     @Transactional
