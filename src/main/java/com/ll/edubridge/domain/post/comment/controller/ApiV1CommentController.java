@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.post.comment.controller;
 
+import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.comment.dto.CommentDto;
 import com.ll.edubridge.domain.post.comment.dto.CreateCommentDto;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
@@ -7,6 +8,7 @@ import com.ll.edubridge.domain.post.comment.service.CommentService;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
+import com.ll.edubridge.standard.base.Empty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -55,5 +57,45 @@ public class ApiV1CommentController {
         CommentDto modifyCommentDto = new CommentDto(modifyComment, rq.getMember());
 
         return RsData.of("200-2", "수정 성공", modifyCommentDto);
+    }
+
+    @DeleteMapping("/{postId}")
+    @Operation(summary = "댓글 삭제")
+    public RsData<Empty> deleteComment(@PathVariable("postId") Long postId) {
+
+        if(!commentService.haveAuthority(postId))
+            throw new GlobalException("403-1", "권한이 없습니다.");
+
+        commentService.delete(postId);
+
+        return RsData.of("200-3", "삭제 성공");
+    }
+
+    @PostMapping("/{postId}/like")
+    @Operation(summary = "댓글 추천")
+    public RsData<Void> voteComment(@PathVariable("postId") Long postId) {
+        Member member = rq.getMember();
+
+        if(!commentService.canLike(member, commentService.getComment(postId))) {
+            throw new GlobalException("400-1", "이미 추천하셨습니다.");
+        }
+
+        commentService.vote(postId, member);
+
+        return RsData.of("200-4", "추천 성공");
+    }
+
+    @DeleteMapping("/{postId}/like")
+    @Operation(summary = "댓글 추천 취소")
+    public RsData<Void> deleteVoteComment(@PathVariable("postId") Long postId) {
+        Member member = rq.getMember();
+
+        if(!commentService.canCancelLike(member, commentService.getComment(postId))) {
+            throw new GlobalException("400-2", "추천을 하지 않았습니다.");
+        }
+
+        commentService.deleteVote(postId, member);
+
+        return RsData.of("200-5", "추천 취소 성공");
     }
 }
