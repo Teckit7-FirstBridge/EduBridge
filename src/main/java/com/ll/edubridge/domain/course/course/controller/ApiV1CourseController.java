@@ -55,6 +55,8 @@ public class ApiV1CourseController {
     @GetMapping("/{course-id}")
     public RsData<CourseDto> getCourse(@PathVariable("course-id") Long id){
         Course course = courseService.findById(id);
-        return RsData.of("200-1", "성공", new CourseDto(course));
+        return RsData.of("200-1",
+                "성공",
+                new CourseDto(course));
     }
 }

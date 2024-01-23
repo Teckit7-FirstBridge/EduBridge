@@ -76,13 +76,8 @@ public class CourseService {
         if (course.isPresent()) {
             return course.get();
         } else {
-            throw new GlobalException("404-1", "해당 영상을 찾을 수 없습니다.");
+            throw new GlobalException("404-1", "해당 강좌을 찾을 수 없습니다.");
         }
-    }
-
-    @Transactional
-    public CourseRepository getCourseRepository() {
-        return courseRepository;
     }
 
     @Transactional
