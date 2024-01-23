@@ -13,6 +13,7 @@ public class CourseDto {
     private String notice;
     private String imgUrl;
     private String overView;
+    private String ownerName;
     private LocalDateTime createDate;
 
     public CourseDto(Course course){
@@ -21,6 +22,7 @@ public class CourseDto {
         this.notice = course.getNotice();
         this.imgUrl = course.getImgUrl();
         this.overView = course.getOverView();
+        this.ownerName = course.getOwner().getNickname();
         this.createDate = course.getCreateDate();
     }
 }
