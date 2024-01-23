@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -42,6 +43,25 @@ public class VideoController {
     public RsData<GetVideosResponseBody> getVideos(@PathVariable("courseId") Long courseId) {
         List<Video> videos = videoService.findAll(courseId); // findByCourseId
         GetVideosResponseBody responseBody = new GetVideosResponseBody(videos);
+
+        return RsData.of(
+                "200-1",
+                "성공",
+                responseBody
+        );
+    }
+
+    @GetMapping("/courses/{courseId}/{id}")
+    @Operation(summary = "특정 강의")
+    public RsData<GetVideosResponseBody> getVideos(@PathVariable("courseId") Long courseId,
+                                                   @PathVariable("id") Long id) {
+
+        Video video = videoService.findById(courseId, id);
+        if (video == null) {
+            throw new GlobalException("404-1", "해당 강의를 찾을 수 없습니다.");
+        }
+
+        GetVideosResponseBody responseBody = new GetVideosResponseBody(Collections.singletonList(video));
 
         return RsData.of(
                 "200-1",

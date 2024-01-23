@@ -64,6 +64,11 @@ public class VideoService {
     }
 
     @Transactional
+    public Video findById(Long courseId, Long id) {
+        return videoRepository.findById(id);
+    }
+
+    @Transactional
     public List<Video> findAll(Long courseId) {
         List<Video> videoList = videoRepository.findByCourseId(courseId);
         Collections.sort(videoList, (v1, v2) -> v1.getId().compareTo(v2.getId()));
