@@ -14,44 +14,32 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CourseService {
-
-    private final Rq rq;
     private final CourseRepository courseRepository;
+    private final Rq rq;
 
-    public static List<Course> findAll() {
-        return null;
+    public Page<Course> findAll(Pageable pageable) {
+        return courseRepository.findAll(pageable);
     }
 
     public Optional<Course> findById(Long id) {
-        // return courseRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 아이디의 강좌가 존재하지 않습니다."));
         return courseRepository.findById(id);
     }
 
-
-
     @Transactional
-    public Page<Course> search(Specification<Course> spec, Pageable pageable){
-        return courseRepository.findAll(spec, pageable);
-    }
-
-
-
-    @Transactional
-    public Course create(CreateCourseDto createCourseDto) {
+    public Course create(Member member, CreateCourseDto createCourseDto) {
         Course course = Course.builder()
                 .title(createCourseDto.getTitle())
                 .notice(createCourseDto.getNotice())
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .build();
-        return CourseRepository.save(course);
+        return courseRepository.save(course);
     }
 
     @Transactional
@@ -61,13 +49,13 @@ public class CourseService {
         course.setImgUrl(CourseDto.getImgUrl());
         course.setOverView(CourseDto.getOverView());
 
-        return CourseRepository.save(course);
+        return courseRepository.save(course);
     }
 
     @Transactional
     public void delete(Long id) {
         Course course = this.getCourse(id);
-        CourseRepository.delete(course);
+        courseRepository.delete(course);
     }
 
     @Transactional
@@ -81,16 +69,13 @@ public class CourseService {
     }
 
     @Transactional
-    public boolean haveAuthority(Course course){
-
+    public boolean haveAuthority(Long id) {
         Member member = rq.getMember();
-
-        Course course = this.getCourse();
 
         if (member == null) return false;
 
         if (rq.isAdmin()) return true;
 
-        return course.getId().equals(member);
+        return true;
     }
 }
