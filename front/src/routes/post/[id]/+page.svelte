@@ -1,9 +1,22 @@
 <script lang="ts">
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
+  import { page } from '$app/stores';
 
   const { data } = $props<{ data: { post: components['schemas']['PostDto'] } }>();
   const { post } = data;
+
+  async function deletePost() {
+    const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/posts/{id}`, {
+      params: { path: { id: parseInt($page.params.id) } }
+    });
+    if (data) {
+      rq.msgInfo('게시글이 삭제되었습니다');
+      rq.goTo('/post');
+    } else if (error) {
+      rq.msgError(error.msg);
+    }
+  }
 </script>
 
 <div class="max-w-4xl mx-auto my-8">
