@@ -1,5 +1,7 @@
 package com.ll.edubridge.domain.course.video.service;
 
+import com.ll.edubridge.domain.course.course.entity.Course;
+import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
 import com.ll.edubridge.domain.course.video.dto.VideoDto;
 import com.ll.edubridge.domain.course.video.entity.Video;
@@ -20,7 +22,7 @@ import java.util.Optional;
 public class VideoService {
     private final Rq rq;
     private final VideoRepository videoRepository;
-    // private final CourseService courseService;
+    private final CourseService courseService;
 
     @Transactional
     public Video create(CreateVideoDto createVideoDto) {
@@ -85,13 +87,12 @@ public class VideoService {
     public boolean haveAuthority(Long courseId) {
         Member member = rq.getMember();
 
-        // Course course = courseService.findById(courseId);
+        Optional<Course> course = courseService.findById(courseId);
 
         if (member == null) return false;
 
         if (rq.isAdmin()) return true;
 
-        return true; // Course에 owner 필드 생성 전이라 임시 작성
-        // return course.getOwner().equals(member);
+        return course.get().getOwner().equals(member);
     }
 }
