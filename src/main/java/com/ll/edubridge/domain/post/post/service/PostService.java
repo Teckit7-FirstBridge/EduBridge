@@ -103,16 +103,16 @@ public class PostService {
         return postRepository.findById(id);
     }
 
-    @Transactional
-    public void isReported(Post post) {
-        Member member = post.getWriter();
-
-        post.setReport(true);
-
-        memberService.isReported(member);
-
-        postRepository.save(post);
-    }
+//    @Transactional
+//    public void isReported(Post post) {
+//        Member member = post.getWriter();
+//
+//        post.setReport(true);
+//
+//        memberService.isReported(member);
+//
+//        postRepository.save(post);
+//    }
 
     public Page<Post> getReport(Pageable pageable) {
         return postRepository.findByReport(pageable, true);
@@ -148,14 +148,16 @@ public class PostService {
     public boolean canRead(Post post){
         Member member=rq.getMember();
 
+        if(member==null&& post.isPublished()) return true;
+
         if(rq.isAdmin()) return true;
 
-        if(post.isPublished()) return false;
+        if(!post.isPublished()) return false;
 
         return member.equals(post.getWriter());
     }
 
     public Page<Post> findByPublished(boolean published, Pageable pageable) {
-        return postRepository.findByPublishedOrderByIdDesc(published);
+        return postRepository.findByPublishedOrderByIdDesc(published, pageable);
     }
 }

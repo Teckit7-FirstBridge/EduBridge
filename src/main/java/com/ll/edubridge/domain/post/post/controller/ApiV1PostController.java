@@ -4,6 +4,7 @@ import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.dto.PostDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.service.PostService;
+import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
@@ -13,9 +14,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,10 +47,13 @@ public class ApiV1PostController {
     @GetMapping("")
     @Operation(summary = "글 리스트")
     public RsData<GetPostsResponseBody> getPosts(
-            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            @RequestParam(value = "page", defaultValue = "1") int page
     ) {
-        Page<Post> page = postService.findByPublished(true, pageable);
-        GetPostsResponseBody responseBody = new GetPostsResponseBody(page);
+        int pageSize = AppConfig.getBasePageSize();
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+
+        Page<Post> postPage = postService.findByPublished(true, pageable);
+        GetPostsResponseBody responseBody = new GetPostsResponseBody(postPage);
 
         return RsData.of(
                 "200-1",
@@ -69,7 +73,7 @@ public class ApiV1PostController {
 
     @GetMapping("/{id}")
     @Operation(summary = "글 상세 정보")
-    public RsData<PostDto> getDetail(@PathVariable Long id) {
+    public RsData<PostDto> getDetail(@PathVariable("id") Long id) {
         Post post = postService.getPost(id);
 
         if(!postService.canRead(post))
@@ -82,7 +86,7 @@ public class ApiV1PostController {
     @PutMapping("/{id}")
     @Operation(summary = "글 수정")
     public RsData<PostDto> modify(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @RequestBody PostDto postDto) {
 
         if(!postService.haveAuthority(id))
@@ -97,7 +101,7 @@ public class ApiV1PostController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "글 삭제")
-    public RsData<Empty> delete(@PathVariable Long id) {
+    public RsData<Empty> delete(@PathVariable("id") Long id) {
 
         if(!postService.haveAuthority(id))
             throw new GlobalException("403-1", "권한이 없습니다.");
@@ -109,7 +113,7 @@ public class ApiV1PostController {
 
     @PostMapping("/{id}/like")
     @Operation(summary = "글 추천")
-    public RsData<Void> vote(@PathVariable Long id) {
+    public RsData<Void> vote(@PathVariable("id") Long id) {
         Member member = rq.getMember();
 
         if (!postService.canLike(member, postService.getPost(id))) {
@@ -123,7 +127,7 @@ public class ApiV1PostController {
 
     @DeleteMapping("/{id}/like")
     @Operation(summary = "글 추천 취소")
-    public RsData<Void> deleteVote(@PathVariable Long id) {
+    public RsData<Void> deleteVote(@PathVariable("id") Long id) {
         Member member = rq.getMember();
 
         if (!postService.canCancelLike(member, postService.getPost(id))) {
