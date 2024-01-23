@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.course.video.service;
 
+import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.video.dto.VideoDto;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.course.video.repository.VideoRepository;
@@ -80,9 +81,16 @@ public class VideoService {
     }
 
     @Transactional
-    public boolean haveAuthority() {
+    public boolean haveAuthority(Long id) {
         Member member = rq.getMember();
-        if (member.getUsername().equals("admin")) return true;
-        return false;
+
+        Course course = this.getVideo(id).getCourse();
+
+        if (member == null) return false;
+
+        if (rq.isAdmin()) return true;
+
+        return true; // owner 필드 생선 전이라 임시 작성
+        // return course.getOwner().equals(member);
     }
 }
