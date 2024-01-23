@@ -8,14 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
-
-<<<<<<< HEAD
 import java.util.stream.IntStream;
 
-=======
->>>>>>> 5fc37290e9de6e24860b273d9cf541eacbd7ce7d
+
 //@Configuration
 @Slf4j
 @RequiredArgsConstructor
