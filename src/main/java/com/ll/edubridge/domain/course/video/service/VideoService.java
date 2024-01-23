@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,7 +70,7 @@ public class VideoService {
     @Transactional
     public List<Video> findAll(Long courseId) {
         List<Video> videoList = videoRepository.findByCourseId(courseId);
-        Collections.sort(videoList, (v1, v2) -> v1.getId().compareTo(v2.getId()));
+        videoList.sort((v1, v2) -> v1.getId().compareTo(v2.getId()));
         return videoList;
     }
 
