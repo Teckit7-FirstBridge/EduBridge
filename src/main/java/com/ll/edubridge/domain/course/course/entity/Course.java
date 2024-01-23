@@ -23,8 +23,6 @@ public class Course extends BaseEntity {
     @Column(length = 200)
     private String title;
 
-    private int price;
-
     @Column(length = 1000)
     private String notice;
 
