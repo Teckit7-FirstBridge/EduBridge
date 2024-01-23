@@ -74,7 +74,10 @@ public class ApiV1VideoController {
     @Operation(summary = "강의 등록")
     public RsData<VideoDto> createVideo(@PathVariable("courseId") Long courseId,
                                         @RequestBody VideoDto videoDto) {
-        // TODO : member islogin 체크
+
+        if (!videoService.haveAuthority(courseId))
+            throw new GlobalException("403-1", "권한이 없습니다.");
+
         Video video = videoService.create(videoDto);
         VideoDto createdVideoDto = new VideoDto(video);
 
@@ -87,7 +90,7 @@ public class ApiV1VideoController {
                                    @PathVariable("id") Long id,
                                    @RequestBody VideoDto videoDto) {
 
-        if (!videoService.haveAuthority(id))
+        if (!videoService.haveAuthority(courseId))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
         Video modifyVideo = videoService.modify(id, videoDto);
@@ -102,7 +105,7 @@ public class ApiV1VideoController {
     public RsData<Empty> delete(@PathVariable("courseId") Long courseId,
                                 @PathVariable("id") Long id) {
 
-        if (!videoService.haveAuthority(id))
+        if (!videoService.haveAuthority(courseId))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
         videoService.delete(id);
