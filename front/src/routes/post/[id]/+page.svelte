@@ -1,18 +1,25 @@
 <script lang="ts">
+  import rq from '$lib/rq/rq.svelte';
+  import type { components } from '$lib/types/api/v1/schema';
+
+  const { data } = $props<{ data: { post: components['schemas']['PostDto'] } }>();
+  const { post } = data;
 </script>
 
 <div class="max-w-4xl mx-auto my-8">
-  <h1 class="text-3xl font-bold mb-4">title</h1>
+  <h1 class="text-3xl font-bold mb-4">{post.title}</h1>
   <div class="justify-between flex items-center mt-10 mb-20">
-    <p class="text-gray-600 mb-2">작성자: author</p>
+    <p class="text-gray-600 mb-2">작성자: {post.authorName}</p>
     <!-- 글 작성자인경우 -->
-    <div class="mb-5 mx-2">
-      <a href="#" class="btn btn-sm">글 수정</a>
-      <a class="btn btn-sm">글 삭제</a>
-    </div>
+    {#if rq.member == post.authorId}
+      <div class="mb-5 mx-2">
+        <a href="#" class="btn btn-sm">글 수정</a>
+        <a class="btn btn-sm">글 삭제</a>
+      </div>
+    {/if}
     <!-- 글 수정, 삭제 -->
   </div>
-  <p class="w-auto break-all">body</p>
+  <p class="w-auto break-all">{post.body}</p>
   <div class="flex justify-center mt-20">
     <!-- 버튼에 좋아요 기능 추가 -->
     <button class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14">
@@ -38,12 +45,12 @@
     <h1>Comment</h1>
 
     <div class="mt-8 flex gap-2 items-center">
-      <!-- textarea         bind:value={commentbody} 추가 -->
       <textarea
         id="commentbody"
         class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
         rows="4"
         placeholder="댓글을 입력하세요..."
+        bind:value={post.body}
       ></textarea>
       <!-- 댓글 등록 기능 추가 -->
       <button class="mt-2 btn">댓글 등록</button>

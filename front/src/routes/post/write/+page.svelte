@@ -4,10 +4,12 @@
   import '@toast-ui/editor/dist/toastui-editor.css';
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
+  import type { components } from '$lib/types/api/v1/schema';
   let div: HTMLDivElement;
   let editor: Editor;
   let oldBody: string = '';
-  let title = '안녕';
+  let title = '';
+  let dto: components['schemas']['PostDto'][] = $state([]);
 
   $effect(() => {
     editor = new Editor({
@@ -47,17 +49,17 @@
 
   const Post__save = async () => {
     const newBody = editor.getMarkdown().trim();
-    console.log(newBody);
-    console.log(title);
     if (oldBody === newBody) {
       return;
     }
 
-    // const { data, error } = await rq.apiEndPoints().PUT('/api/v1/posts/{id}', {
-    //   // url 설정
-    //   params: { path: { id: parseInt($page.params.id) } },
-    //   body: { body: newBody }
-    // });
+    const { data, error } = await rq.apiEndPoints().POST('/api/v1/posts', {
+      // url 설정
+      body: {
+        body: newBody,
+        title: title
+      }
+    });
 
     oldBody = newBody;
 

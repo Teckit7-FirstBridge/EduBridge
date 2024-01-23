@@ -14,7 +14,7 @@ toastr.options = {
 };
 
 class Rq {
-  // public member: components['schemas']['MemberDto'];
+  public member: components['schemas']['MemberDto'];
   private shouldLogoutPagePaths = ['/member/login', '/member/join'];
   private shouldLoginPagePaths = ['/p/myList'];
 
@@ -90,13 +90,13 @@ class Rq {
     goto(url, { replaceState: true });
   }
 
-  // public setLogined(member: components['schemas']['MemberDto']) {
-  //   this.member.id = member.id;
-  //   this.member.createDate = member.createDate;
-  //   this.member.modifyDate = member.modifyDate;
-  //   this.member.username = member.username;
-  //   this.member.authorities = member.authorities;
-  // }
+  public setLogined(member: components['schemas']['MemberDto']) {
+    this.member.id = member.id;
+    this.member.createDate = member.createDate;
+    this.member.modifyDate = member.modifyDate;
+    this.member.username = member.username;
+    this.member.authorities = member.authorities;
+  }
 
   public setLogout() {
     this.member.id = 0;
@@ -160,13 +160,13 @@ class Rq {
     this.goTo('/');
   }
 
-  // public async goToTempPostEditPage() {
-  //   const { data } = await this.apiEndPoints().POST('/api/v1/posts/temp');
+  public async goToTempPostEditPage() {
+    const { data } = await this.apiEndPoints().POST('/api/v1/posts');
 
-  //   if (data) {
-  //     this.goTo(`/p/${data.data.item.id}/edit`);
-  //   }
-  // }
+    if (data) {
+      this.goTo(`/p/${data.data.item.id}/edit`);
+    }
+  }
 
   public goToLoginPage() {
     this.goTo('/member/login');

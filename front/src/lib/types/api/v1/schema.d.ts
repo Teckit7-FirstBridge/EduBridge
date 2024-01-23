@@ -5,8 +5,37 @@
 
 
 export interface paths {
+  "/api/v1/posts/{id}": {
+    /** 글 상세 정보 */
+    get: operations["getDetail"];
+    /** 글 수정 */
+    put: operations["modify"];
+    /** 글 삭제 */
+    delete: operations["delete"];
+  };
   "/api/v1/posts": {
+    /** 글 리스트 */
     get: operations["getPosts"];
+    /** 글 등록 */
+    post: operations["createPost"];
+  };
+  "/api/v1/posts/{id}/like": {
+    /** 글 추천 */
+    post: operations["vote"];
+    /** 글 추천 취소 */
+    delete: operations["deleteVote"];
+  };
+  "/api/v1/posts/qna": {
+    /** 1대1 문의 목록 */
+    get: operations["getMyQna"];
+    /** 1대1 문의 등록 */
+    post: operations["createQna"];
+  };
+  "/api/v1/posts/qna/{id}": {
+    /** 1대1 문의 상세 정보 */
+    get: operations["getQnaDetail"];
+    /** 1대1 문의 삭제 */
+    delete: operations["deleteQna"];
   };
 }
 
@@ -14,21 +43,60 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
-    GetPostsResponseBody: {
-      items: components["schemas"]["PostDto"][];
-    };
     PostDto: {
       /** Format: int64 */
       id: number;
       /** Format: date-time */
       createDate: string;
-      /** Format: date-time */
-      modifyDate: string;
       /** Format: int64 */
       authorId: number;
       authorName: string;
       title: string;
       body: string;
+      /** Format: int32 */
+      voteCount?: number;
+      likedByCurrentUser?: boolean;
+    };
+    RsDataPostDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["PostDto"];
+      fail: boolean;
+      success: boolean;
+    };
+    RsDataVoid: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: Record<string, never>;
+      fail: boolean;
+      success: boolean;
+    };
+    QnaDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      /** Format: int64 */
+      authorId: number;
+      authorName: string;
+      title: string;
+      body: string;
+    };
+    RsDataQnaDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["QnaDto"];
+      fail: boolean;
+      success: boolean;
+    };
+    GetPostsResponseBody: {
+      items: components["schemas"]["PostDto"][];
     };
     RsDataGetPostsResponseBody: {
       resultCode: string;
@@ -36,8 +104,27 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostsResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
+    };
+    RsDataListQnaDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["QnaDto"][];
+      fail: boolean;
+      success: boolean;
+    };
+    Empty: Record<string, never>;
+    RsDataEmpty: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["Empty"];
+      fail: boolean;
+      success: boolean;
     };
   };
   responses: never;
@@ -53,12 +140,178 @@ export type external = Record<string, never>;
 
 export interface operations {
 
-  getPosts: {
+  /** 글 상세 정보 */
+  getDetail: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "*/*": components["schemas"]["RsDataGetPostsResponseBody"];
+          "application/json": components["schemas"]["RsDataPostDto"];
+        };
+      };
+    };
+  };
+  /** 글 수정 */
+  modify: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PostDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataPostDto"];
+        };
+      };
+    };
+  };
+  /** 글 삭제 */
+  delete: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 글 리스트 */
+  getPosts: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetPostsResponseBody"];
+        };
+      };
+    };
+  };
+  /** 글 등록 */
+  createPost: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PostDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataPostDto"];
+        };
+      };
+    };
+  };
+  /** 글 추천 */
+  vote: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataVoid"];
+        };
+      };
+    };
+  };
+  /** 글 추천 취소 */
+  deleteVote: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataVoid"];
+        };
+      };
+    };
+  };
+  /** 1대1 문의 목록 */
+  getMyQna: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListQnaDto"];
+        };
+      };
+    };
+  };
+  /** 1대1 문의 등록 */
+  createQna: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["QnaDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataQnaDto"];
+        };
+      };
+    };
+  };
+  /** 1대1 문의 상세 정보 */
+  getQnaDetail: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataQnaDto"];
+        };
+      };
+    };
+  };
+  /** 1대1 문의 삭제 */
+  deleteQna: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };
