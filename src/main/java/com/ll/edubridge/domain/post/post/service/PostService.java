@@ -54,7 +54,7 @@ public class PostService {
 
     @Transactional
     public Post modify(Long id, PostDto postDto) {
-        Post post=this.getPost(id);
+        Post post = this.getPost(id);
 
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getTitle());
@@ -148,14 +148,14 @@ public class PostService {
         return post.getWriter().equals(member);
     }
 
-    public boolean canRead(Post post){
-        Member member=rq.getMember();
+    public boolean canRead(Post post) {
+        Member member = rq.getMember();
 
-        if(member==null&& post.isPublished()) return true;
+        if (member == null && post.isPublished()) return true;
 
-        if(rq.isAdmin()) return true;
+        if (rq.isAdmin()) return true;
 
-        if(!post.isPublished()) return false;
+        if (!post.isPublished()) return false;
 
         return member.equals(post.getWriter());
     }

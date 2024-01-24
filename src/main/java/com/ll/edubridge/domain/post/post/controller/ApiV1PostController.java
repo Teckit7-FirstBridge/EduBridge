@@ -56,7 +56,7 @@ public class ApiV1PostController {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 
         Page<Post> postPage = postService.findByPublished(true, pageable);
-        GetPostsResponseBody responseBody = new GetPostsResponseBody(postPage,rq.getMember());
+        GetPostsResponseBody responseBody = new GetPostsResponseBody(postPage, rq.getMember());
 
         return RsData.of(
                 "200-1",
@@ -80,7 +80,7 @@ public class ApiV1PostController {
     public RsData<PostDto> getDetail(@PathVariable("id") Long id) {
         Post post = postService.getPost(id);
 
-        if(!postService.canRead(post))
+        if (!postService.canRead(post))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
         PostDto postDto = new PostDto(post, rq.getMember());
@@ -93,7 +93,7 @@ public class ApiV1PostController {
             @PathVariable("id") Long id,
             @RequestBody PostDto postDto) {
 
-        if(!postService.haveAuthority(id))
+        if (!postService.haveAuthority(id))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
         Post modifyPost = postService.modify(id, postDto);
@@ -107,7 +107,7 @@ public class ApiV1PostController {
     @Operation(summary = "글 삭제")
     public RsData<Empty> delete(@PathVariable("id") Long id) {
 
-        if(!postService.haveAuthority(id))
+        if (!postService.haveAuthority(id))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
         postService.delete(id);
@@ -172,7 +172,7 @@ public class ApiV1PostController {
     public RsData<QnaDto> getQnaDetail(@PathVariable("id") Long id) {
         Post post = postService.getPost(id);
 
-        if(!postService.canRead(post))
+        if (!postService.canRead(post))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
         QnaDto qnaDto = new QnaDto(post);
@@ -183,7 +183,7 @@ public class ApiV1PostController {
     @Operation(summary = "1대1 문의 삭제")
     public RsData<Empty> deleteQna(@PathVariable("id") Long id) {
 
-        if(!postService.haveAuthority(id))
+        if (!postService.haveAuthority(id))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
         postService.delete(id);
