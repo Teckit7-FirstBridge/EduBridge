@@ -1,10 +1,8 @@
 package com.ll.edubridge.domain.course.video.dto;
 
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
@@ -23,8 +21,8 @@ public class VideoDto {
     @Size(max = 300)
     private String overView;
 
-    @NotEmpty
-    private Course course;
+    @NonNull
+    private Long courseId;
 
     private List<SummaryNote> summaryNotes;
 
@@ -32,7 +30,7 @@ public class VideoDto {
         this.id = video.getId();
         this.url = video.getUrl();
         this.overView = video.getOverView();
-        this.course = video.getCourse();
+        this.courseId = video.getCourse().getId();
         this.summaryNotes = video.getSummaryNotes();
     }
 }
