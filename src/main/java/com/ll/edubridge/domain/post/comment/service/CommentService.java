@@ -21,28 +21,28 @@ public class CommentService {
     private final Rq rq;
 
     // 권한 검사 기능
-    public boolean haveAuthority(Long id){
+    public boolean haveAuthority(Long id) {
 
-        Member member=rq.getMember();
+        Member member = rq.getMember();
 
         Comment comment = this.getComment(id);
 
-        if(member==null) return false;
+        if (member == null) return false;
 
         return comment.getWriter().equals(member);
     }
 
     // 댓글 추천 권한 검사
-    public boolean canLike(Member member, Comment comment){
-        if(member==null) {
+    public boolean canLike(Member member, Comment comment) {
+        if (member == null) {
             return false;
         }
         return !comment.getVoter().contains(member);
     }
 
     // 댓글 취소 권한 검사
-    public boolean canCancelLike(Member member, Comment comment){
-        if(member==null){
+    public boolean canCancelLike(Member member, Comment comment) {
+        if (member == null) {
             return false;
         }
         return comment.getVoter().contains(member);
@@ -76,6 +76,7 @@ public class CommentService {
 
         commentRepository.delete(comment);
     }
+
     // 댓글 추천 기능
     @Transactional
     public void vote(Long id, Member member) {
@@ -95,7 +96,7 @@ public class CommentService {
     // 댓글 조회 기능
     public Comment getComment(Long id) {
         Optional<Comment> comment = this.findById(id);
-        if(comment.isPresent()) {
+        if (comment.isPresent()) {
             return comment.get();
         } else {
             throw new GlobalException("404-1", "comment를 찾을 수 없습니다");

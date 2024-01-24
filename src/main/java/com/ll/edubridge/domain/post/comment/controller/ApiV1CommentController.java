@@ -36,7 +36,7 @@ public class ApiV1CommentController {
 
     @GetMapping("/{postId}")
     @Operation(summary = "댓글 목록")
-    public RsData<List<CommentDto>> getComments(@PathVariable("postId")Long postId) {
+    public RsData<List<CommentDto>> getComments(@PathVariable("postId") Long postId) {
         List<Comment> comments = commentService.findByPostId(postId);
 
         List<CommentDto> commentDtoList = comments.stream()
@@ -49,7 +49,7 @@ public class ApiV1CommentController {
     @PutMapping("/{postId}/{commentId}")
     @Operation(summary = "댓글 수정")
     public RsData<CommentDto> modifyComment(@PathVariable("commentId") Long commentId, @RequestBody CreateCommentDto createCommentDto) {
-        if(!commentService.haveAuthority(commentId))
+        if (!commentService.haveAuthority(commentId))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
         Comment modifyComment = commentService.modify(commentId, createCommentDto);
@@ -63,7 +63,7 @@ public class ApiV1CommentController {
     @Operation(summary = "댓글 삭제")
     public RsData<Empty> deleteComment(@PathVariable("commentId") Long commentId) {
 
-        if(!commentService.haveAuthority(commentId))
+        if (!commentService.haveAuthority(commentId))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
         commentService.delete(commentId);
@@ -76,7 +76,7 @@ public class ApiV1CommentController {
     public RsData<Void> voteComment(@PathVariable("commentId") Long commentId) {
         Member member = rq.getMember();
 
-        if(!commentService.canLike(member, commentService.getComment(commentId))) {
+        if (!commentService.canLike(member, commentService.getComment(commentId))) {
             throw new GlobalException("400-1", "이미 추천하셨습니다.");
         }
 
@@ -90,7 +90,7 @@ public class ApiV1CommentController {
     public RsData<Void> deleteVoteComment(@PathVariable("commentId") Long commentId) {
         Member member = rq.getMember();
 
-        if(!commentService.canCancelLike(member, commentService.getComment(commentId))) {
+        if (!commentService.canCancelLike(member, commentService.getComment(commentId))) {
             throw new GlobalException("400-2", "추천을 하지 않았습니다.");
         }
 

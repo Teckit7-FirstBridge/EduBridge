@@ -30,5 +30,4 @@ public class BaseEntity {
     private LocalDateTime createDate;
 
 
-
 }
