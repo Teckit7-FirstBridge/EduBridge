@@ -72,8 +72,7 @@ public class CommentService {
     // 댓글 삭제 기능
     @Transactional
     public void delete(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new GlobalException("404-1", "댓글을 찾을 수 없습니다."));
+        Comment comment = this.getComment(commentId);
 
         commentRepository.delete(comment);
     }
