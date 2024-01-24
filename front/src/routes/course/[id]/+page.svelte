@@ -1,7 +1,20 @@
-<!--
-// v0 by Vercel.
-// https://v0.dev/t/kFtBXsY7aiO
--->
+<script lang="ts">
+  import rq from '$lib/rq/rq.svelte';
+  import type { components } from '$lib/types/api/v1/schema';
+  import { page } from '$app/stores';
+  async function deleteCourse() {
+    const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}`, {
+      params: { path: { id: parseInt($page.params.id) } }
+    });
+    if (data) {
+      rq.msgInfo('강좌가 삭제되었습니다');
+      rq.goTo('/course');
+    } else if (error) {
+      rq.msgError(error.msg);
+    }
+  }
+</script>
+
 <div class="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
   <div class="hidden w-64 border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
     <div class="flex h-full max-h-screen flex-col gap-2">
@@ -143,8 +156,14 @@
       >
     </header>
     <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-      <div class="flex items-center">
+      <div class="flex items-center justify-between">
         <h1 class="font-semibold text-lg md:text-2xl">강좌 이름</h1>
+        <!-- {#if rq.member == .authorId} -->
+        <div class="mb-5 mx-2 items-center">
+          <a href="#" class="btn btn-sm">글 수정</a>
+          <button on:click={deleteCourse} class="btn btn-sm">글 삭제</button>
+        </div>
+        <!-- {/if} -->
       </div>
 
       <div class="mb-4 bg-white p-4 rounded-lg shadow-md">
