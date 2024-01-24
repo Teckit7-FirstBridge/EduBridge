@@ -160,7 +160,7 @@
         <h1 class="font-semibold text-lg md:text-2xl">강좌 이름</h1>
         <!-- {#if rq.member == .authorId} -->
         <div class="mb-5 mx-2 items-center">
-          <a href="#" class="btn btn-sm">글 수정</a>
+          <a href="/course/{$page.params.id}/edit" class="btn btn-sm">글 수정</a>
           <button on:click={deleteCourse} class="btn btn-sm">글 삭제</button>
         </div>
         <!-- {/if} -->
