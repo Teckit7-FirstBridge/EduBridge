@@ -80,9 +80,9 @@ public class ApiV1VideoController {
             throw new GlobalException("403-1", "권한이 없습니다.");
 
         Video video = videoService.create(createVideoDto);
-        VideoDto createdVideoDto = new VideoDto(video);
+        CreateVideoDto createdVideoDto = new CreateVideoDto(video);
 
-        return RsData.of("200-0", "등록 성공", createVideoDto);
+        return RsData.of("200-0", "등록 성공", createdVideoDto);
     }
 
     @PutMapping("/admin/{courseId}/videos/{id}")
