@@ -2,6 +2,10 @@
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
   import { page } from '$app/stores';
+
+  const { data } = $props<{ data: { course: components['schemas']['CourseDto'] } }>();
+  const { course } = data;
+
   async function deleteCourse() {
     const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}`, {
       params: { path: { id: parseInt($page.params.id) } }
@@ -157,7 +161,7 @@
     </header>
     <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div class="flex items-center justify-between">
-        <h1 class="font-semibold text-lg md:text-2xl">강좌 이름</h1>
+        <h1 class="font-semibold text-lg md:text-2xl">{course.title}</h1>
         <!-- {#if rq.member == .authorId} -->
         <div class="mb-5 mx-2 items-center">
           <a href="/course/{$page.params.id}/edit" class="btn btn-sm">글 수정</a>
@@ -171,6 +175,7 @@
         <p class="text-sm md:text-md mt-2">
           <!-- 강좌에 대한 간단한 설명 -->
           이 강좌는 ...에 대해 다루며, 학습자에게 ... 기회를 제공합니다.
+          {course.notice}
         </p>
       </div>
       <div class="mb-4 bg-white p-4 rounded-lg shadow-md">
@@ -178,6 +183,7 @@
         <p class="text-sm md:text-md mt-2">
           <!-- 강좌에 대한 간단한 설명 -->
           이 강좌는 ...에 대해 다루며, 학습자에게 ... 기회를 제공합니다.
+          {course.overView}
         </p>
       </div>
 
@@ -219,7 +225,7 @@
                     alt="Video thumbnail"
                     class="aspect-square rounded-md object-cover mt-2"
                     height="64"
-                    src="/placeholder.svg"
+                    src={course.imgUrl}
                     width="64"
                   />
                 </td>
