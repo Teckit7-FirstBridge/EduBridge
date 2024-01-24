@@ -11,11 +11,4 @@ public interface VideoRepository extends JpaRepository<Video, Integer> {
     Video findById(Long id);
 
     List<Video> findByCourseId(Long courseId);
-
-//    @Query("select "
-//            + "v.id, v.overView "
-//            + "from Video v "
-//            + "where (v.course.id = :courseId)")
-//    List<Video> findByCourseId(@Param("courseId") Long courseId);
-
 }
