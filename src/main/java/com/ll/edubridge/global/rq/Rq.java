@@ -1,4 +1,4 @@
-package com.ll.edubridge.global.rq.Rq;
+package com.ll.edubridge.global.rq;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
@@ -158,7 +158,7 @@ public class Rq {
         SecurityContextHolder.getContext().setAuthentication(securityUser.genAuthentication());
     }
 
-    public String getHeader(String name) {
+    public String getHeader(String name, Object o) {
         return req.getHeader(name);
     }
 
@@ -256,4 +256,6 @@ public class Rq {
     public void setHeader(String name, String value) {
         resp.setHeader(name, value);
     }
+
+
 }
