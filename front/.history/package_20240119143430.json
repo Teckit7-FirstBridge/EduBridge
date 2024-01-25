@@ -21,11 +21,9 @@
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "@types/eslint": "8.56.0",
-    "@types/toastr": "^2.1.43",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "autoprefixer": "^10.4.16",
-    "daisyui": "^4.6.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-svelte": "^2.36.0-next.4",
@@ -43,9 +41,6 @@
   },
   "type": "module",
   "dependencies": {
-    "@toast-ui/editor": "^3.2.2",
-    "axios": "^1.6.5",
-    "openapi-fetch": "^0.8.2",
-    "toastr": "^2.1.4"
+    "openapi-fetch": "^0.8.2"
   }
 }
