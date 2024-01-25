@@ -14,7 +14,6 @@ public class CourseDto {
     private String imgUrl;
     private String overView;
     private String ownerName;
-    private LocalDateTime createDate;
 
     public CourseDto(Course course){
         this.id = course.getId();
@@ -23,6 +22,9 @@ public class CourseDto {
         this.imgUrl = course.getImgUrl();
         this.overView = course.getOverView();
         this.ownerName = course.getOwner().getNickname();
-        this.createDate = course.getCreateDate();
+    }
+
+    public CourseDto(){
+
     }
 }

@@ -16,4 +16,8 @@ public class CreateCourseDto {
         this.imgUrl = course.getImgUrl();
         this.overView = course.getOverView();
     }
+
+    public CreateCourseDto(){
+
+    }
 }
