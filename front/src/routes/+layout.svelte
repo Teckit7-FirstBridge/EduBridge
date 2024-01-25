@@ -35,14 +35,11 @@
         class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
       >
         <li>
-          <a href="/p/list"><i class="fa-solid fa-list"></i> 글</a>
+          <a href="/board"><i class="fa-solid fa-list"></i> 글</a>
         </li>
         {#if rq.isLogout()}
           <li>
             <a href="/member/login"><i class="fa-solid fa-right-to-bracket"></i> 로그인</a>
-          </li>
-          <li>
-            <a href="/member/join"><i class="fa-solid fa-right-to-bracket"></i> 회원가입</a>
           </li>
         {/if}
         {#if rq.isLogin()}
@@ -64,7 +61,7 @@
     </div>
   </div>
   <div class="flex-1">
-    <a href="/" class="btn btn-ghost">게 시 판</a>
+    <a href="/board" class="btn btn-ghost">게 시 판</a>
   </div>
   <div class="flex-1">
     <a href="/">EduBridge</a>
