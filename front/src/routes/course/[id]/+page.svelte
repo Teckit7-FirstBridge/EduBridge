@@ -169,8 +169,9 @@
                 강의 목록</summary
               >
               <ul>
-                <li><a>강의 1</a></li>
-                <li><a>강의 2</a></li>
+                {#each videos as video, index}
+                  <li><a href={video.url}>강의 {index + 1}</a></li>
+                {/each}
               </ul>
             </details>
           </li>
@@ -200,10 +201,9 @@
       <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div class="flex items-center justify-between">
           <h1 class="font-semibold text-lg md:text-2xl">
-            title
-            <!-- {course!.title} -->
+            {course!.title}
           </h1>
-          <!-- {#if rq.member == .authorId} -->
+          <!-- {#if rq.member.id == course.} -->
           <div class="mb-5 mx-2 items-center">
             <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
             <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
@@ -215,16 +215,14 @@
           <h2 class="text-md md:text-lg font-semibold">공지사항</h2>
           <p class="text-sm md:text-md mt-2">
             <!-- 강좌에 대한 간단한 설명 -->
-            이 강좌는 ...에 대해 다루며, 학습자에게 ... 기회를 제공합니다.
-            <!-- {course!.notice} -->
+            {course!.notice}
           </p>
         </div>
         <div class="mb-4 bg-white p-4 rounded-lg shadow-md">
           <h2 class="text-md md:text-lg font-semibold">강좌 설명</h2>
           <p class="text-sm md:text-md mt-2">
             <!-- 강좌에 대한 간단한 설명 -->
-            이 강좌는 ...에 대해 다루며, 학습자에게 ... 기회를 제공합니다.
-            <!-- {course!.overView} -->
+            {course!.overView}
           </p>
         </div>
 
@@ -289,7 +287,9 @@
                       class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
                     >
                       <div class="mb-5 mx-2 items-center">
-                        <a href="/course/{$page.params.id}/videoedit/1" class="btn btn-sm">수정</a>
+                        <a href="/course/{video.courseId}/videoedit/{video.id}" class="btn btn-sm"
+                          >수정</a
+                        >
                         <button on:click={() => deleteVideo(video.id)} class="btn btn-sm"
                           >삭제</button
                         >

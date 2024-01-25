@@ -31,4 +31,8 @@ public class VideoDto {
         this.overView = video.getOverView();
         this.courseId = video.getCourse().getId();
     }
+
+    public VideoDto(){
+
+    }
 }
