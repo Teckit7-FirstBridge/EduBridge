@@ -158,7 +158,7 @@ public class Rq {
         SecurityContextHolder.getContext().setAuthentication(securityUser.genAuthentication());
     }
 
-    public String getHeader(String name) {
+    public String getHeader(String name, Object o) {
         return req.getHeader(name);
     }
 

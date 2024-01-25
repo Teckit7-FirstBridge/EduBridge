@@ -23,8 +23,6 @@ public class Course extends BaseEntity {
     @Column(length = 200)
     private String title;
 
-    private int price;
-
     @Column(length = 1000)
     private String notice;
 
@@ -33,6 +31,9 @@ public class Course extends BaseEntity {
 
     @Column(length = 500)
     private String overView;
+
+    @ManyToOne(optional = false)
+    private Member owner;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     private List<Video> videoList;

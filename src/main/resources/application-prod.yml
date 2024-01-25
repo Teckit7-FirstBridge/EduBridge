@@ -1,6 +1,6 @@
 server:
   port: 8080
-  shutdown: graceful
+  shutdown: graceful # 자기가 이전에 받은 요청을 깔끔하게 처리한 상태에서 끝나게 해줌
 spring:
   servlet:
     multipart:
@@ -21,7 +21,7 @@ spring:
         use_sql_comments: false
 logging:
   level:
-    com.ll.rsv: INFO
+    com.ll.EduBridge: INFO
     org.hibernate.SQL: INFO
     org.hibernate.orm.jdbc.bind: INFO
     org.hibernate.orm.jdbc.extract: INFO
