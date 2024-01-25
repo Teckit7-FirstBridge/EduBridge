@@ -58,7 +58,7 @@ public class ApiV1VideoController {
             throw new GlobalException("404-1", "해당 강좌를 찾을 수 없습니다.");
         }
 
-        Video video = videoService.findById(courseId, id);
+        Video video = videoService.findByIdAndCourseId(courseId, id);
         if (video == null) {
             throw new GlobalException("404-1", "해당 강의를 찾을 수 없습니다.");
         }
@@ -100,7 +100,7 @@ public class ApiV1VideoController {
             throw new GlobalException("404-1", "해당 강좌를 찾을 수 없습니다.");
         }
 
-        Video video = videoService.findById(courseId, id);
+        Video video = videoService.findByIdAndCourseId(courseId, id);
         if (video == null) {
             throw new GlobalException("404-1", "해당 강의를 찾을 수 없습니다.");
         }
@@ -125,7 +125,7 @@ public class ApiV1VideoController {
             throw new GlobalException("404-1", "해당 강좌를 찾을 수 없습니다.");
         }
 
-        Video video = videoService.findById(courseId, id);
+        Video video = videoService.findByIdAndCourseId(courseId, id);
         if (video == null) {
             throw new GlobalException("404-1", "해당 강의를 찾을 수 없습니다.");
         }

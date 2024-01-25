@@ -67,8 +67,8 @@ public class VideoService {
     }
 
     @Transactional
-    public Video findById(Long courseId, Long id) {
-        return videoRepository.findById(id);
+    public Video findByIdAndCourseId(Long courseId, Long id) {
+        return videoRepository.findByIdAndCourseId(courseId, id);
     }
 
     @Transactional
