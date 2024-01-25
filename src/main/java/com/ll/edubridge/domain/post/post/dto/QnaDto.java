@@ -22,7 +22,6 @@ public class QnaDto {
     private String body;
 
 
-
     public QnaDto(Post post) {
         this.id = post.getId();
         this.createDate = post.getCreateDate();

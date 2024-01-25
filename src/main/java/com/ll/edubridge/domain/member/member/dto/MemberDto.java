@@ -18,8 +18,6 @@ public class MemberDto { // 엔티티(JPA(보안이 민감한 정보가 들어�
     @NonNull
     private LocalDateTime createDate;
     @NonNull
-    private LocalDateTime modifyDate;
-    @NonNull
     private String name;
     @NonNull
     private String profileImgUrl;
@@ -29,8 +27,7 @@ public class MemberDto { // 엔티티(JPA(보안이 민감한 정보가 들어�
     public MemberDto(Member member) {
         this.id = member.getId();
         this.createDate = member.getCreateDate();
-        this.modifyDate = member.getModifyDate();
-        this.name = member.getName();
+        this.name = member.getNickname();
         this.profileImgUrl = member.getProfileImgUrlOrDefault();
         this.authorities = member.getAuthoritiesAsStringList();
     }

@@ -2,12 +2,14 @@ package com.ll.edubridge.domain.member.member.entity;
 
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import com.ll.edubridge.standard.util.Ut;
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -43,7 +45,11 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<CourseEnroll> courseEnrollList;
 
-    /*
+    public String getProfileImgUrlOrDefault() {
+        return Ut.str.hasLength(profileImgUrl) ? profileImgUrl : "https://placehold.co/640x640?text=O_O";
+    }
+
+
     @Transient
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getAuthoritiesAsStringList()
@@ -68,5 +74,5 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
     public String getName() {
         return username;
     }
-     */
+
 }
