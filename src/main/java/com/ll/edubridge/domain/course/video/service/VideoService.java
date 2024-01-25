@@ -30,7 +30,6 @@ public class VideoService {
                 .url(createVideoDto.getUrl())
                 .overView(createVideoDto.getOverView())
                 .course(createVideoDto.getCourse())
-                .summaryNotes(createVideoDto.getSummaryNotes())
                 .build();
         return videoRepository.save(video);
     }
