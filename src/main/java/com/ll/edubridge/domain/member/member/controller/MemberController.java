@@ -16,9 +16,9 @@ public class MemberController {
 
     @GetMapping("/socialLogin/{providerTypeCode}")
     @Operation(summary = "소셜로그인")
-    public String socialLogin(String redirectUrl, @PathVariable String providerTypeCode) {
+    public String socialLogin(String redirectUrl, @PathVariable("providerTypeCode") String providerTypeCode) {
         if (rq.isFrontUrl(redirectUrl)) { // 돌아가야되는 주소가 Front 그래서 쿠키를 남김
-            rq.setCookie("redirectUrlAferSocialLogin",redirectUrl, 60 * 10);
+            rq.setCookie("redirectUrlAfterSocialLogin",redirectUrl, 60 * 10);
         }               // 소셜로그인 성공나서 돌아가야할 위치가 여기고 유효기간은 10분
 
         // /oauth2/authorization/kakao
