@@ -1,12 +1,28 @@
 <script lang="ts">
   import rq from '$lib/rq/rq.svelte';
   import { page } from '$app/stores';
-  let url = $state('');
-  let overview = $state('');
+  import type { components } from '$lib/types/api/v1/schema';
+  let url: string | undefined = $state('');
+  let overview: string | undefined = $state('');
+  let video: components['schemas']['VideoDto'] | undefined = $state();
+  async function load() {
+    if (import.meta.env.SSR) throw new Error('CSR ONLY');
+    const { data, error } = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}/{id}`, {
+      params: {
+        path: {
+          courseId: parseInt($page.params.id),
+          id: parseInt($page.params.videoid)
+        }
+      }
+    });
+    video = data?.data.videos.at(0);
+    url = video?.url;
+    overview = video?.overView;
+  }
 
   const submitForm = async () => {
-    const { data, error } = await rq.apiEndPoints().POST(`/api/v1/admin/{courseId}/videos`, {
-      params: { path: { courseId: parseInt($page.params.id) } },
+    const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/videos/{id}`, {
+      params: { path: { courseId: parseInt($page.params.id), id: parseInt($page.params.videoid) } },
       body: {
         url,
         overView: overview
@@ -14,6 +30,12 @@
     });
   };
 </script>
+
+<!-- {#await load()}
+  <div>loading...</div>
+{:then {video,url,overview}} 
+  
+{/await} -->
 
 <div
   class="min-h-screen w-full flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8"

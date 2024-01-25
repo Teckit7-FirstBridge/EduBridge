@@ -287,7 +287,7 @@
                 </td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
                   <div class="mb-5 mx-2 items-center">
-                    <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
+                    <a href="/course/{$page.params.id}/videoedit/1" class="btn btn-sm">수정</a>
                     <button on:click={() => deleteVideo(1)} class="btn btn-sm">삭제</button>
                   </div>
                 </td>
