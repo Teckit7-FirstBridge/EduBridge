@@ -212,9 +212,9 @@ export interface components {
       profileImgUrl?: string;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
       authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
     };
     SummaryNote: {
       /** Format: int64 */

@@ -22,8 +22,9 @@ public class AuthTokenService {
                 .claims()
                 .add("id", member.getId())
                 .add("username", member.getUsername())
-                // .add("authorities", member.getAuthoritiesAsStringList())
+                .add("authorities", member.getAuthoritiesAsStringList())
                 .build();
+
 
         Date issuedAt = new Date();
         Date expiration = new Date(issuedAt.getTime() + 1000 * expireSeconds);
