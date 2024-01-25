@@ -30,7 +30,6 @@ public class VideoService {
                 .url(createVideoDto.getUrl())
                 .overView(createVideoDto.getOverView())
                 .course(createVideoDto.getCourse())
-                .summaryNotes(createVideoDto.getSummaryNotes())
                 .build();
         return videoRepository.save(video);
     }
@@ -67,8 +66,8 @@ public class VideoService {
     }
 
     @Transactional
-    public Video findById(Long courseId, Long id) {
-        return videoRepository.findById(id);
+    public Video findByIdAndCourseId(Long courseId, Long id) {
+        return videoRepository.findByIdAndCourseId(courseId, id);
     }
 
     @Transactional
