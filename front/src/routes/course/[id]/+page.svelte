@@ -6,27 +6,28 @@
 
   let course: components['schemas']['CourseDto'] | undefined = $state();
   let videos: components['schemas']['VideoDto'][] | undefined = $state();
+  load();
+  async function load() {
+    // if (import.meta.env.SSR) throw new Error('CSR ONLY');
+    const responseVideos = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}/videos`, {
+      params: {
+        path: {
+          courseId: parseInt($page.params.id)
+        }
+      }
+    });
+    videos = responseVideos.data?.data;
+    console.log(videos);
 
-  // async function load() {
-  //   if (import.meta.env.SSR) throw new Error('CSR ONLY');
-  //   const responseVideos = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}/videos`, {
-  //     params: {
-  //       path: {
-  //         courseId: parseInt($page.params.id)
-  //       }
-  //     }
-  //   });
-  //   videos = responseVideos.data?.data.videos;
-
-  //   const responseCourse = await rq.apiEndPoints().GET(`/api/v1/courses/{course-id}`, {
-  //     params: {
-  //       path: {
-  //         'course-id': parseInt($page.params.id)
-  //       }
-  //     }
-  //   });
-  //   course = responseCourse.data?.data;
-  // }
+    const responseCourse = await rq.apiEndPoints().GET(`/api/v1/courses/{course-id}`, {
+      params: {
+        path: {
+          'course-id': parseInt($page.params.id)
+        }
+      }
+    });
+    course = responseCourse.data?.data;
+  }
 
   async function deleteCourse() {
     const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}`, {
@@ -229,7 +230,9 @@
       </div>
 
       <div class="flex justify-end">
-        <a class=" mx-10 btn w-24 text-center" href="/course/1/videowrite">강의 등록</a>
+        <a class=" mx-10 btn w-24 text-center" href="/course/{$page.params.id}/videowrite"
+          >강의 등록</a
+        >
       </div>
 
       <div class="border shadow-sm rounded-lg">

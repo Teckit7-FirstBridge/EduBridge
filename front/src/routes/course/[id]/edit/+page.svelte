@@ -9,7 +9,6 @@
 
   let divNoti: HTMLDivElement | undefined = $state();
   let divOverview: HTMLDivElement | undefined = $state();
-  let bodyeditor: Editor;
   let notieditor: Editor;
   let overvieweditor: Editor;
   let title: string | undefined = $state();
@@ -20,14 +19,14 @@
     const { data } = await rq.apiEndPoints().GET('/api/v1/courses/{course-id}', {
       params: { path: { 'course-id': parseInt($page.params.id) } }
     });
-    console.log(initialData);
+
     initialData = data!.data;
     title = initialData.title;
     imgUrl = initialData.imgUrl;
     return data!;
   }
+  load();
   $effect(() => {
-    load();
     notieditor = new Editor({
       el: divNoti,
       height: 'calc(30dvh - 60px)',
@@ -43,7 +42,6 @@
       initialValue: initialData?.overView
     });
     return () => {
-      bodyeditor.destroy();
       notieditor.destroy();
       overvieweditor.destroy();
     };
@@ -53,9 +51,12 @@
     const newNoti = notieditor.getMarkdown().trim();
     const newOverview = overvieweditor.getMarkdown().trim();
 
-    const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/courses', {
+    const { data, error } = await rq.apiEndPointsWithFetch(fetch).PUT('/api/v1/courses/{id}', {
+      params: { path: { id: parseInt($page.params.id) } },
       // url 설정
       body: {
+        id: parseInt($page.params.id),
+        ownerName: rq.member.name,
         title: title,
         notice: newNoti,
         overView: newOverview,
@@ -65,6 +66,7 @@
 
     if (data) {
       rq.msgInfo(data.msg); //msg
+      rq.goTo('/course/{}');
     }
   };
 </script>

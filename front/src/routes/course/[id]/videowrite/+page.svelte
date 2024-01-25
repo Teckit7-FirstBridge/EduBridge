@@ -9,9 +9,13 @@
       params: { path: { courseId: parseInt($page.params.id) } },
       body: {
         url,
-        overView: overview
+        overView: overview,
+        courseid: parseInt($page.params.id)
       }
     });
+    if (data) {
+      rq.goTo(`/course/${$page.params.id}`);
+    }
   };
 </script>
 
