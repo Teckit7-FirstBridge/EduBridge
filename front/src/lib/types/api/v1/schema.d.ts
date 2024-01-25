@@ -19,6 +19,12 @@ export interface paths {
     /** 강좌 삭제 */
     delete: operations["delete_1"];
   };
+  "/api/v1/comments/{postId}/{commentId}": {
+    /** 댓글 수정 */
+    put: operations["modifyComment"];
+    /** 댓글 삭제 */
+    delete: operations["deleteComment"];
+  };
   "/api/v1/admin/{courseId}/videos/{id}": {
     /** 강의 수정 */
     put: operations["modify_2"];
@@ -43,9 +49,24 @@ export interface paths {
     /** 1대1 문의 등록 */
     post: operations["createQna"];
   };
+  "/api/v1/members/logout": {
+    post: operations["logout"];
+  };
   "/api/v1/courses": {
+    /** 전체 강좌 목록 조회 */
+    get: operations["getCourses"];
     /** 강좌 등록 */
     post: operations["createCourse"];
+  };
+  "/api/v1/comments": {
+    /** 댓글 등록 */
+    post: operations["createComment"];
+  };
+  "/api/v1/comments/{postId}/{commentId}/like": {
+    /** 댓글 추천 */
+    post: operations["voteComment"];
+    /** 댓글 추천 취소 */
+    delete: operations["deleteVoteComment"];
   };
   "/api/v1/admin/{courseId}/videos": {
     /** 강의 등록 */
@@ -57,21 +78,24 @@ export interface paths {
     /** 1대1 문의 삭제 */
     delete: operations["deleteQna"];
   };
-  "/api/v1/courses/{courseId}/{id}": {
-    /** 특정 강의 */
-    get: operations["getVideos"];
+  "/api/v1/members/me": {
+    get: operations["getMe"];
   };
   "/api/v1/courses/{courseId}/videos": {
     /** 강의 리스트 */
+    get: operations["getVideos"];
+  };
+  "/api/v1/courses/{courseId}/videos/{id}": {
+    /** 특정 강의 */
     get: operations["getVideos_1"];
   };
   "/api/v1/courses/{course-id}": {
     /** 강좌 상세 조회 */
     get: operations["getCourse"];
   };
-  "/api/v1/courses/": {
-    /** 전체 강좌 목록 조회 */
-    get: operations["getCourses"];
+  "/api/v1/comments/{postId}": {
+    /** 댓글 목록 */
+    get: operations["getComments"];
   };
 }
 
@@ -122,6 +146,31 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    CreateCommentDto: {
+      body: string;
+    };
+    CommentDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      /** Format: int64 */
+      authorId: number;
+      authorName: string;
+      body: string;
+      likedByCurrentUser?: boolean;
+      /** Format: int64 */
+      postId: number;
+    };
+    RsDataCommentDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["CommentDto"];
+      fail: boolean;
+      success: boolean;
+    };
     Course: {
       /** Format: int64 */
       id?: number;
@@ -145,6 +194,9 @@ export interface components {
       course?: components["schemas"]["Course"];
       member?: components["schemas"]["Member"];
     };
+    GrantedAuthority: {
+      authority?: string;
+    };
     Member: {
       /** Format: int64 */
       id?: number;
@@ -157,7 +209,12 @@ export interface components {
       point?: number;
       report?: boolean;
       refreshToken?: string;
+      profileImgUrl?: string;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
+      name?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
+      authoritiesAsStringList?: string[];
+      profileImgUrlOrDefault?: string;
     };
     SummaryNote: {
       /** Format: int64 */
@@ -183,7 +240,8 @@ export interface components {
       id: number;
       url: string;
       overView?: string;
-      course: components["schemas"]["Course"];
+      /** Format: int64 */
+      courseId: number;
       summaryNotes?: components["schemas"]["SummaryNote"][];
     };
     RsDataVideoDto: {
@@ -192,6 +250,19 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["VideoDto"];
+      fail: boolean;
+      success: boolean;
+    };
+    CreatePostDto: {
+      title: string;
+      body: string;
+    };
+    RsDataCreatePostDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["CreatePostDto"];
       fail: boolean;
       success: boolean;
     };
@@ -224,6 +295,16 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    Empty: Record<string, never>;
+    RsDataEmpty: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["Empty"];
+      fail: boolean;
+      success: boolean;
+    };
     CreateCourseDto: {
       title?: string;
       notice?: string;
@@ -239,11 +320,19 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    RsDataCreateCommentDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["CreateCommentDto"];
+      fail: boolean;
+      success: boolean;
+    };
     CreateVideoDto: {
       url: string;
       overView?: string;
       course: components["schemas"]["Course"];
-      summaryNotes?: components["schemas"]["SummaryNote"][];
     };
     RsDataCreateVideoDto: {
       resultCode: string;
@@ -275,15 +364,24 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    GetVideosResponseBody: {
-      videos: components["schemas"]["VideoDto"][];
+    MeResponseBody: {
+      item: components["schemas"]["MemberDto"];
     };
-    RsDataGetVideosResponseBody: {
+    MemberDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      name: string;
+      profileImgUrl: string;
+      authorities: string[];
+    };
+    RsDataMeResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["GetVideosResponseBody"];
+      data: components["schemas"]["MeResponseBody"];
       fail: boolean;
       success: boolean;
     };
@@ -299,13 +397,21 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    Empty: Record<string, never>;
-    RsDataEmpty: {
+    RsDataListVideoDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["Empty"];
+      data: components["schemas"]["VideoDto"][];
+      fail: boolean;
+      success: boolean;
+    };
+    RsDataListCommentDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["CommentDto"][];
       fail: boolean;
       success: boolean;
     };
@@ -413,6 +519,43 @@ export interface operations {
       };
     };
   };
+  /** 댓글 수정 */
+  modifyComment: {
+    parameters: {
+      path: {
+        commentId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateCommentDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataCommentDto"];
+        };
+      };
+    };
+  };
+  /** 댓글 삭제 */
+  deleteComment: {
+    parameters: {
+      path: {
+        commentId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
   /** 강의 수정 */
   modify_2: {
     parameters: {
@@ -472,14 +615,14 @@ export interface operations {
   createPost: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["PostDto"];
+        "application/json": components["schemas"]["CreatePostDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataPostDto"];
+          "application/json": components["schemas"]["RsDataCreatePostDto"];
         };
       };
     };
@@ -543,6 +686,32 @@ export interface operations {
       };
     };
   };
+  logout: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 전체 강좌 목록 조회 */
+  getCourses: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetCoursesResponsebody"];
+        };
+      };
+    };
+  };
   /** 강좌 등록 */
   createCourse: {
     requestBody: {
@@ -555,6 +724,54 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataCreateCourseDto"];
+        };
+      };
+    };
+  };
+  /** 댓글 등록 */
+  createComment: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateCommentDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataCreateCommentDto"];
+        };
+      };
+    };
+  };
+  /** 댓글 추천 */
+  voteComment: {
+    parameters: {
+      path: {
+        commentId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataVoid"];
+        };
+      };
+    };
+  };
+  /** 댓글 추천 취소 */
+  deleteVoteComment: {
+    parameters: {
+      path: {
+        commentId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataVoid"];
         };
       };
     };
@@ -612,8 +829,34 @@ export interface operations {
       };
     };
   };
-  /** 특정 강의 */
+  getMe: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataMeResponseBody"];
+        };
+      };
+    };
+  };
+  /** 강의 리스트 */
   getVideos: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListVideoDto"];
+        };
+      };
+    };
+  };
+  /** 특정 강의 */
+  getVideos_1: {
     parameters: {
       path: {
         courseId: number;
@@ -624,23 +867,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataGetVideosResponseBody"];
-        };
-      };
-    };
-  };
-  /** 강의 리스트 */
-  getVideos_1: {
-    parameters: {
-      path: {
-        courseId: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataGetVideosResponseBody"];
+          "application/json": components["schemas"]["RsDataVideoDto"];
         };
       };
     };
@@ -661,18 +888,18 @@ export interface operations {
       };
     };
   };
-  /** 전체 강좌 목록 조회 */
-  getCourses: {
+  /** 댓글 목록 */
+  getComments: {
     parameters: {
-      query?: {
-        page?: number;
+      path: {
+        postId: number;
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataGetCoursesResponsebody"];
+          "application/json": components["schemas"]["RsDataListCommentDto"];
         };
       };
     };
