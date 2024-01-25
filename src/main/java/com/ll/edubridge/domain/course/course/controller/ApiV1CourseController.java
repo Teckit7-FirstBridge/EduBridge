@@ -48,7 +48,7 @@ public class ApiV1CourseController {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(summary = "전체 강좌 목록 조회")
     public RsData<GetCoursesResponsebody> getCourses(@RequestParam(value = "page", defaultValue = "1") int page){
         int pageSize = AppConfig.getBasePageSize();
