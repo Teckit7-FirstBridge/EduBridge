@@ -57,6 +57,7 @@ public class MemberService {
         return join(username, "");
     }
 
+
     @AllArgsConstructor
     @Getter
     public static class AuthAndMakeTokensResponseBody {

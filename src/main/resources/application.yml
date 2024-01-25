@@ -32,18 +32,22 @@ spring:
   security:
     oauth2:
       client:
-        registration:
-          kakao:
+        registration: #카카오 대한 기본적인 정보
+          kakao: # OAuth2(음식주문) 해야하는 규약 EX) 롯데리아 손님 (스프링부트) / 점원 (카카오,구글,네이버)
             clientId: ON_SECRET
             scope: profile_nickname, profile_image
             client-name: Kakao
             authorization-grant-type: authorization_code
             redirect-uri: '${custom.site.backUrl}/{action}/oauth2/code/{registrationId}'
+          google:
+              redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
+              client-name: Google
+              scope: profile
         provider:
           kakao:
-            authorization-uri: https://kauth.kakao.com/oauth/authorize
-            token-uri: https://kauth.kakao.com/oauth/token
-            user-info-uri: https://kapi.kakao.com/v2/user/me
+            authorization-uri: https://kauth.kakao.com/oauth/authorize # 카카오 로그인 신청할 때 일로 보내라
+            token-uri: https://kauth.kakao.com/oauth/token # 토큰 얻고 싶으면
+            user-info-uri: https://kapi.kakao.com/v2/user/me #카카오의 유저정보 일로넘겨라
             user-name-attribute: id
 logging:
   level:

@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.IntStream;
 
-@Configuration
+//@Configuration
 @Slf4j
 @RequiredArgsConstructor
 public class NotProd {

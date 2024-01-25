@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Setter
 @Getter
 @ToString(callSuper = true)
-public class Member extends BaseEntity {
+public class Member extends BaseEntity { // 보안이 들어있는 클래스
 
     @Column(unique = true, length = 50)
     private String username;
@@ -36,6 +36,9 @@ public class Member extends BaseEntity {
 
     @Column(unique = true)
     private String refreshToken;
+
+    private String profileImgUrl;
+
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<CourseEnroll> courseEnrollList;
