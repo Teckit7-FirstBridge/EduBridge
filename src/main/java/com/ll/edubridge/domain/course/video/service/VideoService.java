@@ -1,5 +1,7 @@
 package com.ll.edubridge.domain.course.video.service;
 
+import com.ll.edubridge.domain.course.course.entity.Course;
+import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
 import com.ll.edubridge.domain.course.video.dto.VideoDto;
 import com.ll.edubridge.domain.course.video.entity.Video;
@@ -20,7 +22,7 @@ import java.util.Optional;
 public class VideoService {
     private final Rq rq;
     private final VideoRepository videoRepository;
-    // private final CourseService courseService;
+    private final CourseService courseService;
 
     @Transactional
     public Video create(CreateVideoDto createVideoDto) {
@@ -28,7 +30,6 @@ public class VideoService {
                 .url(createVideoDto.getUrl())
                 .overView(createVideoDto.getOverView())
                 .course(createVideoDto.getCourse())
-                .summaryNotes(createVideoDto.getSummaryNotes())
                 .build();
         return videoRepository.save(video);
     }
@@ -65,15 +66,13 @@ public class VideoService {
     }
 
     @Transactional
-    public Video findById(Long courseId, Long id) {
-        return videoRepository.findById(id);
+    public Video findByIdAndCourseId(Long courseId, Long id) {
+        return videoRepository.findByIdAndCourseId(courseId, id);
     }
 
     @Transactional
-    public List<Video> findAll(Long courseId) {
-        List<Video> videoList = videoRepository.findByCourseId(courseId);
-        videoList.sort((v1, v2) -> v1.getId().compareTo(v2.getId()));
-        return videoList;
+    public List<Video> findByCourseId(Long courseId) {
+        return videoRepository.findByCourseId(courseId);
     }
 
     @Transactional
@@ -85,13 +84,12 @@ public class VideoService {
     public boolean haveAuthority(Long courseId) {
         Member member = rq.getMember();
 
-        // Course course = courseService.findById(courseId);
+        Optional<Course> course = courseService.findById(courseId);
 
         if (member == null) return false;
 
         if (rq.isAdmin()) return true;
 
-        return true; // Course에 owner 필드 생성 전이라 임시 작성
-        // return course.getOwner().equals(member);
+        return course.get().getOwner().equals(member);
     }
 }

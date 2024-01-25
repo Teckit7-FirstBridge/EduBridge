@@ -1,5 +1,7 @@
 package com.ll.edubridge.domain.course.video.controller;
 
+import com.ll.edubridge.domain.course.course.entity.Course;
+import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
 import com.ll.edubridge.domain.course.video.dto.VideoDto;
 import com.ll.edubridge.domain.course.video.entity.Video;
@@ -9,12 +11,9 @@ import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -25,49 +24,51 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Tag(name = "VideoController", description = "강의 CRUD 컨트롤러")
 public class ApiV1VideoController {
     private final VideoService videoService;
-
-    @Getter
-    public static class GetVideosResponseBody {
-
-        @NonNull
-        private final List<VideoDto> videos;
-
-        public GetVideosResponseBody(List<Video> items) {
-            this.videos = items.stream()
-                    .map(VideoDto::new)
-                    .toList();
-        }
-    }
+    private final CourseService courseService;
 
     @GetMapping("/courses/{courseId}/videos")
     @Operation(summary = "강의 리스트")
-    public RsData<GetVideosResponseBody> getVideos(@PathVariable("courseId") Long courseId) {
-        List<Video> videos = videoService.findAll(courseId); // findByCourseId
-        GetVideosResponseBody responseBody = new GetVideosResponseBody(videos);
+    public RsData<List<VideoDto>> getVideos(@PathVariable("courseId") Long courseId) {
+
+        Course course = courseService.getCourse(courseId);
+        if(course == null) {
+            throw new GlobalException("404-1", "해당 강좌를 찾을 수 없습니다.");
+        }
+
+        List<Video> videos = videoService.findByCourseId(courseId);
+
+        List<VideoDto> videoDtoList = videos.stream()
+                .map(VideoDto::new)
+                .toList();
 
         return RsData.of(
                 "200-1",
                 "성공",
-                responseBody
+                videoDtoList
         );
     }
 
-    @GetMapping("/courses/{courseId}/{id}")
+    @GetMapping("/courses/{courseId}/videos/{id}")
     @Operation(summary = "특정 강의")
-    public RsData<GetVideosResponseBody> getVideos(@PathVariable("courseId") Long courseId,
-                                                   @PathVariable("id") Long id) {
+    public RsData<VideoDto> getVideos(@PathVariable("courseId") Long courseId,
+                                      @PathVariable("id") Long id) {
 
-        Video video = videoService.findById(courseId, id);
+        Course course = courseService.getCourse(courseId);
+        if(course == null) {
+            throw new GlobalException("404-1", "해당 강좌를 찾을 수 없습니다.");
+        }
+
+        Video video = videoService.findByIdAndCourseId(courseId, id);
         if (video == null) {
             throw new GlobalException("404-1", "해당 강의를 찾을 수 없습니다.");
         }
 
-        GetVideosResponseBody responseBody = new GetVideosResponseBody(Collections.singletonList(video));
+        VideoDto videoDto = new VideoDto(video);
 
         return RsData.of(
                 "200-1",
                 "성공",
-                responseBody
+                videoDto
         );
     }
 
@@ -80,9 +81,9 @@ public class ApiV1VideoController {
             throw new GlobalException("403-1", "권한이 없습니다.");
 
         Video video = videoService.create(createVideoDto);
-        VideoDto createdVideoDto = new VideoDto(video);
+        CreateVideoDto createdVideoDto = new CreateVideoDto(video);
 
-        return RsData.of("200-0", "등록 성공", createVideoDto);
+        return RsData.of("200-0", "등록 성공", createdVideoDto);
     }
 
     @PutMapping("/admin/{courseId}/videos/{id}")
@@ -93,6 +94,16 @@ public class ApiV1VideoController {
 
         if (!videoService.haveAuthority(courseId))
             throw new GlobalException("403-1", "권한이 없습니다.");
+
+        Course course = courseService.getCourse(courseId);
+        if(course == null) {
+            throw new GlobalException("404-1", "해당 강좌를 찾을 수 없습니다.");
+        }
+
+        Video video = videoService.findByIdAndCourseId(courseId, id);
+        if (video == null) {
+            throw new GlobalException("404-1", "해당 강의를 찾을 수 없습니다.");
+        }
 
         Video modifyVideo = videoService.modify(id, videoDto);
 
@@ -108,6 +119,16 @@ public class ApiV1VideoController {
 
         if (!videoService.haveAuthority(courseId))
             throw new GlobalException("403-1", "권한이 없습니다.");
+
+        Course course = courseService.getCourse(courseId);
+        if(course == null) {
+            throw new GlobalException("404-1", "해당 강좌를 찾을 수 없습니다.");
+        }
+
+        Video video = videoService.findByIdAndCourseId(courseId, id);
+        if (video == null) {
+            throw new GlobalException("404-1", "해당 강의를 찾을 수 없습니다.");
+        }
 
         videoService.delete(id);
 
