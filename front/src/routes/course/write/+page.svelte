@@ -14,6 +14,7 @@
   let overvieweditor: Editor;
   let title: string | undefined = $state();
   let imgUrl: string | undefined = $state();
+  let price: number | undefined = $state();
   $effect(() => {
     notieditor = new Editor({
       el: divNoti,
@@ -45,7 +46,8 @@
         title: title,
         notice: newNoti,
         overView: newOverview,
-        imgUrl: imgUrl
+        imgUrl: imgUrl,
+        price: price
       }
     });
 
@@ -82,12 +84,21 @@
       <div bind:this={divOverview} id="post-overview"></div>
       <label
         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        for="post-title">ImgUrl</label
+        for="post-imgUrl">ImgUrl</label
       ><input
         class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-        id="post-title"
+        id="post-imgUrl"
         placeholder="Enter ImgUrl"
         bind:value={imgUrl}
+      />
+      <label
+        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        for="post-price">price</label
+      ><input
+        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        id="post-price"
+        placeholder="Enter ImgUrl"
+        bind:value={price}
       />
     </div>
 

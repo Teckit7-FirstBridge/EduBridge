@@ -3,6 +3,7 @@
   import { page } from '$app/stores';
   let url = $state('');
   let overview = $state('');
+  let imgUrl = $state('');
 
   const submitForm = async () => {
     const { data, error } = await rq.apiEndPoints().POST(`/api/v1/admin/{courseId}/videos`, {
@@ -10,7 +11,8 @@
       body: {
         url,
         overView: overview,
-        courseid: parseInt($page.params.id)
+        courseId: parseInt($page.params.id),
+        imgUrl: imgUrl
       }
     });
     if (data) {
@@ -38,6 +40,18 @@
             type="text"
             placeholder="Enter video URL"
             bind:value={url}
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="video-imgUrl">
+            img URL
+          </label>
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="video-imgUrl"
+            type="text"
+            placeholder="Enter img URL"
+            bind:value={imgUrl}
           />
         </div>
         <div class="mb-6">

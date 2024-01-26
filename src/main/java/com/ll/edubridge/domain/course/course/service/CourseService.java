@@ -37,6 +37,7 @@ public class CourseService {
                 .notice(createCourseDto.getNotice())
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
+                .price(createCourseDto.getPrice())
                 .owner(member)
                 .build();
         return courseRepository.save(course);
@@ -46,6 +47,8 @@ public class CourseService {
     public Course modify(Long id, CourseDto courseDto) {
         Course course = this.getCourse(id);
 
+        course.setTitle(courseDto.getTitle());
+        course.setNotice(courseDto.getNotice());
         course.setImgUrl(courseDto.getImgUrl());
         course.setOverView(courseDto.getOverView());
 
