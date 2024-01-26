@@ -3,6 +3,7 @@
   import { page } from '$app/stores';
   import type { components } from '$lib/types/api/v1/schema';
   let url: string | undefined = $state('');
+  let imgUrl: string | undefined = $state('');
   let overview: string | undefined = $state('');
   let video: components['schemas']['VideoDto'] | undefined = $state();
   async function load() {
@@ -17,6 +18,7 @@
     });
     video = data?.data;
     url = video?.url;
+    imgUrl = video?.imgUrl;
     overview = video?.overView;
     return video;
   }
@@ -27,6 +29,7 @@
       body: {
         id: parseInt($page.params.videoid),
         url: url!,
+        imgUrl: imgUrl,
         overView: overview,
         courseId: parseInt($page.params.id)
       }
@@ -59,6 +62,18 @@
               type="text"
               placeholder="Enter video URL"
               bind:value={url}
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="video-url">
+              Img URL
+            </label>
+            <input
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="video-imgUrl"
+              type="text"
+              placeholder="Enter video URL"
+              bind:value={imgUrl}
             />
           </div>
           <div class="mb-6">

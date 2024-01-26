@@ -3,6 +3,10 @@
   import type { components } from '$lib/types/api/v1/schema';
   import { page } from '$app/stores';
 
+  function goToVideo(videoUrl) {
+    window.location.href = videoUrl;
+  }
+
   let course: components['schemas']['CourseDto'] = $state();
   let videos: components['schemas']['VideoDto'][] = $state();
 
@@ -272,8 +276,9 @@
                         alt="Video thumbnail"
                         class="aspect-square rounded-md object-cover mt-2"
                         height="64"
-                        src="static/favicon.png"
+                        src={video.imgUrl}
                         width="64"
+                        on:click={() => window.open(video.url, '_blank')}
                       />
                     </td>
                     <td

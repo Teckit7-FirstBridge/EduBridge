@@ -10,7 +10,7 @@
 <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
   <CourseNav></CourseNav>
   <div class="flex flex-col flex-1">
-    <a href="/course/write" class="btn">등록</a>
+    <a href="/course/write" class="btn mt-5 ml-6 w-[200px]"> 강좌 등록</a>
     <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {#if items}
@@ -21,7 +21,7 @@
             >
               <h2 class="text-lg font-semibold my-2">{item.title}</h2>
               <div class="flex justify-center my-2">
-                <img src="favicon.png" />
+                <img src={item.imgUrl} />
               </div>
               <p class="text-sm text-gray-500 dark:text-gray-400 my-4">{item.overView}</p>
             </a>

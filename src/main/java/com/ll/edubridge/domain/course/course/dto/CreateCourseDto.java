@@ -9,15 +9,17 @@ public class CreateCourseDto {
     private String notice;
     private String imgUrl;
     private String overView;
+    private int price;
 
-    public CreateCourseDto(Course course){
+    public CreateCourseDto(Course course) {
         this.title = course.getTitle();
         this.notice = course.getNotice();
         this.imgUrl = course.getImgUrl();
         this.overView = course.getOverView();
+        this.price = course.getPrice();
     }
 
-    public CreateCourseDto(){
+    public CreateCourseDto() {
 
     }
 }

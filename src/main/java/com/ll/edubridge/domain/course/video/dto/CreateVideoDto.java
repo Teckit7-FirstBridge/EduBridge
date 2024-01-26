@@ -1,6 +1,5 @@
 package com.ll.edubridge.domain.course.video.dto;
 
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -17,15 +16,19 @@ public class CreateVideoDto {
     private String overView;
 
     @NotEmpty
-    private Long courseid;
+    private Long courseId;
+
+    @NotEmpty
+    private String imgUrl;
 
     public CreateVideoDto(Video video) {
         this.url = video.getUrl();
         this.overView = video.getOverView();
-        this.courseid = video.getCourse().getId();
+        this.courseId = video.getCourse().getId();
+        this.imgUrl = video.getImgUrl();
     }
 
-    public CreateVideoDto(){
+    public CreateVideoDto() {
 
     }
 }
