@@ -73,16 +73,62 @@
       {#each post as item}
         <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
           <a href="/board/{item.id}">
-            <div class="flex flex-col space-y-1.5 p-6">
-              <h3 class="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight">
-                {item.title}
-              </h3>
+            <div class="flex justify-between">
+              <div class="flex flex-col space-y-1.5 p-6">
+                <h3 class="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight">
+                  {item.title}
+                </h3>
+              </div>
+              <p class="text-sm space-y-1.5 p-6">
+                {new Date(item.createDate)
+                  .toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                  })
+                  .replace(/\.$/, '')}
+              </p>
             </div>
-            <div class="p-6">
-              <p class="text-sm">{item.body}</p>
-            </div>
-            <div class="flex items-center p-6">
-              <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between p-6">
+              <div class="flex flex-colum">
+                <div class="mr-3">
+                  <span>{item.voteCount}</span>
+                </div>
+                <div>
+                  {#if item.likedByCurrentUser}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="red"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="red"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                      />
+                    </svg>
+                  {:else}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                      />
+                    </svg>
+                  {/if}
+                </div>
+              </div>
+              <div class="flex items-center">
                 <p class="text-sm text-gray-500 dark:text-gray-400">{item.authorName}</p>
               </div>
             </div>
