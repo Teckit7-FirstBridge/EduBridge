@@ -3,7 +3,6 @@
 
   const { data } = $props<{ data: { post: components['schemas']['GetPostsResponseBody'] } }>();
   const { post } = data;
-  const { items } = post;
 
   function closeDropdown() {
     document.getElementById('dropdownButton')!.tabIndex = -1;
@@ -70,10 +69,10 @@
     </button>
   </div>
   <div class="space-y-4">
-    {#if items}
-      {#each items as item}
+    {#if post}
+      {#each post as item}
         <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-          <a href="/board/1">
+          <a href="/board/{item.id}">
             <div class="flex flex-col space-y-1.5 p-6">
               <h3 class="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight">
                 {item.title}
@@ -91,52 +90,5 @@
         </div>
       {/each}
     {/if}
-
-    <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-      <a href="/board/1" rel="nofollow">
-        <div class="flex flex-col space-y-1.5 p-6">
-          <h3 class="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight">제목</h3>
-        </div>
-        <div class="p-6">
-          <p class="text-sm">간단한 내용</p>
-        </div>
-        <div class="flex items-center p-6">
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-gray-500 dark:text-gray-400">글쓴이</p>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-      <div class="flex flex-col space-y-1.5 p-6">
-        <h3 class="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight">
-          How does gravity work?
-        </h3>
-      </div>
-      <div class="p-6">
-        <p class="text-sm">I'm curious about the concept of gravity. Can anyone explain?</p>
-      </div>
-      <div class="flex items-center p-6">
-        <div class="flex items-center justify-between">
-          <p class="text-sm text-gray-500 dark:text-gray-400">Posted by Jane Smith</p>
-        </div>
-      </div>
-    </div>
-    <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-      <div class="flex flex-col space-y-1.5 p-6">
-        <h3 class="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight">
-          Why is the sky blue?
-        </h3>
-      </div>
-      <div class="p-6">
-        <p class="text-sm">I've heard different explanations. What's the real reason?</p>
-      </div>
-      <div class="flex items-center p-6">
-        <div class="flex items-center justify-between">
-          <p class="text-sm text-gray-500 dark:text-gray-400">Posted by Alice Johnson</p>
-        </div>
-      </div>
-    </div>
   </div>
 </div>

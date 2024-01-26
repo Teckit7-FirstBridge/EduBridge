@@ -34,6 +34,7 @@ public class PostService {
         Post post = Post.builder()
                 .writer(member)
                 .title(createPostDto.getTitle())
+                .published(true)
                 .content(createPostDto.getBody())
                 .build();
 
