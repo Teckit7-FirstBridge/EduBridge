@@ -5,6 +5,7 @@
 
   const { data } = $props<{ data: { post: components['schemas']['PostDto'] } }>();
   const { post } = data;
+  console.log(post);
 
   async function deletePost() {
     const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/posts/{id}`, {
@@ -17,6 +18,30 @@
       rq.msgError(error.msg);
     }
   }
+
+  async function clickLiked() {
+    if (post.likedByCurrentUser) {
+      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/posts/{id}/like`, {
+        params: { path: { id: parseInt($page.params.id) } }
+      });
+      if (data) {
+        rq.msgInfo('좋아요 취소');
+        window.location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
+    } else {
+      const { data, error } = await rq.apiEndPoints().POST(`/api/v1/posts/{id}/like`, {
+        params: { path: { id: parseInt($page.params.id) } }
+      });
+      if (data) {
+        rq.msgInfo('좋아요!!');
+        window.location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
+    }
+  }
 </script>
 
 <div class="max-w-4xl mx-auto my-8">
@@ -24,7 +49,7 @@
   <div class="justify-between flex items-center mt-10 mb-20">
     <p class="text-gray-600 mb-2">작성자: {post.authorName}</p>
     <!-- 글 작성자인경우 -->
-    {#if rq.member == post.authorId}
+    {#if rq.member.id == post.authorId}
       <div class="mb-5 mx-2">
         <a href="#" class="btn btn-sm">글 수정</a>
         <a class="btn btn-sm">글 삭제</a>
@@ -35,22 +60,42 @@
   <p class="w-auto break-all">{post.body}</p>
   <div class="flex justify-center mt-20">
     <!-- 버튼에 좋아요 기능 추가 -->
-    <button class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="red"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="red"
-        class="w-6 h-6"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-        />
-      </svg>
-      <span>1</span>
+    <button
+      class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14"
+      on:click={clickLiked}
+    >
+      {#if post.likedByCurrentUser}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="red"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="red"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+          />
+        </svg>
+      {:else}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+          />
+        </svg>
+      {/if}
+      <span>{post.voteCount}</span>
     </button>
   </div>
   <div class="border-t mb-8 mt-10"></div>
