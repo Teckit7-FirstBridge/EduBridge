@@ -8,6 +8,7 @@ import com.ll.edubridge.global.security.SecurityUser;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -145,5 +146,23 @@ public class MemberService {
         String accessToken = authTokenService.genAccessToken(member);
 
         return RsData.of("200-1", "토큰 갱신 성공", accessToken);
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정
+    public void resetVisitedToday() {
+        List<Member> allMembers = this.getAllMembers();
+
+        for (Member member : allMembers) {
+            member.setVisitedToday(false);
+            this.save(member);
+        }
+    }
+
+    public void save(Member member) {
+        memberRepository.save(member);
+    }
+
+    private List<Member> getAllMembers() {
+        return memberRepository.findAll();
     }
 }
