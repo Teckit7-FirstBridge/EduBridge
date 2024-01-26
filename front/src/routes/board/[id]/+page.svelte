@@ -13,7 +13,7 @@
     });
     if (data) {
       rq.msgInfo('게시글이 삭제되었습니다');
-      rq.goTo('/post');
+      rq.goTo('/board');
     } else if (error) {
       rq.msgError(error.msg);
     }
@@ -52,7 +52,7 @@
     {#if rq.member.id == post.authorId}
       <div class="mb-5 mx-2">
         <a href="#" class="btn btn-sm">글 수정</a>
-        <a class="btn btn-sm">글 삭제</a>
+        <a class="btn btn-sm" on:click={deletePost}>글 삭제</a>
       </div>
     {/if}
     <!-- 글 수정, 삭제 -->
@@ -108,7 +108,6 @@
         class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
         rows="4"
         placeholder="댓글을 입력하세요..."
-        bind:value={post.body}
       ></textarea>
       <!-- 댓글 등록 기능 추가 -->
       <button class="mt-2 btn">댓글 등록</button>
