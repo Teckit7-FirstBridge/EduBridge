@@ -2,7 +2,6 @@
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
   import { page } from '$app/stores';
-  import CourseNav from '../../../components/CourseNav.svelte';
 
   let course: components['schemas']['CourseDto'] = $state();
   let videos: components['schemas']['VideoDto'][] = $state();
@@ -17,7 +16,6 @@
       }
     });
     videos = responseVideos.data?.data!;
-    console.log(videos);
 
     const responseCourse = await rq.apiEndPoints().GET(`/api/v1/courses/{course-id}`, {
       params: {
@@ -48,6 +46,7 @@
     });
     if (data) {
       rq.msgInfo('동영상이 삭제 되었습니다');
+      window.location.reload();
     } else if (error) {
       rq.msgError(error.msg);
     }
@@ -61,7 +60,7 @@
     <div class="hidden w-64 border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
       <div class="flex h-full max-h-screen flex-col gap-2">
         <div class="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-800">
-          <a class="flex items-center gap-2 font-semibold" href="#"
+          <a class="flex items-center gap-2 font-semibold" href="/"
             ><svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -264,7 +263,7 @@
               </thead>
 
               <tbody class="[&amp;_tr:last-child]:border-0">
-                {#each videos as video}
+                {#each videos as video, index}
                   <tr
                     class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                   >

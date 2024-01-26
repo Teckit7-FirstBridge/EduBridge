@@ -66,7 +66,7 @@
 
     if (data) {
       rq.msgInfo(data.msg); //msg
-      rq.goTo('/course/{}');
+      rq.goTo('/course/' + $page.params.id);
     }
   };
 </script>

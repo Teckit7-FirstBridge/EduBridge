@@ -1,6 +1,6 @@
 <div class="flex flex-col w-64 border-r border-gray-200 dark:border-gray-800">
   <div class="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-800">
-    <a class="flex items-center gap-2 font-semibold" href="#"
+    <a class="flex items-center gap-2 font-semibold" href="/"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
