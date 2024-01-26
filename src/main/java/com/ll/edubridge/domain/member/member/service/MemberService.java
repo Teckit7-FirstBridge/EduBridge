@@ -41,6 +41,8 @@ public class MemberService {
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .refreshToken(authTokenService.genRefreshToken())
+                .nickname(nickname)
+                .profileImgUrl(profileImgUrl)
                 .build();
         memberRepository.save(member);
 
