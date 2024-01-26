@@ -51,7 +51,7 @@
     <!-- 글 작성자인경우 -->
     {#if rq.member.id == post.authorId}
       <div class="mb-5 mx-2">
-        <a href="#" class="btn btn-sm">글 수정</a>
+        <a href="/board/{post.id}/edit" class="btn btn-sm">글 수정</a>
         <a class="btn btn-sm" on:click={deletePost}>글 삭제</a>
       </div>
     {/if}

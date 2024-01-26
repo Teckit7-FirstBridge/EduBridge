@@ -36,4 +36,8 @@ public class PostDto {
         this.voteCount = post.getVoteCount();
         this.likedByCurrentUser = post.getVoter().contains(member);
     }
+
+    public PostDto(){
+
+    }
 }
