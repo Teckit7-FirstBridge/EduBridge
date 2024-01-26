@@ -67,6 +67,7 @@
 
     if (data) {
       rq.msgInfo(data.msg); //msg
+      rq.goTo('/board');
     }
   };
 </script>

@@ -20,4 +20,8 @@ public class CreatePostDto {
         this.body = post.getContent();
     }
 
+    public CreatePostDto(){
+
+    }
+
 }
