@@ -17,11 +17,15 @@ public class CreateVideoDto {
     private String overView;
 
     @NotEmpty
-    private Course course;
+    private Long courseid;
 
     public CreateVideoDto(Video video) {
         this.url = video.getUrl();
         this.overView = video.getOverView();
-        this.course = video.getCourse();
+        this.courseid = video.getCourse().getId();
+    }
+
+    public CreateVideoDto(){
+
     }
 }

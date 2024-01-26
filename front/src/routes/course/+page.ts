@@ -11,8 +11,7 @@ export const load: PageLoad = async ({ params, fetch, url }) => {
       }
     }
   });
-  console.log(data!);
   return {
-    course: data!.data.items
+    course: data!.data
   };
 };

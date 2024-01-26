@@ -5,47 +5,36 @@
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
+  import { post } from 'jquery';
   let div: HTMLDivElement;
   let editor: Editor;
   let oldBody: string = '';
-  let title = '';
+  let title: string = $state();
+  let initialData: components['schemas']['PostDto'] | undefined = $state();
   let dto: components['schemas']['PostDto'][] = $state([]);
+
+  async function load() {
+    const { data } = await rq.apiEndPoints().GET('/api/v1/posts/{id}', {
+      params: { path: { id: parseInt($page.params.id) } }
+    });
+    initialData = data?.data!;
+
+    title = initialData.title;
+  }
+  load();
 
   $effect(() => {
     editor = new Editor({
       el: div,
       height: 'calc(100dvh - 60px)',
       initialEditType: 'markdown',
-      previewStyle: 'vertical'
+      previewStyle: 'vertical',
+      initialValue: initialData?.body
     });
     return () => {
       editor.destroy();
     };
   });
-
-  function saveToLocalStorage(id: number, body: string) {
-    const key = 'posts_' + id;
-    // LocalStorage에서 기존 데이터를 가져옵니다.
-    const existingData = localStorage.getItem(key);
-
-    // 기존 데이터가 있으면 JSON으로 파싱하고, 없으면 빈 배열을 사용합니다.
-    const posts = existingData ? JSON.parse(existingData) : [];
-
-    // 새 데이터를 배열에 추가합니다.
-    posts.push({
-      id,
-      body: body,
-      date: new Date().toISOString()
-    });
-
-    // 배열의 크기가 10을 초과하면 가장 오래된 항목(첫 번째 항목)을 제거합니다.
-    if (posts.length > 10) {
-      posts.shift(); // 배열의 첫 번째 항목을 제거합니다.
-    }
-
-    // 변경된 배열을 JSON 문자열로 변환하여 LocalStorage에 저장합니다.
-    localStorage.setItem(key, JSON.stringify(posts));
-  }
 
   const Post__save = async () => {
     const newBody = editor.getMarkdown().trim();
@@ -53,29 +42,34 @@
       return;
     }
 
-    const { data, error } = await rq.apiEndPoints().POST('/api/v1/posts', {
+    const { data, error } = await rq.apiEndPoints().PUT('/api/v1/posts/{id}', {
+      params: { path: { id: initialData?.id! } },
       // url 설정
       body: {
+        id: initialData?.id!,
         body: newBody,
-        title: title
+        title: title,
+        likedByCurrentUser: initialData?.likedByCurrentUser,
+        createDate: initialData?.createDate!,
+        authorId: initialData?.authorId!,
+        authorName: initialData?.authorName!,
+        voteCount: initialData?.voteCount
       }
     });
 
     oldBody = newBody;
 
-    saveToLocalStorage(parseInt($page.params.id), newBody);
-
     if (data) {
       rq.msgInfo(data.msg); //msg
-      rq.goTo('/board');
+      rq.goTo('/board/' + initialData?.id);
     }
   };
 </script>
 
 <!--
-// v0 by Vercel.
-// https://v0.dev/t/BlOM8H6hEQ8
--->
+  // v0 by Vercel.
+  // https://v0.dev/t/BlOM8H6hEQ8
+  -->
 <div class="flex flex-col h-full px-4 py-6 md:px-6 lg:py-16 md:py-12">
   <div class="space-y-4">
     <div class="space-y-2">

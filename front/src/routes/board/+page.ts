@@ -11,7 +11,6 @@ export const load: PageLoad = async ({ params, fetch, url }) => {
       }
     }
   });
-
   return {
     post: data!.data.items
   };

@@ -24,7 +24,6 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         String redirectUrlAfterSocialLogin = rq.getCookieValue("redirectUrlAfterSocialLogin", "");
-        System.out.println("-----------------------------");
 
         // 일반적인 방식이 아닌 외부 프론트도메인에서 요청한
         // 소셜 로그인인 경우에는 아래와 같이 처리한다.
