@@ -3,99 +3,98 @@
  * Do not make direct changes to the file.
  */
 
-
 export interface paths {
-  "/api/v1/posts/{id}": {
+  '/api/v1/posts/{id}': {
     /** 글 상세 정보 */
-    get: operations["getDetail"];
+    get: operations['getDetail'];
     /** 글 수정 */
-    put: operations["modify"];
+    put: operations['modify'];
     /** 글 삭제 */
-    delete: operations["delete"];
+    delete: operations['delete'];
   };
-  "/api/v1/courses/{id}": {
+  '/api/v1/courses/{id}': {
     /** 강좌 수정 */
-    put: operations["modify_1"];
+    put: operations['modify_1'];
     /** 강좌 삭제 */
-    delete: operations["delete_1"];
+    delete: operations['delete_1'];
   };
-  "/api/v1/comments/{postId}/{commentId}": {
+  '/api/v1/comments/{postId}/{commentId}': {
     /** 댓글 수정 */
-    put: operations["modifyComment"];
+    put: operations['modifyComment'];
     /** 댓글 삭제 */
-    delete: operations["deleteComment"];
+    delete: operations['deleteComment'];
   };
-  "/api/v1/admin/{courseId}/videos/{id}": {
+  '/api/v1/admin/{courseId}/videos/{id}': {
     /** 강의 수정 */
-    put: operations["modify_2"];
+    put: operations['modify_2'];
     /** 강의 삭제 */
-    delete: operations["delete_2"];
+    delete: operations['delete_2'];
   };
-  "/api/v1/posts": {
+  '/api/v1/posts': {
     /** 글 리스트 */
-    get: operations["getPosts"];
+    get: operations['getPosts'];
     /** 글 등록 */
-    post: operations["createPost"];
+    post: operations['createPost'];
   };
-  "/api/v1/posts/{id}/like": {
+  '/api/v1/posts/{id}/like': {
     /** 글 추천 */
-    post: operations["vote"];
+    post: operations['vote'];
     /** 글 추천 취소 */
-    delete: operations["deleteVote"];
+    delete: operations['deleteVote'];
   };
-  "/api/v1/posts/qna": {
+  '/api/v1/posts/qna': {
     /** 1대1 문의 목록 */
-    get: operations["getMyQna"];
+    get: operations['getMyQna'];
     /** 1대1 문의 등록 */
-    post: operations["createQna"];
+    post: operations['createQna'];
   };
-  "/api/v1/members/logout": {
-    post: operations["logout"];
+  '/api/v1/members/logout': {
+    post: operations['logout'];
   };
-  "/api/v1/courses": {
+  '/api/v1/courses': {
     /** 전체 강좌 목록 조회 */
-    get: operations["getCourses"];
+    get: operations['getCourses'];
     /** 강좌 등록 */
-    post: operations["createCourse"];
+    post: operations['createCourse'];
   };
-  "/api/v1/comments": {
+  '/api/v1/comments': {
     /** 댓글 등록 */
-    post: operations["createComment"];
+    post: operations['createComment'];
   };
-  "/api/v1/comments/{postId}/{commentId}/like": {
+  '/api/v1/comments/{postId}/{commentId}/like': {
     /** 댓글 추천 */
-    post: operations["voteComment"];
+    post: operations['voteComment'];
     /** 댓글 추천 취소 */
-    delete: operations["deleteVoteComment"];
+    delete: operations['deleteVoteComment'];
   };
-  "/api/v1/admin/{courseId}/videos": {
+  '/api/v1/admin/{courseId}/videos': {
     /** 강의 등록 */
-    post: operations["createVideo"];
+    post: operations['createVideo'];
   };
-  "/api/v1/posts/qna/{id}": {
+  '/api/v1/posts/qna/{id}': {
     /** 1대1 문의 상세 정보 */
-    get: operations["getQnaDetail"];
+    get: operations['getQnaDetail'];
     /** 1대1 문의 삭제 */
-    delete: operations["deleteQna"];
+    delete: operations['deleteQna'];
   };
-  "/api/v1/members/me": {
-    get: operations["getMe"];
+  '/api/v1/members/me': {
+    get: operations['getMe'];
   };
-  "/api/v1/courses/{courseId}/videos": {
+  '/api/v1/courses/{courseId}/videos': {
     /** 강의 리스트 */
-    get: operations["getVideos"];
+    get: operations['getVideos'];
   };
-  "/api/v1/courses/{courseId}/videos/{id}": {
+  '/api/v1/courses/{courseId}/videos/{id}': {
     /** 특정 강의 */
-    get: operations["getVideos_1"];
+    get: operations['getVideos_1'];
   };
-  "/api/v1/courses/{course-id}": {
+  '/api/v1/courses/{course-id}': {
     /** 강좌 상세 조회 */
-    get: operations["getCourse"];
+    get: operations['getCourse'];
   };
-  "/api/v1/comments/{postId}": {
+  '/api/v1/comments/{postId}': {
     /** 댓글 목록 */
-    get: operations["getComments"];
+    get: operations['getComments'];
   };
 }
 
@@ -122,7 +121,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["PostDto"];
+      data: components['schemas']['PostDto'];
       success: boolean;
       fail: boolean;
     };
@@ -140,7 +139,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["CourseDto"];
+      data: components['schemas']['CourseDto'];
       success: boolean;
       fail: boolean;
     };
@@ -165,7 +164,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["CommentDto"];
+      data: components['schemas']['CommentDto'];
       success: boolean;
       fail: boolean;
     };
@@ -174,6 +173,7 @@ export interface components {
       id: number;
       url: string;
       overView?: string;
+      imgUrl?: string;
       /** Format: int64 */
       courseId: number;
     };
@@ -182,7 +182,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["VideoDto"];
+      data: components['schemas']['VideoDto'];
       success: boolean;
       fail: boolean;
     };
@@ -195,7 +195,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["CreatePostDto"];
+      data: components['schemas']['CreatePostDto'];
       success: boolean;
       fail: boolean;
     };
@@ -224,7 +224,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["QnaDto"];
+      data: components['schemas']['QnaDto'];
       success: boolean;
       fail: boolean;
     };
@@ -234,7 +234,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["Empty"];
+      data: components['schemas']['Empty'];
       success: boolean;
       fail: boolean;
     };
@@ -243,13 +243,14 @@ export interface components {
       notice?: string;
       imgUrl?: string;
       overView?: string;
+      price?: number;
     };
     RsDataCreateCourseDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["CreateCourseDto"];
+      data: components['schemas']['CreateCourseDto'];
       success: boolean;
       fail: boolean;
     };
@@ -258,7 +259,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["CreateCommentDto"];
+      data: components['schemas']['CreateCommentDto'];
       success: boolean;
       fail: boolean;
     };
@@ -266,26 +267,27 @@ export interface components {
       url: string;
       overView?: string;
       /** Format: int64 */
-      courseid: number;
+      courseId: number;
+      imgUrl: string;
     };
     RsDataCreateVideoDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["CreateVideoDto"];
+      data: components['schemas']['CreateVideoDto'];
       success: boolean;
       fail: boolean;
     };
     GetPostsResponseBody: {
-      items: components["schemas"]["PostDto"][];
+      items: components['schemas']['PostDto'][];
     };
     RsDataGetPostsResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["GetPostsResponseBody"];
+      data: components['schemas']['GetPostsResponseBody'];
       success: boolean;
       fail: boolean;
     };
@@ -294,12 +296,12 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["QnaDto"][];
+      data: components['schemas']['QnaDto'][];
       success: boolean;
       fail: boolean;
     };
     MeResponseBody: {
-      item: components["schemas"]["MemberDto"];
+      item: components['schemas']['MemberDto'];
     };
     MemberDto: {
       /** Format: int64 */
@@ -315,19 +317,19 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["MeResponseBody"];
+      data: components['schemas']['MeResponseBody'];
       success: boolean;
       fail: boolean;
     };
     GetCoursesResponsebody: {
-      items: components["schemas"]["CourseDto"][];
+      items: components['schemas']['CourseDto'][];
     };
     RsDataGetCoursesResponsebody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["GetCoursesResponsebody"];
+      data: components['schemas']['GetCoursesResponsebody'];
       success: boolean;
       fail: boolean;
     };
@@ -336,7 +338,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["VideoDto"][];
+      data: components['schemas']['VideoDto'][];
       success: boolean;
       fail: boolean;
     };
@@ -345,7 +347,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["CommentDto"][];
+      data: components['schemas']['CommentDto'][];
       success: boolean;
       fail: boolean;
     };
@@ -362,7 +364,6 @@ export type $defs = Record<string, never>;
 export type external = Record<string, never>;
 
 export interface operations {
-
   /** 글 상세 정보 */
   getDetail: {
     parameters: {
@@ -374,7 +375,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataPostDto"];
+          'application/json': components['schemas']['RsDataPostDto'];
         };
       };
     };
@@ -388,14 +389,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["PostDto"];
+        'application/json': components['schemas']['PostDto'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataPostDto"];
+          'application/json': components['schemas']['RsDataPostDto'];
         };
       };
     };
@@ -411,7 +412,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -425,14 +426,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CourseDto"];
+        'application/json': components['schemas']['CourseDto'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataCourseDto"];
+          'application/json': components['schemas']['RsDataCourseDto'];
         };
       };
     };
@@ -448,7 +449,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -462,14 +463,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateCommentDto"];
+        'application/json': components['schemas']['CreateCommentDto'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataCommentDto"];
+          'application/json': components['schemas']['RsDataCommentDto'];
         };
       };
     };
@@ -485,7 +486,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -500,14 +501,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["VideoDto"];
+        'application/json': components['schemas']['VideoDto'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataVideoDto"];
+          'application/json': components['schemas']['RsDataVideoDto'];
         };
       };
     };
@@ -524,7 +525,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -540,7 +541,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataGetPostsResponseBody"];
+          'application/json': components['schemas']['RsDataGetPostsResponseBody'];
         };
       };
     };
@@ -549,14 +550,14 @@ export interface operations {
   createPost: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreatePostDto"];
+        'application/json': components['schemas']['CreatePostDto'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataCreatePostDto"];
+          'application/json': components['schemas']['RsDataCreatePostDto'];
         };
       };
     };
@@ -572,7 +573,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataVoid"];
+          'application/json': components['schemas']['RsDataVoid'];
         };
       };
     };
@@ -588,7 +589,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataVoid"];
+          'application/json': components['schemas']['RsDataVoid'];
         };
       };
     };
@@ -599,7 +600,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListQnaDto"];
+          'application/json': components['schemas']['RsDataListQnaDto'];
         };
       };
     };
@@ -608,14 +609,14 @@ export interface operations {
   createQna: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["QnaDto"];
+        'application/json': components['schemas']['QnaDto'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataQnaDto"];
+          'application/json': components['schemas']['RsDataQnaDto'];
         };
       };
     };
@@ -625,7 +626,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "*/*": components["schemas"]["RsDataEmpty"];
+          '*/*': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -641,7 +642,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataGetCoursesResponsebody"];
+          'application/json': components['schemas']['RsDataGetCoursesResponsebody'];
         };
       };
     };
@@ -650,14 +651,14 @@ export interface operations {
   createCourse: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateCourseDto"];
+        'application/json': components['schemas']['CreateCourseDto'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataCreateCourseDto"];
+          'application/json': components['schemas']['RsDataCreateCourseDto'];
         };
       };
     };
@@ -666,14 +667,14 @@ export interface operations {
   createComment: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateCommentDto"];
+        'application/json': components['schemas']['CreateCommentDto'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataCreateCommentDto"];
+          'application/json': components['schemas']['RsDataCreateCommentDto'];
         };
       };
     };
@@ -689,7 +690,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataVoid"];
+          'application/json': components['schemas']['RsDataVoid'];
         };
       };
     };
@@ -705,7 +706,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataVoid"];
+          'application/json': components['schemas']['RsDataVoid'];
         };
       };
     };
@@ -719,14 +720,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateVideoDto"];
+        'application/json': components['schemas']['CreateVideoDto'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataCreateVideoDto"];
+          'application/json': components['schemas']['RsDataCreateVideoDto'];
         };
       };
     };
@@ -742,7 +743,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataQnaDto"];
+          'application/json': components['schemas']['RsDataQnaDto'];
         };
       };
     };
@@ -758,7 +759,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -768,7 +769,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "*/*": components["schemas"]["RsDataMeResponseBody"];
+          '*/*': components['schemas']['RsDataMeResponseBody'];
         };
       };
     };
@@ -784,7 +785,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListVideoDto"];
+          'application/json': components['schemas']['RsDataListVideoDto'];
         };
       };
     };
@@ -801,7 +802,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataVideoDto"];
+          'application/json': components['schemas']['RsDataVideoDto'];
         };
       };
     };
@@ -810,14 +811,14 @@ export interface operations {
   getCourse: {
     parameters: {
       path: {
-        "course-id": number;
+        'course-id': number;
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataCourseDto"];
+          'application/json': components['schemas']['RsDataCourseDto'];
         };
       };
     };
@@ -833,7 +834,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListCommentDto"];
+          'application/json': components['schemas']['RsDataListCommentDto'];
         };
       };
     };
