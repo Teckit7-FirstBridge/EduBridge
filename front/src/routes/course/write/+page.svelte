@@ -28,7 +28,6 @@
       previewStyle: 'vertical'
     });
     return () => {
-      bodyeditor.destroy();
       notieditor.destroy();
       overvieweditor.destroy();
     };
@@ -37,6 +36,8 @@
   const Post__save = async () => {
     const newNoti = notieditor.getMarkdown().trim();
     const newOverview = overvieweditor.getMarkdown().trim();
+
+    console.log(newNoti, newOverview);
 
     const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/courses', {
       // url 설정
@@ -50,6 +51,7 @@
 
     if (data) {
       rq.msgInfo(data.msg); //msg
+      rq.goTo('/course');
     }
   };
 </script>

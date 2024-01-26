@@ -93,7 +93,7 @@ class Rq {
   public setLogined(member: components['schemas']['MemberDto']) {
     this.member.id = member.id;
     this.member.createDate = member.createDate;
-    this.member.modifyDate = member.modifyDate;
+    // this.member.modifyDate = member.modifyDate;
     this.member.username = member.username;
     this.member.authorities = member.authorities;
   }
@@ -116,7 +116,6 @@ class Rq {
 
   public async initAuth() {
     const { data } = await this.apiEndPoints().GET('/api/v1/members/me');
-
     if (data) {
       this.setLogined(data.data.item);
     }

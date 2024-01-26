@@ -134,8 +134,6 @@ export interface components {
       imgUrl?: string;
       overView?: string;
       ownerName?: string;
-      /** Format: date-time */
-      createDate?: string;
     };
     RsDataCourseDto: {
       resultCode: string;
@@ -171,70 +169,6 @@ export interface components {
       success: boolean;
       fail: boolean;
     };
-    Course: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      title?: string;
-      notice?: string;
-      imgUrl?: string;
-      overView?: string;
-      owner?: components["schemas"]["Member"];
-      videoList?: components["schemas"]["Video"][];
-      voter?: components["schemas"]["Member"][];
-    };
-    CourseEnroll: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      /** Format: date-time */
-      cancelDate?: string;
-      course?: components["schemas"]["Course"];
-      member?: components["schemas"]["Member"];
-    };
-    GrantedAuthority: {
-      authority?: string;
-    };
-    Member: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      username?: string;
-      password?: string;
-      nickname?: string;
-      /** Format: int32 */
-      point?: number;
-      report?: boolean;
-      refreshToken?: string;
-      profileImgUrl?: string;
-      courseEnrollList?: components["schemas"]["CourseEnroll"][];
-      name?: string;
-      authoritiesAsStringList?: string[];
-      profileImgUrlOrDefault?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
-    };
-    SummaryNote: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      content?: string;
-      writer?: components["schemas"]["Member"];
-      video?: components["schemas"]["Video"];
-    };
-    Video: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      url?: string;
-      overView?: string;
-      course?: components["schemas"]["Course"];
-      summaryNotes?: components["schemas"]["SummaryNote"][];
-    };
     VideoDto: {
       /** Format: int64 */
       id: number;
@@ -242,7 +176,6 @@ export interface components {
       overView?: string;
       /** Format: int64 */
       courseId: number;
-      summaryNotes?: components["schemas"]["SummaryNote"][];
     };
     RsDataVideoDto: {
       resultCode: string;
@@ -332,7 +265,8 @@ export interface components {
     CreateVideoDto: {
       url: string;
       overView?: string;
-      course: components["schemas"]["Course"];
+      /** Format: int64 */
+      courseid: number;
     };
     RsDataCreateVideoDto: {
       resultCode: string;

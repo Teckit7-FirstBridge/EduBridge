@@ -24,13 +24,15 @@ public class VideoDto {
     @NonNull
     private Long courseId;
 
-    private List<SummaryNote> summaryNotes;
 
     public VideoDto(Video video) {
         this.id = video.getId();
         this.url = video.getUrl();
         this.overView = video.getOverView();
         this.courseId = video.getCourse().getId();
-        this.summaryNotes = video.getSummaryNotes();
+    }
+
+    public VideoDto(){
+
     }
 }
