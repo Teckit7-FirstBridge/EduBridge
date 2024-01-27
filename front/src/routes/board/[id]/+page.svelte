@@ -45,8 +45,43 @@
 </script>
 
 <div class="max-w-4xl mx-auto my-8">
-  <h1 class="text-3xl font-bold mb-4">{post.title}</h1>
-  <div class="justify-between flex items-center mt-10 mb-20">
+  <div class="flex justify-between">
+    <div>
+      <h1 class="text-3xl font-bold mb-4">{post.title}</h1>
+    </div>
+    <div>
+      <p class="text-nm space-y-1.5 p-6">
+        {(() => {
+          const now = new Date();
+          const postDate = new Date(post.createDate);
+          const seconds = Math.floor((now - postDate) / 1000);
+
+          let interval = seconds / 31536000;
+          if (interval > 1) {
+            return Math.floor(interval) + '년 전';
+          }
+          interval = seconds / 2592000;
+          if (interval > 1) {
+            return Math.floor(interval) + '개월 전';
+          }
+          interval = seconds / 86400;
+          if (interval > 1) {
+            return Math.floor(interval) + '일 전';
+          }
+          interval = seconds / 3600;
+          if (interval > 1) {
+            return Math.floor(interval) + '시간 전';
+          }
+          interval = seconds / 60;
+          if (interval > 1) {
+            return Math.floor(interval) + '분 전';
+          }
+          return Math.floor(seconds) + '초 전';
+        })()}
+      </p>
+    </div>
+  </div>
+  <div class="justify-between flex items-center mt-3 mb-20">
     <p class="text-gray-600 mb-2">작성자: {post.authorName}</p>
     <!-- 글 작성자인경우 -->
     {#if rq.member.id == post.authorId}

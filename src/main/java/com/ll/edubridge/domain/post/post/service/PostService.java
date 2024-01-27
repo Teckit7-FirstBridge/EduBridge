@@ -58,7 +58,7 @@ public class PostService {
         Post post = this.getPost(id);
 
         post.setTitle(postDto.getTitle());
-        post.setContent(postDto.getTitle());
+        post.setContent(postDto.getBody());
 
         return postRepository.save(post);
     }
