@@ -12,7 +12,7 @@
   }
 </script>
 
-<div class="flex flex-col w-full min-h-screen p-4 md:p-6">
+<div class="max-w-4xl mx-auto my-8">
   <h1 class="text-3xl font-bold mb-4">Q&amp;A</h1>
   <div class="flex items-center gap-4 mb-6">
     <input
@@ -80,13 +80,33 @@
                 </h3>
               </div>
               <p class="text-sm space-y-1.5 p-6">
-                {new Date(item.createDate)
-                  .toLocaleDateString('ko-KR', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                  })
-                  .replace(/\.$/, '')}
+                {(() => {
+                  const now = new Date();
+                  const postDate = new Date(item.createDate);
+                  const seconds = Math.floor((now - postDate) / 1000);
+
+                  let interval = seconds / 31536000;
+                  if (interval > 1) {
+                    return Math.floor(interval) + '년 전';
+                  }
+                  interval = seconds / 2592000;
+                  if (interval > 1) {
+                    return Math.floor(interval) + '개월 전';
+                  }
+                  interval = seconds / 86400;
+                  if (interval > 1) {
+                    return Math.floor(interval) + '일 전';
+                  }
+                  interval = seconds / 3600;
+                  if (interval > 1) {
+                    return Math.floor(interval) + '시간 전';
+                  }
+                  interval = seconds / 60;
+                  if (interval > 1) {
+                    return Math.floor(interval) + '분 전';
+                  }
+                  return Math.floor(seconds) + '초 전';
+                })()}
               </p>
             </div>
             <div class="flex items-center justify-between p-6">
