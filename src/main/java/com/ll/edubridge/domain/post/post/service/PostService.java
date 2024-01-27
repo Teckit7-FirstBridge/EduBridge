@@ -9,6 +9,7 @@ import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
+import com.ll.edubridge.standard.base.KwTypeV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -169,5 +170,10 @@ public class PostService {
         Member member = rq.getMember();
 
         return postRepository.findByWriterAndPublished(member, false);
+    }
+
+
+    public Page<Post> findByKw(KwTypeV1 kwType, String kw, Member author, Boolean published, Pageable pageable) {
+        return postRepository.findByKw(kwType, kw, author, published, pageable);
     }
 }

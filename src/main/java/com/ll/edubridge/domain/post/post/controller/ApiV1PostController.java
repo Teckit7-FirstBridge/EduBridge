@@ -11,6 +11,7 @@ import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
+import com.ll.edubridge.standard.base.KwTypeV1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,15 +49,21 @@ public class ApiV1PostController {
         }
     }
 
-    @GetMapping("")
-    @Operation(summary = "글 리스트")
-    public RsData<GetPostsResponseBody> getPosts(
-            @RequestParam(value = "page", defaultValue = "1") int page
-    ) {
-        int pageSize = AppConfig.getBasePageSize();
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 
-        Page<Post> postPage = postService.findByPublished(true, pageable);
+    @GetMapping(value = "")
+    @Operation(summary = "글 다건조회")
+    public RsData<GetPostsResponseBody> getPosts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String kw,
+            @RequestParam(defaultValue = "ALL") KwTypeV1 kwType
+    ) {
+
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+        Page<Post> postPage = postService.findByKw(kwType, kw, null, true, pageable);
+        postPage.stream().forEach(System.out::println);
+
         GetPostsResponseBody responseBody = new GetPostsResponseBody(postPage, rq.getMember());
 
         return RsData.of(
@@ -190,5 +198,6 @@ public class ApiV1PostController {
 
         return RsData.of("200-3", "삭제 성공");
     }
+
 
 }
