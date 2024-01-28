@@ -150,18 +150,16 @@ public class MemberService {
         return RsData.of("200-1", "토큰 갱신 성공", accessToken);
     }
 
+    @Transactional
     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정
     public void resetVisitedToday() {
         List<Member> allMembers = this.getAllMembers();
 
         for (Member member : allMembers) {
             member.setVisitedToday(false);
-            this.save(member);
+            memberRepository.save(member);
+            // System.out.println("성공");
         }
-    }
-
-    public void save(Member member) {
-        memberRepository.save(member);
     }
 
     private List<Member> getAllMembers() {
