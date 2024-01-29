@@ -5,6 +5,7 @@ import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
@@ -14,6 +15,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
@@ -79,9 +83,25 @@ public class ApiV1SummaryNoteController {
         return RsData.of("200-3", "삭제 성공");
     }
 
+    @GetMapping("")
+    @Operation(summary = "전체 강의노트 목록 조회")
+    public RsData<GetSummaryNoteResponsebody> getSummaryNote(@RequestParam(value = "page", defaultValue = "1") int page){
+        int pageSize = AppConfig.getBasePageSize();
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+
+        Page<SummaryNote> summaryNotes = summaryNoteService.findAll(pageable);
+        GetSummaryNoteResponsebody responseBody = new ApiV1SummaryNoteController.GetSummaryNoteResponsebody(summaryNotes, rq.getMember());
+
+        return RsData.of(
+                "200-1",
+                "성공",
+                responseBody
+        );
+    }
+
     @GetMapping("/{note-id}")
     @Operation(summary = "강의 요약 노트 상세 보기")
-    public RsData<SummaryNoteDto> getSummaryNote(@PathVariable("id") Long id){
+    public RsData<SummaryNoteDto> getSummaryNote(@PathVariable("{note-id}") Long id){
         SummaryNote summaryNote = summaryNoteService.getSummaryNote(id);
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
         return RsData.of("200-1", "성공", summaryNoteDto);
