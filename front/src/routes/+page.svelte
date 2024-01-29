@@ -9,12 +9,20 @@
   import type { components } from '$lib/types/api/v1/schema';
 
   let courses: components['schemas']['CourseDto'][] = $state([]);
+  const sampleCourse = {
+    title: 'Sample Course',
+    overView: 'This is a sample course description.'
+    // 나머지 필요한 필드 추가
+  };
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
     const { data } = await rq.apiEndPoints().GET('/api/v1', {});
     courses = data!.data.items;
+    while (courses.length < 6) {
+      courses.push({ ...sampleCourse });
+    }
 
     return courses;
   }
