@@ -134,6 +134,40 @@
                     .replace(/\.$/, '')}
                 </p>
               </div>
+              <p class="text-sm space-y-1.5 p-6">
+                {(() => {
+                  const now = new Date();
+                  const postDate = new Date(item.createDate);
+                  const seconds = Math.floor((now - postDate) / 1000);
+
+                  let interval = seconds / 31536000;
+                  if (interval > 1) {
+                    return Math.floor(interval) + '년 전';
+                  }
+                  interval = seconds / 2592000;
+                  if (interval > 1) {
+                    return Math.floor(interval) + '개월 전';
+                  }
+                  interval = seconds / 86400;
+                  if (interval > 1) {
+                    return Math.floor(interval) + '일 전';
+                  }
+                  interval = seconds / 3600;
+                  if (interval > 1) {
+                    return Math.floor(interval) + '시간 전';
+                  }
+                  interval = seconds / 60;
+                  if (interval > 1) {
+                    return Math.floor(interval) + '분 전';
+                  }
+                  return Math.floor(seconds) + '초 전';
+                })()}
+              </p>
+            </div>
+            <div class="flex items-center justify-between p-6">
+              <div class="flex flex-colum">
+                <div class="mr-3">
+                  <span>{item.voteCount}</span>
               <div class="flex items-center justify-between p-6">
                 <div class="flex flex-colum">
                   <div class="mr-3">

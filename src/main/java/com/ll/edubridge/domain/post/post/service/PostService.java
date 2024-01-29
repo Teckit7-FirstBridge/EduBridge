@@ -59,7 +59,7 @@ public class PostService {
         Post post = this.getPost(id);
 
         post.setTitle(postDto.getTitle());
-        post.setContent(postDto.getTitle());
+        post.setContent(postDto.getBody());
 
         return postRepository.save(post);
     }
@@ -153,13 +153,9 @@ public class PostService {
     public boolean canRead(Post post) {
         Member member = rq.getMember();
 
-        if (member == null && post.isPublished()) return true;
+        if(!post.isPublished()&&member.equals(post.getWriter())) return false;
 
-        if (rq.isAdmin()) return true;
-
-        if (!post.isPublished()) return false;
-
-        return member.equals(post.getWriter());
+        return true;
     }
 
     public Page<Post> findByPublished(boolean published, Pageable pageable) {
