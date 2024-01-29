@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.course.summaryNote.service;
 
 import com.ll.edubridge.domain.course.summaryNote.dto.CreateSummaryNoteDto;
+import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
@@ -37,7 +38,7 @@ public class SummaryNoteService {
 
 
     @Transactional
-    public SummaryNote create(CreateSummaryNoteDto createSummaryNoteDto) {
+    public SummaryNote create(Member member, CreateSummaryNoteDto createSummaryNoteDto) {
         SummaryNote summaryNote = SummaryNote.builder()
                 .content(createSummaryNoteDto.getContent())
                 .build();
@@ -45,10 +46,10 @@ public class SummaryNoteService {
     }
 
     @Transactional
-    public SummaryNote modify(Long id , CreateSummaryNoteDto createSummaryNoteDto) {
+    public SummaryNote modify(Long id , SummaryNoteDto summaryNoteDto) {
         SummaryNote summaryNote = this.getSummaryNote(id);
 
-        summaryNote.setContent(createSummaryNoteDto.getContent());
+        summaryNote.setContent(summaryNoteDto.getContent());
 
         return summaryNoteRepository.save(summaryNote);
     }
