@@ -3,6 +3,7 @@ package com.ll.edubridge.domain.course.summaryNote.controller;
 import com.ll.edubridge.domain.course.summaryNote.dto.CreateSummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
+import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
@@ -30,6 +31,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 @Tag(name = "ApiV1SummaryNoteController", description = "강의 요약노트 CRUD 컨트롤러")
 public class ApiV1SummaryNoteController {
+
+    private final SummaryNoteRepository summaryNoteRepository;
     private final SummaryNoteService summaryNoteService;
     private final Rq rq;
 
@@ -53,6 +56,7 @@ public class ApiV1SummaryNoteController {
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
 
         return RsData.of("200-0", "등록 성공", summaryNoteDto);
+
     }
 
     @PutMapping("/{note-id}")
@@ -69,6 +73,8 @@ public class ApiV1SummaryNoteController {
         SummaryNoteDto modifySummaryNoteDto = new SummaryNoteDto(modifySummaryNote);
 
         return RsData.of("200-2", "수정 성공", modifySummaryNoteDto);
+
+
     }
 
     @DeleteMapping("/{note-id}")

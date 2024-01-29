@@ -3,8 +3,6 @@ package com.ll.edubridge.domain.course.course.dto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 public class CourseDto {
 
@@ -22,9 +20,5 @@ public class CourseDto {
         this.imgUrl = course.getImgUrl();
         this.overView = course.getOverView();
         this.ownerName = course.getOwner().getNickname();
-    }
-
-    public CourseDto(){
-
     }
 }

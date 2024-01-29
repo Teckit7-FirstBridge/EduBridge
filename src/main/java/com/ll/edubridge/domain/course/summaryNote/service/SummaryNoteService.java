@@ -66,7 +66,6 @@ public class SummaryNoteService {
         summaryNoteRepository.delete(summaryNote);
     }
 
-
     @Transactional
     public boolean haveAuthority(Long id) {
         Member member = rq.getMember();
