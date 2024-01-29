@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PostRepository extends JpaRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Long>, CustomPostRepository {
     Page<Post> findByPublishedOrderByIdDesc(boolean published, Pageable pageable);
 
     Page<Post> findByReport(Pageable pageable, boolean report);

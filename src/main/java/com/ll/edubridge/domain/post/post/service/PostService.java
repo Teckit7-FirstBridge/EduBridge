@@ -9,6 +9,7 @@ import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
+import com.ll.edubridge.standard.base.KwTypeV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,7 +59,7 @@ public class PostService {
         Post post = this.getPost(id);
 
         post.setTitle(postDto.getTitle());
-        post.setContent(postDto.getTitle());
+        post.setContent(postDto.getBody());
 
         return postRepository.save(post);
     }
@@ -152,13 +153,9 @@ public class PostService {
     public boolean canRead(Post post) {
         Member member = rq.getMember();
 
-        if (member == null && post.isPublished()) return true;
+        if(!post.isPublished()&&member.equals(post.getWriter())) return false;
 
-        if (rq.isAdmin()) return true;
-
-        if (!post.isPublished()) return false;
-
-        return member.equals(post.getWriter());
+        return true;
     }
 
     public Page<Post> findByPublished(boolean published, Pageable pageable) {
@@ -169,5 +166,10 @@ public class PostService {
         Member member = rq.getMember();
 
         return postRepository.findByWriterAndPublished(member, false);
+    }
+
+
+    public Page<Post> findByKw(KwTypeV1 kwType, String kw, Member author, Boolean published, Pageable pageable) {
+        return postRepository.findByKw(kwType, kw, author, published, pageable);
     }
 }

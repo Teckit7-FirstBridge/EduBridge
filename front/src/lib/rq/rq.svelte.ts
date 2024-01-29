@@ -20,9 +20,9 @@ class Rq {
 
   constructor() {
     let id = $state(0);
-    let username = $state('');
+    let name = $state('');
+    let profileImgUrl = $state('');
     let createDate = $state('');
-    let modifyDate = $state('');
     let authorities: string[] = $state([]);
 
     this.member = {
@@ -38,17 +38,17 @@ class Rq {
       set createDate(value: string) {
         createDate = value;
       },
-      get modifyDate() {
-        return modifyDate;
+      get name() {
+        return name;
       },
-      set modifyDate(value: string) {
-        modifyDate = value;
+      set name(value: string) {
+        name = value;
       },
-      get username() {
-        return username;
+      get profileImgUrl() {
+        return profileImgUrl;
       },
-      set username(value: string) {
-        username = value;
+      set profileImgUrl(value: string) {
+        profileImgUrl = value;
       },
       get authorities() {
         return authorities;
@@ -93,8 +93,8 @@ class Rq {
   public setLogined(member: components['schemas']['MemberDto']) {
     this.member.id = member.id;
     this.member.createDate = member.createDate;
-    // this.member.modifyDate = member.modifyDate;
-    this.member.username = member.username;
+    this.member.profileImgUrl = member.profileImgUrl;
+    this.member.name = member.name;
     this.member.authorities = member.authorities;
   }
 
@@ -102,7 +102,7 @@ class Rq {
     this.member.id = 0;
     this.member.createDate = '';
     this.member.modifyDate = '';
-    this.member.username = '';
+    this.member.name = '';
     this.member.authorities = [];
   }
 
@@ -185,6 +185,14 @@ class Rq {
     }/member/socialLogin/kakao?redirectUrl=${encodeURIComponent(
       import.meta.env.VITE_CORE_FRONT_BASE_URL
     )}/member/socialLoginCallback?provierTypeCode=kakao`;
+  }
+
+  public getGoogleLoginUrl() {
+    return `${
+      import.meta.env.VITE_CORE_API_BASE_URL
+    }/member/socialLogin/google?redirectUrl=${encodeURIComponent(
+      import.meta.env.VITE_CORE_FRONT_BASE_URL
+    )}/member/socialLoginCallback?provierTypeCode=google`;
   }
 
   public goToCurrentPageWithNewQueryStr(query: string) {

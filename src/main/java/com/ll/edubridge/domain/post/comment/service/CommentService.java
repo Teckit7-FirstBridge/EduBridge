@@ -4,6 +4,7 @@ import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.comment.dto.CreateCommentDto;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.comment.repository.CommentRepository;
+import com.ll.edubridge.domain.post.post.service.PostService;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final Rq rq;
+    private final PostService postService;
 
     // 권한 검사 기능
     public boolean haveAuthority(Long id) {
@@ -54,6 +56,7 @@ public class CommentService {
         Comment comment = Comment.builder()
                 .writer(author)
                 .content(createCommentDto.getBody())
+                .post(postService.getPost(createCommentDto.getPostId()))
                 .build();
 
         return commentRepository.save(comment);
