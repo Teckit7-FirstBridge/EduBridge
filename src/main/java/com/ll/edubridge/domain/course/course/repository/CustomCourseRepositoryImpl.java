@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
+import java.util.List;
+
 import static com.ll.edubridge.domain.post.post.entity.QPost.post;
 import static com.ll.edubridge.domain.course.course.entity.QCourse.course;
 
@@ -46,6 +48,15 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
         JPAQuery<Long> totalQuery = createTotalQuery(builder);
 
         return PageableExecutionUtils.getPage(cousrsesQuery.fetch(), pageable, totalQuery::fetchOne);
+    }
+
+    @Override
+    public List<Course> findLatestCourse(int num) {
+
+        return queryFactory.selectFrom(course)
+                .orderBy(course.createDate.desc())
+                .limit(num)
+                .fetch();
     }
 
 

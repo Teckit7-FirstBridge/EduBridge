@@ -33,7 +33,7 @@ export interface paths {
   };
   "/api/v1/posts": {
     /** 글 다건조회 */
-    get: operations["getPosts"];
+    get: operations["getPosts_1"];
     /** 글 등록 */
     post: operations["createPost"];
   };
@@ -54,7 +54,7 @@ export interface paths {
   };
   "/api/v1/courses": {
     /** 강좌 다건 조회 */
-    get: operations["getPosts_1"];
+    get: operations["getPosts_2"];
     /** 강좌 등록 */
     post: operations["createCourse"];
   };
@@ -71,6 +71,10 @@ export interface paths {
   "/api/v1/admin/{courseId}/videos": {
     /** 강의 등록 */
     post: operations["createVideo"];
+  };
+  "/api/v1": {
+    /** 홈화면 최신 강좌 N개조회 */
+    get: operations["getPosts"];
   };
   "/api/v1/posts/qna/{id}": {
     /** 1대1 문의 상세 정보 */
@@ -286,7 +290,7 @@ export interface components {
       success: boolean;
     };
     GetPostsResponseBody: {
-      items: components["schemas"]["PostDto"][];
+      items: components["schemas"]["CourseDto"][];
     };
     RsDataGetPostsResponseBody: {
       resultCode: string;
@@ -539,7 +543,7 @@ export interface operations {
     };
   };
   /** 글 다건조회 */
-  getPosts: {
+  getPosts_1: {
     parameters: {
       query?: {
         page?: number;
@@ -642,7 +646,7 @@ export interface operations {
     };
   };
   /** 강좌 다건 조회 */
-  getPosts_1: {
+  getPosts_2: {
     parameters: {
       query?: {
         page?: number;
@@ -740,6 +744,17 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataCreateVideoDto"];
+        };
+      };
+    };
+  };
+  /** 홈화면 최신 강좌 N개조회 */
+  getPosts: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataGetPostsResponseBody"];
         };
       };
     };
