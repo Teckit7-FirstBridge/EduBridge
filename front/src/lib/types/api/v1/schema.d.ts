@@ -148,6 +148,7 @@ export interface components {
     };
     CreateCommentDto: {
       body: string;
+      /** Format: int64 */
       postId: number;
     };
     CommentDto: {
