@@ -1,8 +1,5 @@
 package com.ll.edubridge.domain.course.summaryNote.controller;
 
-import com.ll.edubridge.domain.course.course.dto.CourseDto;
-import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.summaryNote.dto.CreateSummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
@@ -63,11 +60,11 @@ public class ApiV1SummaryNoteController {
         if(!summaryNoteService.haveAuthority(id))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
-        SummaryNote modifyCourse = summaryNoteService.modify(id, summaryNoteDto);
+        SummaryNote modifySummaryNote = summaryNoteService.modify(id, summaryNoteDto);
 
-        SummaryNoteDto modifyCourseDto = new SummaryNoteDto(modifyCourse);
+        SummaryNoteDto modifySummaryNoteDto = new SummaryNoteDto(modifySummaryNote);
 
-        return RsData.of("200-2", "수정 성공", modifyCourseDto);
+        return RsData.of("200-2", "수정 성공", modifySummaryNoteDto);
     }
 
     @DeleteMapping("/{note-id}")
@@ -84,9 +81,9 @@ public class ApiV1SummaryNoteController {
 
     @GetMapping("/{note-id}")
     @Operation(summary = "강의 요약 노트 상세 보기")
-    public RsData<CourseDto> getCourse(@PathVariable("") Long id){
-        Course course = courseService.getCourse(id);
-        CourseDto courseDto = new CourseDto(course);
-        return RsData.of("200-1", "성공", courseDto);
+    public RsData<SummaryNoteDto> getSummaryNote(@PathVariable("id") Long id){
+        SummaryNote summaryNote = summaryNoteService.getSummaryNote(id);
+        SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
+        return RsData.of("200-1", "성공", summaryNoteDto);
     }
 }
