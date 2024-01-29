@@ -96,7 +96,8 @@
     </button>
     {#if rq.isLogin()}
       <a href="/member/me" class="btn btn-ghost">
-        {rq.member.username}
+        <img class="inline-block rounded-circle" src={rq.member.profileImgUrl} width="30" alt="" />
+        {rq.member.name}
       </a>
     {/if}
   </div>

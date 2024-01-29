@@ -54,3 +54,7 @@ html > body .modal-box {
 main {
   flex: 1;
 }
+
+.rounded-circle {
+  border-radius: 50%; /* 이미지를 동그라미로 만듭니다. */
+}

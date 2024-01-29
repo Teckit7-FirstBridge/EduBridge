@@ -21,8 +21,8 @@ class Rq {
   constructor() {
     let id = $state(0);
     let name = $state('');
+    let profileImgUrl = $state('');
     let createDate = $state('');
-    let modifyDate = $state('');
     let authorities: string[] = $state([]);
 
     this.member = {
@@ -38,17 +38,17 @@ class Rq {
       set createDate(value: string) {
         createDate = value;
       },
-      get modifyDate() {
-        return modifyDate;
-      },
-      set modifyDate(value: string) {
-        modifyDate = value;
-      },
       get name() {
         return name;
       },
       set name(value: string) {
         name = value;
+      },
+      get profileImgUrl() {
+        return profileImgUrl;
+      },
+      set profileImgUrl(value: string) {
+        profileImgUrl = value;
       },
       get authorities() {
         return authorities;
@@ -93,7 +93,7 @@ class Rq {
   public setLogined(member: components['schemas']['MemberDto']) {
     this.member.id = member.id;
     this.member.createDate = member.createDate;
-    // this.member.modifyDate = member.modifyDate;
+    this.member.profileImgUrl = member.profileImgUrl;
     this.member.name = member.name;
     this.member.authorities = member.authorities;
   }
