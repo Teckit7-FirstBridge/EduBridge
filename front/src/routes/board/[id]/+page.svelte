@@ -3,6 +3,26 @@
   import type { components } from '$lib/types/api/v1/schema';
   import { page } from '$app/stores';
 
+  let comments: components['schemas']['CommentDto'][] = $state();
+
+  let postId = parseInt($page.params.id);
+
+  let body: string | undefined = $state();
+
+  async function load() {
+    if (import.meta.env.SSR) throw new Error('CSR ONLY');
+    const responseVideos = await rq.apiEndPoints().GET(`/api/v1/comments/{postId}`, {
+      params: {
+        path: {
+          postId: parseInt($page.params.id)
+        }
+      }
+    });
+    comments = responseVideos.data?.data!;
+
+    return { comments };
+  }
+
   const { data } = $props<{ data: { post: components['schemas']['PostDto'] } }>();
   const { post } = data;
   console.log(post);
@@ -14,6 +34,20 @@
     if (data) {
       rq.msgInfo('게시글이 삭제되었습니다');
       rq.goTo('/board');
+    } else if (error) {
+      rq.msgError(error.msg);
+    }
+  }
+
+  async function deleteComment(commentId: number) {
+    const { data, error } = await rq
+      .apiEndPoints()
+      .DELETE(`/api/v1/comments/{postId}/{commentId}`, {
+        params: { path: { postId: parseInt($page.params.id), commentId: commentId } }
+      });
+    if (data) {
+      rq.msgInfo('댓글이 삭제되었습니다');
+      location.reload();
     } else if (error) {
       rq.msgError(error.msg);
     }
@@ -42,6 +76,24 @@
       }
     }
   }
+
+  const Comment__save = async () => {
+    console.log(body);
+
+    const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/comments', {
+      // url 설정
+      body: {
+        body: body,
+        postId: postId
+      }
+    });
+
+    if (data) {
+      rq.msgInfo(data.msg); //msg
+      location.reload();
+      body = '';
+    }
+  };
 </script>
 
 <div class="max-w-4xl mx-auto my-8">
@@ -143,48 +195,87 @@
         class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
         rows="4"
         placeholder="댓글을 입력하세요..."
+        bind:value={body}
       ></textarea>
       <!-- 댓글 등록 기능 추가 -->
-      <button class="mt-2 btn">댓글 등록</button>
+      <button class="mt-2 btn" on:click={Comment__save}>댓글 등록</button>
     </div>
   </div>
 
-  <div class="border-t my-8"></div>
+  {#await load()}
+    <div>loading...</div>
+  {:then { comments }}
+    <div class="border-t my-8"></div>
+    <div>댓글</div>
+    {#each comments as comment}
+      <div class="mt-8">
+        <div class="border rounded-md">
+          <div>
+            <div class="flex items-center">
+              <div class="ml-5">
+                <span class="font-bold mr-2">{comment.authorName}</span>
+              </div>
+              <div>
+                <p class="text-nm space-y-1.5 p-6">
+                  {(() => {
+                    const now = new Date();
+                    const commentDate = new Date(comment.createDate);
+                    const seconds = Math.floor((now - commentDate) / 1000);
 
-  <div>댓글</div>
-  <!-- {#each commentlist as comment} -->
-  <div class="mt-8">
-    <div class="border rounded-md p-4">
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center">
-          <span class="font-bold mr-2">comment.author.username:</span>
-          <span class="text-gray-600">comment.body</span>
+                    let interval = seconds / 31536000;
+                    if (interval > 1) {
+                      return Math.floor(interval) + '년 전';
+                    }
+                    interval = seconds / 2592000;
+                    if (interval > 1) {
+                      return Math.floor(interval) + '개월 전';
+                    }
+                    interval = seconds / 86400;
+                    if (interval > 1) {
+                      return Math.floor(interval) + '일 전';
+                    }
+                    interval = seconds / 3600;
+                    if (interval > 1) {
+                      return Math.floor(interval) + '시간 전';
+                    }
+                    interval = seconds / 60;
+                    if (interval > 1) {
+                      return Math.floor(interval) + '분 전';
+                    }
+                    return Math.floor(seconds) + '초 전';
+                  })()}
+                </p>
+              </div>
+              <div class="flex justify-end">
+                {#if rq.member.id === comment.authorId}
+                  <div class="flex gap-2 text-gray-400">
+                    <!-- 수정 기능 추가 -->
+                    <button class="text-xs">수정</button>
+                    <p>/</p>
+                    <!-- 삭제 기능 추가 -->
+                    <button class="text-xs" on:click={() => deleteComment(comment.id)}>삭제</button>
+                  </div>
+                {/if}
+              </div>
+            </div>
+            <div class="flex items-center mx-5 mb-5">
+              <span class="text-gray-600">{comment.body}</span>
+            </div>
+          </div>
         </div>
-        <!--    만약 댓글 작성자 라면 -->
-        <div class="flex gap-2 text-gray-400">
-          <!-- 수정 기능 추가 -->
-          <button class="text-xs">수정</button>
-          <p>/</p>
-          <!-- 삭제 기능 추가 -->
-          <button class="text-xs">삭제</button>
-        </div>
-        <!-- 댓글 수정, 삭제 -->
       </div>
-      <!-- 댓글 내용이 들어가는 부분 -->
-    </div>
+    {/each}
+  {/await}
 
-    <!-- {#if editingCommentId === comment.id} -->
-    <div class="flex justify-center items-center">
-      <!--bind:value = {comment.body}추가 -->
-      <textarea
-        class="w-full px-3 py-2 h-20 border rounded-md focus:outline-none focus:border-blue-500 mt-4 mx-2"
-        rows="4"
-      ></textarea>
-      <!-- on:click={() => fetchModiComment(comment.id, comment.body)} 추가 -->
-      <button class="btn">저장</button>
-    </div>
-    <!-- {/if} -->
-    <!-- 다른 댓글들도 유사한 방식으로 표시 -->
+  <!-- {#if editingCommentId === comment.id} -->
+  <div class="flex justify-center items-center">
+    <!--bind:value = {comment.body}추가 -->
+    <textarea
+      class="w-full px-3 py-2 h-20 border rounded-md focus:outline-none focus:border-blue-500 mt-4 mx-2"
+      rows="4"
+    ></textarea>
+    <!-- on:click={() => fetchModiComment(comment.id, comment.body)} 추가 -->
+    <button class="btn">저장</button>
   </div>
-  <!-- {/each} -->
 </div>
+<!-- {/if} -->
