@@ -7,7 +7,7 @@
     const provierTypeCode = $page.url.searchParams.get('provierTypeCode');
     console.log(provierTypeCode);
     rq.msgInfo('환영합니다.');
-    rq.replace(/);
+    rq.replace('/');
   });
 </script>
 <script lang="ts">
