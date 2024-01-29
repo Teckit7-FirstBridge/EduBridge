@@ -53,6 +53,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         Member member = memberService.modifyOrJoin(username, providerTypeCode, nickname, profileImgUrl).getData();
 
+        if(!member.isVisitedToday()) {
+            member.setVisitedToday(true);
+            int point = member.getPoint() + 500;
+            member.setPoint(point);
+        }
+
         return new SecurityUser(member.getId(), member.getUsername(), member.getPassword(), member.getAuthorities());
     }
 }
