@@ -8,6 +8,8 @@ import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,10 @@ import java.util.Optional;
 public class SummaryNoteService {
     private final SummaryNoteRepository summaryNoteRepository;
     private final Rq rq;
+
+    public Page<SummaryNote> findAll(Pageable pageable) {
+        return summaryNoteRepository.findAll(pageable);
+    }
 
     public Optional<SummaryNote> findById(Long id) {
         return summaryNoteRepository.findById(id);

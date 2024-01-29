@@ -1,13 +1,11 @@
 package com.ll.edubridge.domain.course.summaryNote.controller;
 
-import com.ll.edubridge.domain.course.course.dto.CourseDto;
-import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.summaryNote.dto.CreateSummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
@@ -17,6 +15,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,11 +64,11 @@ public class ApiV1SummaryNoteController {
         if(!summaryNoteService.haveAuthority(id))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
-        SummaryNote modifyCourse = summaryNoteService.modify(id, summaryNoteDto);
+        SummaryNote modifySummaryNote = summaryNoteService.modify(id, summaryNoteDto);
 
-        SummaryNoteDto modifyCourseDto = new SummaryNoteDto(modifyCourse);
+        SummaryNoteDto modifySummaryNoteDto = new SummaryNoteDto(modifySummaryNote);
 
-        return RsData.of("200-2", "수정 성공", modifyCourseDto);
+        return RsData.of("200-2", "수정 성공", modifySummaryNoteDto);
     }
 
     @DeleteMapping("/{note-id}")
@@ -82,11 +83,27 @@ public class ApiV1SummaryNoteController {
         return RsData.of("200-3", "삭제 성공");
     }
 
+    @GetMapping("")
+    @Operation(summary = "전체 강의노트 목록 조회")
+    public RsData<GetSummaryNoteResponsebody> getSummaryNote(@RequestParam(value = "page", defaultValue = "1") int page){
+        int pageSize = AppConfig.getBasePageSize();
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+
+        Page<SummaryNote> summaryNotes = summaryNoteService.findAll(pageable);
+        GetSummaryNoteResponsebody responseBody = new ApiV1SummaryNoteController.GetSummaryNoteResponsebody(summaryNotes, rq.getMember());
+
+        return RsData.of(
+                "200-1",
+                "성공",
+                responseBody
+        );
+    }
+
     @GetMapping("/{note-id}")
     @Operation(summary = "강의 요약 노트 상세 보기")
-    public RsData<CourseDto> getCourse(@PathVariable("") Long id){
-        Course course = courseService.getCourse(id);
-        CourseDto courseDto = new CourseDto(course);
-        return RsData.of("200-1", "성공", courseDto);
+    public RsData<SummaryNoteDto> getSummaryNote(@PathVariable("{note-id}") Long id){
+        SummaryNote summaryNote = summaryNoteService.getSummaryNote(id);
+        SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
+        return RsData.of("200-1", "성공", summaryNoteDto);
     }
 }
