@@ -62,7 +62,6 @@ public class ApiV1PostController {
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
         Page<Post> postPage = postService.findByKw(kwType, kw, null, true, pageable);
-        postPage.stream().forEach(System.out::println);
 
         GetPostsResponseBody responseBody = new GetPostsResponseBody(postPage, rq.getMember());
 

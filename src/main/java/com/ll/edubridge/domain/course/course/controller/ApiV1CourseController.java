@@ -6,11 +6,15 @@ import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.post.post.controller.ApiV1PostController;
+import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
+import com.ll.edubridge.standard.base.KwTypeCourse;
+import com.ll.edubridge.standard.base.KwTypeV1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
@@ -23,6 +27,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -48,14 +53,20 @@ public class ApiV1CourseController {
         }
     }
 
-    @GetMapping("")
-    @Operation(summary = "전체 강좌 목록 조회")
-    public RsData<GetCoursesResponsebody> getCourses(@RequestParam(value = "page", defaultValue = "1") int page){
-        int pageSize = AppConfig.getBasePageSize();
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+    @GetMapping(value = "")
+    @Operation(summary = "강좌 다건 조회")
+    public RsData<GetCoursesResponsebody> getPosts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String kw,
+            @RequestParam(defaultValue = "ALL") KwTypeCourse kwType
+    ) {
 
-        Page<Course> courses = courseService.findAll(pageable);
-        GetCoursesResponsebody responseBody = new GetCoursesResponsebody(courses, rq.getMember());
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+        Page<Course> coursePage = courseService.findByKw(kwType, kw, null,  pageable);
+
+        GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage, rq.getMember());
 
         return RsData.of(
                 "200-1",
