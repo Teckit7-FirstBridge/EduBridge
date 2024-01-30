@@ -5,9 +5,8 @@ import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.global.security.SecurityUser;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -88,12 +87,14 @@ public class MemberService {
     }
 
 
-    @AllArgsConstructor
-    @Getter
-    public static class AuthAndMakeTokensResponseBody {
-        private Member member;
-        private String accessToken;
-        private String refreshToken;
+    public record AuthAndMakeTokensResponseBody(
+            @NonNull
+            Member member,
+            @NonNull
+            String accessToken,
+            @NonNull
+            String refreshToken
+    ) {
     }
 
     @Transactional
