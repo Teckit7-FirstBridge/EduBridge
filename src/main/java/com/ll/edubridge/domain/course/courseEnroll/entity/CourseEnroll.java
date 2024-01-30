@@ -7,8 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -20,13 +18,10 @@ import static lombok.AccessLevel.PROTECTED;
 @ToString(callSuper = true)
 public class CourseEnroll extends BaseEntity {
 
-    private LocalDateTime cancelDate;
-
     @ManyToOne(optional = false)
     private Course course;
 
     @ManyToOne(optional = false)
     private Member member;
-
 
 }
