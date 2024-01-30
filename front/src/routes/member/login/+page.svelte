@@ -15,7 +15,8 @@
     >
       <img src="/kakao_login_medium_wide (1).png" alt="" />
     </a>
-    <button
+    <a
+      href={rq.getGoogleLoginUrl()}
       class="whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50h-10 px-4 bg-white text-black w-[300px] flex items-center justify-center py-3 rounded-md shadow-md"
     >
       <svg
@@ -37,6 +38,6 @@
         <line x1="10.88" x2="15.46" y1="21.94" y2="14"></line>
       </svg>
       구글로 계속하기
-    </button>
+    </a>
   </div>
 </div>

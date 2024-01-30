@@ -8,8 +8,15 @@ import org.springframework.lang.NonNull;
 public class CreateCommentDto {
     @NonNull
     private String body;
+    @NonNull
+    private Long postId;
 
     public CreateCommentDto(Comment comment) {
         this.body = comment.getContent();
+        this.postId=comment.getPost().getId();
+    }
+
+    public CreateCommentDto(){
+
     }
 }

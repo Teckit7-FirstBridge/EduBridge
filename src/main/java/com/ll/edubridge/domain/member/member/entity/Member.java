@@ -41,6 +41,8 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
 
     private String profileImgUrl;
 
+    private boolean visitedToday;
+
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<CourseEnroll> courseEnrollList;

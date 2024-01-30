@@ -5,8 +5,11 @@ import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
+import com.ll.edubridge.standard.base.KwTypeCourse;
+import com.ll.edubridge.standard.base.KwTypeV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +40,7 @@ public class CourseService {
                 .notice(createCourseDto.getNotice())
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
+                .price(createCourseDto.getPrice())
                 .owner(member)
                 .build();
         return courseRepository.save(course);
@@ -46,6 +50,8 @@ public class CourseService {
     public Course modify(Long id, CourseDto courseDto) {
         Course course = this.getCourse(id);
 
+        course.setTitle(courseDto.getTitle());
+        course.setNotice(courseDto.getNotice());
         course.setImgUrl(courseDto.getImgUrl());
         course.setOverView(courseDto.getOverView());
 
@@ -77,5 +83,9 @@ public class CourseService {
         if (rq.isAdmin()) return true;
 
         return true;
+    }
+
+    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {
+        return courseRepository.findByKw(kwType, kw, author, pageable);
     }
 }

@@ -15,13 +15,13 @@ spring:
     virtual:
       enabled: true
   datasource:
-    url: jdbc:h2:./db_dev;MODE=MYSQL
+    url: jdbc:h2:./db_dev;MODE=PostgreSQL
     username: sa
     password:
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         default_batch_fetch_size: 100
@@ -39,7 +39,7 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: '${custom.site.backUrl}/{action}/oauth2/code/{registrationId}'
           google:
-              redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
+              redirect-uri: '${custom.site.backUrl}/{action}/oauth2/code/{registrationId}'
               client-name: Google
               scope: profile
         provider:
@@ -68,7 +68,7 @@ custom:
     cookieDomain: "${custom.dev.cookieDomain}"
     frontUrl: "${custom.dev.frontUrl}"
     backUrl: "${custom.dev.backUrl}"
-    name: slog
+    name: eb
   jwt:
     secretKey: ON_SECRET
   accessToken:

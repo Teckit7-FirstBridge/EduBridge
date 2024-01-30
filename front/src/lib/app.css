@@ -50,3 +50,11 @@ html > body .modal-box {
   font-weight: 500;
   opacity: 0.7;
 }
+
+main {
+  flex: 1;
+}
+
+.rounded-circle {
+  border-radius: 50%; /* 이미지를 동그라미로 만듭니다. */
+}

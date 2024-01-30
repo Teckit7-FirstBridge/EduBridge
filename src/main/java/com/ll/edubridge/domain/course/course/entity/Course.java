@@ -35,6 +35,8 @@ public class Course extends BaseEntity {
     @ManyToOne(optional = false)
     private Member owner;
 
+    private int price;
+
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     private List<Video> videoList;
 

@@ -1,4 +1,5 @@
 server:
+  address: 0.0.0.0
   port: 8080
   shutdown: graceful # 자기가 이전에 받은 요청을 깔끔하게 처리한 상태에서 끝나게 해줌
 spring:
@@ -7,10 +8,10 @@ spring:
       max-file-size: 5MB
       max-request-size: 5MB
   datasource:
-    url: NEED_TO_INPUT
-    username: NEED_TO_INPUT
-    password: NEED_TO_INPUT
-    driver-class-name: org.h2.Driver # NEED_TO_CHANGE
+    url: jdbc:postgresql://potato-eb-db.internal:5432/eb_prod
+    username: postgres
+    password: ${custom.prod.database.password}
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update

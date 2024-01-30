@@ -96,7 +96,8 @@
     </button>
     {#if rq.isLogin()}
       <a href="/member/me" class="btn btn-ghost">
-        {rq.member.username}
+        <img class="inline-block rounded-circle" src={rq.member.profileImgUrl} width="30" alt="" />
+        {rq.member.name}
       </a>
     {/if}
   </div>
@@ -107,7 +108,7 @@
       </form>
 
       <form
-        action="/p/list"
+        action="/course"
         class="bg-base rounded flex flex-col gap-6"
         onsubmit={() => {
         const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
@@ -126,7 +127,6 @@
           >
             <option value="ALL">전체</option>
             <option value="TITLE">제목</option>
-            <option value="TITLE_OR_BODY">제목,내용</option>
             <option value="NAME">작성자</option>
           </select>
         </div>

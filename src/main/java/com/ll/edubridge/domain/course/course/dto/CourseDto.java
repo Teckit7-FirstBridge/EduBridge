@@ -12,13 +12,20 @@ public class CourseDto {
     private String imgUrl;
     private String overView;
     private String ownerName;
+    private int price;
 
-    public CourseDto(Course course){
+    public CourseDto(Course course) {
         this.id = course.getId();
         this.title = course.getTitle();
         this.notice = course.getNotice();
         this.imgUrl = course.getImgUrl();
         this.overView = course.getOverView();
         this.ownerName = course.getOwner().getNickname();
+        this.price = course.getPrice();
     }
+
+    public CourseDto() {
+
+    }
+
 }
