@@ -5,7 +5,6 @@ FROM gradle:jdk21-graal-jammy as builder
 WORKDIR /app
 
 # 소스 코드와 Gradle 래퍼 복사
-COPY ./db_prod.mv.db .
 COPY gradlew .
 COPY gradle gradle
 COPY build.gradle .
