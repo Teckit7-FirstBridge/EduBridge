@@ -1,6 +1,6 @@
 package com.ll.edubridge.domain.course.courseEnroll.service;
 
-import com.ll.edubridge.domain.course.courseEnroll.dto.CreateCourseEnrollDto;
+import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
@@ -20,6 +20,7 @@ import java.util.Optional;
 public class CourseEnrollService {
     private final Rq rq;
     private final CourseEnrollRepository courseEnrollRepository;
+    private final CourseService courseService;
 
     public Page<CourseEnroll> findAll(Pageable pageable) {
         return courseEnrollRepository.findAll(pageable);
@@ -30,9 +31,10 @@ public class CourseEnrollService {
     }
 
     @Transactional
-    public CourseEnroll create(Member member, CreateCourseEnrollDto createCourseEnrollDto) {
+    public CourseEnroll create(Member member, Long courseId) {
         CourseEnroll courseEnroll = CourseEnroll.builder()
-                .cancelDate(createCourseEnrollDto.getCancelDate())
+                .course(courseService.getCourse(courseId))
+                .member(member)
                 .build();
         return courseEnrollRepository.save(courseEnroll);
     }
