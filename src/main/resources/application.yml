@@ -68,7 +68,7 @@ custom:
     cookieDomain: "${custom.dev.cookieDomain}"
     frontUrl: "${custom.dev.frontUrl}"
     backUrl: "${custom.dev.backUrl}"
-    name: slog
+    name: eb
   jwt:
     secretKey: ON_SECRET
   accessToken:
