@@ -39,7 +39,7 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: '${custom.site.backUrl}/{action}/oauth2/code/{registrationId}'
           google:
-              redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
+              redirect-uri: '${custom.site.backUrl}/{action}/oauth2/code/{registrationId}'
               client-name: Google
               scope: profile
         provider:
