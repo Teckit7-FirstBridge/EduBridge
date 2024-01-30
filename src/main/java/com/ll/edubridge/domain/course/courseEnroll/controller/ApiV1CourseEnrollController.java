@@ -1,13 +1,8 @@
 package com.ll.edubridge.domain.course.courseEnroll.controller;
 
 import com.ll.edubridge.domain.course.courseEnroll.dto.CourseEnrollDto;
-import com.ll.edubridge.domain.course.courseEnroll.dto.CreateCourseEnrollDto;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
-import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
-import com.ll.edubridge.domain.course.summaryNote.controller.ApiV1SummaryNoteController;
-import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
-import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.rq.Rq;
@@ -28,11 +23,10 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(value = "/api/v1/posts", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/enroll", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "ApiV1CourseEnrollController", description = "수업 테이블 컨트롤러")
 public class ApiV1CourseEnrollController {
-    private final CourseEnrollRepository courseEnrollRepository;
     private final CourseEnrollService courseEnrollService;
     private final Rq rq;
 
@@ -48,10 +42,11 @@ public class ApiV1CourseEnrollController {
         }
     }
 
-    @PostMapping("")
-    @Operation(summary = "강의 요약 노트 등록")
-    public RsData<CourseEnrollDto> create(@RequestBody CreateCourseEnrollDto createCourseEnrollDto) {
-        CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), createCourseEnrollDto);
+    @PostMapping("/{courseId}")
+    @Operation(summary = "수강 등록")
+    public RsData<CourseEnrollDto> create(@PathVariable("id") Long courseId) {
+
+        CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), courseId);
 
         CourseEnrollDto courseEnrollDto = new CourseEnrollDto(courseEnroll);
 
@@ -61,12 +56,12 @@ public class ApiV1CourseEnrollController {
 
     @GetMapping("")
     @Operation(summary = "수업 목록 조회")
-    public RsData<ApiV1CourseEnrollController.GetCourseEnrollResponsebody> getSummaryNote(@RequestParam(value = "page", defaultValue = "1") int page){
+    public RsData<GetCourseEnrollResponsebody> getSummaryNote(@RequestParam(value = "page", defaultValue = "1") int page){
         int pageSize = AppConfig.getBasePageSize();
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "id"));
 
         Page<CourseEnroll> courseEnrolls = courseEnrollService.findAll(pageable);
-        ApiV1CourseEnrollController.GetCourseEnrollResponsebody responseBody = new ApiV1CourseEnrollController.GetCourseEnrollResponsebody(courseEnrolls, rq.getMember());
+        GetCourseEnrollResponsebody responseBody = new GetCourseEnrollResponsebody(courseEnrolls, rq.getMember());
 
         return RsData.of(
                 "200-1",

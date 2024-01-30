@@ -3,7 +3,6 @@ package com.ll.edubridge.domain.course.summaryNote.controller;
 import com.ll.edubridge.domain.course.summaryNote.dto.CreateSummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
-import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
@@ -32,7 +31,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Tag(name = "ApiV1SummaryNoteController", description = "강의 요약노트 CRUD 컨트롤러")
 public class ApiV1SummaryNoteController {
 
-    private final SummaryNoteRepository summaryNoteRepository;
     private final SummaryNoteService summaryNoteService;
     private final Rq rq;
 
@@ -59,10 +57,10 @@ public class ApiV1SummaryNoteController {
 
     }
 
-    @PutMapping("/{note-id}")
+    @PutMapping("/{noteId}")
     @Operation(summary = "강의 요약 노트 수정")
     public RsData<SummaryNoteDto> modify(
-            @PathVariable("id") Long id,
+            @PathVariable("noteId") Long id,
             @RequestBody SummaryNoteDto summaryNoteDto) {
 
         if(!summaryNoteService.haveAuthority(id))
@@ -77,9 +75,9 @@ public class ApiV1SummaryNoteController {
 
     }
 
-    @DeleteMapping("/{note-id}")
+    @DeleteMapping("/{noteId}")
     @Operation(summary = "강의 요약 노트 삭제")
-    public RsData<Empty> delete(@PathVariable("id") Long id) {
+    public RsData<Empty> delete(@PathVariable("noteId") Long id) {
 
         if(!summaryNoteService.haveAuthority(id))
             throw new GlobalException("403-1", "권한이 없습니다.");
