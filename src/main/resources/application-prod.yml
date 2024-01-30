@@ -10,7 +10,7 @@ spring:
   datasource:
     url: jdbc:postgresql://potato-eb-db.internal:5432/eb_prod
     username: postgres
-    password: hYUkKmKfukr7U0y
+    password: ${custom.prod.database.password}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
