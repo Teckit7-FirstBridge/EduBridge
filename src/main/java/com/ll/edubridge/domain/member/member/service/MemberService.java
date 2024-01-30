@@ -165,4 +165,8 @@ public class MemberService {
     private List<Member> getAllMembers() {
         return memberRepository.findAll();
     }
+
+    public List<Member> recentMembers(int num) {
+        return memberRepository.findTopByCreateDate(num);
+    }
 }
