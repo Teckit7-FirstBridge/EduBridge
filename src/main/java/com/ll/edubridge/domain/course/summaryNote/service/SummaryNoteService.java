@@ -1,10 +1,12 @@
 package com.ll.edubridge.domain.course.summaryNote.service;
 
+import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.summaryNote.dto.CreateSummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class SummaryNoteService {
     private final SummaryNoteRepository summaryNoteRepository;
+    private final MemberRepository memberRepository;
     private final Rq rq;
 
     public Page<SummaryNote> findAll(Pageable pageable) {
@@ -41,18 +44,23 @@ public class SummaryNoteService {
         }
     }
 
-
-
     @Transactional
     public SummaryNote create(Member member, CreateSummaryNoteDto createSummaryNoteDto) {
         SummaryNote summaryNote = SummaryNote.builder()
                 .content(createSummaryNoteDto.getContent())
                 .build();
+
+        // 포인트 지급 -> 로컬 테스트 실패
+        Course course = summaryNote.getVideo().getCourse();
+        int point = member.getPoint() + course.getPrice()/10;
+        member.setPoint(point);
+        memberRepository.save(member);
+
         return summaryNoteRepository.save(summaryNote);
     }
 
     @Transactional
-    public SummaryNote modify(Long id , SummaryNoteDto summaryNoteDto) {
+    public SummaryNote modify(Long id, SummaryNoteDto summaryNoteDto) {
         SummaryNote summaryNote = this.getSummaryNote(id);
 
         summaryNote.setContent(summaryNoteDto.getContent());
@@ -76,7 +84,5 @@ public class SummaryNoteService {
 
         return true;
     }
-
-
 
 }
