@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.post.post.service;
 
+import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.domain.post.post.dto.CreatePostDto;
@@ -172,4 +173,5 @@ public class PostService {
     public Page<Post> findByKw(KwTypeV1 kwType, String kw, Member author, Boolean published, Pageable pageable) {
         return postRepository.findByKw(kwType, kw, author, published, pageable);
     }
+
 }
