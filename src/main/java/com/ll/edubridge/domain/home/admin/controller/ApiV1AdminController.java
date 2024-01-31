@@ -53,7 +53,7 @@ public class ApiV1AdminController {
     @Operation(summary = "신고 게시물 최신순")
     public RsData<List<ReportedPostDto>> getReportedPosts() {
 
-        List<Post> reportedPosts = postService.reportedPosts(5);
+        List<Post> reportedPosts = postService.reportedPosts();
 
         List<ReportedPostDto> reportedPostList = reportedPosts.stream()
                 .map(ReportedPostDto::new)
@@ -70,7 +70,7 @@ public class ApiV1AdminController {
     @Operation(summary = "회원 최신순")
     public RsData<List<RecentMemberDto>> getMembers() {
 
-        List<Member> recentMembers = memberService.recentMembers(5);
+        List<Member> recentMembers = memberService.recentMembers();
 
         List<RecentMemberDto> recentMemberList = recentMembers.stream()
                 .map(RecentMemberDto::new)

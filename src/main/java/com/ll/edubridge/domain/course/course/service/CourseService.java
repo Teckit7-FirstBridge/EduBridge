@@ -81,7 +81,7 @@ public class CourseService {
 
         if (member == null) return false;
 
-        if (rq.isAdmin()) return true;
+        if (!rq.isAdmin()) return true;
 
         return true;
     }
