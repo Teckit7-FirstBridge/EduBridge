@@ -20,7 +20,7 @@
   <nav class="flex-1 px-2 space-y-2">
     <a
       class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-      href="#"
+      href="/admin"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -57,7 +57,7 @@
         <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
       </svg>
-      Customers
+      강좌 관리
     </a>
   </nav>
 </div>

@@ -6,14 +6,13 @@ import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/members")
@@ -29,22 +28,23 @@ public class ApiV1MemberController {
     public record LoginResponseBody(@NonNull MemberDto item) {
     }
 
-//    @PostMapping("/login")
-//    public RsData<LoginResponseBody> login(@Valid @RequestBody LoginRequestBody body) {
-//        RsData<MemberService.AuthAndMakeTokensResponseBody> authAndMakeTokensRs = memberService.authAndMakeTokens(
-//                body.username,
-//                body.password
-//        );
-//
-//        rq.setCrossDomainCookie("refreshToken", authAndMakeTokensRs.getData().refreshToken());
-//        rq.setCrossDomainCookie("accessToken", authAndMakeTokensRs.getData().accessToken());
-//
-//        return authAndMakeTokensRs.newDataOf(
-//                new LoginResponseBody(
-//                        new MemberDto(authAndMakeTokensRs.getData().member())
-//                )
-//        );
-//    }
+    @PostMapping(value = "/login")
+    @Operation(summary = "로그인, accessToken, refreshToken 쿠키 생성됨")
+    public RsData<LoginResponseBody> login(@Valid @RequestBody LoginRequestBody body) {
+        RsData<MemberService.AuthAndMakeTokensResponseBody> authAndMakeTokensRs = memberService.authAndMakeTokens(
+                body.username,
+                body.password
+        );
+
+        rq.setCrossDomainCookie("refreshToken", authAndMakeTokensRs.getData().refreshToken());
+        rq.setCrossDomainCookie("accessToken", authAndMakeTokensRs.getData().accessToken());
+
+        return authAndMakeTokensRs.newDataOf(
+                new LoginResponseBody(
+                        new MemberDto(authAndMakeTokensRs.getData().member())
+                )
+        );
+    }
 
 
     public record MeResponseBody(@NonNull MemberDto item) {

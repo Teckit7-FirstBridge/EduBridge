@@ -114,6 +114,12 @@ class Rq {
     return !this.isLogin();
   }
 
+  public isAdmin() {
+    if (this.isLogout()) return false;
+
+    return this.member.authorities.includes('ROLE_ADMIN');
+  }
+
   public async initAuth() {
     const { data } = await this.apiEndPoints().GET('/api/v1/members/me');
     if (data) {
