@@ -1,7 +1,10 @@
 package com.ll.edubridge.domain.course.courseEnroll.controller;
 
+import com.ll.edubridge.domain.course.course.entity.Course;
+import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.courseEnroll.dto.CourseEnrollDto;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
+import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
@@ -28,7 +31,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Tag(name = "ApiV1CourseEnrollController", description = "수업 테이블 컨트롤러")
 public class ApiV1CourseEnrollController {
     private final CourseEnrollService courseEnrollService;
+    private final CourseService courseService;
     private final Rq rq;
+    private final CourseEnrollRepository courseEnrollRepository;
 
     @Getter
     public static class GetCourseEnrollResponsebody{
@@ -46,12 +51,18 @@ public class ApiV1CourseEnrollController {
     @Operation(summary = "수강 등록")
     public RsData<CourseEnrollDto> create(@PathVariable("id") Long courseId) {
 
-        CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), courseId);
+        Member member = rq.getMember(); //  현재 로그인한 사용자의 정보
+        int point = member.getPoint();
+        Course course = courseService.getCourse(courseId); //
+        int price = course.getPrice();
+        if (point >= price) {
+            CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), courseId,price,point);
+            CourseEnrollDto courseEnrollDto = new CourseEnrollDto(courseEnroll);
+            return RsData.of("200-0", "등록 성공", courseEnrollDto);
+        }else {
+            return RsData.of("400-1","수강 등록 실패"); // 400 - Not found
 
-        CourseEnrollDto courseEnrollDto = new CourseEnrollDto(courseEnroll);
-
-        return RsData.of("200-0", "등록 성공", courseEnrollDto);
-
+        }
     }
 
     @GetMapping("")

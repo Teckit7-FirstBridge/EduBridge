@@ -32,6 +32,8 @@ public class CourseService {
         return courseRepository.findById(id);
     }
 
+
+
     @Transactional
     public Course create(Member member, CreateCourseDto createCourseDto) {
         Course course = Course.builder()
