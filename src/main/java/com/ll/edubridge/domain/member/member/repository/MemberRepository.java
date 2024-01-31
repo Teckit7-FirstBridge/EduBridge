@@ -12,4 +12,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByRefreshToken(String refreshToken);
 
     List<Member> findAll();
+
+    List<Member> findTopByCreateDateOrderByCreateDateDesc(int num);
 }

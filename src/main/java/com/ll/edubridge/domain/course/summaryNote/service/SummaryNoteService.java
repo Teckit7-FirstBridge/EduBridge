@@ -1,11 +1,13 @@
 package com.ll.edubridge.domain.course.summaryNote.service;
 
+import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.summaryNote.dto.CreateSummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
 import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class SummaryNoteService {
     private final SummaryNoteRepository summaryNoteRepository;
+    private final MemberRepository memberRepository;
     private final Rq rq;
     private final VideoService videoService;
 
@@ -43,8 +46,6 @@ public class SummaryNoteService {
         }
     }
 
-
-
     @Transactional
     public SummaryNote create(Member member, CreateSummaryNoteDto createSummaryNoteDto,Long videoid) {
         SummaryNote summaryNote = SummaryNote.builder()
@@ -52,6 +53,13 @@ public class SummaryNoteService {
                 .writer(member)
                 .video(videoService.findById(videoid).get())
                 .build();
+
+        // 포인트 지급 -> 로컬 테스트 실패
+        Course course = summaryNote.getVideo().getCourse();
+        int point = member.getPoint() + course.getPrice()/10;
+        member.setPoint(point);
+        memberRepository.save(member);
+
         return summaryNoteRepository.save(summaryNote);
     }
 
@@ -85,4 +93,5 @@ public class SummaryNoteService {
     public Page<SummaryNote> findByVideoId(Pageable pageable,Long videoid) {
         return summaryNoteRepository.findByVideoId(pageable,videoid);
     }
+
 }
