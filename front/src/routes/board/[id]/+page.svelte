@@ -5,39 +5,28 @@
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
   import { page } from '$app/stores';
+  import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
 
   let comments: components['schemas']['CommentDto'][] = $state();
   let post: components['schemas']['PostDto'] = $state();
   let editor: Editor;
-  let commentEditOpen: number = $state();
+  let commentEditOpen: number | null = $state();
 
   let postId = parseInt($page.params.id);
 
   let body: string | undefined = $state();
   let div: HTMLDivElement;
 
-  // $effect(() => {
-  //   editor = new Editor({
-  //     el: div,
-  //     height: 'calc(100dvh - 60px)',
-  //     initialEditType: 'markdown',
-  //     previewStyle: 'vertical'
-  //   });
-  //   return () => {
-  //     editor.destroy();
-  //   };
-  // });
-
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
-    const responseVideos = await rq.apiEndPoints().GET(`/api/v1/comments/{postId}`, {
+    const responseComment = await rq.apiEndPoints().GET(`/api/v1/comments/{postId}`, {
       params: {
         path: {
           postId: parseInt($page.params.id)
         }
       }
     });
-    comments = responseVideos.data?.data!;
+    comments = responseComment.data?.data!;
 
     const responsePost = await rq.apiEndPointsWithFetch(fetch).GET(`/api/v1/posts/{id}`, {
       params: {
@@ -144,7 +133,6 @@
 {#await load()}
   <h1>loading...</h1>
 {:then { comments, post }}
-  <div bind:this={div} id="post-body"></div>
   <div class="max-w-4xl mx-auto my-8">
     <div class="flex justify-between">
       <div>
@@ -182,20 +170,20 @@
         </p>
       </div>
     </div>
+
     <div class="justify-between flex items-center mt-3 mb-20">
       <p class="text-gray-600 mb-2">작성자: {post.authorName}</p>
-      <!-- 글 작성자인경우 -->
       {#if rq.member.id == post.authorId}
         <div class="mb-5 mx-2">
           <a href="/board/{post.id}/edit" class="btn btn-sm">글 수정</a>
           <a class="btn btn-sm" on:click={deletePost}>글 삭제</a>
         </div>
       {/if}
-      <!-- 글 수정, 삭제 -->
     </div>
-    <p class="w-auto break-all">{post.body}</p>
+    <div class=" border-">
+      <ToastUiEditor body={post.body} viewer={true}></ToastUiEditor>
+    </div>
     <div class="flex justify-center mt-20">
-      <!-- 버튼에 좋아요 기능 추가 -->
       <button
         class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14"
         on:click={clickLiked}
@@ -246,7 +234,6 @@
           placeholder="댓글을 입력하세요..."
           bind:value={body}
         ></textarea>
-        <!-- 댓글 등록 기능 추가 -->
         <button class="mt-2 btn" on:click={Comment__save}>댓글 등록</button>
       </div>
     </div>
@@ -295,7 +282,6 @@
               <div class="flex justify-end">
                 {#if rq.member.id === comment.authorId}
                   <div class="flex gap-2 text-gray-400">
-                    <!-- 수정 기능 추가 -->
                     <button
                       class="text-xs"
                       on:click={() => {
@@ -303,7 +289,6 @@
                       }}>수정</button
                     >
                     <p>/</p>
-                    <!-- 삭제 기능 추가 -->
                     <button class="text-xs" on:click={() => deleteComment(comment.id)}>삭제</button>
                   </div>
                 {/if}

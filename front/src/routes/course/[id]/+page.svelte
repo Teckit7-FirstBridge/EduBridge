@@ -2,6 +2,7 @@
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
   import { page } from '$app/stores';
+  import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
 
   function goToVideo(videoUrl) {
     window.location.href = videoUrl;
@@ -9,6 +10,8 @@
 
   let course: components['schemas']['CourseDto'] = $state();
   let videos: components['schemas']['VideoDto'][] = $state();
+  let overviewviewr: any | undefined = $state();
+  let notiviewer: any | undefined = $state();
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -208,7 +211,7 @@
           <h1 class="font-semibold text-lg md:text-2xl">
             {course!.title}
           </h1>
-          <!-- {#if rq.member.id == course.} -->
+          <!-- {#if rq.member.id == course} -->
           <div class="mb-5 mx-2 items-center">
             <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
             <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
@@ -218,17 +221,22 @@
 
         <div class="mb-4 bg-white p-4 rounded-lg shadow-md">
           <h2 class="text-md md:text-lg font-semibold">공지사항</h2>
-          <p class="text-sm md:text-md mt-2">
-            <!-- 강좌에 대한 간단한 설명 -->
-            {course!.notice}
-          </p>
+
+          <ToastUiEditor
+            bind:this={notiviewer}
+            body={course.notice}
+            height={'calc(50dvh - 64px)'}
+            viewer={true}
+          ></ToastUiEditor>
         </div>
         <div class="mb-4 bg-white p-4 rounded-lg shadow-md">
           <h2 class="text-md md:text-lg font-semibold">강좌 설명</h2>
-          <p class="text-sm md:text-md mt-2">
-            <!-- 강좌에 대한 간단한 설명 -->
-            {course!.overView}
-          </p>
+          <ToastUiEditor
+            bind:this={overviewviewr}
+            body={course!.overView}
+            height={'calc(50dvh - 64px)'}
+            viewer={true}
+          ></ToastUiEditor>
         </div>
 
         <div class="flex justify-end">
