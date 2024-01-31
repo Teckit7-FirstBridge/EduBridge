@@ -38,8 +38,6 @@
     const newNoti = notieditor.getMarkdown().trim();
     const newOverview = overvieweditor.getMarkdown().trim();
 
-    console.log(newNoti, newOverview);
-
     const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/courses', {
       // url 설정
       body: {

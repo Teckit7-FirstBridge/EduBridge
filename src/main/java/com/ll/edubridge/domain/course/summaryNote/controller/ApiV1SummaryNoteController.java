@@ -26,7 +26,7 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(value = "/api/v1/courses/{video-id}/note", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/courses/{videoid}/note", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "ApiV1SummaryNoteController", description = "강의 요약노트 CRUD 컨트롤러")
 public class ApiV1SummaryNoteController {
@@ -48,8 +48,8 @@ public class ApiV1SummaryNoteController {
 
     @PostMapping("")
     @Operation(summary = "강의 요약 노트 등록")
-    public RsData<SummaryNoteDto> create(@RequestBody CreateSummaryNoteDto createSummaryNoteDto) {
-        SummaryNote summaryNote = summaryNoteService.create(rq.getMember(), createSummaryNoteDto);
+    public RsData<SummaryNoteDto> create(@RequestBody CreateSummaryNoteDto createSummaryNoteDto,@PathVariable Long videoid) {
+        SummaryNote summaryNote = summaryNoteService.create(rq.getMember(), createSummaryNoteDto,videoid);
 
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
 
@@ -61,12 +61,12 @@ public class ApiV1SummaryNoteController {
     @Operation(summary = "강의 요약 노트 수정")
     public RsData<SummaryNoteDto> modify(
             @PathVariable("noteId") Long id,
-            @RequestBody SummaryNoteDto summaryNoteDto) {
+            @RequestBody CreateSummaryNoteDto createSummaryNoteDto) {
 
         if(!summaryNoteService.haveAuthority(id))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
-        SummaryNote modifySummaryNote = summaryNoteService.modify(id, summaryNoteDto);
+        SummaryNote modifySummaryNote = summaryNoteService.modify(id, createSummaryNoteDto);
 
         SummaryNoteDto modifySummaryNoteDto = new SummaryNoteDto(modifySummaryNote);
 
@@ -86,26 +86,22 @@ public class ApiV1SummaryNoteController {
 
         return RsData.of("200-3", "삭제 성공");
     }
-
-    @GetMapping("")
-    @Operation(summary = "전체 강의노트 목록 조회")
-    public RsData<GetSummaryNoteResponsebody> getSummaryNote(@RequestParam(value = "page", defaultValue = "1") int page){
+    @GetMapping("/admin")
+    @Operation(summary = "비디오별 강의노트 조회(관리자 기능)")
+    public RsData<GetSummaryNoteResponsebody> getSummaryNoteAdmin(@RequestParam(value = "page", defaultValue = "1") int page,@PathVariable Long videoid){
         int pageSize = AppConfig.getBasePageSize();
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "id"));
 
-        Page<SummaryNote> summaryNotes = summaryNoteService.findAll(pageable);
+        Page<SummaryNote> summaryNotes = summaryNoteService.findByVideoId(pageable,videoid);
         GetSummaryNoteResponsebody responseBody = new ApiV1SummaryNoteController.GetSummaryNoteResponsebody(summaryNotes, rq.getMember());
 
-        return RsData.of(
-                "200-1",
-                "성공",
-                responseBody
-        );
+        return RsData.of("200-2", "수정 성공", responseBody);
     }
+
 
     @GetMapping("/{note-id}")
     @Operation(summary = "강의 요약 노트 상세 보기")
-    public RsData<SummaryNoteDto> getSummaryNote(@PathVariable("{note-id}") Long id){
+    public RsData<SummaryNoteDto> getSummaryNote(@PathVariable("note-id") Long id){
         SummaryNote summaryNote = summaryNoteService.getSummaryNote(id);
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
         return RsData.of("200-1", "성공", summaryNoteDto);

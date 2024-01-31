@@ -2,11 +2,14 @@ package com.ll.edubridge.domain.course.video.controller;
 
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
+import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
 import com.ll.edubridge.domain.course.video.dto.VideoDto;
 import com.ll.edubridge.domain.course.video.entity.Video;
+import com.ll.edubridge.domain.course.video.mapper.VideoMapper;
 import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.global.exceptions.GlobalException;
+import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +28,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ApiV1VideoController {
     private final VideoService videoService;
     private final CourseService courseService;
+    private final Rq rq;
 
     @GetMapping("/courses/{courseId}/videos")
     @Operation(summary = "강의 리스트")
@@ -36,9 +40,8 @@ public class ApiV1VideoController {
         }
 
         List<Video> videos = videoService.findByCourseId(courseId);
-
         List<VideoDto> videoDtoList = videos.stream()
-                .map(VideoDto::new)
+                .map(video -> VideoMapper.toDto(video,rq.getMember().getId()))
                 .toList();
 
         return RsData.of(
