@@ -8,7 +8,11 @@ public class CreateSummaryNoteDto {
 
     private String content;
 
-    public CreateSummaryNoteDto(SummaryNote summaryNote){
-        this.content = summaryNote.getContent();
+    public CreateSummaryNoteDto(String content,Long video_id){
+        this.content = content;
+    }
+
+    public CreateSummaryNoteDto(){
+
     }
 }

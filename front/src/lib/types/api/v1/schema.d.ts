@@ -13,11 +13,17 @@ export interface paths {
     /** 글 삭제 */
     delete: operations["delete"];
   };
+  "/api/v1/courses/{videoid}/note/{noteId}": {
+    /** 강의 요약 노트 수정 */
+    put: operations["modify_1"];
+    /** 강의 요약 노트 삭제 */
+    delete: operations["delete_1"];
+  };
   "/api/v1/courses/{id}": {
     /** 강좌 수정 */
-    put: operations["modify_1"];
+    put: operations["modify_2"];
     /** 강좌 삭제 */
-    delete: operations["delete_1"];
+    delete: operations["delete_2"];
   };
   "/api/v1/comments/{postId}/{commentId}": {
     /** 댓글 수정 */
@@ -27,9 +33,9 @@ export interface paths {
   };
   "/api/v1/admin/{courseId}/videos/{id}": {
     /** 강의 수정 */
-    put: operations["modify_2"];
+    put: operations["modify_3"];
     /** 강의 삭제 */
-    delete: operations["delete_2"];
+    delete: operations["delete_3"];
   };
   "/api/v1/posts": {
     /** 글 다건조회 */
@@ -52,11 +58,19 @@ export interface paths {
   "/api/v1/members/logout": {
     post: operations["logout"];
   };
+  "/api/v1/enroll/{courseId}": {
+    /** 수강 등록 */
+    post: operations["create"];
+  };
   "/api/v1/courses": {
     /** 강좌 다건 조회 */
     get: operations["getPosts_2"];
     /** 강좌 등록 */
     post: operations["createCourse"];
+  };
+  "/api/v1/courses/{videoid}/note": {
+    /** 강의 요약 노트 등록 */
+    post: operations["create_1"];
   };
   "/api/v1/comments": {
     /** 댓글 등록 */
@@ -84,6 +98,18 @@ export interface paths {
   };
   "/api/v1/members/me": {
     get: operations["getMe"];
+  };
+  "/api/v1/enroll": {
+    /** 수업 목록 조회 */
+    get: operations["getSummaryNote"];
+  };
+  "/api/v1/courses/{videoid}/note/{note-id}": {
+    /** 강의 요약 노트 상세 보기 */
+    get: operations["getSummaryNote_1"];
+  };
+  "/api/v1/courses/{videoid}/note/admin": {
+    /** 비디오별 강의노트 조회(관리자 기능) */
+    get: operations["getSummaryNoteAdmin"];
   };
   "/api/v1/courses/{courseId}/videos": {
     /** 강의 리스트 */
@@ -127,8 +153,92 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["PostDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
+    };
+    CreateSummaryNoteDto: {
+      content?: string;
+    };
+    Course: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      title?: string;
+      notice?: string;
+      imgUrl?: string;
+      overView?: string;
+      owner?: components["schemas"]["Member"];
+      /** Format: int32 */
+      price?: number;
+      videoList?: components["schemas"]["Video"][];
+      voter?: components["schemas"]["Member"][];
+    };
+    CourseEnroll: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      course?: components["schemas"]["Course"];
+      member?: components["schemas"]["Member"];
+    };
+    GrantedAuthority: {
+      authority?: string;
+    };
+    Member: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      username?: string;
+      password?: string;
+      nickname?: string;
+      /** Format: int32 */
+      point?: number;
+      report?: boolean;
+      refreshToken?: string;
+      profileImgUrl?: string;
+      visitedToday?: boolean;
+      courseEnrollList?: components["schemas"]["CourseEnroll"][];
+      name?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
+      profileImgUrlOrDefault?: string;
+      authoritiesAsStringList?: string[];
+    };
+    RsDataSummaryNoteDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["SummaryNoteDto"];
+      success: boolean;
+      fail: boolean;
+    };
+    SummaryNote: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      content?: string;
+      writer?: components["schemas"]["Member"];
+      video?: components["schemas"]["Video"];
+    };
+    SummaryNoteDto: {
+      /** Format: int64 */
+      id?: number;
+      member?: components["schemas"]["Member"];
+      content?: string;
+    };
+    Video: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      url?: string;
+      imgUrl?: string;
+      overView?: string;
+      course?: components["schemas"]["Course"];
+      summaryNotes?: components["schemas"]["SummaryNote"][];
     };
     CourseDto: {
       /** Format: int64 */
@@ -147,8 +257,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CourseDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CreateCommentDto: {
       body: string;
@@ -174,8 +284,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CommentDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     VideoDto: {
       /** Format: int64 */
@@ -185,6 +295,7 @@ export interface components {
       imgUrl: string;
       /** Format: int64 */
       courseId: number;
+      summaryNotes: components["schemas"]["SummaryNoteDto"][];
     };
     RsDataVideoDto: {
       resultCode: string;
@@ -192,8 +303,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["VideoDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CreatePostDto: {
       title: string;
@@ -205,8 +316,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreatePostDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataVoid: {
       resultCode: string;
@@ -214,8 +325,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: Record<string, never>;
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     QnaDto: {
       /** Format: int64 */
@@ -234,8 +345,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["QnaDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     Empty: Record<string, never>;
     RsDataEmpty: {
@@ -244,8 +355,21 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["Empty"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
+    };
+    CourseEnrollDto: {
+      /** Format: int64 */
+      id?: number;
+    };
+    RsDataCourseEnrollDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["CourseEnrollDto"];
+      success: boolean;
+      fail: boolean;
     };
     CreateCourseDto: {
       title?: string;
@@ -261,8 +385,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateCourseDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataCreateCommentDto: {
       resultCode: string;
@@ -270,8 +394,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateCommentDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CreateVideoDto: {
       url: string;
@@ -286,8 +410,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateVideoDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetPostsResponseBody: {
       items: components["schemas"]["CourseDto"][];
@@ -298,8 +422,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostsResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataListQnaDto: {
       resultCode: string;
@@ -307,8 +431,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["QnaDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     MeResponseBody: {
       item: components["schemas"]["MemberDto"];
@@ -329,8 +453,20 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["MeResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
+    };
+    GetCourseEnrollResponsebody: {
+      items: components["schemas"]["CourseEnrollDto"][];
+    };
+    RsDataGetCourseEnrollResponsebody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetCourseEnrollResponsebody"];
+      success: boolean;
+      fail: boolean;
     };
     GetCoursesResponsebody: {
       items: components["schemas"]["CourseDto"][];
@@ -341,8 +477,20 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetCoursesResponsebody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
+    };
+    GetSummaryNoteResponsebody: {
+      items: components["schemas"]["SummaryNoteDto"][];
+    };
+    RsDataGetSummaryNoteResponsebody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetSummaryNoteResponsebody"];
+      success: boolean;
+      fail: boolean;
     };
     RsDataListVideoDto: {
       resultCode: string;
@@ -350,8 +498,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["VideoDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataListCommentDto: {
       resultCode: string;
@@ -359,8 +507,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CommentDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
   };
   responses: never;
@@ -429,8 +577,45 @@ export interface operations {
       };
     };
   };
-  /** 강좌 수정 */
+  /** 강의 요약 노트 수정 */
   modify_1: {
+    parameters: {
+      path: {
+        noteId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateSummaryNoteDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataSummaryNoteDto"];
+        };
+      };
+    };
+  };
+  /** 강의 요약 노트 삭제 */
+  delete_1: {
+    parameters: {
+      path: {
+        noteId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 강좌 수정 */
+  modify_2: {
     parameters: {
       path: {
         id: number;
@@ -451,7 +636,7 @@ export interface operations {
     };
   };
   /** 강좌 삭제 */
-  delete_1: {
+  delete_2: {
     parameters: {
       path: {
         id: number;
@@ -504,7 +689,7 @@ export interface operations {
     };
   };
   /** 강의 수정 */
-  modify_2: {
+  modify_3: {
     parameters: {
       path: {
         courseId: number;
@@ -526,7 +711,7 @@ export interface operations {
     };
   };
   /** 강의 삭제 */
-  delete_2: {
+  delete_3: {
     parameters: {
       path: {
         courseId: number;
@@ -645,6 +830,17 @@ export interface operations {
       };
     };
   };
+  /** 수강 등록 */
+  create: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataCourseEnrollDto"];
+        };
+      };
+    };
+  };
   /** 강좌 다건 조회 */
   getPosts_2: {
     parameters: {
@@ -675,6 +871,27 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataCreateCourseDto"];
+        };
+      };
+    };
+  };
+  /** 강의 요약 노트 등록 */
+  create_1: {
+    parameters: {
+      path: {
+        videoid: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateSummaryNoteDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataSummaryNoteDto"];
         };
       };
     };
@@ -797,6 +1014,57 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataMeResponseBody"];
+        };
+      };
+    };
+  };
+  /** 수업 목록 조회 */
+  getSummaryNote: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetCourseEnrollResponsebody"];
+        };
+      };
+    };
+  };
+  /** 강의 요약 노트 상세 보기 */
+  getSummaryNote_1: {
+    parameters: {
+      path: {
+        "note-id": number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataSummaryNoteDto"];
+        };
+      };
+    };
+  };
+  /** 비디오별 강의노트 조회(관리자 기능) */
+  getSummaryNoteAdmin: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+      path: {
+        videoid: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetSummaryNoteResponsebody"];
         };
       };
     };

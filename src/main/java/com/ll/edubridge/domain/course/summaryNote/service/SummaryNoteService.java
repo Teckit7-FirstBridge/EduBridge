@@ -4,6 +4,7 @@ import com.ll.edubridge.domain.course.summaryNote.dto.CreateSummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
+import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
@@ -21,6 +22,7 @@ import java.util.Optional;
 public class SummaryNoteService {
     private final SummaryNoteRepository summaryNoteRepository;
     private final Rq rq;
+    private final VideoService videoService;
 
     public Page<SummaryNote> findAll(Pageable pageable) {
         return summaryNoteRepository.findAll(pageable);
@@ -44,18 +46,20 @@ public class SummaryNoteService {
 
 
     @Transactional
-    public SummaryNote create(Member member, CreateSummaryNoteDto createSummaryNoteDto) {
+    public SummaryNote create(Member member, CreateSummaryNoteDto createSummaryNoteDto,Long videoid) {
         SummaryNote summaryNote = SummaryNote.builder()
                 .content(createSummaryNoteDto.getContent())
+                .writer(member)
+                .video(videoService.findById(videoid).get())
                 .build();
         return summaryNoteRepository.save(summaryNote);
     }
 
     @Transactional
-    public SummaryNote modify(Long id , SummaryNoteDto summaryNoteDto) {
+    public SummaryNote modify(Long id , CreateSummaryNoteDto createSummaryNoteDto) {
         SummaryNote summaryNote = this.getSummaryNote(id);
 
-        summaryNote.setContent(summaryNoteDto.getContent());
+        summaryNote.setContent(createSummaryNoteDto.getContent());
 
         return summaryNoteRepository.save(summaryNote);
     }
@@ -78,5 +82,7 @@ public class SummaryNoteService {
     }
 
 
-
+    public Page<SummaryNote> findByVideoId(Pageable pageable,Long videoid) {
+        return summaryNoteRepository.findByVideoId(pageable,videoid);
+    }
 }
