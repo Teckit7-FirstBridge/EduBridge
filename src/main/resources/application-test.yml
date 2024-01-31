@@ -6,6 +6,6 @@ spring:
       ddl-auto: create
 custom:
   temp:
-    dirPath: c:/temp/slog_test/temp
+    dirPath: c:/temp/eb_test/temp
   genFile:
-    dirPath: c:/temp/slog_test
+    dirPath: c:/temp/eb_test
