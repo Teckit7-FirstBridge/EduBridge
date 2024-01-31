@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.post.post.service;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.domain.post.post.dto.CreatePostDto;
 import com.ll.edubridge.domain.post.post.dto.PostDto;
@@ -29,6 +30,7 @@ public class PostService {
     private final MemberService memberService;
 
     private final Rq rq;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public Post create(Member member, CreatePostDto createPostDto) {
@@ -108,16 +110,17 @@ public class PostService {
         return postRepository.findById(id);
     }
 
-//    @Transactional
-//    public void isReported(Post post) {
-//        Member member = post.getWriter();
-//
-//        post.setReport(true);
-//
-//        memberService.isReported(member);
-//
-//        postRepository.save(post);
-//    }
+    @Transactional
+    public void isReported(Post post) {
+        Member member = post.getWriter();
+
+        post.setReport(true);
+
+        memberService.isReported(member);
+
+        postRepository.save(post);
+        memberRepository.save(member);
+    }
 
     public Page<Post> getReport(Pageable pageable) {
         return postRepository.findByReport(pageable, true);
@@ -173,8 +176,8 @@ public class PostService {
         return postRepository.findByKw(kwType, kw, author, published, pageable);
     }
 
-    public List<Post> reportedPosts(int num) {
-        return postRepository.findTopByReport(num, true);
+    public List<Post> reportedPosts() {
+        return postRepository.findTop5ByReport(true);
     }
 
 }

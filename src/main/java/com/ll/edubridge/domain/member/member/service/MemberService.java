@@ -86,6 +86,10 @@ public class MemberService {
         return join(username, "");
     }
 
+    public void isReported(Member member) {
+        member.setReport(true);
+    }
+
 
     public record AuthAndMakeTokensResponseBody(
             @NonNull
@@ -167,7 +171,7 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
-    public List<Member> recentMembers(int num) {
-        return memberRepository.findTopByCreateDateOrderByCreateDateDesc(num);
+    public List<Member> recentMembers() {
+        return memberRepository.findTop5ByOrderByIdDesc();
     }
 }
