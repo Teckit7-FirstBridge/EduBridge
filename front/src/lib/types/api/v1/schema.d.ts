@@ -183,9 +183,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["PostDto"];
+=======
       data: components['schemas']['PostDto'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     CreateSummaryNoteDto: {
       content?: string;
@@ -232,18 +237,29 @@ export interface components {
       visitedToday?: boolean;
       courseEnrollList?: components['schemas']['CourseEnroll'][];
       name?: string;
+<<<<<<< HEAD
+      profileImgUrlOrDefault?: string;
+      authoritiesAsStringList?: string[];
+      authorities?: components["schemas"]["GrantedAuthority"][];
+=======
       authorities?: components['schemas']['GrantedAuthority'][];
       profileImgUrlOrDefault?: string;
       authoritiesAsStringList?: string[];
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["SummaryNoteDto"];
+=======
       data: components['schemas']['SummaryNoteDto'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     SummaryNote: {
       /** Format: int64 */
@@ -287,9 +303,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["CourseDto"];
+=======
       data: components['schemas']['CourseDto'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     CreateCommentDto: {
       body: string;
@@ -314,9 +335,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["CommentDto"];
+=======
       data: components['schemas']['CommentDto'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     VideoDto: {
       /** Format: int64 */
@@ -333,9 +359,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["VideoDto"];
+=======
       data: components['schemas']['VideoDto'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     CreatePostDto: {
       title: string;
@@ -346,9 +377,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["CreatePostDto"];
+=======
       data: components['schemas']['CreatePostDto'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     RsDataVoid: {
       resultCode: string;
@@ -356,8 +392,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: Record<string, never>;
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     QnaDto: {
       /** Format: int64 */
@@ -375,9 +411,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["QnaDto"];
+=======
       data: components['schemas']['QnaDto'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     Empty: Record<string, never>;
     RsDataEmpty: {
@@ -385,9 +426,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["Empty"];
+=======
       data: components['schemas']['Empty'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     LoginRequestBody: {
       username: string;
@@ -411,9 +457,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["LoginResponseBody"];
+=======
       data: components['schemas']['LoginResponseBody'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     CourseEnrollDto: {
       /** Format: int64 */
@@ -424,9 +475,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["CourseEnrollDto"];
+=======
       data: components['schemas']['CourseEnrollDto'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     CreateCourseDto: {
       title?: string;
@@ -441,18 +497,28 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["CreateCourseDto"];
+=======
       data: components['schemas']['CreateCourseDto'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     RsDataCreateCommentDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["CreateCommentDto"];
+=======
       data: components['schemas']['CreateCommentDto'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     CreateVideoDto: {
       url: string;
@@ -466,9 +532,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["CreateVideoDto"];
+=======
       data: components['schemas']['CreateVideoDto'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     GetPostsResponseBody: {
       items: components['schemas']['CourseDto'][];
@@ -478,18 +549,28 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["GetPostsResponseBody"];
+=======
       data: components['schemas']['GetPostsResponseBody'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     RsDataListQnaDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["QnaDto"][];
+=======
       data: components['schemas']['QnaDto'][];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     MeResponseBody: {
       item: components['schemas']['MemberDto'];
@@ -499,9 +580,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["MeResponseBody"];
+=======
       data: components['schemas']['MeResponseBody'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     GetCourseEnrollResponsebody: {
       items: components['schemas']['CourseEnrollDto'][];
@@ -511,9 +597,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["GetCourseEnrollResponsebody"];
+=======
       data: components['schemas']['GetCourseEnrollResponsebody'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     GetCoursesResponsebody: {
       items: components['schemas']['CourseDto'][];
@@ -523,9 +614,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["GetCoursesResponsebody"];
+=======
       data: components['schemas']['GetCoursesResponsebody'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     GetSummaryNoteResponsebody: {
       items: components['schemas']['SummaryNoteDto'][];
@@ -535,24 +631,37 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["GetSummaryNoteResponsebody"];
+=======
       data: components['schemas']['GetSummaryNoteResponsebody'];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     RsDataListVideoDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["VideoDto"][];
+=======
       data: components['schemas']['VideoDto'][];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     RsDataListCommentDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["CommentDto"][];
+=======
       data: components['schemas']['CommentDto'][];
       fail: boolean;
       success: boolean;
@@ -574,7 +683,9 @@ export interface components {
       msg: string;
       data: components['schemas']['RecentSummaryNoteDto'][];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     ReportedPostDto: {
       /** Format: int64 */
@@ -591,9 +702,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["ReportedPostDto"][];
+=======
       data: components['schemas']['ReportedPostDto'][];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     RecentMemberDto: {
       /** Format: int64 */
@@ -608,9 +724,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["RecentMemberDto"][];
+=======
       data: components['schemas']['RecentMemberDto'][];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
     RecentCourseDto: {
       /** Format: int64 */
@@ -622,9 +743,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
+<<<<<<< HEAD
+      data: components["schemas"]["RecentCourseDto"][];
+=======
       data: components['schemas']['RecentCourseDto'][];
       fail: boolean;
+>>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+      fail: boolean;
     };
   };
   responses: never;
