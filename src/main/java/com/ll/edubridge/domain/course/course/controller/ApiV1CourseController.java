@@ -6,17 +6,14 @@ import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.member.member.role.MemberRole;
-import com.ll.edubridge.domain.post.post.controller.ApiV1PostController;
-import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.app.AppConfig;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.KwTypeCourse;
-import com.ll.edubridge.standard.base.KwTypeV1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
@@ -103,7 +100,7 @@ public class ApiV1CourseController {
             @RequestBody CourseDto courseDto) {
 
         if (!courseService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         Course modifyCourse = courseService.modify(id, courseDto);
 
@@ -117,7 +114,7 @@ public class ApiV1CourseController {
     public RsData<Empty> delete(@PathVariable("id") Long id) {
 
         if (!courseService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         courseService.delete(id);
 

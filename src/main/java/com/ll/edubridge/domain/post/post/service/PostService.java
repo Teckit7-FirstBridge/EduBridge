@@ -8,6 +8,7 @@ import com.ll.edubridge.domain.post.post.dto.PostDto;
 import com.ll.edubridge.domain.post.post.dto.QnaDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.repository.PostRepository;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.standard.base.KwTypeV1;
@@ -101,7 +102,7 @@ public class PostService {
         if (comment.isPresent()) {
             return comment.get();
         } else {
-            throw new GlobalException("404-1", "post를 찾을 수 없습니다.");
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(),CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
     }
 

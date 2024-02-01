@@ -5,6 +5,7 @@ import com.ll.edubridge.domain.post.comment.dto.CommentDto;
 import com.ll.edubridge.domain.post.comment.dto.CreateCommentDto;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.comment.service.CommentService;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
@@ -51,7 +52,7 @@ public class ApiV1CommentController {
     @Operation(summary = "댓글 수정")
     public RsData<CommentDto> modifyComment(@PathVariable("commentId") Long commentId, @RequestBody CreateCommentDto createCommentDto) {
         if (!commentService.haveAuthority(commentId))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
             Comment modifyComment = commentService.modify(commentId, createCommentDto);
 
@@ -65,7 +66,7 @@ public class ApiV1CommentController {
     public RsData<Empty> deleteComment(@PathVariable("commentId") Long commentId) {
 
         if (!commentService.haveAuthority(commentId))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         commentService.delete(commentId);
 
@@ -78,7 +79,7 @@ public class ApiV1CommentController {
         Member member = rq.getMember();
 
         if (!commentService.canLike(member, commentService.getComment(commentId))) {
-            throw new GlobalException("400-1", "이미 추천하셨습니다.");
+            throw new GlobalException(CodeMsg.E400_1_ALREADY_RECOMMENDED.getCode(),CodeMsg.E400_1_ALREADY_RECOMMENDED.getMessage());
         }
 
         commentService.vote(commentId, member);
@@ -92,7 +93,7 @@ public class ApiV1CommentController {
         Member member = rq.getMember();
 
         if (!commentService.canCancelLike(member, commentService.getComment(commentId))) {
-            throw new GlobalException("400-2", "추천을 하지 않았습니다.");
+            throw new GlobalException(CodeMsg.E400_2_NOT_RECOMMENDED_YET.getCode(),CodeMsg.E400_2_NOT_RECOMMENDED_YET.getMessage());
         }
 
         commentService.deleteVote(commentId, member);

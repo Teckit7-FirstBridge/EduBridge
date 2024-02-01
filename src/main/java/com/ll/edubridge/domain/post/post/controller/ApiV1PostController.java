@@ -7,6 +7,7 @@ import com.ll.edubridge.domain.post.post.dto.QnaDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.service.PostService;
 import com.ll.edubridge.global.app.AppConfig;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
@@ -89,7 +90,7 @@ public class ApiV1PostController {
         Post post = postService.getPost(id);
 
         if (!postService.canRead(post))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         PostDto postDto = new PostDto(post, rq.getMember());
         return RsData.of("200-1", Msg.CHECK.getMsg(), postDto);
@@ -102,7 +103,7 @@ public class ApiV1PostController {
             @RequestBody PostDto postDto) {
 
         if (!postService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         Post modifyPost = postService.modify(id, postDto);
 
@@ -116,7 +117,7 @@ public class ApiV1PostController {
     public RsData<Empty> delete(@PathVariable("id") Long id) {
 
         if (!postService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         postService.delete(id);
 
@@ -129,7 +130,7 @@ public class ApiV1PostController {
         Member member = rq.getMember();
 
         if (!postService.canLike(member, postService.getPost(id))) {
-            throw new GlobalException("400-1", "이미 추천하셨습니다.");
+            throw new GlobalException(CodeMsg.E400_1_ALREADY_RECOMMENDED.getCode(),CodeMsg.E400_1_ALREADY_RECOMMENDED.getMessage());
         }
 
         postService.vote(id, member);
@@ -143,7 +144,7 @@ public class ApiV1PostController {
         Member member = rq.getMember();
 
         if (!postService.canCancelLike(member, postService.getPost(id))) {
-            throw new GlobalException("400-2", "추천을 하지 않았습니다.");
+            throw new GlobalException(CodeMsg.E400_2_NOT_RECOMMENDED_YET.getCode(),CodeMsg.E400_2_NOT_RECOMMENDED_YET.getMessage());
         }
 
         postService.deleteVote(id, member);
@@ -181,7 +182,7 @@ public class ApiV1PostController {
         Post post = postService.getPost(id);
 
         if (!postService.canRead(post))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         QnaDto qnaDto = new QnaDto(post);
         return RsData.of("200-1", Msg.CHECK.getMsg(), qnaDto);
@@ -192,7 +193,7 @@ public class ApiV1PostController {
     public RsData<Empty> deleteQna(@PathVariable("id") Long id) {
 
         if (!postService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         postService.delete(id);
 
