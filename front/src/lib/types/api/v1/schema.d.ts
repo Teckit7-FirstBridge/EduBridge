@@ -217,9 +217,9 @@ export interface components {
       visitedToday?: boolean;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authoritiesAsStringList?: string[];
-      profileImgUrlOrDefault?: string;
       authorities?: components["schemas"]["GrantedAuthority"][];
+      profileImgUrlOrDefault?: string;
+      authoritiesAsStringList?: string[];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
