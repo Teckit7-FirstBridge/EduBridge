@@ -1,7 +1,9 @@
-package com.ll.edubridge.domain.course.course.controller;
+package com.ll.edubridge.domain.course.video.controller;
 
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.course.service.CourseService;
+import com.ll.edubridge.domain.course.video.repository.VideoRepository;
+import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,22 +15,23 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.AssertionErrors;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Transactional
-public class ApiV1CourseControllerTest {
+class ApiV1VideoControllerTest {
 
     @Autowired
-    private MockMvc mvc;
+    private MockMvc mockMvc;
+
+    @Mock
+    private VideoRepository videoRepository;
+
+    @InjectMocks
+    private VideoService videoService;
 
     @Mock
     private CourseRepository courseRepository;
@@ -38,17 +41,17 @@ public class ApiV1CourseControllerTest {
 
     @Test
     @WithMockUser(username = "testUser", roles = "USER")
-    void 없는강좌조회() {
+    void 없는강의조회() {
         // Given
-        Long courseId = 123L;
-        when(courseRepository.findById(courseId)).thenReturn(Optional.empty());
+        Long id = 123L;
+        when(videoRepository.findById(id)).thenReturn(null);
 
         // When, Then
         GlobalException exception = assertThrows(GlobalException.class, () -> {
-            courseService.getCourse(courseId);
+            videoService.getVideo(id);
         });
         AssertionErrors.assertEquals(null, "404-1", exception.getRsData().getResultCode());
-        AssertionErrors.assertEquals(null, "해당 강좌를 찾을 수 없습니다.", exception.getRsData().getMsg());
+        AssertionErrors.assertEquals(null, "해당 영상을 찾을 수 없습니다.", exception.getRsData().getMsg());
     }
 
 }

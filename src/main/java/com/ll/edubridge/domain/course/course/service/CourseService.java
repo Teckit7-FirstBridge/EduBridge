@@ -71,7 +71,7 @@ public class CourseService {
         if (course.isPresent()) {
             return course.get();
         } else {
-            throw new GlobalException("404-1", "해당 강좌을 찾을 수 없습니다.");
+            throw new GlobalException("404-1", "해당 강좌를 찾을 수 없습니다.");
         }
     }
 
