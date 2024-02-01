@@ -3,9 +3,8 @@ package com.ll.edubridge.domain.course.course.controller;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.global.exceptions.GlobalException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,13 +29,14 @@ public class ApiV1CourseControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @Mock
+    @Autowired
     private CourseRepository courseRepository;
 
-    @InjectMocks
+    @Autowired
     private CourseService courseService;
 
     @Test
+    @DisplayName("GET /api/v1/courses/{courseId}")
     @WithMockUser(username = "testUser", roles = "USER")
     void 없는강좌조회() {
         // Given
@@ -48,7 +48,7 @@ public class ApiV1CourseControllerTest {
             courseService.getCourse(courseId);
         });
         AssertionErrors.assertEquals(null, "404-1", exception.getRsData().getResultCode());
-        AssertionErrors.assertEquals(null, "해당 강좌를 찾을 수 없습니다.", exception.getRsData().getMsg());
+        AssertionErrors.assertEquals(null, "해당 데이터를 찾을 수 없습니다.", exception.getRsData().getMsg());
     }
 
 }

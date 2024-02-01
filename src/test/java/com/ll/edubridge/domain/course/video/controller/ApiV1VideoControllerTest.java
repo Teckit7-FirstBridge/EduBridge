@@ -5,6 +5,7 @@ import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.video.repository.VideoRepository;
 import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.global.exceptions.GlobalException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -40,6 +41,7 @@ class ApiV1VideoControllerTest {
     private CourseService courseService;
 
     @Test
+    @DisplayName("GET /api/v1/courses/{courseId}/videos/{videoId}")
     @WithMockUser(username = "testUser", roles = "USER")
     void 없는강의조회() {
         // Given
@@ -51,7 +53,7 @@ class ApiV1VideoControllerTest {
             videoService.getVideo(id);
         });
         AssertionErrors.assertEquals(null, "404-1", exception.getRsData().getResultCode());
-        AssertionErrors.assertEquals(null, "해당 영상을 찾을 수 없습니다.", exception.getRsData().getMsg());
+        AssertionErrors.assertEquals(null, "해당 데이터를 찾을 수 없습니다.", exception.getRsData().getMsg());
     }
 
 }
