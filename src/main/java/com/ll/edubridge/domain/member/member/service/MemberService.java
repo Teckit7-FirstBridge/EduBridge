@@ -6,6 +6,8 @@ import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -88,6 +90,10 @@ public class MemberService {
 
     public void isReported(Member member) {
         member.setReport(true);
+    }
+
+    public Page<Member> findAll(Pageable pageable) {
+        return memberRepository.findAll(pageable);
     }
 
 
