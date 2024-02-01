@@ -89,8 +89,8 @@ public class VideoService {
 
         if (member == null) return false;
 
-        if (!rq.isAdmin()) return true;
+        if (rq.isAdmin()) return true;
 
-        return true;
+        return false;
     }
 }
