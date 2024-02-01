@@ -50,5 +50,4 @@ public class ApiV1CourseControllerTest {
         AssertionErrors.assertEquals(null, "404-1", exception.getRsData().getResultCode());
         AssertionErrors.assertEquals(null, "해당 데이터를 찾을 수 없습니다.", exception.getRsData().getMsg());
     }
-
 }
