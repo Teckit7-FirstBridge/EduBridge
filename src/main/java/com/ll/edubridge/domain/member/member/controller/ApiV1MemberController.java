@@ -3,6 +3,7 @@ package com.ll.edubridge.domain.member.member.controller;
 
 import com.ll.edubridge.domain.member.member.dto.MemberDto;
 import com.ll.edubridge.domain.member.member.service.MemberService;
+import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
@@ -52,7 +53,7 @@ public class ApiV1MemberController {
 
     @GetMapping("/me")
     public RsData<MeResponseBody> getMe() {
-        return RsData.of("200-1","성공",
+        return RsData.of("200-1", Msg.CHECK.getMsg(),
                 new MeResponseBody(
                         new MemberDto(rq.getMember())
                 )
@@ -63,6 +64,6 @@ public class ApiV1MemberController {
     public RsData<Empty> logout() {
         rq.setLogout();
 
-        return RsData.of("200-1","성공");
+        return RsData.of("200-1","로그아웃 성공");
     }
 }

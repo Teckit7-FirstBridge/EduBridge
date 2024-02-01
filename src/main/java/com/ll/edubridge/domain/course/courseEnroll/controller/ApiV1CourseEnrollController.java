@@ -8,6 +8,7 @@ import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollReposi
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
+import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,10 +59,9 @@ public class ApiV1CourseEnrollController {
         if (point >= price) {
             CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), courseId,price,point);
             CourseEnrollDto courseEnrollDto = new CourseEnrollDto(courseEnroll);
-            return RsData.of("200-0", "등록 성공", courseEnrollDto);
+            return RsData.of("200-0", Msg.CREATE.getMsg(), courseEnrollDto);
         }else {
-            return RsData.of("400-1","수강 등록 실패"); // 400 - Not found
-
+            return RsData.of("400-1", Msg.CREATEFAILURE.getMsg()); // 400 - Not found
         }
     }
 
@@ -76,7 +76,7 @@ public class ApiV1CourseEnrollController {
 
         return RsData.of(
                 "200-1",
-                "성공",
+                Msg.CHECK.getMsg(),
                 responseBody
         );
     }
