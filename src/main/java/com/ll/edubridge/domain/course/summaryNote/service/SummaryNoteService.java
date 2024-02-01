@@ -2,12 +2,12 @@ package com.ll.edubridge.domain.course.summaryNote.service;
 
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.summaryNote.dto.CreateSummaryNoteDto;
-import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
 import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,7 +43,7 @@ public class SummaryNoteService {
         if (summaryNote.isPresent()) {
             return summaryNote.get();
         } else {
-            throw new GlobalException("404-1", "해당 강의 요약노트를 찾을 수 없습니다.");
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
     }
 
@@ -94,4 +95,7 @@ public class SummaryNoteService {
         return summaryNoteRepository.findByVideoId(pageable,videoid);
     }
 
+    public List<SummaryNote> recentSummaryNotes() {
+        return summaryNoteRepository.findTop5ByOrderByIdDesc();
+    }
 }

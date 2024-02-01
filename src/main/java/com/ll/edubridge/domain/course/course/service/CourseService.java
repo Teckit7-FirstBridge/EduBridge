@@ -5,6 +5,7 @@ import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.standard.base.KwTypeCourse;
@@ -24,8 +25,8 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final Rq rq;
 
-    public Page<Course> findAll(Pageable pageable) {
-        return courseRepository.findAll(pageable);
+    public List<Course> findAll() {
+        return courseRepository.findAll();
     }
 
     public Optional<Course> findById(Long id) {
@@ -35,14 +36,13 @@ public class CourseService {
 
 
     @Transactional
-    public Course create(Member member, CreateCourseDto createCourseDto) {
+    public Course create(CreateCourseDto createCourseDto) {
         Course course = Course.builder()
                 .title(createCourseDto.getTitle())
                 .notice(createCourseDto.getNotice())
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .price(createCourseDto.getPrice())
-                .owner(member)
                 .build();
         return courseRepository.save(course);
     }
@@ -71,7 +71,7 @@ public class CourseService {
         if (course.isPresent()) {
             return course.get();
         } else {
-            throw new GlobalException("404-1", "해당 강좌을 찾을 수 없습니다.");
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(),CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
     }
 

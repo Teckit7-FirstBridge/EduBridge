@@ -7,7 +7,9 @@ import com.ll.edubridge.domain.post.post.dto.QnaDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.service.PostService;
 import com.ll.edubridge.global.app.AppConfig;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
+import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
@@ -67,7 +69,7 @@ public class ApiV1PostController {
 
         return RsData.of(
                 "200-1",
-                "성공",
+                Msg.CHECK.getMsg(),
                 responseBody
         );
     }
@@ -79,7 +81,7 @@ public class ApiV1PostController {
 
         CreatePostDto createdPostDto = new CreatePostDto(post);
 
-        return RsData.of("200-0", "등록 성공", createdPostDto);
+        return RsData.of("200-0", Msg.CREATE.getMsg(), createdPostDto);
     }
 
     @GetMapping("/{id}")
@@ -88,10 +90,10 @@ public class ApiV1PostController {
         Post post = postService.getPost(id);
 
         if (!postService.canRead(post))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         PostDto postDto = new PostDto(post, rq.getMember());
-        return RsData.of("200-1", "성공", postDto);
+        return RsData.of("200-1", Msg.CHECK.getMsg(), postDto);
     }
 
     @PutMapping("/{id}")
@@ -101,13 +103,13 @@ public class ApiV1PostController {
             @RequestBody PostDto postDto) {
 
         if (!postService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         Post modifyPost = postService.modify(id, postDto);
 
         PostDto modifyPostDto = new PostDto(modifyPost, rq.getMember());
 
-        return RsData.of("200-2", "수정 성공", modifyPostDto);
+        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifyPostDto);
     }
 
     @DeleteMapping("/{id}")
@@ -115,11 +117,11 @@ public class ApiV1PostController {
     public RsData<Empty> delete(@PathVariable("id") Long id) {
 
         if (!postService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         postService.delete(id);
 
-        return RsData.of("200-3", "삭제 성공");
+        return RsData.of("200-3", Msg.DELETE.getMsg());
     }
 
     @PostMapping("/{id}/like")
@@ -128,12 +130,12 @@ public class ApiV1PostController {
         Member member = rq.getMember();
 
         if (!postService.canLike(member, postService.getPost(id))) {
-            throw new GlobalException("400-1", "이미 추천하셨습니다.");
+            throw new GlobalException(CodeMsg.E400_1_ALREADY_RECOMMENDED.getCode(),CodeMsg.E400_1_ALREADY_RECOMMENDED.getMessage());
         }
 
         postService.vote(id, member);
 
-        return RsData.of("200-4", "추천 성공");
+        return RsData.of("200-4", Msg.RECOMMEND.getMsg());
     }
 
     @DeleteMapping("/{id}/like")
@@ -142,12 +144,12 @@ public class ApiV1PostController {
         Member member = rq.getMember();
 
         if (!postService.canCancelLike(member, postService.getPost(id))) {
-            throw new GlobalException("400-2", "추천을 하지 않았습니다.");
+            throw new GlobalException(CodeMsg.E400_2_NOT_RECOMMENDED_YET.getCode(),CodeMsg.E400_2_NOT_RECOMMENDED_YET.getMessage());
         }
 
         postService.deleteVote(id, member);
 
-        return RsData.of("200-5", "추천 취소 성공");
+        return RsData.of("200-5", Msg.RECOMMENDCANCEL.getMsg());
     }
 
     @PostMapping("/qna")
@@ -157,7 +159,7 @@ public class ApiV1PostController {
 
         QnaDto createdQnaDto = new QnaDto(post);
 
-        return RsData.of("200-0", "등록 성공", createdQnaDto);
+        return RsData.of("200-0", Msg.CREATE.getMsg(), createdQnaDto);
     }
 
     @GetMapping("/qna")
@@ -171,7 +173,7 @@ public class ApiV1PostController {
                 .map(QnaDto::new)
                 .collect(Collectors.toList());
 
-        return RsData.of("200-1", "조회 성공", qnaDtoList);
+        return RsData.of("200-1", Msg.CHECK.getMsg(), qnaDtoList);
     }
 
     @GetMapping("/qna/{id}")
@@ -180,10 +182,10 @@ public class ApiV1PostController {
         Post post = postService.getPost(id);
 
         if (!postService.canRead(post))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         QnaDto qnaDto = new QnaDto(post);
-        return RsData.of("200-1", "성공", qnaDto);
+        return RsData.of("200-1", Msg.CHECK.getMsg(), qnaDto);
     }
 
     @DeleteMapping("/qna/{id}")
@@ -191,11 +193,11 @@ public class ApiV1PostController {
     public RsData<Empty> deleteQna(@PathVariable("id") Long id) {
 
         if (!postService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         postService.delete(id);
 
-        return RsData.of("200-3", "삭제 성공");
+        return RsData.of("200-3", Msg.DELETE.getMsg());
     }
 
 

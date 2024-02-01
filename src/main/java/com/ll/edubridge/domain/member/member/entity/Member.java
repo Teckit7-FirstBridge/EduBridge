@@ -34,7 +34,7 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
 
     private int point = 0;
 
-    private boolean report = false;
+    private boolean report;
 
     @Column(unique = true)
     private String refreshToken;
