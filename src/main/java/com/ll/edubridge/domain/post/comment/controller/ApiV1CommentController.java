@@ -53,7 +53,7 @@ public class ApiV1CommentController {
         if (!commentService.haveAuthority(commentId))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
-        Comment modifyComment = commentService.modify(commentId, createCommentDto);
+            Comment modifyComment = commentService.modify(commentId, createCommentDto);
 
         CommentDto modifyCommentDto = new CommentDto(modifyComment, rq.getMember());
 
