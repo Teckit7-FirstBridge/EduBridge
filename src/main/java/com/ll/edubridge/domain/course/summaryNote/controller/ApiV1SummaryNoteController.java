@@ -7,6 +7,7 @@ import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.GlobalException;
+import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
@@ -53,7 +54,7 @@ public class ApiV1SummaryNoteController {
 
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
 
-        return RsData.of("200-0", "등록 성공", summaryNoteDto);
+        return RsData.of("200-0", Msg.CREATE.getMsg(), summaryNoteDto);
 
     }
 
@@ -70,7 +71,7 @@ public class ApiV1SummaryNoteController {
 
         SummaryNoteDto modifySummaryNoteDto = new SummaryNoteDto(modifySummaryNote);
 
-        return RsData.of("200-2", "수정 성공", modifySummaryNoteDto);
+        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifySummaryNoteDto);
 
 
     }
@@ -84,7 +85,7 @@ public class ApiV1SummaryNoteController {
 
         summaryNoteService.delete(id);
 
-        return RsData.of("200-3", "삭제 성공");
+        return RsData.of("200-3", Msg.DELETE.getMsg());
     }
     @GetMapping("/admin")
     @Operation(summary = "비디오별 강의노트 조회(관리자 기능)")
@@ -95,7 +96,7 @@ public class ApiV1SummaryNoteController {
         Page<SummaryNote> summaryNotes = summaryNoteService.findByVideoId(pageable,videoid);
         GetSummaryNoteResponsebody responseBody = new ApiV1SummaryNoteController.GetSummaryNoteResponsebody(summaryNotes, rq.getMember());
 
-        return RsData.of("200-2", "수정 성공", responseBody);
+        return RsData.of("200-2", Msg.CHECK.getMsg(), responseBody);
     }
 
 
@@ -104,6 +105,6 @@ public class ApiV1SummaryNoteController {
     public RsData<SummaryNoteDto> getSummaryNote(@PathVariable("note-id") Long id){
         SummaryNote summaryNote = summaryNoteService.getSummaryNote(id);
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
-        return RsData.of("200-1", "성공", summaryNoteDto);
+        return RsData.of("200-1", Msg.CHECK.getMsg(), summaryNoteDto);
     }
 }

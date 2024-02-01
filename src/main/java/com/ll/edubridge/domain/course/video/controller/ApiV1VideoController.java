@@ -9,6 +9,7 @@ import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.course.video.mapper.VideoMapper;
 import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.global.exceptions.GlobalException;
+import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
@@ -46,7 +47,7 @@ public class ApiV1VideoController {
 
         return RsData.of(
                 "200-1",
-                "성공",
+                Msg.CHECK.getMsg(),
                 videoDtoList
         );
     }
@@ -70,7 +71,7 @@ public class ApiV1VideoController {
 
         return RsData.of(
                 "200-1",
-                "성공",
+                Msg.CHECK.getMsg(),
                 videoDto
         );
     }
@@ -86,7 +87,7 @@ public class ApiV1VideoController {
         Video video = videoService.create(createVideoDto);
         CreateVideoDto createdVideoDto = new CreateVideoDto(video);
 
-        return RsData.of("200-0", "등록 성공", createdVideoDto);
+        return RsData.of("200-0", Msg.CREATE.getMsg(), createdVideoDto);
     }
 
     @PutMapping("/admin/{courseId}/videos/{id}")
@@ -112,7 +113,7 @@ public class ApiV1VideoController {
 
         VideoDto modifyVideoDto = new VideoDto(modifyVideo);
 
-        return RsData.of("200-2", "수정 성공", modifyVideoDto);
+        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifyVideoDto);
     }
 
     @DeleteMapping("/admin/{courseId}/videos/{id}")
@@ -135,6 +136,6 @@ public class ApiV1VideoController {
 
         videoService.delete(id);
 
-        return RsData.of("200-3", "삭제 성공");
+        return RsData.of("200-3", Msg.DELETE.getMsg());
     }
 }

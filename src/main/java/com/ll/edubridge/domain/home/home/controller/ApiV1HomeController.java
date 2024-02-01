@@ -9,6 +9,7 @@ import com.ll.edubridge.domain.post.post.dto.PostDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.service.PostService;
 import com.ll.edubridge.global.app.AppConfig;
+import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.KwTypeV1;
@@ -58,7 +59,7 @@ public class ApiV1HomeController {
 
         return RsData.of(
                 "200-1",
-                "성공",
+                Msg.CHECK.getMsg(),
                 responseBody
         );
     }
