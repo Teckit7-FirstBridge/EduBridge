@@ -14,4 +14,6 @@ import java.util.Optional;
 public interface SummaryNoteRepository extends JpaRepository<SummaryNote, Long> {
     Optional<SummaryNote> findById(Long id);
     Page<SummaryNote> findByVideoId(Pageable pageable,Long videoid);
+
+    List<SummaryNote> findTop5ByOrderByIdDesc();
 }
