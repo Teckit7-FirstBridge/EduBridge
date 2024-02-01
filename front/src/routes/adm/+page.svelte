@@ -33,7 +33,7 @@
     <div>
       <CourseNav></CourseNav>
     </div>
-    <div class="flex py-4 px-32 flex-1">
+    <div class="flex py-4 pl-16 flex-1">
       <div class="w-1/2">
         <div class="flex-1 p-4">
           {#if recentCourse && recentCourse.length > 0}
@@ -89,7 +89,7 @@
                 </div>
                 <div class="ml-2 mt-1">
                   <a
-                    href="/adm/course"
+                    href="/adm/member"
                     class="inline-block px-2 py-1 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                     >+</a
                   >
@@ -123,8 +123,10 @@
                     {#each recentMember as member}
                       <tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {member.name}
-                        </td>
+                          <a href="/member/{member.id}" class="text-blue-600 hover:text-blue-900">
+                            {member.name}
+                          </a></td
+                        >
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {`${new Date(member.createDate).getFullYear()}년 ${new Date(member.createDate).getMonth() + 1}월 ${new Date(member.createDate).getDate()}일`}
                         </td>
@@ -156,7 +158,7 @@
                 </div>
                 <div class="ml-2 mt-1">
                   <a
-                    href="/adm/course"
+                    href="/adm/note"
                     class="inline-block px-2 py-1 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                     >+</a
                   >
@@ -227,7 +229,7 @@
                 </div>
                 <div class="ml-2 mt-1">
                   <a
-                    href="/adm/course"
+                    href="/adm/report"
                     class="inline-block px-2 py-1 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                     >+</a
                   >

@@ -39,7 +39,7 @@
       Dashboard
     </a><a
       class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-      href="/admin/course"
+      href="/adm/course"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -61,7 +61,7 @@
     </a>
     <a
       class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-      href="/admin/course"
+      href="/adm/note"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -83,7 +83,7 @@
     </a>
     <a
       class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-      href="/admin/course"
+      href="/adm/member"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -105,7 +105,7 @@
     </a>
     <a
       class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-      href="/admin/course"
+      href="/adm/report"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"

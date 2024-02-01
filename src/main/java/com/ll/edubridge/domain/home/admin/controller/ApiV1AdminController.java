@@ -15,6 +15,7 @@ import com.ll.edubridge.domain.post.post.service.PostService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rsData.RsData;
+import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -131,7 +132,7 @@ public class ApiV1AdminController {
 
     @GetMapping(value = "/members/list")
     @Operation(summary = "회원 목록")
-    public RsData<List<RecentMemberDto>> getAllMembers(
+    public RsData<PageDto<RecentMemberDto>> getAllMembers(
             @RequestParam(defaultValue = "1") int page
     ) {
 
@@ -141,21 +142,22 @@ public class ApiV1AdminController {
 
         Page<Member> members = memberService.findAll(pageable);
 
-        List<RecentMemberDto> recentMemberList = members.stream()
-                .map(RecentMemberDto::new)
-                .toList();
+        // Page<Member>를 PageDto<RecentMemberDto>로 변환
+        PageDto<RecentMemberDto> pageDto = new PageDto<>(
+                members.map(RecentMemberDto::new)
+        );
 
         return RsData.of(
                 "200-1",
                 Msg.CHECK.getMsg(),
-                recentMemberList
+                pageDto
         );
     }
 
     @GetMapping(value = "/summaryNotes/list")
     @Operation(summary = "요약노트 목록")
-    public RsData<List<RecentSummaryNoteDto>> getAllSummeryNotes(
-            @RequestParam(defaultValue = "1") int page){
+    public RsData<PageDto<RecentSummaryNoteDto>> getAllSummeryNotes(
+            @RequestParam(defaultValue = "1") int page) {
 
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
@@ -163,14 +165,15 @@ public class ApiV1AdminController {
 
         Page<SummaryNote> recentSummaryNotes = summaryNoteService.findAll(pageable);
 
-        List<RecentSummaryNoteDto> recentSummaryNoteList = recentSummaryNotes.stream()
-                .map(RecentSummaryNoteDto::new)
-                .toList();
+        // Page<SummaryNote>를 PageDto<RecentSummaryNoteDto>로 변환
+        PageDto<RecentSummaryNoteDto> pageDto = new PageDto<>(
+                recentSummaryNotes.map(RecentSummaryNoteDto::new)
+        );
 
         return RsData.of(
                 "200-1",
                 Msg.CHECK.getMsg(),
-                recentSummaryNoteList
+                pageDto
         );
     }
 

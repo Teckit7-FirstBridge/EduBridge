@@ -6,9 +6,6 @@ import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.member.member.role.MemberRole;
-import com.ll.edubridge.domain.post.post.controller.ApiV1PostController;
-import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
@@ -16,7 +13,6 @@ import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.KwTypeCourse;
-import com.ll.edubridge.standard.base.KwTypeV1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
@@ -89,7 +85,7 @@ public class ApiV1CourseController {
     @PostMapping("")
     @Operation(summary = "강좌 등록")
     public RsData<CreateCourseDto> createCourse(@RequestBody CreateCourseDto createCourseDto) {
-        Course course = courseService.create(rq.getMember(), createCourseDto);
+        Course course = courseService.create(createCourseDto);
 
         CreateCourseDto createdCourseDto = new CreateCourseDto(course);
 
