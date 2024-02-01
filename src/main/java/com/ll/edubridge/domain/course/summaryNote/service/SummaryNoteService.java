@@ -7,6 +7,8 @@ import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteReposito
 import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
+import com.ll.edubridge.global.exceptions.CodeMsg;
+import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,7 +43,7 @@ public class SummaryNoteService {
         if (summaryNote.isPresent()) {
             return summaryNote.get();
         } else {
-            throw new GlobalException("404-1", "해당 강의 요약노트를 찾을 수 없습니다.");
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
     }
 

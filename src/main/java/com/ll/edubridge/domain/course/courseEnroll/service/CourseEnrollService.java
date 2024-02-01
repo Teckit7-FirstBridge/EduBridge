@@ -5,6 +5,8 @@ import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
+import com.ll.edubridge.global.exceptions.CodeMsg;
+import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -48,7 +50,7 @@ public class CourseEnrollService {
         if (courseEnroll.isPresent()) {
             return courseEnroll.get();
         } else {
-            throw new GlobalException("404-1", "해당 수업 테이블을 찾을 수 없습니다.");
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(),CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
     }
 

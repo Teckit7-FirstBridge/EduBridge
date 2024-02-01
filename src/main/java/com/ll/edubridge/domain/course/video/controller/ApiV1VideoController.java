@@ -37,7 +37,7 @@ public class ApiV1VideoController {
 
         Course course = courseService.getCourse(courseId);
         if(course == null) {
-            throw new GlobalException(CodeMsg.E404_1_COURSE_NOT_FIND.getCode(), CodeMsg.E404_1_COURSE_NOT_FIND.getMessage());
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
         List<Video> videos = videoService.findByCourseId(courseId);
@@ -59,12 +59,12 @@ public class ApiV1VideoController {
 
         Course course = courseService.getCourse(courseId);
         if(course == null) {
-            throw new GlobalException(CodeMsg.E404_1_COURSE_NOT_FIND.getCode(), CodeMsg.E404_1_COURSE_NOT_FIND.getMessage());
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
         Video video = videoService.findByCourseIdAndId(courseId, id);
         if (video == null) {
-            throw new GlobalException(CodeMsg.E404_1_COURSE_NOT_FIND.getCode(), CodeMsg.E404_1_COURSE_NOT_FIND.getMessage());
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
         VideoDto videoDto = new VideoDto(video);
@@ -101,12 +101,12 @@ public class ApiV1VideoController {
 
         Course course = courseService.getCourse(courseId);
         if(course == null) {
-            throw new GlobalException(CodeMsg.E404_1_COURSE_NOT_FIND.getCode(), CodeMsg.E404_1_COURSE_NOT_FIND.getMessage());
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
         Video video = videoService.findByCourseIdAndId(courseId, id);
         if (video == null) {
-            throw new GlobalException(CodeMsg.E404_1_COURSE_NOT_FIND.getCode(), CodeMsg.E404_1_COURSE_NOT_FIND.getMessage());
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
         Video modifyVideo = videoService.modify(id, videoDto);
@@ -126,12 +126,12 @@ public class ApiV1VideoController {
 
         Course course = courseService.getCourse(courseId);
         if(course == null) {
-            throw new GlobalException(CodeMsg.E404_1_COURSE_NOT_FIND.getCode(), CodeMsg.E404_1_COURSE_NOT_FIND.getMessage());
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
         Video video = videoService.findByCourseIdAndId(courseId, id);
         if (video == null) {
-            throw new GlobalException(CodeMsg.E404_1_COURSE_NOT_FIND.getCode(), CodeMsg.E404_1_COURSE_NOT_FIND.getMessage());
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
         videoService.delete(id);

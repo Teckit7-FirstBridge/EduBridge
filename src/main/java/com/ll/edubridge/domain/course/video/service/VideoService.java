@@ -7,6 +7,8 @@ import com.ll.edubridge.domain.course.video.dto.VideoDto;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.course.video.repository.VideoRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.global.exceptions.CodeMsg;
+import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,7 +59,7 @@ public class VideoService {
         if (video.isPresent()) {
             return video.get();
         } else {
-            throw new GlobalException("404-1", "해당 영상을 찾을 수 없습니다.");
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
     }
 
