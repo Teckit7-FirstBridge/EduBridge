@@ -54,7 +54,7 @@ public class ApiV1CourseController {
 
     @GetMapping(value = "")
     @Operation(summary = "강좌 다건 조회")
-    public RsData<GetCoursesResponsebody> getPosts(
+    public RsData<GetCoursesResponsebody> getCourses(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "") String kw,
             @RequestParam(defaultValue = "ALL") KwTypeCourse kwType
@@ -86,6 +86,10 @@ public class ApiV1CourseController {
     @PostMapping("")
     @Operation(summary = "강좌 등록")
     public RsData<CreateCourseDto> createCourse(@RequestBody CreateCourseDto createCourseDto) {
+
+        if (!courseService.haveAuthority())
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
+
         Course course = courseService.create(createCourseDto);
 
         CreateCourseDto createdCourseDto = new CreateCourseDto(course);
@@ -99,7 +103,7 @@ public class ApiV1CourseController {
             @PathVariable("id") Long id,
             @RequestBody CourseDto courseDto) {
 
-        if (!courseService.haveAuthority(id))
+        if (!courseService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         Course modifyCourse = courseService.modify(id, courseDto);
@@ -113,7 +117,7 @@ public class ApiV1CourseController {
     @Operation(summary = "강좌 삭제")
     public RsData<Empty> delete(@PathVariable("id") Long id) {
 
-        if (!courseService.haveAuthority(id))
+        if (!courseService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         courseService.delete(id);

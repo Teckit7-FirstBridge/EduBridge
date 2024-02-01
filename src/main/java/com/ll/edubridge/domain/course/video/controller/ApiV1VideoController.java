@@ -81,7 +81,7 @@ public class ApiV1VideoController {
     public RsData<CreateVideoDto> createVideo(@PathVariable("courseId") Long courseId,
                                               @RequestBody CreateVideoDto createVideoDto) {
 
-        if (!videoService.haveAuthority(courseId))
+        if (!videoService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Video video = videoService.create(createVideoDto);
@@ -96,7 +96,7 @@ public class ApiV1VideoController {
                                    @PathVariable("id") Long id,
                                    @RequestBody VideoDto videoDto) {
 
-        if (!videoService.haveAuthority(courseId))
+        if (!videoService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Course course = courseService.getCourse(courseId);
@@ -121,7 +121,7 @@ public class ApiV1VideoController {
     public RsData<Empty> delete(@PathVariable("courseId") Long courseId,
                                 @PathVariable("id") Long id) {
 
-        if (!videoService.haveAuthority(courseId))
+        if (!videoService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         Course course = courseService.getCourse(courseId);
