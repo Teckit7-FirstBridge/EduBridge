@@ -32,9 +32,6 @@ public class Course extends BaseEntity {
     @Column(length = 500)
     private String overView;
 
-    @ManyToOne(optional = false)
-    private Member owner;
-
     private int price;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)

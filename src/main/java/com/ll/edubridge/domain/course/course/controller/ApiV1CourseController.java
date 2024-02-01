@@ -99,7 +99,7 @@ public class ApiV1CourseController {
             @PathVariable("id") Long id,
             @RequestBody CourseDto courseDto) {
 
-        if (!courseService.haveAuthority(id))
+        if (!courseService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         Course modifyCourse = courseService.modify(id, courseDto);
@@ -113,7 +113,7 @@ public class ApiV1CourseController {
     @Operation(summary = "강좌 삭제")
     public RsData<Empty> delete(@PathVariable("id") Long id) {
 
-        if (!courseService.haveAuthority(id))
+        if (!courseService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         courseService.delete(id);

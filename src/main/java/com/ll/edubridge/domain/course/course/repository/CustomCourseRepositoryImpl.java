@@ -2,9 +2,7 @@ package com.ll.edubridge.domain.course.course.repository;
 
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.standard.base.KwTypeCourse;
-import com.ll.edubridge.standard.base.KwTypeV1;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -19,8 +17,8 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
-import static com.ll.edubridge.domain.post.post.entity.QPost.post;
 import static com.ll.edubridge.domain.course.course.entity.QCourse.course;
+import static com.ll.edubridge.domain.post.post.entity.QPost.post;
 
 @RequiredArgsConstructor
 public class CustomCourseRepositoryImpl implements CustomCourseRepository{
@@ -63,11 +61,8 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
     private void applyKeywordFilter(KwTypeCourse kwType, String kw, BooleanBuilder builder) {
         switch (kwType) {
             case kwType.TITLE -> builder.and(course.title.containsIgnoreCase(kw));
-            case kwType.NAME -> builder.and(course.owner.nickname.containsIgnoreCase(kw));
             default -> builder.and(
                     course.title.containsIgnoreCase(kw)
-                                    .or(course.owner.nickname.containsIgnoreCase(kw))
-
             );
         }
     }

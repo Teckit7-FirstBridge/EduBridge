@@ -43,7 +43,6 @@ public class CourseService {
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .price(createCourseDto.getPrice())
-                .owner(member)
                 .build();
         return courseRepository.save(course);
     }
@@ -77,14 +76,14 @@ public class CourseService {
     }
 
     @Transactional
-    public boolean haveAuthority(Long id) {
+    public boolean haveAuthority() {
         Member member = rq.getMember();
 
         if (member == null) return false;
 
         if (!rq.isAdmin()) return true;
 
-        return true;
+        return false;
     }
 
     public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {

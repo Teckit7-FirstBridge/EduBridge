@@ -1,6 +1,5 @@
 package com.ll.edubridge.domain.course.video.service;
 
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
 import com.ll.edubridge.domain.course.video.dto.VideoDto;
@@ -85,15 +84,13 @@ public class VideoService {
     }
 
     @Transactional
-    public boolean haveAuthority(Long courseId) {
+    public boolean haveAuthority() {
         Member member = rq.getMember();
-
-        Optional<Course> course = courseService.findById(courseId);
 
         if (member == null) return false;
 
-        if (rq.isAdmin()) return true;
+        if (!rq.isAdmin()) return true;
 
-        return course.get().getOwner().equals(member);
+        return true;
     }
 }
