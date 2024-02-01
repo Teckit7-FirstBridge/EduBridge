@@ -2,9 +2,9 @@
 // v0 by Vercel.
 // https://v0.dev/t/xXTAK4cPZaT
 -->
-<div class="flex flex-col h-screen">
+<div class="max-w-4xl mx-auto my-8">
   <header class="flex h-16 items-center border-b px-4 md:px-6 justify-between">
-    <a class="flex items-center gap-2" href="#"
+    <a class="flex items-center gap-2"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -22,12 +22,7 @@
       ><span class="text-lg font-semibold">My Page</span></a
     >
     <div class="ml-auto flex gap-4">
-      <a class="text-sm font-medium" href="#"> Change Nickname </a><a
-        class="text-sm font-medium"
-        href="#"
-      >
-        Shopping Cart
-      </a>
+      <a class="text-sm font-medium" href="#"> Change Nickname </a>
     </div>
   </header>
   <main class="flex-1 p-4 md:p-6">

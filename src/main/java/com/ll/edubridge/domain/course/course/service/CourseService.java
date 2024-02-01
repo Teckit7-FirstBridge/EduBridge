@@ -36,14 +36,13 @@ public class CourseService {
 
 
     @Transactional
-    public Course create(Member member, CreateCourseDto createCourseDto) {
+    public Course create(CreateCourseDto createCourseDto) {
         Course course = Course.builder()
                 .title(createCourseDto.getTitle())
                 .notice(createCourseDto.getNotice())
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .price(createCourseDto.getPrice())
-                .owner(member)
                 .build();
         return courseRepository.save(course);
     }

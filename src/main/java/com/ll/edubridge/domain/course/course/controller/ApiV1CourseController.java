@@ -86,7 +86,7 @@ public class ApiV1CourseController {
     @PostMapping("")
     @Operation(summary = "강좌 등록")
     public RsData<CreateCourseDto> createCourse(@RequestBody CreateCourseDto createCourseDto) {
-        Course course = courseService.create(rq.getMember(), createCourseDto);
+        Course course = courseService.create(createCourseDto);
 
         CreateCourseDto createdCourseDto = new CreateCourseDto(course);
 
