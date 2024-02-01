@@ -79,7 +79,7 @@ custom:
     dirPath: c:/temp/eb_dev
 
 openai:
-  model: gpt-3.5-turbo
+  model: gpt-4-turbo-preview
   secret-key: ON_SECRET
   api:
     key: ON_SECRET
