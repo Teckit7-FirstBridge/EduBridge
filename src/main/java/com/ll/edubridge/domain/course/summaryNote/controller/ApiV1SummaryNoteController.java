@@ -6,6 +6,7 @@ import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
@@ -65,7 +66,7 @@ public class ApiV1SummaryNoteController {
             @RequestBody CreateSummaryNoteDto createSummaryNoteDto) {
 
         if(!summaryNoteService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         SummaryNote modifySummaryNote = summaryNoteService.modify(id, createSummaryNoteDto);
 
@@ -81,7 +82,7 @@ public class ApiV1SummaryNoteController {
     public RsData<Empty> delete(@PathVariable("noteId") Long id) {
 
         if(!summaryNoteService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         summaryNoteService.delete(id);
 

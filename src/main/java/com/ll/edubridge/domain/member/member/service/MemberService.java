@@ -2,7 +2,6 @@ package com.ll.edubridge.domain.member.member.service;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
-import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
