@@ -5,50 +5,14 @@
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
-  let div: HTMLDivElement;
-  let editor: Editor;
+  import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
   let oldBody: string = '';
   let title = '';
   let dto: components['schemas']['PostDto'][] = $state([]);
-
-  $effect(() => {
-    editor = new Editor({
-      el: div,
-      height: 'calc(100dvh - 60px)',
-      initialEditType: 'markdown',
-      previewStyle: 'vertical'
-    });
-    return () => {
-      editor.destroy();
-    };
-  });
-
-  function saveToLocalStorage(id: number, body: string) {
-    const key = 'posts_' + id;
-    // LocalStorage에서 기존 데이터를 가져옵니다.
-    const existingData = localStorage.getItem(key);
-
-    // 기존 데이터가 있으면 JSON으로 파싱하고, 없으면 빈 배열을 사용합니다.
-    const posts = existingData ? JSON.parse(existingData) : [];
-
-    // 새 데이터를 배열에 추가합니다.
-    posts.push({
-      id,
-      body: body,
-      date: new Date().toISOString()
-    });
-
-    // 배열의 크기가 10을 초과하면 가장 오래된 항목(첫 번째 항목)을 제거합니다.
-    if (posts.length > 10) {
-      posts.shift(); // 배열의 첫 번째 항목을 제거합니다.
-    }
-
-    // 변경된 배열을 JSON 문자열로 변환하여 LocalStorage에 저장합니다.
-    localStorage.setItem(key, JSON.stringify(posts));
-  }
+  let toastUiEditor: any | undefined = $state();
 
   const Post__save = async () => {
-    const newBody = editor.getMarkdown().trim();
+    const newBody = toastUiEditor.editor.getMarkdown().trim();
     if (oldBody === newBody) {
       return;
     }
@@ -62,8 +26,6 @@
     });
 
     oldBody = newBody;
-
-    saveToLocalStorage(parseInt($page.params.id), newBody);
 
     if (data) {
       rq.msgInfo(data.msg); //msg
@@ -94,7 +56,7 @@
         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         for="post-body">Body</label
       >
-      <div bind:this={div} id="post-body"></div>
+      <ToastUiEditor bind:this={toastUiEditor} />
     </div>
     <button
       on:click={Post__save}

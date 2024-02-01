@@ -5,38 +5,18 @@
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
-  import axios from 'axios';
+  import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
 
   let divNoti: HTMLDivElement | undefined = $state();
-  let divOverview: HTMLDivElement | undefined = $state();
-  let bodyeditor: Editor;
-  let notieditor: Editor;
-  let overvieweditor: Editor;
+  let overvieweditor: any | undefined = $state();
+  let notieditor: any | undefined = $state();
   let title: string | undefined = $state();
   let imgUrl: string | undefined = $state();
   let price: number | undefined = $state();
-  $effect(() => {
-    notieditor = new Editor({
-      el: divNoti,
-      height: 'calc(30dvh - 60px)',
-      initialEditType: 'markdown',
-      previewStyle: 'vertical'
-    });
-    overvieweditor = new Editor({
-      el: divOverview,
-      height: 'calc(50dvh - 60px)',
-      initialEditType: 'markdown',
-      previewStyle: 'vertical'
-    });
-    return () => {
-      notieditor.destroy();
-      overvieweditor.destroy();
-    };
-  });
 
   const Post__save = async () => {
-    const newNoti = notieditor.getMarkdown().trim();
-    const newOverview = overvieweditor.getMarkdown().trim();
+    const newNoti = notieditor.editor.getMarkdown().trim();
+    const newOverview = overvieweditor.editor.getMarkdown().trim();
 
     const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/courses', {
       // url 설정
@@ -75,11 +55,12 @@
         for="post-noti">Notification</label
       >
       <div bind:this={divNoti} id="post-noti"></div>
+      <ToastUiEditor bind:this={notieditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
       <label
         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         for="post-overview">OverView</label
       >
-      <div bind:this={divOverview} id="post-overview"></div>
+      <ToastUiEditor bind:this={overvieweditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
       <label
         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         for="post-imgUrl">ImgUrl</label
