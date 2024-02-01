@@ -24,8 +24,8 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final Rq rq;
 
-    public Page<Course> findAll(Pageable pageable) {
-        return courseRepository.findAll(pageable);
+    public List<Course> findAll() {
+        return courseRepository.findAll();
     }
 
     public Optional<Course> findById(Long id) {
