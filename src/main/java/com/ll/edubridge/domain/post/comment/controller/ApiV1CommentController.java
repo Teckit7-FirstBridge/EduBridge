@@ -6,6 +6,7 @@ import com.ll.edubridge.domain.post.comment.dto.CreateCommentDto;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.comment.service.CommentService;
 import com.ll.edubridge.global.exceptions.GlobalException;
+import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
@@ -31,7 +32,7 @@ public class ApiV1CommentController {
     public RsData<CreateCommentDto> createComment(@RequestBody CreateCommentDto createCommentDto) {
         Comment comment = commentService.create(rq.getMember(), createCommentDto);
 
-        return RsData.of("200-0", "등록 성공", createCommentDto);
+        return RsData.of("200-0", Msg.CREATE.getMsg(), createCommentDto);
     }
 
     @GetMapping("/{postId}")
@@ -43,7 +44,7 @@ public class ApiV1CommentController {
                 .map((Comment comment) -> new CommentDto(comment, rq.getMember()))
                 .toList();
 
-        return RsData.of("200-1", "조회 성공", commentDtoList);
+        return RsData.of("200-1", Msg.CHECK.getMsg(), commentDtoList);
     }
 
     @PutMapping("/{postId}/{commentId}")
@@ -56,7 +57,7 @@ public class ApiV1CommentController {
 
         CommentDto modifyCommentDto = new CommentDto(modifyComment, rq.getMember());
 
-        return RsData.of("200-2", "수정 성공", modifyCommentDto);
+        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifyCommentDto);
     }
 
     @DeleteMapping("/{postId}/{commentId}")
@@ -68,7 +69,7 @@ public class ApiV1CommentController {
 
         commentService.delete(commentId);
 
-        return RsData.of("200-3", "삭제 성공");
+        return RsData.of("200-3", Msg.DELETE.getMsg());
     }
 
     @PostMapping("/{postId}/{commentId}/like")
@@ -82,7 +83,7 @@ public class ApiV1CommentController {
 
         commentService.vote(commentId, member);
 
-        return RsData.of("200-4", "추천 성공");
+        return RsData.of("200-4", Msg.RECOMMEND.getMsg());
     }
 
     @DeleteMapping("/{postId}/{commentId}/like")
@@ -96,6 +97,6 @@ public class ApiV1CommentController {
 
         commentService.deleteVote(commentId, member);
 
-        return RsData.of("200-5", "추천 취소 성공");
+        return RsData.of("200-5", Msg.RECOMMENDCANCEL.getMsg());
     }
 }

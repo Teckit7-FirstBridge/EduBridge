@@ -51,3 +51,4 @@ public class RsData<T> {
         return new RsData<>(resultCode, statusCode, msg, data);
     }
 }
+
