@@ -13,10 +13,13 @@ public class RecentMemberDto {
     private LocalDateTime createDate;
     @NonNull
     private String name;
+    @NonNull
+    private boolean report;
 
     public RecentMemberDto(Member member) {
         this.id = member.getId();
         this.createDate = member.getCreateDate();
         this.name = member.getName();
+        this.report=member.isReport();
     }
 }

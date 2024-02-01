@@ -131,13 +131,29 @@ export interface paths {
     /** 댓글 목록 */
     get: operations["getComments"];
   };
+  "/api/v1/admin/summaryNotes": {
+    /** 최신 요약노트 */
+    get: operations["getSummeryNotes"];
+  };
+  "/api/v1/admin/summaryNotes/list": {
+    /** 요약노트 목록 */
+    get: operations["getAllSummeryNotes"];
+  };
   "/api/v1/admin/reports": {
     /** 신고 게시물 최신순 */
     get: operations["getReportedPosts"];
   };
+  "/api/v1/admin/reports/list": {
+    /** 신고 게시물 목록 */
+    get: operations["getAllReportedPosts"];
+  };
   "/api/v1/admin/members": {
     /** 회원 최신순 */
     get: operations["getMembers"];
+  };
+  "/api/v1/admin/members/list": {
+    /** 회원 목록 */
+    get: operations["getAllMembers"];
   };
   "/api/v1/admin/courses": {
     /** 강좌 최신순 */
@@ -542,6 +558,21 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    RecentSummaryNoteDto: {
+      /** Format: int64 */
+      id: number;
+      name: string;
+      courseName: string;
+    };
+    RsDataListRecentSummaryNoteDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["RecentSummaryNoteDto"][];
+      fail: boolean;
+      success: boolean;
+    };
     ReportedPostDto: {
       /** Format: int64 */
       id: number;
@@ -567,6 +598,7 @@ export interface components {
       /** Format: date-time */
       createDate: string;
       name: string;
+      report: boolean;
     };
     RsDataListRecentMemberDto: {
       resultCode: string;
@@ -1231,6 +1263,33 @@ export interface operations {
       };
     };
   };
+  /** 최신 요약노트 */
+  getSummeryNotes: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListRecentSummaryNoteDto"];
+        };
+      };
+    };
+  };
+  /** 요약노트 목록 */
+  getAllSummeryNotes: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListRecentSummaryNoteDto"];
+        };
+      };
+    };
+  };
   /** 신고 게시물 최신순 */
   getReportedPosts: {
     responses: {
@@ -1242,8 +1301,35 @@ export interface operations {
       };
     };
   };
+  /** 신고 게시물 목록 */
+  getAllReportedPosts: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListReportedPostDto"];
+        };
+      };
+    };
+  };
   /** 회원 최신순 */
   getMembers: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListRecentMemberDto"];
+        };
+      };
+    };
+  };
+  /** 회원 목록 */
+  getAllMembers: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
     responses: {
       /** @description OK */
       200: {

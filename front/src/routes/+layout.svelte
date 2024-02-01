@@ -37,6 +37,11 @@
         <li>
           <a href="/board"><i class="fa-solid fa-list"></i> 글</a>
         </li>
+        {#if rq.isAdmin()}
+          <li>
+            <a href="/adm"><i class="fa-solid fa-right-to-bracket"></i> 관리자</a>
+          </li>
+        {/if}
         {#if rq.isLogout()}
           <li>
             <a href="/member/login"><i class="fa-solid fa-right-to-bracket"></i> 로그인</a>
