@@ -18,6 +18,7 @@ import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -154,9 +155,12 @@ public class ApiV1AdminController {
         );
     }
 
+    public record GetNotesResponseBody(@NonNull PageDto<RecentSummaryNoteDto> itemPage) {
+    }
+
     @GetMapping(value = "/summaryNotes/list")
     @Operation(summary = "요약노트 목록")
-    public RsData<PageDto<RecentSummaryNoteDto>> getAllSummeryNotes(
+    public RsData<GetNotesResponseBody> getAllSummeryNotes(
             @RequestParam(defaultValue = "1") int page) {
 
         List<Sort.Order> sorts = new ArrayList<>();
@@ -166,15 +170,22 @@ public class ApiV1AdminController {
         Page<SummaryNote> recentSummaryNotes = summaryNoteService.findAll(pageable);
 
         // Page<SummaryNote>를 PageDto<RecentSummaryNoteDto>로 변환
-        PageDto<RecentSummaryNoteDto> pageDto = new PageDto<>(
-                recentSummaryNotes.map(RecentSummaryNoteDto::new)
-        );
+
+        Page<RecentSummaryNoteDto> notePage = recentSummaryNotes.map(this::noteToDto);
 
         return RsData.of(
                 "200-1",
                 Msg.CHECK.getMsg(),
-                pageDto
+                new GetNotesResponseBody(
+                        new PageDto<>(notePage)
+                )
         );
+    }
+
+    private RecentSummaryNoteDto noteToDto(SummaryNote summaryNote) {
+        RecentSummaryNoteDto dto = new RecentSummaryNoteDto(summaryNote);
+
+        return dto;
     }
 
 

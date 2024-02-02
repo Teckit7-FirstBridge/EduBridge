@@ -3,160 +3,161 @@
  * Do not make direct changes to the file.
  */
 
+
 export interface paths {
-  '/api/v1/posts/{id}': {
+  "/api/v1/posts/{id}": {
     /** 글 상세 정보 */
-    get: operations['getDetail'];
+    get: operations["getDetail"];
     /** 글 수정 */
-    put: operations['modify'];
+    put: operations["modify"];
     /** 글 삭제 */
-    delete: operations['delete'];
+    delete: operations["delete"];
   };
-  '/api/v1/courses/{videoid}/note/{noteId}': {
+  "/api/v1/courses/{videoid}/note/{noteId}": {
     /** 강의 요약 노트 수정 */
-    put: operations['modify_1'];
+    put: operations["modify_1"];
     /** 강의 요약 노트 삭제 */
-    delete: operations['delete_1'];
+    delete: operations["delete_1"];
   };
-  '/api/v1/courses/{id}': {
+  "/api/v1/courses/{id}": {
     /** 강좌 수정 */
-    put: operations['modify_2'];
+    put: operations["modify_2"];
     /** 강좌 삭제 */
-    delete: operations['delete_2'];
+    delete: operations["delete_2"];
   };
-  '/api/v1/comments/{postId}/{commentId}': {
+  "/api/v1/comments/{postId}/{commentId}": {
     /** 댓글 수정 */
-    put: operations['modifyComment'];
+    put: operations["modifyComment"];
     /** 댓글 삭제 */
-    delete: operations['deleteComment'];
+    delete: operations["deleteComment"];
   };
-  '/api/v1/admin/{courseId}/videos/{id}': {
+  "/api/v1/admin/{courseId}/videos/{id}": {
     /** 강의 수정 */
-    put: operations['modify_3'];
+    put: operations["modify_3"];
     /** 강의 삭제 */
-    delete: operations['delete_3'];
+    delete: operations["delete_3"];
   };
-  '/api/v1/posts': {
+  "/api/v1/posts": {
     /** 글 다건조회 */
-    get: operations['getPosts_1'];
+    get: operations["getPosts_1"];
     /** 글 등록 */
-    post: operations['createPost'];
+    post: operations["createPost"];
   };
-  '/api/v1/posts/{id}/like': {
+  "/api/v1/posts/{id}/like": {
     /** 글 추천 */
-    post: operations['vote'];
+    post: operations["vote"];
     /** 글 추천 취소 */
-    delete: operations['deleteVote'];
+    delete: operations["deleteVote"];
   };
-  '/api/v1/posts/qna': {
+  "/api/v1/posts/qna": {
     /** 1대1 문의 목록 */
-    get: operations['getMyQna'];
+    get: operations["getMyQna"];
     /** 1대1 문의 등록 */
-    post: operations['createQna'];
+    post: operations["createQna"];
   };
-  '/api/v1/members/logout': {
-    post: operations['logout'];
+  "/api/v1/members/logout": {
+    post: operations["logout"];
   };
-  '/api/v1/members/login': {
+  "/api/v1/members/login": {
     /** 로그인, accessToken, refreshToken 쿠키 생성됨 */
-    post: operations['login'];
+    post: operations["login"];
   };
-  '/api/v1/enroll/{courseId}': {
+  "/api/v1/enroll/{courseId}": {
     /** 수강 등록 */
-    post: operations['create'];
+    post: operations["create"];
   };
-  '/api/v1/courses': {
+  "/api/v1/courses": {
     /** 강좌 다건 조회 */
-    get: operations['getPosts_2'];
+    get: operations["getCourses"];
     /** 강좌 등록 */
-    post: operations['createCourse'];
+    post: operations["createCourse"];
   };
-  '/api/v1/courses/{videoid}/note': {
+  "/api/v1/courses/{videoid}/note": {
     /** 강의 요약 노트 등록 */
-    post: operations['create_1'];
+    post: operations["create_1"];
   };
-  '/api/v1/comments': {
+  "/api/v1/comments": {
     /** 댓글 등록 */
-    post: operations['createComment'];
+    post: operations["createComment"];
   };
-  '/api/v1/comments/{postId}/{commentId}/like': {
+  "/api/v1/comments/{postId}/{commentId}/like": {
     /** 댓글 추천 */
-    post: operations['voteComment'];
+    post: operations["voteComment"];
     /** 댓글 추천 취소 */
-    delete: operations['deleteVoteComment'];
+    delete: operations["deleteVoteComment"];
   };
-  '/api/v1/admin/{courseId}/videos': {
+  "/api/v1/admin/{courseId}/videos": {
     /** 강의 등록 */
-    post: operations['createVideo'];
+    post: operations["createVideo"];
   };
-  '/api/v1': {
+  "/api/v1": {
     /** 홈화면 최신 강좌 N개조회 */
-    get: operations['getPosts'];
+    get: operations["getPosts"];
   };
-  '/api/v1/posts/qna/{id}': {
+  "/api/v1/posts/qna/{id}": {
     /** 1대1 문의 상세 정보 */
-    get: operations['getQnaDetail'];
+    get: operations["getQnaDetail"];
     /** 1대1 문의 삭제 */
-    delete: operations['deleteQna'];
+    delete: operations["deleteQna"];
   };
-  '/api/v1/members/me': {
-    get: operations['getMe'];
+  "/api/v1/members/me": {
+    get: operations["getMe"];
   };
-  '/api/v1/enroll': {
+  "/api/v1/enroll": {
     /** 수업 목록 조회 */
-    get: operations['getSummaryNote'];
+    get: operations["getSummaryNote"];
   };
-  '/api/v1/courses/{videoid}/note/{note-id}': {
+  "/api/v1/courses/{videoid}/note/{note-id}": {
     /** 강의 요약 노트 상세 보기 */
-    get: operations['getSummaryNote_1'];
+    get: operations["getSummaryNote_1"];
   };
-  '/api/v1/courses/{videoid}/note/admin': {
+  "/api/v1/courses/{videoid}/note/admin": {
     /** 비디오별 강의노트 조회(관리자 기능) */
-    get: operations['getSummaryNoteAdmin'];
+    get: operations["getSummaryNoteAdmin"];
   };
-  '/api/v1/courses/{courseId}/videos': {
+  "/api/v1/courses/{courseId}/videos": {
     /** 강의 리스트 */
-    get: operations['getVideos'];
+    get: operations["getVideos"];
   };
-  '/api/v1/courses/{courseId}/videos/{id}': {
+  "/api/v1/courses/{courseId}/videos/{id}": {
     /** 특정 강의 */
-    get: operations['getVideos_1'];
+    get: operations["getVideos_1"];
   };
-  '/api/v1/courses/{course-id}': {
+  "/api/v1/courses/{course-id}": {
     /** 강좌 상세 조회 */
-    get: operations['getCourse'];
+    get: operations["getCourse"];
   };
-  '/api/v1/comments/{postId}': {
+  "/api/v1/comments/{postId}": {
     /** 댓글 목록 */
-    get: operations['getComments'];
+    get: operations["getComments"];
   };
-  '/api/v1/admin/summaryNotes': {
+  "/api/v1/admin/summaryNotes": {
     /** 최신 요약노트 */
-    get: operations['getSummeryNotes'];
+    get: operations["getSummeryNotes"];
   };
-  '/api/v1/admin/summaryNotes/list': {
+  "/api/v1/admin/summaryNotes/list": {
     /** 요약노트 목록 */
-    get: operations['getAllSummeryNotes'];
+    get: operations["getAllSummeryNotes"];
   };
-  '/api/v1/admin/reports': {
+  "/api/v1/admin/reports": {
     /** 신고 게시물 최신순 */
-    get: operations['getReportedPosts'];
+    get: operations["getReportedPosts"];
   };
-  '/api/v1/admin/reports/list': {
+  "/api/v1/admin/reports/list": {
     /** 신고 게시물 목록 */
-    get: operations['getAllReportedPosts'];
+    get: operations["getAllReportedPosts"];
   };
-  '/api/v1/admin/members': {
+  "/api/v1/admin/members": {
     /** 회원 최신순 */
-    get: operations['getMembers'];
+    get: operations["getMembers"];
   };
-  '/api/v1/admin/members/list': {
+  "/api/v1/admin/members/list": {
     /** 회원 목록 */
-    get: operations['getAllMembers'];
+    get: operations["getAllMembers"];
   };
-  '/api/v1/admin/courses': {
+  "/api/v1/admin/courses": {
     /** 강좌 최신순 */
-    get: operations['getRecentCourses'];
+    get: operations["getRecentCourses"];
   };
 }
 
@@ -183,14 +184,9 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["PostDto"];
-=======
-      data: components['schemas']['PostDto'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     CreateSummaryNoteDto: {
       content?: string;
@@ -204,19 +200,18 @@ export interface components {
       notice?: string;
       imgUrl?: string;
       overView?: string;
-      owner?: components['schemas']['Member'];
       /** Format: int32 */
       price?: number;
-      videoList?: components['schemas']['Video'][];
-      voter?: components['schemas']['Member'][];
+      videoList?: components["schemas"]["Video"][];
+      voter?: components["schemas"]["Member"][];
     };
     CourseEnroll: {
       /** Format: int64 */
       id?: number;
       /** Format: date-time */
       createDate?: string;
-      course?: components['schemas']['Course'];
-      member?: components['schemas']['Member'];
+      course?: components["schemas"]["Course"];
+      member?: components["schemas"]["Member"];
     };
     GrantedAuthority: {
       authority?: string;
@@ -235,31 +230,20 @@ export interface components {
       refreshToken?: string;
       profileImgUrl?: string;
       visitedToday?: boolean;
-      courseEnrollList?: components['schemas']['CourseEnroll'][];
+      courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-<<<<<<< HEAD
-      profileImgUrlOrDefault?: string;
       authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
-=======
-      authorities?: components['schemas']['GrantedAuthority'][];
       profileImgUrlOrDefault?: string;
-      authoritiesAsStringList?: string[];
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["SummaryNoteDto"];
-=======
-      data: components['schemas']['SummaryNoteDto'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     SummaryNote: {
       /** Format: int64 */
@@ -267,13 +251,13 @@ export interface components {
       /** Format: date-time */
       createDate?: string;
       content?: string;
-      writer?: components['schemas']['Member'];
-      video?: components['schemas']['Video'];
+      writer?: components["schemas"]["Member"];
+      video?: components["schemas"]["Video"];
     };
     SummaryNoteDto: {
       /** Format: int64 */
       id?: number;
-      member?: components['schemas']['Member'];
+      member?: components["schemas"]["Member"];
       content?: string;
     };
     Video: {
@@ -284,8 +268,8 @@ export interface components {
       url?: string;
       imgUrl?: string;
       overView?: string;
-      course?: components['schemas']['Course'];
-      summaryNotes?: components['schemas']['SummaryNote'][];
+      course?: components["schemas"]["Course"];
+      summaryNotes?: components["schemas"]["SummaryNote"][];
     };
     CourseDto: {
       /** Format: int64 */
@@ -294,7 +278,6 @@ export interface components {
       notice?: string;
       imgUrl?: string;
       overView?: string;
-      ownerName?: string;
       /** Format: int32 */
       price?: number;
     };
@@ -303,14 +286,9 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["CourseDto"];
-=======
-      data: components['schemas']['CourseDto'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     CreateCommentDto: {
       body: string;
@@ -335,14 +313,9 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["CommentDto"];
-=======
-      data: components['schemas']['CommentDto'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     VideoDto: {
       /** Format: int64 */
@@ -352,21 +325,16 @@ export interface components {
       imgUrl: string;
       /** Format: int64 */
       courseId: number;
-      summaryNotes: components['schemas']['SummaryNoteDto'][];
+      summaryNotes: components["schemas"]["SummaryNoteDto"][];
     };
     RsDataVideoDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["VideoDto"];
-=======
-      data: components['schemas']['VideoDto'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     CreatePostDto: {
       title: string;
@@ -377,14 +345,9 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["CreatePostDto"];
-=======
-      data: components['schemas']['CreatePostDto'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     RsDataVoid: {
       resultCode: string;
@@ -392,8 +355,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: Record<string, never>;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     QnaDto: {
       /** Format: int64 */
@@ -411,14 +374,9 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["QnaDto"];
-=======
-      data: components['schemas']['QnaDto'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     Empty: Record<string, never>;
     RsDataEmpty: {
@@ -426,21 +384,16 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["Empty"];
-=======
-      data: components['schemas']['Empty'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     LoginRequestBody: {
       username: string;
       password: string;
     };
     LoginResponseBody: {
-      item: components['schemas']['MemberDto'];
+      item: components["schemas"]["MemberDto"];
     };
     MemberDto: {
       /** Format: int64 */
@@ -457,14 +410,9 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["LoginResponseBody"];
-=======
-      data: components['schemas']['LoginResponseBody'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     CourseEnrollDto: {
       /** Format: int64 */
@@ -475,14 +423,9 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["CourseEnrollDto"];
-=======
-      data: components['schemas']['CourseEnrollDto'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     CreateCourseDto: {
       title?: string;
@@ -497,28 +440,18 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["CreateCourseDto"];
-=======
-      data: components['schemas']['CreateCourseDto'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     RsDataCreateCommentDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["CreateCommentDto"];
-=======
-      data: components['schemas']['CreateCommentDto'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     CreateVideoDto: {
       url: string;
@@ -532,137 +465,94 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["CreateVideoDto"];
-=======
-      data: components['schemas']['CreateVideoDto'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     GetPostsResponseBody: {
-      items: components['schemas']['CourseDto'][];
+      items: components["schemas"]["CourseDto"][];
     };
     RsDataGetPostsResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["GetPostsResponseBody"];
-=======
-      data: components['schemas']['GetPostsResponseBody'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     RsDataListQnaDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["QnaDto"][];
-=======
-      data: components['schemas']['QnaDto'][];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     MeResponseBody: {
-      item: components['schemas']['MemberDto'];
+      item: components["schemas"]["MemberDto"];
     };
     RsDataMeResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["MeResponseBody"];
-=======
-      data: components['schemas']['MeResponseBody'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     GetCourseEnrollResponsebody: {
-      items: components['schemas']['CourseEnrollDto'][];
+      items: components["schemas"]["CourseEnrollDto"][];
     };
     RsDataGetCourseEnrollResponsebody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["GetCourseEnrollResponsebody"];
-=======
-      data: components['schemas']['GetCourseEnrollResponsebody'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     GetCoursesResponsebody: {
-      items: components['schemas']['CourseDto'][];
+      items: components["schemas"]["CourseDto"][];
     };
     RsDataGetCoursesResponsebody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["GetCoursesResponsebody"];
-=======
-      data: components['schemas']['GetCoursesResponsebody'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     GetSummaryNoteResponsebody: {
-      items: components['schemas']['SummaryNoteDto'][];
+      items: components["schemas"]["SummaryNoteDto"][];
     };
     RsDataGetSummaryNoteResponsebody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["GetSummaryNoteResponsebody"];
-=======
-      data: components['schemas']['GetSummaryNoteResponsebody'];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     RsDataListVideoDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["VideoDto"][];
-=======
-      data: components['schemas']['VideoDto'][];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     RsDataListCommentDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["CommentDto"][];
-=======
-      data: components['schemas']['CommentDto'][];
       fail: boolean;
       success: boolean;
     };
@@ -671,7 +561,9 @@ export interface components {
       id: number;
       name: string;
       courseName: string;
+      /** Format: int64 */
       videoId: number;
+      /** Format: int64 */
       courseId: number;
       /** Format: date-time */
       createDate: string;
@@ -681,11 +573,32 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components['schemas']['RecentSummaryNoteDto'][];
+      data: components["schemas"]["RecentSummaryNoteDto"][];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+    };
+    GetNotesResponseBody: {
+      itemPage?: components["schemas"]["PageDtoRecentSummaryNoteDto"];
+    };
+    PageDtoRecentSummaryNoteDto: {
+      /** Format: int64 */
+      totalElementsCount: number;
+      /** Format: int64 */
+      pageElementsCount: number;
+      /** Format: int64 */
+      totalPagesCount: number;
+      /** Format: int32 */
+      number: number;
+      content: components["schemas"]["RecentSummaryNoteDto"][];
+    };
+    RsDataGetNotesResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetNotesResponseBody"];
       fail: boolean;
+      success: boolean;
     };
     ReportedPostDto: {
       /** Format: int64 */
@@ -702,14 +615,9 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["ReportedPostDto"][];
-=======
-      data: components['schemas']['ReportedPostDto'][];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
     RecentMemberDto: {
       /** Format: int64 */
@@ -724,14 +632,29 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["RecentMemberDto"][];
-=======
-      data: components['schemas']['RecentMemberDto'][];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
+    };
+    PageDtoRecentMemberDto: {
+      /** Format: int64 */
+      totalElementsCount: number;
+      /** Format: int64 */
+      pageElementsCount: number;
+      /** Format: int64 */
+      totalPagesCount: number;
+      /** Format: int32 */
+      number: number;
+      content: components["schemas"]["RecentMemberDto"][];
+    };
+    RsDataPageDtoRecentMemberDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["PageDtoRecentMemberDto"];
       fail: boolean;
+      success: boolean;
     };
     RecentCourseDto: {
       /** Format: int64 */
@@ -743,14 +666,9 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
       data: components["schemas"]["RecentCourseDto"][];
-=======
-      data: components['schemas']['RecentCourseDto'][];
       fail: boolean;
->>>>>>> 6769ba5bef76efc2a29b43ded8a26e988c245523
       success: boolean;
-      fail: boolean;
     };
   };
   responses: never;
@@ -765,6 +683,7 @@ export type $defs = Record<string, never>;
 export type external = Record<string, never>;
 
 export interface operations {
+
   /** 글 상세 정보 */
   getDetail: {
     parameters: {
@@ -776,7 +695,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataPostDto'];
+          "application/json": components["schemas"]["RsDataPostDto"];
         };
       };
     };
@@ -790,14 +709,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['PostDto'];
+        "application/json": components["schemas"]["PostDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataPostDto'];
+          "application/json": components["schemas"]["RsDataPostDto"];
         };
       };
     };
@@ -813,7 +732,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataEmpty'];
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };
@@ -827,14 +746,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateSummaryNoteDto'];
+        "application/json": components["schemas"]["CreateSummaryNoteDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataSummaryNoteDto'];
+          "application/json": components["schemas"]["RsDataSummaryNoteDto"];
         };
       };
     };
@@ -850,7 +769,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataEmpty'];
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };
@@ -864,14 +783,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['CourseDto'];
+        "application/json": components["schemas"]["CourseDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataCourseDto'];
+          "application/json": components["schemas"]["RsDataCourseDto"];
         };
       };
     };
@@ -887,7 +806,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataEmpty'];
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };
@@ -901,14 +820,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateCommentDto'];
+        "application/json": components["schemas"]["CreateCommentDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataCommentDto'];
+          "application/json": components["schemas"]["RsDataCommentDto"];
         };
       };
     };
@@ -924,7 +843,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataEmpty'];
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };
@@ -939,14 +858,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['VideoDto'];
+        "application/json": components["schemas"]["VideoDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataVideoDto'];
+          "application/json": components["schemas"]["RsDataVideoDto"];
         };
       };
     };
@@ -963,7 +882,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataEmpty'];
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };
@@ -974,14 +893,14 @@ export interface operations {
       query?: {
         page?: number;
         kw?: string;
-        kwType?: 'ALL' | 'TITLE' | 'BODY' | 'NAME';
+        kwType?: "ALL" | "TITLE" | "BODY" | "NAME";
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataGetPostsResponseBody'];
+          "application/json": components["schemas"]["RsDataGetPostsResponseBody"];
         };
       };
     };
@@ -990,14 +909,14 @@ export interface operations {
   createPost: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreatePostDto'];
+        "application/json": components["schemas"]["CreatePostDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataCreatePostDto'];
+          "application/json": components["schemas"]["RsDataCreatePostDto"];
         };
       };
     };
@@ -1013,7 +932,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataVoid'];
+          "application/json": components["schemas"]["RsDataVoid"];
         };
       };
     };
@@ -1029,7 +948,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataVoid'];
+          "application/json": components["schemas"]["RsDataVoid"];
         };
       };
     };
@@ -1040,7 +959,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataListQnaDto'];
+          "application/json": components["schemas"]["RsDataListQnaDto"];
         };
       };
     };
@@ -1049,14 +968,14 @@ export interface operations {
   createQna: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['QnaDto'];
+        "application/json": components["schemas"]["QnaDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataQnaDto'];
+          "application/json": components["schemas"]["RsDataQnaDto"];
         };
       };
     };
@@ -1066,7 +985,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          '*/*': components['schemas']['RsDataEmpty'];
+          "*/*": components["schemas"]["RsDataEmpty"];
         };
       };
     };
@@ -1075,14 +994,14 @@ export interface operations {
   login: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['LoginRequestBody'];
+        "application/json": components["schemas"]["LoginRequestBody"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          '*/*': components['schemas']['RsDataLoginResponseBody'];
+          "*/*": components["schemas"]["RsDataLoginResponseBody"];
         };
       };
     };
@@ -1093,25 +1012,25 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataCourseEnrollDto'];
+          "application/json": components["schemas"]["RsDataCourseEnrollDto"];
         };
       };
     };
   };
   /** 강좌 다건 조회 */
-  getPosts_2: {
+  getCourses: {
     parameters: {
       query?: {
         page?: number;
         kw?: string;
-        kwType?: 'ALL' | 'TITLE' | 'NAME';
+        kwType?: "ALL" | "TITLE" | "NAME";
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataGetCoursesResponsebody'];
+          "application/json": components["schemas"]["RsDataGetCoursesResponsebody"];
         };
       };
     };
@@ -1120,14 +1039,14 @@ export interface operations {
   createCourse: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateCourseDto'];
+        "application/json": components["schemas"]["CreateCourseDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataCreateCourseDto'];
+          "application/json": components["schemas"]["RsDataCreateCourseDto"];
         };
       };
     };
@@ -1141,14 +1060,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateSummaryNoteDto'];
+        "application/json": components["schemas"]["CreateSummaryNoteDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataSummaryNoteDto'];
+          "application/json": components["schemas"]["RsDataSummaryNoteDto"];
         };
       };
     };
@@ -1157,14 +1076,14 @@ export interface operations {
   createComment: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateCommentDto'];
+        "application/json": components["schemas"]["CreateCommentDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataCreateCommentDto'];
+          "application/json": components["schemas"]["RsDataCreateCommentDto"];
         };
       };
     };
@@ -1180,7 +1099,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataVoid'];
+          "application/json": components["schemas"]["RsDataVoid"];
         };
       };
     };
@@ -1196,7 +1115,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataVoid'];
+          "application/json": components["schemas"]["RsDataVoid"];
         };
       };
     };
@@ -1210,14 +1129,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateVideoDto'];
+        "application/json": components["schemas"]["CreateVideoDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataCreateVideoDto'];
+          "application/json": components["schemas"]["RsDataCreateVideoDto"];
         };
       };
     };
@@ -1228,7 +1147,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          '*/*': components['schemas']['RsDataGetPostsResponseBody'];
+          "*/*": components["schemas"]["RsDataGetPostsResponseBody"];
         };
       };
     };
@@ -1244,7 +1163,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataQnaDto'];
+          "application/json": components["schemas"]["RsDataQnaDto"];
         };
       };
     };
@@ -1260,7 +1179,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataEmpty'];
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };
@@ -1270,7 +1189,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          '*/*': components['schemas']['RsDataMeResponseBody'];
+          "*/*": components["schemas"]["RsDataMeResponseBody"];
         };
       };
     };
@@ -1286,7 +1205,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataGetCourseEnrollResponsebody'];
+          "application/json": components["schemas"]["RsDataGetCourseEnrollResponsebody"];
         };
       };
     };
@@ -1295,14 +1214,14 @@ export interface operations {
   getSummaryNote_1: {
     parameters: {
       path: {
-        'note-id': number;
+        "note-id": number;
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataSummaryNoteDto'];
+          "application/json": components["schemas"]["RsDataSummaryNoteDto"];
         };
       };
     };
@@ -1321,7 +1240,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataGetSummaryNoteResponsebody'];
+          "application/json": components["schemas"]["RsDataGetSummaryNoteResponsebody"];
         };
       };
     };
@@ -1337,7 +1256,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataListVideoDto'];
+          "application/json": components["schemas"]["RsDataListVideoDto"];
         };
       };
     };
@@ -1354,7 +1273,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataVideoDto'];
+          "application/json": components["schemas"]["RsDataVideoDto"];
         };
       };
     };
@@ -1363,14 +1282,14 @@ export interface operations {
   getCourse: {
     parameters: {
       path: {
-        'course-id': number;
+        "course-id": number;
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataCourseDto'];
+          "application/json": components["schemas"]["RsDataCourseDto"];
         };
       };
     };
@@ -1386,7 +1305,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataListCommentDto'];
+          "application/json": components["schemas"]["RsDataListCommentDto"];
         };
       };
     };
@@ -1397,7 +1316,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataListRecentSummaryNoteDto'];
+          "application/json": components["schemas"]["RsDataListRecentSummaryNoteDto"];
         };
       };
     };
@@ -1413,7 +1332,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataListRecentSummaryNoteDto'];
+          "application/json": components["schemas"]["RsDataGetNotesResponseBody"];
         };
       };
     };
@@ -1424,7 +1343,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataListReportedPostDto'];
+          "application/json": components["schemas"]["RsDataListReportedPostDto"];
         };
       };
     };
@@ -1435,7 +1354,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataListReportedPostDto'];
+          "application/json": components["schemas"]["RsDataListReportedPostDto"];
         };
       };
     };
@@ -1446,7 +1365,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataListRecentMemberDto'];
+          "application/json": components["schemas"]["RsDataListRecentMemberDto"];
         };
       };
     };
@@ -1462,7 +1381,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataListRecentMemberDto'];
+          "application/json": components["schemas"]["RsDataPageDtoRecentMemberDto"];
         };
       };
     };
@@ -1473,7 +1392,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['RsDataListRecentCourseDto'];
+          "application/json": components["schemas"]["RsDataListRecentCourseDto"];
         };
       };
     };
