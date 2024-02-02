@@ -2,17 +2,12 @@ package com.ll.edubridge.domain.course.course.controller;
 
 
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
-import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
-import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
-import com.ll.edubridge.global.exceptions.CodeMsg;
-import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
-import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.KwTypeCourse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -31,7 +25,6 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Controller
 @RestController
 @RequestMapping(value = "/api/v1/courses", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -45,7 +38,7 @@ public class ApiV1CourseController {
         @NonNull
         private final List<CourseDto> items;
 
-        public GetCoursesResponsebody(Page<Course> page, Member currentUser) {
+        public GetCoursesResponsebody(Page<Course> page) {
             this.items = page.getContent().stream()
                     .map(course -> new CourseDto(course))
                     .toList();
@@ -65,7 +58,7 @@ public class ApiV1CourseController {
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
         Page<Course> coursePage = courseService.findByKw(kwType, kw, null, pageable);
 
-        GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage, rq.getMember());
+        GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage);
 
         return RsData.of(
                 "200-1",
@@ -83,45 +76,4 @@ public class ApiV1CourseController {
         return RsData.of("200-1", Msg.CHECK.getMsg(), courseDto);
     }
 
-    @PostMapping("")
-    @Operation(summary = "강좌 등록")
-    public RsData<CreateCourseDto> createCourse(@RequestBody CreateCourseDto createCourseDto) {
-
-        if (!courseService.haveAuthority())
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
-
-        Course course = courseService.create(createCourseDto);
-
-        CreateCourseDto createdCourseDto = new CreateCourseDto(course);
-
-        return RsData.of("200-0", Msg.CREATE.getMsg(), createdCourseDto);
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "강좌 수정")
-    public RsData<CourseDto> modify(
-            @PathVariable("id") Long id,
-            @RequestBody CourseDto courseDto) {
-
-        if (!courseService.haveAuthority())
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
-
-        Course modifyCourse = courseService.modify(id, courseDto);
-
-        CourseDto modifyCourseDto = new CourseDto(modifyCourse);
-
-        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifyCourseDto);
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "강좌 삭제")
-    public RsData<Empty> delete(@PathVariable("id") Long id) {
-
-        if (!courseService.haveAuthority())
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
-
-        courseService.delete(id);
-
-        return RsData.of("200-3", Msg.DELETE.getMsg());
-    }
 }

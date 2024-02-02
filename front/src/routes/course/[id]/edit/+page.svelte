@@ -28,18 +28,19 @@
     const newNoti = notieditor.editor.getMarkdown().trim();
     const newOverview = overvieweditor.editor.getMarkdown().trim();
 
-    const { data, error } = await rq.apiEndPointsWithFetch(fetch).PUT('/api/v1/courses/{id}', {
-      params: { path: { id: parseInt($page.params.id) } },
-      // url 설정
-      body: {
-        id: parseInt($page.params.id),
-        ownerName: rq.member.name,
-        title: initialData?.title,
-        notice: newNoti,
-        overView: newOverview,
-        imgUrl: initialData?.imgUrl
-      }
-    });
+    const { data, error } = await rq
+      .apiEndPointsWithFetch(fetch)
+      .PUT('/api/v1/admin/courses/{id}', {
+        params: { path: { id: parseInt($page.params.id) } },
+        // url 설정
+        body: {
+          id: parseInt($page.params.id),
+          title: initialData?.title,
+          notice: newNoti,
+          overView: newOverview,
+          imgUrl: initialData?.imgUrl
+        }
+      });
 
     if (data) {
       rq.msgInfo(data.msg); //msg

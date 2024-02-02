@@ -38,7 +38,7 @@
   }
 
   async function deleteCourse() {
-    const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}`, {
+    const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/admin/courses/{id}`, {
       params: { path: { id: parseInt($page.params.id) } }
     });
     if (data) {
@@ -239,11 +239,13 @@
           ></ToastUiEditor>
         </div>
 
-        <div class="flex justify-end">
-          <a class=" mx-10 btn w-24 text-center" href="/course/{$page.params.id}/videowrite"
-            >강의 등록</a
-          >
-        </div>
+        {#if rq.isAdmin()}
+          <div class="flex justify-end">
+            <a class=" mx-10 btn w-24 text-center" href="/course/{$page.params.id}/videowrite"
+              >강의 등록</a
+            >
+          </div>
+        {/if}
 
         <div class="border shadow-sm rounded-lg">
           <div class="relative w-full overflow-auto">

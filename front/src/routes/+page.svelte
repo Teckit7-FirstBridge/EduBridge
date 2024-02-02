@@ -18,7 +18,7 @@
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
-    const { data } = await rq.apiEndPoints().GET('/api/v1', {});
+    const { data } = await rq.apiEndPoints().GET('/api/v1/home', {});
     courses = data!.data.items;
     while (courses.length < 6) {
       courses.push({ ...sampleCourse });
