@@ -6,7 +6,7 @@ import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
 import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.member.member.repository.MemberRepository;
+import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
@@ -24,7 +24,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class SummaryNoteService {
     private final SummaryNoteRepository summaryNoteRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final Rq rq;
     private final VideoService videoService;
 
@@ -35,7 +35,6 @@ public class SummaryNoteService {
     public Optional<SummaryNote> findById(Long id) {
         return summaryNoteRepository.findById(id);
     }
-
 
     @Transactional
     public SummaryNote getSummaryNote(Long id) {
@@ -59,7 +58,7 @@ public class SummaryNoteService {
         Course course = summaryNote.getVideo().getCourse();
         int point = member.getPoint() + course.getPrice()/10;
         member.setPoint(point);
-        memberRepository.save(member);
+        memberService.save(member);
 
         return summaryNoteRepository.save(summaryNote);
     }
