@@ -68,8 +68,8 @@ public class ApiV1CourseController {
         GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage, rq.getMember());
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 responseBody
         );
     }
@@ -80,7 +80,8 @@ public class ApiV1CourseController {
         Course course = courseService.getCourse(id);
         CourseDto courseDto = new CourseDto(course);
 
-        return RsData.of("200-1", Msg.CHECK.getMsg(), courseDto);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(), courseDto);
     }
 
     @PostMapping("")
@@ -94,7 +95,7 @@ public class ApiV1CourseController {
 
         CreateCourseDto createdCourseDto = new CreateCourseDto(course);
 
-        return RsData.of("200-0", Msg.CREATE.getMsg(), createdCourseDto);
+        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(), Msg.E200_0_CREATE_SUCCUSSED.getMsg(), createdCourseDto);
     }
 
     @PutMapping("/{id}")
@@ -110,7 +111,7 @@ public class ApiV1CourseController {
 
         CourseDto modifyCourseDto = new CourseDto(modifyCourse);
 
-        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifyCourseDto);
+        return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(), Msg.E200_2_MODIFY_SUCCUSSED.getMsg(), modifyCourseDto);
     }
 
     @DeleteMapping("/{id}")
@@ -122,6 +123,6 @@ public class ApiV1CourseController {
 
         courseService.delete(id);
 
-        return RsData.of("200-3", Msg.DELETE.getMsg());
+        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(), Msg.E200_3_DELETE_SUCCUSSED.getMsg());
     }
 }

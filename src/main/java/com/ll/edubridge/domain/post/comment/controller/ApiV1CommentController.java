@@ -33,7 +33,8 @@ public class ApiV1CommentController {
     public RsData<CreateCommentDto> createComment(@RequestBody CreateCommentDto createCommentDto) {
         Comment comment = commentService.create(rq.getMember(), createCommentDto);
 
-        return RsData.of("200-0", Msg.CREATE.getMsg(), createCommentDto);
+        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(),
+                Msg.E200_0_CREATE_SUCCUSSED.getMsg(), createCommentDto);
     }
 
     @GetMapping("/{postId}")
@@ -45,7 +46,8 @@ public class ApiV1CommentController {
                 .map((Comment comment) -> new CommentDto(comment, rq.getMember()))
                 .toList();
 
-        return RsData.of("200-1", Msg.CHECK.getMsg(), commentDtoList);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(), commentDtoList);
     }
 
     @PutMapping("/{postId}/{commentId}")
@@ -58,7 +60,8 @@ public class ApiV1CommentController {
 
         CommentDto modifyCommentDto = new CommentDto(modifyComment, rq.getMember());
 
-        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifyCommentDto);
+        return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(),
+                Msg.E200_2_MODIFY_SUCCUSSED.getMsg(), modifyCommentDto);
     }
 
     @DeleteMapping("/{postId}/{commentId}")
@@ -70,7 +73,8 @@ public class ApiV1CommentController {
 
         commentService.delete(commentId);
 
-        return RsData.of("200-3", Msg.DELETE.getMsg());
+        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(),
+                Msg.E200_3_DELETE_SUCCUSSED.getMsg());
     }
 
     @PostMapping("/{postId}/{commentId}/like")
@@ -84,7 +88,8 @@ public class ApiV1CommentController {
 
         commentService.vote(commentId, member);
 
-        return RsData.of("200-4", Msg.RECOMMEND.getMsg());
+        return RsData.of(Msg.E200_4_RECOMMEND_SUCCUSSED.getCode(),
+                Msg.E200_4_RECOMMEND_SUCCUSSED.getMsg());
     }
 
     @DeleteMapping("/{postId}/{commentId}/like")
@@ -98,6 +103,7 @@ public class ApiV1CommentController {
 
         commentService.deleteVote(commentId, member);
 
-        return RsData.of("200-5", Msg.RECOMMENDCANCEL.getMsg());
+        return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCUSSED.getCode(),
+                Msg.E200_5_CANCEL_RECOMMEND_SUCCUSSED.getMsg());
     }
 }

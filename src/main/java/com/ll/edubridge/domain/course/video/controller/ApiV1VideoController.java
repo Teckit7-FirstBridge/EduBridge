@@ -46,8 +46,7 @@ public class ApiV1VideoController {
                 .toList();
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(), Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 videoDtoList
         );
     }
@@ -70,8 +69,7 @@ public class ApiV1VideoController {
         VideoDto videoDto = new VideoDto(video);
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(), Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 videoDto
         );
     }
@@ -87,7 +85,7 @@ public class ApiV1VideoController {
         Video video = videoService.create(createVideoDto);
         CreateVideoDto createdVideoDto = new CreateVideoDto(video);
 
-        return RsData.of("200-0", Msg.CREATE.getMsg(), createdVideoDto);
+        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(), Msg.E200_0_CREATE_SUCCUSSED.getMsg(), createdVideoDto);
     }
 
     @PutMapping("/admin/{courseId}/videos/{id}")
@@ -113,7 +111,7 @@ public class ApiV1VideoController {
 
         VideoDto modifyVideoDto = new VideoDto(modifyVideo);
 
-        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifyVideoDto);
+        return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(), Msg.E200_2_MODIFY_SUCCUSSED.getMsg(), modifyVideoDto);
     }
 
     @DeleteMapping("/admin/{courseId}/videos/{id}")
@@ -136,6 +134,6 @@ public class ApiV1VideoController {
 
         videoService.delete(id);
 
-        return RsData.of("200-3", Msg.DELETE.getMsg());
+        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(), Msg.E200_3_DELETE_SUCCUSSED.getMsg());
     }
 }
