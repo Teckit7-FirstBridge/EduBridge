@@ -6,6 +6,7 @@
   let imgUrl: string | undefined = $state('');
   let overview: string | undefined = $state('');
   let video: components['schemas']['VideoDto'] | undefined = $state();
+  let keywords = $state('');
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
     const { data, error } = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}/videos/{id}`, {
@@ -20,6 +21,7 @@
     url = video?.url;
     imgUrl = video?.imgUrl;
     overview = video?.overView;
+    keywords = video?.keywords;
     return video;
   }
 
@@ -31,7 +33,9 @@
         url: url!,
         imgUrl: imgUrl,
         overView: overview,
-        courseId: parseInt($page.params.id)
+        courseId: parseInt($page.params.id),
+
+        keywords: keywords
       }
     });
     if (data) {
@@ -74,6 +78,18 @@
               type="text"
               placeholder="Enter video URL"
               bind:value={imgUrl}
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="video-imgUrl">
+              Keywords
+            </label>
+            <input
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="video-imgUrl"
+              type="text"
+              placeholder="Keywords... ex)자바,스프링"
+              bind:value={keywords}
             />
           </div>
           <div class="mb-6">

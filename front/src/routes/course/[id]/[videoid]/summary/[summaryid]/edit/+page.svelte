@@ -172,6 +172,14 @@
       </div>
     </div>
     <div class="flex flex-col w-full h-80 mt-10">
+      {#each videos as video}
+        {#if video.id == parseInt($page.params.videoid)}
+          <div class="flex items-center text-center">
+            <h2 class="text-lg font-semibold text-gray-700 mb-2">Keywords:&nbsp&nbsp</h2>
+            <h2 class="text-lg font-semibold text-gray-700 mb-2">{video.keywords}</h2>
+          </div>
+        {/if}
+      {/each}
       <form
         on:submit|preventDefault={submitForm}
         class="flex flex-col w-full h-full p-4 shadow-md rounded-md bg-white dark:bg-gray-800"

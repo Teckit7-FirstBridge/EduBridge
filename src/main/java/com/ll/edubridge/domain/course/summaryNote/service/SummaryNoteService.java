@@ -4,6 +4,7 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.summaryNote.dto.CreateSummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
+import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
@@ -49,10 +50,11 @@ public class SummaryNoteService {
 
     @Transactional
     public SummaryNote create(Member member, CreateSummaryNoteDto createSummaryNoteDto,Long videoid) {
+        Video video = videoService.findById(videoid).get();
         SummaryNote summaryNote = SummaryNote.builder()
                 .content(createSummaryNoteDto.getContent())
                 .writer(member)
-                .video(videoService.findById(videoid).get())
+                .video(video)
                 .build();
 
         // 포인트 지급 -> 로컬 테스트 실패
@@ -67,8 +69,8 @@ public class SummaryNoteService {
     @Transactional
     public SummaryNote modify(Long id , CreateSummaryNoteDto createSummaryNoteDto) {
         SummaryNote summaryNote = this.getSummaryNote(id);
-
         summaryNote.setContent(createSummaryNoteDto.getContent());
+
 
         return summaryNoteRepository.save(summaryNote);
     }

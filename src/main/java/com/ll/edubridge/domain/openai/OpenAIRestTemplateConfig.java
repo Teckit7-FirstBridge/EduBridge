@@ -1,4 +1,4 @@
-package com.ll.edubridge.domain.openaiv2;
+package com.ll.edubridge.domain.openai;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

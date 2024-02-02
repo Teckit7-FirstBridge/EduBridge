@@ -5,6 +5,7 @@ import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.openai.ChatService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
@@ -35,6 +36,7 @@ public class ApiV1SummaryNoteController {
 
     private final SummaryNoteService summaryNoteService;
     private final Rq rq;
+    private final ChatService chatService;
 
     @Getter
     public static class GetSummaryNoteResponsebody{
@@ -52,8 +54,10 @@ public class ApiV1SummaryNoteController {
     @Operation(summary = "강의 요약 노트 등록")
     public RsData<SummaryNoteDto> create(@RequestBody CreateSummaryNoteDto createSummaryNoteDto,@PathVariable Long videoid) {
         SummaryNote summaryNote = summaryNoteService.create(rq.getMember(), createSummaryNoteDto,videoid);
-
+        String keywords = summaryNote.getVideo().getKeywords();
+        chatService.chat(summaryNote.getId(),createSummaryNoteDto.getContent() + "\n 이 문단을 키워드:"+keywords+ "와 문단의 문맥을 기준으로해서 총점100점기준으로 채점해서 부가적인 설명을 하지말고 20점이면 20,30점이면 30처럼 점수만을 알려줘");
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
+
 
         return RsData.of("200-0", Msg.CREATE.getMsg(), summaryNoteDto);
 

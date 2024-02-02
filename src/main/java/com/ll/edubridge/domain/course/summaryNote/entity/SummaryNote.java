@@ -30,4 +30,6 @@ public class SummaryNote extends BaseEntity {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Video video;
 
+    private Long score;
+
 }
