@@ -1,37 +1,43 @@
 <script lang="ts">
+  import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
+  import Pagination from '$lib/components/Pagination.svelte';
   import CourseNav from '../../../lib/components/CourseNavAdm.svelte';
-  import { goto } from '$app/navigation';
 
-  let recentNote: components['schemas']['RecentSummaryNoteDto'][] = $state();
-  let currentPage: number = 1;
-  let totalPages: number = 0;
-  let recentNotePage: PageDto<components['schemas']['RecentSummaryNoteDto']>;
+  let notes: components['schemas']['PageDtoRecentSummaryNoteDto'][] = $state();
 
-  async function load(page: number = 1) {
+  async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
-    const response = await rq.apiEndPoints().GET(`/api/v1/admin/summaryNotes/list?page=${page}`);
-    recentNotePage = response.data?.data;
+    const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
 
-    if (recentNotePage) {
-      currentPage = recentNotePage.number;
-      totalPages = recentNotePage.totalPagesCount;
-    }
+    const { data } = await rq.apiEndPoints().GET(`/api/v1/admin/summaryNotes/list`, {
+      params: {
+        query: {
+          page: page_
+        }
+      }
+    });
+
+    notes = data!.data.itemPage?.content;
+
+    console.log('dd');
+
+    return data!;
   }
 </script>
 
 {#await load()}
   <p class="text-center">loading...</p>
-{:then { recentNote }}
+{:then { data: { itemPage } }}
   <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
     <div>
       <CourseNav></CourseNav>
     </div>
     <div class="py-8 px-56 w-full">
       <div>
-        {#if recentNote && recentNote.length > 0}
+        {#if notes && notes.length > 0}
           <div class="mb-5">
             <div class="flex justify-col justify-end">
               <div>
@@ -70,7 +76,7 @@
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  {#each recentNote as item}
+                  {#each notes as item}
                     <tr>
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         <a
@@ -84,12 +90,7 @@
                         {`${new Date(item.createDate).getFullYear()}년 ${new Date(item.createDate).getMonth() + 1}월 ${new Date(item.createDate).getDate()}일`}
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        <a
-                          href="/course/{item.courseId}/{item.videoId}/summary/{item.id}"
-                          class="text-blue-600 hover:text-blue-900"
-                        >
-                          {item.name}
-                        </a>
+                        {item.name}
                       </td>
                     </tr>
                   {/each}
@@ -100,6 +101,9 @@
         {:else}
           <p>요약 노트가 없습니다.</p>
         {/if}
+        <div class="mt-4 flex justify-center">
+          <Pagination page={itemPage} />
+        </div>
       </div>
     </div>
   </div>

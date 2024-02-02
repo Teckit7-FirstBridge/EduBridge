@@ -173,12 +173,18 @@
 
     <div class="justify-between flex items-center mt-3 mb-20">
       <p class="text-gray-600 mb-2">작성자: {post.authorName}</p>
-      {#if rq.member.id == post.authorId}
-        <div class="mb-5 mx-2">
-          <a href="/board/{post.id}/edit" class="btn btn-sm">글 수정</a>
-          <a class="btn btn-sm" on:click={deletePost}>글 삭제</a>
-        </div>
-      {/if}
+      <div class="flex">
+        {#if rq.member.id == post.authorId || rq.isAdmin()}
+          <div class="mb-5 mx-2 flex">
+            <a class="btn btn-sm" on:click={deletePost}>글 삭제</a>
+          </div>
+        {/if}
+        {#if rq.member.id == post.authorId}
+          <div class="mb-5 mx-2 flex">
+            <a href="/board/{post.id}/edit" class="btn btn-sm">글 수정</a>
+          </div>
+        {/if}
+      </div>
     </div>
     <div class=" border-">
       <ToastUiEditor body={post.body} viewer={true}></ToastUiEditor>
@@ -279,16 +285,18 @@
                   })()}
                 </p>
               </div>
-              <div class="flex justify-end">
-                {#if rq.member.id === comment.authorId}
-                  <div class="flex gap-2 text-gray-400">
-                    <button
-                      class="text-xs"
-                      on:click={() => {
-                        commentEditOpen = comment.id;
-                      }}>수정</button
-                    >
-                    <p>/</p>
+              <div class="flex justify-end flex gap-2 text-gray-400">
+                {#if rq.member.id == comment.authorId}
+                  <button
+                    class="text-xs"
+                    on:click={() => {
+                      commentEditOpen = comment.id;
+                    }}>수정</button
+                  >
+                  <p>/</p>
+                {/if}
+                {#if rq.member.id == comment.authorId || rq.isAdmin()}
+                  <div>
                     <button class="text-xs" on:click={() => deleteComment(comment.id)}>삭제</button>
                   </div>
                 {/if}

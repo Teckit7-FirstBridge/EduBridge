@@ -211,12 +211,12 @@
           <h1 class="font-semibold text-lg md:text-2xl">
             {course!.title}
           </h1>
-          <!-- {#if rq.member.id == course} -->
-          <div class="mb-5 mx-2 items-center">
-            <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
-            <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
-          </div>
-          <!-- {/if} -->
+          {#if rq.isAdmin()}
+            <div class="mb-5 mx-2 items-center">
+              <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
+              <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
+            </div>
+          {/if}
         </div>
 
         <div class="mb-4 bg-white p-4 rounded-lg shadow-md">
@@ -300,14 +300,16 @@
                     <td
                       class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
                     >
-                      <div class="mb-5 mx-2 items-center">
-                        <a href="/course/{video.courseId}/videoedit/{video.id}" class="btn btn-sm"
-                          >수정</a
-                        >
-                        <button on:click={() => deleteVideo(video.id)} class="btn btn-sm"
-                          >삭제</button
-                        >
-                      </div>
+                      {#if rq.isAdmin()}
+                        <div class="mb-5 mx-2 items-center">
+                          <a href="/course/{video.courseId}/videoedit/{video.id}" class="btn btn-sm"
+                            >수정</a
+                          >
+                          <button on:click={() => deleteVideo(video.id)} class="btn btn-sm"
+                            >삭제</button
+                          >
+                        </div>
+                      {/if}
                     </td>
                     <td
                       class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
