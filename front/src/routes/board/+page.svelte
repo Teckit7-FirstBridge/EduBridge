@@ -2,6 +2,7 @@
   import type { components } from '$lib/types/api/v1/schema';
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
+
   let posts: components['schemas']['PostDto'][] = $state([]);
 
   async function load() {

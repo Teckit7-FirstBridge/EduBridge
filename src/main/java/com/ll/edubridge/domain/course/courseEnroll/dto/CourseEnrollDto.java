@@ -6,12 +6,17 @@ import lombok.Getter;
 @Getter
 public class CourseEnrollDto {
 
-    private Long id;
+    private Long courseId;
+
+    private String title;
+
+    private String imgUrl;
+
 
 
     public CourseEnrollDto(CourseEnroll courseEnroll){
-        this.id = courseEnroll.getId();
-
-
+        this.courseId=courseEnroll.getCourse().getId();
+        this.title=courseEnroll.getCourse().getTitle();
+        this.imgUrl=courseEnroll.getCourse().getImgUrl();
     }
 }

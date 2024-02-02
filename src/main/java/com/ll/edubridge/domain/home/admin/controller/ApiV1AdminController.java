@@ -1,9 +1,15 @@
 package com.ll.edubridge.domain.home.admin.controller;
 
+import com.ll.edubridge.domain.course.course.dto.CourseDto;
+import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
+import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
+import com.ll.edubridge.domain.course.video.dto.VideoDto;
+import com.ll.edubridge.domain.course.video.entity.Video;
+import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.domain.home.admin.dto.RecentCourseDto;
 import com.ll.edubridge.domain.home.admin.dto.RecentMemberDto;
 import com.ll.edubridge.domain.home.admin.dto.RecentSummaryNoteDto;
@@ -13,8 +19,11 @@ import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.service.PostService;
 import com.ll.edubridge.global.app.AppConfig;
+import com.ll.edubridge.global.exceptions.CodeMsg;
+import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rsData.RsData;
+import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,10 +34,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +51,7 @@ public class ApiV1AdminController {
     private final MemberService memberService;
     private final PostService postService;
     private final SummaryNoteService summaryNoteService;
+    private final VideoService videoService;
 
     @GetMapping(value = "/courses")
     @Operation(summary = "강좌 최신순")
@@ -192,6 +199,111 @@ public class ApiV1AdminController {
         RecentSummaryNoteDto dto = new RecentSummaryNoteDto(summaryNote);
 
         return dto;
+    }
+
+    @PostMapping("/{courseId}/videos")
+    @Operation(summary = "강의 등록")
+    public RsData<CreateVideoDto> createVideo(@PathVariable("courseId") Long courseId,
+                                              @RequestBody CreateVideoDto createVideoDto) {
+
+        if (!videoService.haveAuthority())
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
+
+        Video video = videoService.create(createVideoDto);
+        CreateVideoDto createdVideoDto = new CreateVideoDto(video);
+
+        return RsData.of("200-0", Msg.CREATE.getMsg(), createdVideoDto);
+    }
+
+    @PutMapping("/{courseId}/videos/{id}")
+    @Operation(summary = "강의 수정")
+    public RsData<VideoDto> modifyVideo(@PathVariable("courseId") Long courseId,
+                                   @PathVariable("id") Long id,
+                                   @RequestBody VideoDto videoDto) {
+
+        if (!videoService.haveAuthority())
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
+
+        Course course = courseService.getCourse(courseId);
+        if(course == null) {
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
+        }
+
+        Video video = videoService.findByCourseIdAndId(courseId, id);
+        if (video == null) {
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
+        }
+
+        Video modifyVideo = videoService.modify(id, videoDto);
+
+        VideoDto modifyVideoDto = new VideoDto(modifyVideo);
+
+        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifyVideoDto);
+    }
+
+    @DeleteMapping("/{courseId}/videos/{id}")
+    @Operation(summary = "강의 삭제")
+    public RsData<Empty> deleteVideo(@PathVariable("courseId") Long courseId,
+                                @PathVariable("id") Long id) {
+
+        if (!videoService.haveAuthority())
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
+
+        Course course = courseService.getCourse(courseId);
+        if(course == null) {
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
+        }
+
+        Video video = videoService.findByCourseIdAndId(courseId, id);
+        if (video == null) {
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
+        }
+
+        videoService.delete(id);
+
+        return RsData.of("200-3", Msg.DELETE.getMsg());
+    }
+
+    @PostMapping("/courses")
+    @Operation(summary = "강좌 등록")
+    public RsData<CreateCourseDto> createCourse(@RequestBody CreateCourseDto createCourseDto) {
+
+        if (!courseService.haveAuthority())
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
+
+        Course course = courseService.create(createCourseDto);
+
+        CreateCourseDto createdCourseDto = new CreateCourseDto(course);
+
+        return RsData.of("200-0", Msg.CREATE.getMsg(), createdCourseDto);
+    }
+
+    @PutMapping("/courses/{id}")
+    @Operation(summary = "강좌 수정")
+    public RsData<CourseDto> modifyCourse(
+            @PathVariable("id") Long id,
+            @RequestBody CourseDto courseDto) {
+
+        if (!courseService.haveAuthority())
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
+
+        Course modifyCourse = courseService.modify(id, courseDto);
+
+        CourseDto modifyCourseDto = new CourseDto(modifyCourse);
+
+        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifyCourseDto);
+    }
+
+    @DeleteMapping("/courses/{id}")
+    @Operation(summary = "강좌 삭제")
+    public RsData<Empty> deleteCourse(@PathVariable("id") Long id) {
+
+        if (!courseService.haveAuthority())
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
+
+        courseService.delete(id);
+
+        return RsData.of("200-3", Msg.DELETE.getMsg());
     }
 
 

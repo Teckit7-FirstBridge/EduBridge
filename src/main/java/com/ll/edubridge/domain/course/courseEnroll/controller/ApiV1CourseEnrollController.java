@@ -41,7 +41,7 @@ public class ApiV1CourseEnrollController {
         @NonNull
         private final List<CourseEnrollDto> items;
 
-        public GetCourseEnrollResponsebody(Page<CourseEnroll> page, Member currentUser) {
+        public GetCourseEnrollResponsebody(Page<CourseEnroll> page) {
             this.items = page.getContent().stream()
                     .map(courseEnroll -> new CourseEnrollDto(courseEnroll))
                     .toList();
@@ -50,16 +50,15 @@ public class ApiV1CourseEnrollController {
 
     @PostMapping("/{courseId}")
     @Operation(summary = "수강 등록")
-    public RsData<CourseEnrollDto> create(@PathVariable("id") Long courseId) {
+    public RsData<Void> create(@PathVariable("courseId") Long courseId) {
 
         Member member = rq.getMember(); //  현재 로그인한 사용자의 정보
         int point = member.getPoint();
         Course course = courseService.getCourse(courseId); //
         int price = course.getPrice();
         if (point >= price) {
-            CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), courseId,price,point);
-            CourseEnrollDto courseEnrollDto = new CourseEnrollDto(courseEnroll);
-            return RsData.of("200-0", Msg.CREATE.getMsg(), courseEnrollDto);
+            CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), course,point,price);
+            return RsData.of("200-0", Msg.CREATE.getMsg());
         }else {
             return RsData.of("400-1", Msg.CREATEFAILURE.getMsg()); // 400 - Not found
         }
@@ -71,8 +70,8 @@ public class ApiV1CourseEnrollController {
         int pageSize = AppConfig.getBasePageSize();
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "id"));
 
-        Page<CourseEnroll> courseEnrolls = courseEnrollService.findAll(pageable);
-        GetCourseEnrollResponsebody responseBody = new GetCourseEnrollResponsebody(courseEnrolls, rq.getMember());
+        Page<CourseEnroll> courseEnrolls = courseEnrollService.findByMemberId(pageable);
+        GetCourseEnrollResponsebody responseBody = new GetCourseEnrollResponsebody(courseEnrolls);
 
         return RsData.of(
                 "200-1",
@@ -80,4 +79,6 @@ public class ApiV1CourseEnrollController {
                 responseBody
         );
     }
+
+
 }

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
-  import type { components } from '$lib/types/api/v1/schema';
   import CourseNav from '../../lib/components/CourseNav.svelte';
 
   async function load() {
