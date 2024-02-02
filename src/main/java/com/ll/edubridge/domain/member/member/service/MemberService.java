@@ -181,4 +181,8 @@ public class MemberService {
     public List<Member> recentMembers() {
         return memberRepository.findTop5ByOrderByIdDesc();
     }
+
+    public void save(Member member) {
+        memberRepository.save(member);
+    }
 }
