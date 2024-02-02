@@ -21,11 +21,15 @@ public class CreateVideoDto {
     @NotEmpty
     private String imgUrl;
 
+    @NotEmpty
+    private String keywords;
+
     public CreateVideoDto(Video video) {
         this.url = video.getUrl();
         this.overView = video.getOverView();
         this.courseId = video.getCourse().getId();
         this.imgUrl = video.getImgUrl();
+        this.keywords  = video.getKeywords();
     }
 
     public CreateVideoDto() {

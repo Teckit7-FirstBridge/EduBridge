@@ -31,6 +31,7 @@ public class VideoService {
                 .overView(createVideoDto.getOverView())
                 .course(courseService.getCourse(createVideoDto.getCourseId()))
                 .imgUrl(createVideoDto.getImgUrl())
+                .keywords(createVideoDto.getKeywords())
                 .build();
         return videoRepository.save(video);
     }
@@ -41,7 +42,8 @@ public class VideoService {
 
         video.setUrl(videoDto.getUrl());
         video.setOverView(videoDto.getOverView());
-        video.setImgUrl(video.getImgUrl());
+        video.setImgUrl(videoDto.getImgUrl());
+        video.setKeywords(videoDto.getKeywords());
 
         return videoRepository.save(video);
     }

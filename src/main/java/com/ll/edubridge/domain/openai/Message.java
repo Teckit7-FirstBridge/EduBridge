@@ -1,7 +1,6 @@
-package com.ll.edubridge.domain.openaiv2;
+package com.ll.edubridge.domain.openai;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 public class Message {

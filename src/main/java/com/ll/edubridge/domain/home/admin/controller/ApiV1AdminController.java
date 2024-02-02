@@ -138,9 +138,12 @@ public class ApiV1AdminController {
         );
     }
 
+    public record GetMembersResponseBody(@NonNull PageDto<RecentMemberDto> itemPage) {
+    }
+
     @GetMapping(value = "/members/list")
     @Operation(summary = "회원 목록")
-    public RsData<PageDto<RecentMemberDto>> getAllMembers(
+    public RsData<GetMembersResponseBody> getAllMembers(
             @RequestParam(defaultValue = "1") int page
     ) {
 
@@ -150,16 +153,21 @@ public class ApiV1AdminController {
 
         Page<Member> members = memberService.findAll(pageable);
 
-        // Page<Member>를 PageDto<RecentMemberDto>로 변환
-        PageDto<RecentMemberDto> pageDto = new PageDto<>(
-                members.map(RecentMemberDto::new)
-        );
+        Page<RecentMemberDto> memberPage = members.map(this::memberToDto);
 
         return RsData.of(
                 "200-1",
                 Msg.CHECK.getMsg(),
-                pageDto
+                new GetMembersResponseBody(
+                        new PageDto<>(memberPage)
+                )
         );
+    }
+
+    private RecentMemberDto memberToDto(Member member) {
+        RecentMemberDto dto = new RecentMemberDto(member);
+
+        return dto;
     }
 
     public record GetNotesResponseBody(@NonNull PageDto<RecentSummaryNoteDto> itemPage) {
@@ -175,8 +183,6 @@ public class ApiV1AdminController {
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
 
         Page<SummaryNote> recentSummaryNotes = summaryNoteService.findAll(pageable);
-
-        // Page<SummaryNote>를 PageDto<RecentSummaryNoteDto>로 변환
 
         Page<RecentSummaryNoteDto> notePage = recentSummaryNotes.map(this::noteToDto);
 

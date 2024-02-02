@@ -34,4 +34,6 @@ public class Video extends BaseEntity {
     @OneToMany(mappedBy = "video", cascade = CascadeType.REMOVE)
     private List<SummaryNote> summaryNotes;
 
+    private String keywords;
+
 }

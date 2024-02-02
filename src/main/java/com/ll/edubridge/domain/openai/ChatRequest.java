@@ -1,4 +1,4 @@
-package com.ll.edubridge.domain.openaiv2;
+package com.ll.edubridge.domain.openai;
 
 import lombok.Data;
 
