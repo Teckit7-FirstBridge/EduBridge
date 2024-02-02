@@ -82,9 +82,8 @@ public class ApiV1CourseController {
     @GetMapping("/{courseId}/auth")
     @Operation(summary = "해당 멤버가 해당 강좌를 수강 중인지")
     public RsData<CourseAuthDto> getCourseAuth(@PathVariable("courseId") Long courseId){
-        Course course = courseService.getCourse(courseId);
 
-        CourseAuthDto courseAuthDto=new CourseAuthDto(courseEnrollService.isEnroll(course), rq.getMember());
+        CourseAuthDto courseAuthDto=new CourseAuthDto(courseEnrollService.isEnroll(courseId));
 
         return RsData.of("200-1",Msg.CHECK.getMsg(),courseAuthDto);
 

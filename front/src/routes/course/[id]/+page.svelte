@@ -65,7 +65,7 @@
     });
     if (data) {
       rq.msgInfo('수강이 등록 되었습니다.');
-      location.reload();
+      window.location.reload();
     } else if (error) {
       rq.msgError(error.msg);
     }
@@ -235,7 +235,9 @@
           </h1>
           <div class="flex">
             <p>{course.price}원</p>
-            <button class="ml-2" on:click={enrollCourse}> 수강 등록 </button>
+            {#if !auth.enroll}
+              <button class="ml-2" on:click={enrollCourse}> 수강 등록 </button>
+            {/if}
           </div>
           {#if rq.isAdmin()}
             <div class="mb-5 mx-2 items-center">
@@ -273,7 +275,7 @@
           </div>
         {/if}
 
-        {#if auth.auth || rq.isAdmin()}
+        {#if auth.enroll || rq.isAdmin()}
           <div class="border shadow-sm rounded-lg">
             <div class="relative w-full overflow-auto">
               <table class="w-full caption-bottom text-sm">

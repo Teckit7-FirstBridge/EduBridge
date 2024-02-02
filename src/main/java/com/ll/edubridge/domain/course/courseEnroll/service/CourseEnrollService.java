@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,15 +67,13 @@ public class CourseEnrollService {
         return true;
     }
 
-    public boolean isEnroll(Course course){
+    public boolean isEnroll(Long courseId){
         Member member=rq.getMember();
-        List<CourseEnroll> courseEnrolls = member.getCourseEnrollList();
 
-        for (CourseEnroll courseEnroll : courseEnrolls) {
-            if (courseEnroll.getCourse().getId().equals(course.getId()))
-                return true;
-        }
+        Course course = courseService.getCourse(courseId);
 
-        return false;
+        Optional<CourseEnroll> courseEnroll = courseEnrollRepository.findByCourseIdAndMemberId(course.getId(),member.getId());
+
+        return courseEnroll.isPresent();
     }
 }

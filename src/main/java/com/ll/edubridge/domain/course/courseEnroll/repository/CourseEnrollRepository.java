@@ -13,4 +13,6 @@ public interface CourseEnrollRepository extends JpaRepository<CourseEnroll, Long
     Optional<CourseEnroll> findById(Long id);
 
     Page<CourseEnroll> findByMemberId(Pageable pageable, Long memberId);
+
+    Optional<CourseEnroll> findByCourseIdAndMemberId(Long courseId, Long memberId);
 }

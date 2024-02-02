@@ -236,8 +236,8 @@ export interface components {
       visitedToday?: boolean;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
+      authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
     };
     RsDataSummaryNoteDto: {
@@ -418,21 +418,6 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    CourseEnrollDto: {
-      /** Format: int64 */
-      courseId?: number;
-      title?: string;
-      imgUrl?: string;
-    };
-    RsDataCourseEnrollDto: {
-      resultCode: string;
-      /** Format: int32 */
-      statusCode: number;
-      msg: string;
-      data: components["schemas"]["CourseEnrollDto"];
-      fail: boolean;
-      success: boolean;
-    };
     RsDataCreateCommentDto: {
       resultCode: string;
       /** Format: int32 */
@@ -508,6 +493,12 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    CourseEnrollDto: {
+      /** Format: int64 */
+      courseId?: number;
+      title?: string;
+      imgUrl?: string;
+    };
     GetCourseEnrollResponsebody: {
       items: components["schemas"]["CourseEnrollDto"][];
     };
@@ -554,9 +545,7 @@ export interface components {
       success: boolean;
     };
     CourseAuthDto: {
-      auth?: boolean;
-      /** Format: int32 */
-      point?: number;
+      enroll?: boolean;
     };
     RsDataCourseAuthDto: {
       resultCode: string;
@@ -1037,7 +1026,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataCourseEnrollDto"];
+          "application/json": components["schemas"]["RsDataVoid"];
         };
       };
     };
