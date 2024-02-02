@@ -39,12 +39,17 @@ public class VideoDto {
     @NonNull
     private List<SummaryNoteDto> summaryNotes;
 
+    @NonNull
+    private String keywords;
+
+
     public VideoDto(Video video) {
         this.id = video.getId();
         this.url = video.getUrl();
         this.overView = video.getOverView();
         this.courseId = video.getCourse().getId();
         this.imgUrl = video.getImgUrl();
+        this.keywords = video.getKeywords();
     }
 
     public VideoDto() {
