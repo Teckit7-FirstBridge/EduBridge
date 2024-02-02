@@ -119,6 +119,10 @@ export interface paths {
     /** 비디오별 강의노트 조회(관리자 기능) */
     get: operations["getSummaryNoteAdmin"];
   };
+  "/api/v1/courses/{courseId}": {
+    /** 강좌 상세 조회 */
+    get: operations["getCourse"];
+  };
   "/api/v1/courses/{courseId}/videos": {
     /** 강의 리스트 */
     get: operations["getVideos"];
@@ -127,9 +131,9 @@ export interface paths {
     /** 특정 강의 */
     get: operations["getVideos_1"];
   };
-  "/api/v1/courses/{course-id}": {
-    /** 강좌 상세 조회 */
-    get: operations["getCourse"];
+  "/api/v1/courses/{courseId}/auth": {
+    /** 해당 멤버가 해당 강좌를 수강 중인지 */
+    get: operations["getCourseAuth"];
   };
   "/api/v1/comments/{postId}": {
     /** 댓글 목록 */
@@ -416,7 +420,9 @@ export interface components {
     };
     CourseEnrollDto: {
       /** Format: int64 */
-      id?: number;
+      courseId?: number;
+      title?: string;
+      imgUrl?: string;
     };
     RsDataCourseEnrollDto: {
       resultCode: string;
@@ -544,6 +550,20 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["VideoDto"][];
+      fail: boolean;
+      success: boolean;
+    };
+    CourseAuthDto: {
+      auth?: boolean;
+      /** Format: int32 */
+      point?: number;
+    };
+    RsDataCourseAuthDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["CourseAuthDto"];
       fail: boolean;
       success: boolean;
     };
@@ -1008,6 +1028,11 @@ export interface operations {
   };
   /** 수강 등록 */
   create: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
     responses: {
       /** @description OK */
       200: {
@@ -1256,6 +1281,22 @@ export interface operations {
       };
     };
   };
+  /** 강좌 상세 조회 */
+  getCourse: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataCourseDto"];
+        };
+      };
+    };
+  };
   /** 강의 리스트 */
   getVideos: {
     parameters: {
@@ -1289,18 +1330,18 @@ export interface operations {
       };
     };
   };
-  /** 강좌 상세 조회 */
-  getCourse: {
+  /** 해당 멤버가 해당 강좌를 수강 중인지 */
+  getCourseAuth: {
     parameters: {
       path: {
-        "course-id": number;
+        courseId: number;
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataCourseDto"];
+          "application/json": components["schemas"]["RsDataCourseAuthDto"];
         };
       };
     };

@@ -1,9 +1,11 @@
 package com.ll.edubridge.domain.course.course.controller;
 
 
+import com.ll.edubridge.domain.course.course.dto.CourseAuthDto;
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
+import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
@@ -32,6 +34,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ApiV1CourseController {
     private final CourseService courseService;
     private final Rq rq;
+    private final CourseEnrollService courseEnrollService;
 
     @Getter
     public static class GetCoursesResponsebody {
@@ -67,13 +70,24 @@ public class ApiV1CourseController {
         );
     }
 
-    @GetMapping("/{course-id}")
+    @GetMapping("/{courseId}")
     @Operation(summary = "강좌 상세 조회")
-    public RsData<CourseDto> getCourse(@PathVariable("course-id") Long id) {
-        Course course = courseService.getCourse(id);
+    public RsData<CourseDto> getCourse(@PathVariable("courseId") Long courseId) {
+        Course course = courseService.getCourse(courseId);
         CourseDto courseDto = new CourseDto(course);
 
         return RsData.of("200-1", Msg.CHECK.getMsg(), courseDto);
+    }
+
+    @GetMapping("/{courseId}/auth")
+    @Operation(summary = "해당 멤버가 해당 강좌를 수강 중인지")
+    public RsData<CourseAuthDto> getCourseAuth(@PathVariable("courseId") Long courseId){
+        Course course = courseService.getCourse(courseId);
+
+        CourseAuthDto courseAuthDto=new CourseAuthDto(courseEnrollService.isEnroll(course), rq.getMember());
+
+        return RsData.of("200-1",Msg.CHECK.getMsg(),courseAuthDto);
+
     }
 
 }
