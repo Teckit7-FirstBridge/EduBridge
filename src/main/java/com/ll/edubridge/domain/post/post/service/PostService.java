@@ -140,7 +140,6 @@ public class PostService {
         if (member == null) return false;
         if (post == null) return false;
 
-        System.out.println(post.getVoter());
         return post.getVoter().contains(member);
     }
 
