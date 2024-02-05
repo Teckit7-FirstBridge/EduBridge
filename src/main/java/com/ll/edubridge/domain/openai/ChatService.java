@@ -31,7 +31,6 @@ public class ChatService {
     @Transactional
     public void chat(Long summaryNoteId,String prompt) {
         // create a request
-        System.out.println("---------helo-------");
         ChatRequest request = new ChatRequest(model, prompt);
         SummaryNote summaryNote = summaryNoteService.getSummaryNote(summaryNoteId);
         // call the API
@@ -40,7 +39,6 @@ public class ChatService {
         if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
 
         }else{
-            System.out.println("---------chanwoo------------");
             System.out.println(response.getChoices().get(0).getMessage().getContent());
             String numberOnly = response.getChoices().get(0).getMessage().getContent().replaceAll("[^\\d]", "");
             Long score = Long.parseLong((numberOnly));
