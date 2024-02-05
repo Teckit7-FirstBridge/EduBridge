@@ -64,8 +64,8 @@ public class ApiV1CourseController {
         GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage);
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 responseBody
         );
     }
@@ -76,17 +76,18 @@ public class ApiV1CourseController {
         Course course = courseService.getCourse(courseId);
         CourseDto courseDto = new CourseDto(course);
 
-        return RsData.of("200-1", Msg.CHECK.getMsg(), courseDto);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(), courseDto);
     }
 
     @GetMapping("/{courseId}/auth")
     @Operation(summary = "해당 멤버가 해당 강좌를 수강 중인지")
     public RsData<CourseAuthDto> getCourseAuth(@PathVariable("courseId") Long courseId){
 
-        CourseAuthDto courseAuthDto=new CourseAuthDto(courseEnrollService.isEnroll(courseId));
+        CreateCourseDto createdCourseDto = new CreateCourseDto(course);
 
-        return RsData.of("200-1",Msg.CHECK.getMsg(),courseAuthDto);
-
+        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(), Msg.E200_0_CREATE_SUCCUSSED.getMsg(), createdCourseDto);
     }
 
+ 
 }

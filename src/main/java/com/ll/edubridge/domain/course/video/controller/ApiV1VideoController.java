@@ -47,8 +47,7 @@ public class ApiV1VideoController {
                 .toList();
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(), Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 videoDtoList
         );
     }
@@ -71,13 +70,9 @@ public class ApiV1VideoController {
         VideoDto videoDto = new VideoDto(video);
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(), Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 videoDto
         );
     }
-
-
-
 
 }

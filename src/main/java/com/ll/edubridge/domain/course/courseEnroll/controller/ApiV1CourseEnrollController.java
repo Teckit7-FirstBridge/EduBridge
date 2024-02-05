@@ -57,10 +57,11 @@ public class ApiV1CourseEnrollController {
         Course course = courseService.getCourse(courseId); //
         int price = course.getPrice();
         if (point >= price) {
-            CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), course,point,price);
-            return RsData.of("200-0", Msg.CREATE.getMsg());
-        }else {
-            return RsData.of("400-1", Msg.CREATEFAILURE.getMsg()); // 400 - Not found
+            CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), courseId, price, point);
+            return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(), Msg.E200_0_CREATE_SUCCUSSED.getMsg());
+
+        } else {
+            return RsData.of(Msg.E400_1_CREATE_FAILED.getCode(), Msg.E400_1_CREATE_FAILED.getMsg()); // 400 - Not found
         }
     }
 
@@ -74,8 +75,8 @@ public class ApiV1CourseEnrollController {
         GetCourseEnrollResponsebody responseBody = new GetCourseEnrollResponsebody(courseEnrolls);
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 responseBody
         );
     }

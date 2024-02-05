@@ -58,8 +58,8 @@ public class ApiV1SummaryNoteController {
         chatService.chat(summaryNote.getId(),createSummaryNoteDto.getContent() + "\n 이 문단을 키워드:"+keywords+ "와 문단의 문맥을 기준으로해서 총점100점기준으로 채점해서 부가적인 설명을 하지말고 20점이면 20,30점이면 30처럼 점수만을 알려줘");
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
 
+        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(), Msg.E200_0_CREATE_SUCCUSSED.getMsg(), summaryNoteDto);
 
-        return RsData.of("200-0", Msg.CREATE.getMsg(), summaryNoteDto);
 
     }
 
@@ -76,7 +76,7 @@ public class ApiV1SummaryNoteController {
 
         SummaryNoteDto modifySummaryNoteDto = new SummaryNoteDto(modifySummaryNote);
 
-        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifySummaryNoteDto);
+        return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(), Msg.E200_2_MODIFY_SUCCUSSED.getMsg(), modifySummaryNoteDto);
 
 
     }
@@ -90,7 +90,7 @@ public class ApiV1SummaryNoteController {
 
         summaryNoteService.delete(id);
 
-        return RsData.of("200-3", Msg.DELETE.getMsg());
+        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(), Msg.E200_3_DELETE_SUCCUSSED.getMsg());
     }
     @GetMapping("/admin")
     @Operation(summary = "비디오별 강의노트 조회(관리자 기능)")
@@ -101,7 +101,7 @@ public class ApiV1SummaryNoteController {
         Page<SummaryNote> summaryNotes = summaryNoteService.findByVideoId(pageable,videoid);
         GetSummaryNoteResponsebody responseBody = new ApiV1SummaryNoteController.GetSummaryNoteResponsebody(summaryNotes, rq.getMember());
 
-        return RsData.of("200-2", Msg.CHECK.getMsg(), responseBody);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(), Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(), responseBody);
     }
 
 
@@ -110,6 +110,6 @@ public class ApiV1SummaryNoteController {
     public RsData<SummaryNoteDto> getSummaryNote(@PathVariable("note-id") Long id){
         SummaryNote summaryNote = summaryNoteService.getSummaryNote(id);
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
-        return RsData.of("200-1", Msg.CHECK.getMsg(), summaryNoteDto);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(), Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(), summaryNoteDto);
     }
 }

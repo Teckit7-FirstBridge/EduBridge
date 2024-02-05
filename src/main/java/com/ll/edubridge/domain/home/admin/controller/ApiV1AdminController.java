@@ -64,8 +64,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 courseList
         );
     }
@@ -81,8 +81,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 reportedPostList
         );
     }
@@ -98,8 +98,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 recentMemberList
         );
     }
@@ -115,8 +115,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 recentSummaryNoteList
         );
     }
@@ -132,8 +132,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 reportedPostList
         );
     }
@@ -156,8 +156,8 @@ public class ApiV1AdminController {
         Page<RecentMemberDto> memberPage = members.map(this::memberToDto);
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 new GetMembersResponseBody(
                         new PageDto<>(memberPage)
                 )
@@ -187,8 +187,8 @@ public class ApiV1AdminController {
         Page<RecentSummaryNoteDto> notePage = recentSummaryNotes.map(this::noteToDto);
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 new GetNotesResponseBody(
                         new PageDto<>(notePage)
                 )

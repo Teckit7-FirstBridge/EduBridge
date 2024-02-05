@@ -59,11 +59,12 @@ public class ApiV1PostController {
         Page<PostDto> postPage = posts.map(this::postToDto);
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
-                new GetPostsResponseBody(new PageDto<>(postPage)));
-    }
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                new GetPostsResponseBody(new PageDto<>(postPage))
+        );
 
+    }
     private PostDto postToDto(Post post) {
         PostDto dto = new PostDto(post, rq.getMember());
 
@@ -77,7 +78,8 @@ public class ApiV1PostController {
 
         CreatePostDto createdPostDto = new CreatePostDto(post);
 
-        return RsData.of("200-0", Msg.CREATE.getMsg(), createdPostDto);
+        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(),
+                Msg.E200_0_CREATE_SUCCUSSED.getMsg(), createdPostDto);
     }
 
     @GetMapping("/{id}")
@@ -89,7 +91,8 @@ public class ApiV1PostController {
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         PostDto postDto = new PostDto(post, rq.getMember());
-        return RsData.of("200-1", Msg.CHECK.getMsg(), postDto);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(), postDto);
     }
 
     @PutMapping("/{id}")
@@ -105,7 +108,8 @@ public class ApiV1PostController {
 
         PostDto modifyPostDto = new PostDto(modifyPost, rq.getMember());
 
-        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifyPostDto);
+        return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(),
+                Msg.E200_2_MODIFY_SUCCUSSED.getMsg(), modifyPostDto);
     }
 
     @DeleteMapping("/{id}")
@@ -117,7 +121,8 @@ public class ApiV1PostController {
 
         postService.delete(id);
 
-        return RsData.of("200-3", Msg.DELETE.getMsg());
+        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(),
+                Msg.E200_3_DELETE_SUCCUSSED.getMsg());
     }
 
     @PostMapping("/{id}/like")
@@ -131,7 +136,8 @@ public class ApiV1PostController {
 
         postService.vote(id, member);
 
-        return RsData.of("200-4", Msg.RECOMMEND.getMsg());
+        return RsData.of(Msg.E200_4_RECOMMEND_SUCCUSSED.getCode(),
+                Msg.E200_4_RECOMMEND_SUCCUSSED.getMsg());
     }
 
     @DeleteMapping("/{id}/like")
@@ -145,7 +151,8 @@ public class ApiV1PostController {
 
         postService.deleteVote(id, member);
 
-        return RsData.of("200-5", Msg.RECOMMENDCANCEL.getMsg());
+        return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCUSSED.getCode(),
+                Msg.E200_5_CANCEL_RECOMMEND_SUCCUSSED.getMsg());
     }
 
     @PostMapping("/qna")
@@ -155,7 +162,8 @@ public class ApiV1PostController {
 
         QnaDto createdQnaDto = new QnaDto(post);
 
-        return RsData.of("200-0", Msg.CREATE.getMsg(), createdQnaDto);
+        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(),
+                Msg.E200_0_CREATE_SUCCUSSED.getMsg(), createdQnaDto);
     }
 
     @GetMapping("/qna")
@@ -169,7 +177,8 @@ public class ApiV1PostController {
                 .map(QnaDto::new)
                 .collect(Collectors.toList());
 
-        return RsData.of("200-1", Msg.CHECK.getMsg(), qnaDtoList);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(), qnaDtoList);
     }
 
     @GetMapping("/qna/{id}")
@@ -181,7 +190,8 @@ public class ApiV1PostController {
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         QnaDto qnaDto = new QnaDto(post);
-        return RsData.of("200-1", Msg.CHECK.getMsg(), qnaDto);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(), qnaDto);
     }
 
     @DeleteMapping("/qna/{id}")
@@ -193,7 +203,8 @@ public class ApiV1PostController {
 
         postService.delete(id);
 
-        return RsData.of("200-3", Msg.DELETE.getMsg());
+        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(),
+                Msg.E200_3_DELETE_SUCCUSSED.getMsg());
     }
 
 

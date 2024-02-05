@@ -46,8 +46,8 @@ public class ApiV1HomeController {
         GetPostsResponseBody responseBody = new GetPostsResponseBody(courses, rq.getMember());
 
         return RsData.of(
-                "200-1",
-                Msg.CHECK.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
                 responseBody
         );
     }
