@@ -84,9 +84,9 @@ public class ApiV1CourseController {
     @Operation(summary = "해당 멤버가 해당 강좌를 수강 중인지")
     public RsData<CourseAuthDto> getCourseAuth(@PathVariable("courseId") Long courseId){
 
-        CreateCourseDto createdCourseDto = new CreateCourseDto(course);
+        CourseAuthDto courseAuthDto=new CourseAuthDto(courseEnrollService.isEnroll(courseId));
 
-        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(), Msg.E200_0_CREATE_SUCCUSSED.getMsg(), createdCourseDto);
+        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(), Msg.E200_0_CREATE_SUCCUSSED.getMsg(), courseAuthDto);
     }
 
  
