@@ -7,6 +7,7 @@ import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
@@ -56,10 +57,10 @@ public class ApiV1CourseEnrollController {
         int price = course.getPrice();
         if (point >= price) {
             CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), course,point,price);
-            return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(), Msg.E200_0_CREATE_SUCCUSSED.getMsg());
+            return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(), Msg.E200_0_CREATE_SUCCEED.getMsg());
 
         } else {
-            return RsData.of(Msg.E400_1_CREATE_FAILED.getCode(), Msg.E400_1_CREATE_FAILED.getMsg()); // 400 - Not found
+            return RsData.of(CodeMsg.E400_1_CREATE_FAILED.getCode(), CodeMsg.E400_1_CREATE_FAILED.getMessage()); // 400 - Not found
         }
     }
 
@@ -73,8 +74,8 @@ public class ApiV1CourseEnrollController {
         GetCourseEnrollResponsebody responseBody = new GetCourseEnrollResponsebody(courseEnrolls);
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 responseBody
         );
     }

@@ -64,8 +64,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 courseList
         );
     }
@@ -81,8 +81,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 reportedPostList
         );
     }
@@ -98,8 +98,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 recentMemberList
         );
     }
@@ -115,8 +115,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 recentSummaryNoteList
         );
     }
@@ -132,8 +132,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 reportedPostList
         );
     }
@@ -156,8 +156,8 @@ public class ApiV1AdminController {
         Page<RecentMemberDto> memberPage = members.map(this::memberToDto);
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 new GetMembersResponseBody(
                         new PageDto<>(memberPage)
                 )
@@ -187,8 +187,8 @@ public class ApiV1AdminController {
         Page<RecentSummaryNoteDto> notePage = recentSummaryNotes.map(this::noteToDto);
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 new GetNotesResponseBody(
                         new PageDto<>(notePage)
                 )
@@ -212,8 +212,8 @@ public class ApiV1AdminController {
         Video video = videoService.create(createVideoDto);
         CreateVideoDto createdVideoDto = new CreateVideoDto(video);
 
-        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(),
-                Msg.E200_0_CREATE_SUCCUSSED.getMsg(),
+        return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
+                Msg.E200_0_CREATE_SUCCEED.getMsg(),
                 createdVideoDto);
     }
 
@@ -240,8 +240,8 @@ public class ApiV1AdminController {
 
         VideoDto modifyVideoDto = new VideoDto(modifyVideo);
 
-        return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(),
-                Msg.E200_2_MODIFY_SUCCUSSED.getMsg(),
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
+                Msg.E200_2_MODIFY_SUCCEED.getMsg(),
                 modifyVideoDto);
     }
 
@@ -265,8 +265,8 @@ public class ApiV1AdminController {
 
         videoService.delete(id);
 
-        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(),
-                Msg.E200_3_DELETE_SUCCUSSED.getMsg());
+        return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
+                Msg.E200_3_DELETE_SUCCEED.getMsg());
     }
 
     @PostMapping("/courses")
@@ -280,8 +280,8 @@ public class ApiV1AdminController {
 
         CreateCourseDto createdCourseDto = new CreateCourseDto(course);
 
-        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(),
-                Msg.E200_0_CREATE_SUCCUSSED.getMsg(),
+        return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
+                Msg.E200_0_CREATE_SUCCEED.getMsg(),
                 createdCourseDto);
     }
 
@@ -298,8 +298,8 @@ public class ApiV1AdminController {
 
         CourseDto modifyCourseDto = new CourseDto(modifyCourse);
 
-        return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(),
-                Msg.E200_2_MODIFY_SUCCUSSED.getMsg(), modifyCourseDto);
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
+                Msg.E200_2_MODIFY_SUCCEED.getMsg(), modifyCourseDto);
     }
 
     @DeleteMapping("/courses/{id}")
@@ -311,8 +311,8 @@ public class ApiV1AdminController {
 
         courseService.delete(id);
 
-        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(),
-                Msg.E200_3_DELETE_SUCCUSSED.getMsg());
+        return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
+                Msg.E200_3_DELETE_SUCCEED.getMsg());
     }
 
 

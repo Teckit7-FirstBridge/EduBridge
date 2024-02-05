@@ -64,8 +64,8 @@ public class ApiV1CourseController {
         GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage);
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 responseBody
         );
     }
@@ -76,8 +76,8 @@ public class ApiV1CourseController {
         Course course = courseService.getCourse(courseId);
         CourseDto courseDto = new CourseDto(course);
 
-        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(), courseDto);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), courseDto);
     }
 
     @GetMapping("/{courseId}/auth")
@@ -86,7 +86,7 @@ public class ApiV1CourseController {
 
         CourseAuthDto courseAuthDto=new CourseAuthDto(courseEnrollService.isEnroll(courseId));
 
-        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(), Msg.E200_0_CREATE_SUCCUSSED.getMsg(), courseAuthDto);
+        return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(), Msg.E200_0_CREATE_SUCCEED.getMsg(), courseAuthDto);
     }
 
  
