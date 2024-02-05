@@ -2,8 +2,9 @@
   import type { components } from '$lib/types/api/v1/schema';
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
+  import Pagination from '$lib/components/Pagination.svelte';
 
-  let posts: components['schemas']['PostDto'][] = $state([]);
+  let posts: components['schemas']['PageDtoPostDto'][] = $state([]);
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -22,9 +23,9 @@
       }
     });
 
-    posts = data!.data.items;
+    posts = data!.data.itemPage?.content;
 
-    return posts;
+    return data!;
   }
 
   function sortPostsByCreateDate(ascending = true) {
@@ -47,7 +48,7 @@
 <div class="max-w-4xl mx-auto my-8">
   {#await load()}
     <p>loading...</p>
-  {:then posts}
+  {:then { data: { itemPage } }}
     <div class="flex flex-col w-full min-h-screen p-4 md:p-6">
       <h1 class="text-3xl font-bold mb-4">Q&amp;A</h1>
 
@@ -303,6 +304,7 @@
             </div>
           {/each}
         {/if}
+        <Pagination page={itemPage} />
       </div>
     </div>
   {/await}

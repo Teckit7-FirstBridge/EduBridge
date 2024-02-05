@@ -22,8 +22,6 @@
 
     notes = data!.data.itemPage?.content;
 
-    console.log('dd');
-
     return data!;
   }
 </script>
@@ -42,13 +40,6 @@
             <div class="flex justify-col justify-end">
               <div>
                 <h2 class="text-2xl font-semibold text-gray-800">요약 노트 관리</h2>
-              </div>
-              <div class="ml-2 mt-1">
-                <a
-                  href="/adm/note"
-                  class="inline-block px-2 py-1 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-                  >+</a
-                >
               </div>
             </div>
             <div class="mt-3 bg-white shadow overflow-hidden rounded-md">
