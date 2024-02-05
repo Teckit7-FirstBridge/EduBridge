@@ -40,13 +40,13 @@ public class ApiV1CourseController {
     private final CourseEnrollService courseEnrollService;
 
     @Getter
-    public static class GetCoursesResponsebody {
+    public class GetCoursesResponsebody {
         @NonNull
         private final List<CourseDto> items;
 
         public GetCoursesResponsebody(Page<Course> page) {
             this.items = page.getContent().stream()
-                    .map(course -> new CourseDto(course))
+                    .map(course -> new CourseDto(course,rq.getMember()))
                     .toList();
         }
     }
@@ -77,7 +77,7 @@ public class ApiV1CourseController {
     @Operation(summary = "강좌 상세 조회")
     public RsData<CourseDto> getCourse(@PathVariable("courseId") Long courseId) {
         Course course = courseService.getCourse(courseId);
-        CourseDto courseDto = new CourseDto(course);
+        CourseDto courseDto = new CourseDto(course,rq.getMember());
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(), courseDto);

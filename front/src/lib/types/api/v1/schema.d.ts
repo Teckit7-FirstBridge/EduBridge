@@ -70,6 +70,12 @@ export interface paths {
     /** 강의 요약 노트 등록 */
     post: operations["create_1"];
   };
+  "/api/v1/courses/{id}/like": {
+    /** 강좌 좋아요 */
+    post: operations["vote_1"];
+    /** 강좌 좋아요 취소 */
+    delete: operations["deleteVote_1"];
+  };
   "/api/v1/comments": {
     /** 댓글 등록 */
     post: operations["createComment"];
@@ -183,8 +189,8 @@ export interface components {
       title: string;
       body: string;
       /** Format: int32 */
-      voteCount?: number;
-      likedByCurrentUser?: boolean;
+      voteCount: number;
+      likedByCurrentUser: boolean;
     };
     RsDataPostDto: {
       resultCode: string;
@@ -239,9 +245,9 @@ export interface components {
       visitedToday?: boolean;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
       authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -337,6 +343,9 @@ export interface components {
       overView?: string;
       /** Format: int32 */
       price?: number;
+      /** Format: int32 */
+      voteCount?: number;
+      likedByCurrentUser?: boolean;
     };
     RsDataCourseDto: {
       resultCode: string;
@@ -1088,6 +1097,38 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataSummaryNoteDto"];
+        };
+      };
+    };
+  };
+  /** 강좌 좋아요 */
+  vote_1: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataVoid"];
+        };
+      };
+    };
+  };
+  /** 강좌 좋아요 취소 */
+  deleteVote_1: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataVoid"];
         };
       };
     };

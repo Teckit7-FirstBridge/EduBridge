@@ -22,6 +22,7 @@ import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
+import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.PageDto;
@@ -52,6 +53,7 @@ public class ApiV1AdminController {
     private final PostService postService;
     private final SummaryNoteService summaryNoteService;
     private final VideoService videoService;
+    private final Rq rq;
 
     @GetMapping(value = "/courses")
     @Operation(summary = "강좌 최신순")
@@ -296,7 +298,7 @@ public class ApiV1AdminController {
 
         Course modifyCourse = courseService.modify(id, courseDto);
 
-        CourseDto modifyCourseDto = new CourseDto(modifyCourse);
+        CourseDto modifyCourseDto = new CourseDto(modifyCourse,rq.getMember());
 
         return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(),
                 Msg.E200_2_MODIFY_SUCCUSSED.getMsg(), modifyCourseDto);

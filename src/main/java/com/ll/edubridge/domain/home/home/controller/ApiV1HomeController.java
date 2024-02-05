@@ -27,13 +27,13 @@ public class ApiV1HomeController {
 
     private final CourseService courseService;
     @Getter
-    public static class GetPostsResponseBody {
+    public class GetPostsResponseBody {
         @NonNull
         private final List<CourseDto> items;
 
         public GetPostsResponseBody(List<Course> courses, Member currentUser) {
             this.items = courses.stream()
-                    .map(course -> new CourseDto(course))
+                    .map(course -> new CourseDto(course,rq.getMember()))
                     .toList();
         }
     }
