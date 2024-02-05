@@ -295,6 +295,8 @@ export interface components {
       likedByCurrentUser?: boolean;
       /** Format: int64 */
       postId: number;
+      /** Format: int32 */
+      voteCount?: number;
     };
     RsDataCommentDto: {
       resultCode: string;

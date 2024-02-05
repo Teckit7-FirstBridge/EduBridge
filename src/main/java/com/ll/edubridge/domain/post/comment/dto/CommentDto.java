@@ -23,6 +23,8 @@ public class CommentDto {
     @NonNull
     private Long postId;
 
+    private int voteCount;
+
     public CommentDto(Comment comment, Member member) {
         this.id = comment.getId();
         this.createDate = comment.getCreateDate();
@@ -31,5 +33,6 @@ public class CommentDto {
         this.body = comment.getContent();
         this.likedByCurrentUser = comment.getVoter().contains(member);
         this.postId = comment.getPost().getId();
+        this.voteCount = comment.getVoteCount();
     }
 }
