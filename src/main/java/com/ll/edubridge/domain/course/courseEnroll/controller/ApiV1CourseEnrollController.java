@@ -4,7 +4,6 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.courseEnroll.dto.CourseEnrollDto;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
-import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
@@ -34,7 +33,6 @@ public class ApiV1CourseEnrollController {
     private final CourseEnrollService courseEnrollService;
     private final CourseService courseService;
     private final Rq rq;
-    private final CourseEnrollRepository courseEnrollRepository;
 
     @Getter
     public static class GetCourseEnrollResponsebody{
@@ -54,10 +52,10 @@ public class ApiV1CourseEnrollController {
 
         Member member = rq.getMember(); //  현재 로그인한 사용자의 정보
         int point = member.getPoint();
-        Course course = courseService.getCourse(courseId); //
+        Course course = courseService.getCourse(courseId);
         int price = course.getPrice();
         if (point >= price) {
-            CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), courseId, price, point);
+            CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), course,point,price);
             return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(), Msg.E200_0_CREATE_SUCCUSSED.getMsg());
 
         } else {

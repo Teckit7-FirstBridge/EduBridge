@@ -212,7 +212,9 @@ public class ApiV1AdminController {
         Video video = videoService.create(createVideoDto);
         CreateVideoDto createdVideoDto = new CreateVideoDto(video);
 
-        return RsData.of("200-0", Msg.CREATE.getMsg(), createdVideoDto);
+        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(),
+                Msg.E200_0_CREATE_SUCCUSSED.getMsg(),
+                createdVideoDto);
     }
 
     @PutMapping("/{courseId}/videos/{id}")
@@ -238,7 +240,9 @@ public class ApiV1AdminController {
 
         VideoDto modifyVideoDto = new VideoDto(modifyVideo);
 
-        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifyVideoDto);
+        return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(),
+                Msg.E200_2_MODIFY_SUCCUSSED.getMsg(),
+                modifyVideoDto);
     }
 
     @DeleteMapping("/{courseId}/videos/{id}")
@@ -261,7 +265,8 @@ public class ApiV1AdminController {
 
         videoService.delete(id);
 
-        return RsData.of("200-3", Msg.DELETE.getMsg());
+        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(),
+                Msg.E200_3_DELETE_SUCCUSSED.getMsg());
     }
 
     @PostMapping("/courses")
@@ -275,7 +280,9 @@ public class ApiV1AdminController {
 
         CreateCourseDto createdCourseDto = new CreateCourseDto(course);
 
-        return RsData.of("200-0", Msg.CREATE.getMsg(), createdCourseDto);
+        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(),
+                Msg.E200_0_CREATE_SUCCUSSED.getMsg(),
+                createdCourseDto);
     }
 
     @PutMapping("/courses/{id}")
@@ -291,7 +298,8 @@ public class ApiV1AdminController {
 
         CourseDto modifyCourseDto = new CourseDto(modifyCourse);
 
-        return RsData.of("200-2", Msg.MODIFY.getMsg(), modifyCourseDto);
+        return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(),
+                Msg.E200_2_MODIFY_SUCCUSSED.getMsg(), modifyCourseDto);
     }
 
     @DeleteMapping("/courses/{id}")
@@ -303,7 +311,8 @@ public class ApiV1AdminController {
 
         courseService.delete(id);
 
-        return RsData.of("200-3", Msg.DELETE.getMsg());
+        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(),
+                Msg.E200_3_DELETE_SUCCUSSED.getMsg());
     }
 
 
