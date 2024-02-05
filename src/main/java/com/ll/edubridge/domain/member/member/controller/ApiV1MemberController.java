@@ -1,7 +1,11 @@
 package com.ll.edubridge.domain.member.member.controller;
 
 
+import com.ll.edubridge.domain.course.course.entity.Course;
+import com.ll.edubridge.domain.course.course.service.CourseService;
+import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.member.member.dto.MemberDto;
+import com.ll.edubridge.domain.member.member.dto.MyPageDto;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
@@ -15,6 +19,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/members")
 @RequiredArgsConstructor
@@ -22,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 public class ApiV1MemberController {
     private final MemberService memberService;
     private final Rq rq;
+    private final CourseService courseService;
 
     public record LoginRequestBody(@NotBlank String username, @NotBlank String password) {
     }
@@ -67,5 +74,24 @@ public class ApiV1MemberController {
 
         return RsData.of(Msg.E200_6_SUCCUSS_LOGOUT.getCode(),
                 Msg.E200_6_SUCCUSS_LOGOUT.getMsg());
+    }
+
+    public record MyPageResponseBody(@NonNull MyPageDto item){
+
+    }
+
+
+    @GetMapping("/mypage")
+    public RsData<MyPageResponseBody> mypage(){
+
+        List<CourseEnroll> courseEnrollList = rq.getMember().getCourseEnrollList();
+        MyPageDto myPageDto = new MyPageDto();
+
+
+
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(), Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                new MyPageResponseBody(
+                        new MyPageDto()
+                ));
     }
 }

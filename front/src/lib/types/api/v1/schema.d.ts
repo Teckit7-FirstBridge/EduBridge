@@ -96,6 +96,9 @@ export interface paths {
     /** 1대1 문의 삭제 */
     delete: operations["deleteQna"];
   };
+  "/api/v1/members/mypage": {
+    get: operations["mypage"];
+  };
   "/api/v1/members/me": {
     get: operations["getMe"];
   };
@@ -236,9 +239,9 @@ export interface components {
       visitedToday?: boolean;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
       authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -494,6 +497,24 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["QnaDto"][];
+      success: boolean;
+      fail: boolean;
+    };
+    MyPageDto: {
+      learningCourses?: components["schemas"]["Course"][];
+      favoriteCourses?: components["schemas"]["Course"][];
+      /** Format: int64 */
+      goalProgress?: number;
+    };
+    MyPageResponseBody: {
+      item: components["schemas"]["MyPageDto"];
+    };
+    RsDataMyPageResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["MyPageResponseBody"];
       success: boolean;
       fail: boolean;
     };
@@ -1195,6 +1216,16 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  mypage: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataMyPageResponseBody"];
         };
       };
     };
