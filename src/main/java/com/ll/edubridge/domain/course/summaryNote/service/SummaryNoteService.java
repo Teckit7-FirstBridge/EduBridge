@@ -4,9 +4,10 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.summaryNote.dto.CreateSummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
+import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.member.member.repository.MemberRepository;
+import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
@@ -24,7 +25,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class SummaryNoteService {
     private final SummaryNoteRepository summaryNoteRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final Rq rq;
     private final VideoService videoService;
 
@@ -35,7 +36,6 @@ public class SummaryNoteService {
     public Optional<SummaryNote> findById(Long id) {
         return summaryNoteRepository.findById(id);
     }
-
 
     @Transactional
     public SummaryNote getSummaryNote(Long id) {
@@ -49,17 +49,18 @@ public class SummaryNoteService {
 
     @Transactional
     public SummaryNote create(Member member, CreateSummaryNoteDto createSummaryNoteDto,Long videoid) {
+        Video video = videoService.findById(videoid).get();
         SummaryNote summaryNote = SummaryNote.builder()
                 .content(createSummaryNoteDto.getContent())
                 .writer(member)
-                .video(videoService.findById(videoid).get())
+                .video(video)
                 .build();
 
         // 포인트 지급 -> 로컬 테스트 실패
         Course course = summaryNote.getVideo().getCourse();
         int point = member.getPoint() + course.getPrice()/10;
         member.setPoint(point);
-        memberRepository.save(member);
+        memberService.save(member);
 
         return summaryNoteRepository.save(summaryNote);
     }
@@ -67,8 +68,8 @@ public class SummaryNoteService {
     @Transactional
     public SummaryNote modify(Long id , CreateSummaryNoteDto createSummaryNoteDto) {
         SummaryNote summaryNote = this.getSummaryNote(id);
-
         summaryNote.setContent(createSummaryNoteDto.getContent());
+
 
         return summaryNoteRepository.save(summaryNote);
     }

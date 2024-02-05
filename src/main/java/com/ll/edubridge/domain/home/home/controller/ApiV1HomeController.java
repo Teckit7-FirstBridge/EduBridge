@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/home")
 @RequiredArgsConstructor
 @Tag(name = "ApiV1HomeController", description = "홈 컨트롤러")
 public class ApiV1HomeController {

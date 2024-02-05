@@ -14,9 +14,9 @@ import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.KwTypeV1;
+import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,21 +39,12 @@ public class ApiV1PostController {
     private final PostService postService;
     private final Rq rq;
 
-    @Getter
-    public static class GetPostsResponseBody {
-        @NonNull
-        private final List<PostDto> items;
 
-        public GetPostsResponseBody(Page<Post> page, Member currentUser) {
-            this.items = page.getContent().stream()
-                    .map(post -> new PostDto(post, currentUser))
-                    .toList();
-        }
+    public record GetPostsResponseBody(@NonNull PageDto<PostDto> itemPage) {
     }
 
-
     @GetMapping(value = "")
-    @Operation(summary = "글 다건조회")
+    @Operation(summary = "글 다건 조회")
     public RsData<GetPostsResponseBody> getPosts(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "") String kw,
@@ -63,15 +54,21 @@ public class ApiV1PostController {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
-        Page<Post> postPage = postService.findByKw(kwType, kw, null, true, pageable);
+        Page<Post> posts = postService.findByKw(kwType, kw, null, true, pageable);
 
-        GetPostsResponseBody responseBody = new GetPostsResponseBody(postPage, rq.getMember());
+        Page<PostDto> postPage = posts.map(this::postToDto);
 
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
-                responseBody
+                new GetPostsResponseBody(new PageDto<>(postPage))
         );
+
+    }
+    private PostDto postToDto(Post post) {
+        PostDto dto = new PostDto(post, rq.getMember());
+
+        return dto;
     }
 
     @PostMapping("")

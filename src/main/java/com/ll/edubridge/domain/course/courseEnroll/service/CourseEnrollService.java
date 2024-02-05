@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.course.courseEnroll.service;
 
+import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
@@ -25,8 +26,9 @@ public class CourseEnrollService {
     private final CourseService courseService;
     private final MemberRepository memberRepository;
 
-    public Page<CourseEnroll> findAll(Pageable pageable) {
-        return courseEnrollRepository.findAll(pageable);
+    public Page<CourseEnroll> findByMemberId(Pageable pageable) {
+        Long memberId=rq.getMember().getId();
+        return courseEnrollRepository.findByMemberId(pageable, memberId);
     }
 
     public Optional<CourseEnroll> findById(Long id) {
@@ -34,9 +36,9 @@ public class CourseEnrollService {
     }
 
     @Transactional
-    public CourseEnroll create(Member member, Long courseId,int point,int price) {
+    public CourseEnroll create(Member member, Course course, int point,int price) {
         CourseEnroll courseEnroll = CourseEnroll.builder()
-                .course(courseService.getCourse(courseId))
+                .course(course)
                 .member(member)
                 .build();
         member.setPoint(point - price);
@@ -65,9 +67,13 @@ public class CourseEnrollService {
         return true;
     }
 
+    public boolean isEnroll(Long courseId){
+        Member member=rq.getMember();
 
+        Course course = courseService.getCourse(courseId);
 
+        Optional<CourseEnroll> courseEnroll = courseEnrollRepository.findByCourseIdAndMemberId(course.getId(),member.getId());
 
-
-
+        return courseEnroll.isPresent();
+    }
 }

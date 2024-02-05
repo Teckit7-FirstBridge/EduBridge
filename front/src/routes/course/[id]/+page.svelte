@@ -10,6 +10,8 @@
 
   let course: components['schemas']['CourseDto'] = $state();
   let videos: components['schemas']['VideoDto'][] = $state();
+  let auth: components['schemas']['CourseAuthDto'] = $state();
+
   let overviewviewr: any | undefined = $state();
   let notiviewer: any | undefined = $state();
 
@@ -24,26 +26,46 @@
     });
     videos = responseVideos.data?.data!;
 
-    const responseCourse = await rq.apiEndPoints().GET(`/api/v1/courses/{course-id}`, {
+    const responseCourse = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}`, {
       params: {
         path: {
-          'course-id': parseInt($page.params.id)
+          courseId: parseInt($page.params.id)
         }
       }
     });
     course = responseCourse.data?.data!;
-    console.log(videos);
 
-    return { videos, course };
+    const responseAuth = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}/auth`, {
+      params: {
+        path: {
+          courseId: parseInt($page.params.id)
+        }
+      }
+    });
+    auth = responseAuth.data?.data!;
+
+    return { videos, course, auth };
   }
 
   async function deleteCourse() {
-    const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}`, {
+    const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/admin/courses/{id}`, {
       params: { path: { id: parseInt($page.params.id) } }
     });
     if (data) {
       rq.msgInfo('강좌가 삭제되었습니다');
       rq.goTo('/course');
+    } else if (error) {
+      rq.msgError(error.msg);
+    }
+  }
+
+  async function enrollCourse() {
+    const { data, error } = await rq.apiEndPoints().POST(`/api/v1/enroll/{courseId}`, {
+      params: { path: { courseId: parseInt($page.params.id) } }
+    });
+    if (data) {
+      rq.msgInfo('수강이 등록 되었습니다.');
+      window.location.reload();
     } else if (error) {
       rq.msgError(error.msg);
     }
@@ -64,7 +86,7 @@
 
 {#await load()}
   <div>loading...</div>
-{:then { videos, course }}
+{:then { videos, course, auth }}
   <div class="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
     <div class="hidden w-64 border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
       <div class="flex h-full max-h-screen flex-col gap-2">
@@ -211,6 +233,12 @@
           <h1 class="font-semibold text-lg md:text-2xl">
             {course!.title}
           </h1>
+          <div class="flex">
+            <p>{course.price}원</p>
+            {#if !auth.enroll}
+              <button class="ml-2" on:click={enrollCourse}> 수강 등록 </button>
+            {/if}
+          </div>
           {#if rq.isAdmin()}
             <div class="mb-5 mx-2 items-center">
               <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
@@ -239,130 +267,137 @@
           ></ToastUiEditor>
         </div>
 
-        <div class="flex justify-end">
-          <a class=" mx-10 btn w-24 text-center" href="/course/{$page.params.id}/videowrite"
-            >강의 등록</a
-          >
-        </div>
+        {#if rq.isAdmin()}
+          <div class="flex justify-end">
+            <a class=" mx-10 btn w-24 text-center" href="/course/{$page.params.id}/videowrite"
+              >강의 등록</a
+            >
+          </div>
+        {/if}
 
-        <div class="border shadow-sm rounded-lg">
-          <div class="relative w-full overflow-auto">
-            <table class="w-full caption-bottom text-sm">
-              <thead class="[&amp;_tr]:border-b">
-                <tr
-                  class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
-                >
-                  <th
-                    class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 max-w-[150px]"
-                  >
-                    동영상
-                  </th>
-
-                  <th
-                    class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
-                  >
-                    개요
-                  </th>
-                  <th
-                    class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
-                  >
-                  </th>
-
-                  <th
-                    class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
-                  >
-                    요약 노트
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody class="[&amp;_tr:last-child]:border-0">
-                {#each videos as video, index}
+        {#if auth.enroll || rq.isAdmin()}
+          <div class="border shadow-sm rounded-lg">
+            <div class="relative w-full overflow-auto">
+              <table class="w-full caption-bottom text-sm">
+                <thead class="[&amp;_tr]:border-b">
                   <tr
                     class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                   >
-                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
-                      <img
-                        alt="Video thumbnail"
-                        class="aspect-square rounded-md object-cover mt-2"
-                        height="64"
-                        src={video.imgUrl}
-                        width="64"
-                        on:click={() => window.open(video.url, '_blank')}
-                      />
-                    </td>
-                    <td
-                      class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
+                    <th
+                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 max-w-[150px]"
                     >
-                      {video.overView}
-                    </td>
+                      동영상
+                    </th>
 
-                    <td
-                      class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
+                    <th
+                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
                     >
-                      {#if rq.isAdmin()}
-                        <div class="mb-5 mx-2 items-center">
-                          <a href="/course/{video.courseId}/videoedit/{video.id}" class="btn btn-sm"
-                            >수정</a
-                          >
-                          <button on:click={() => deleteVideo(video.id)} class="btn btn-sm"
-                            >삭제</button
-                          >
-                        </div>
-                      {/if}
-                    </td>
-                    <td
-                      class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
+                      개요
+                    </th>
+                    <th
+                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
                     >
-                      {#if video.summaryNotes.length > 0}
-                        <a
-                          class="flex items-center gap-3 w-10 h-10 rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                          href="/course/{video.courseId}/{video.id}/summary/{video.summaryNotes[0]
-                            .id}"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-6 h-6"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="M21.75 17.25v-.228a4.5 4.5 0 0 0-.12-1.03l-2.268-9.64a3.375 3.375 0 0 0-3.285-2.602H7.923a3.375 3.375 0 0 0-3.285 2.602l-2.268 9.64a4.5 4.5 0 0 0-.12 1.03v.228m19.5 0a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3m19.5 0a3 3 0 0 0-3-3H5.25a3 3 0 0 0-3 3m16.5 0h.008v.008h-.008v-.008Zm-3 0h.008v.008h-.008v-.008Z"
-                            />
-                          </svg>
-                        </a>
-                      {:else}
-                        <a
-                          class="flex items-center gap-3 w-10 h-10 rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                          href="/course/{video.courseId}/{video.id}/summary/write"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-6 h-6"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
-                            />
-                          </svg>
-                        </a>
-                      {/if}
-                    </td>
+                    </th>
+
+                    <th
+                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
+                    >
+                      요약 노트
+                    </th>
                   </tr>
-                {/each}
-              </tbody>
-            </table>
+                </thead>
+
+                <tbody class="[&amp;_tr:last-child]:border-0">
+                  {#each videos as video, index}
+                    <tr
+                      class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                    >
+                      <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
+                        <img
+                          alt="Video thumbnail"
+                          class="aspect-square rounded-md object-cover mt-2"
+                          height="64"
+                          src={video.imgUrl}
+                          width="64"
+                          on:click={() => window.open(video.url, '_blank')}
+                        />
+                      </td>
+                      <td
+                        class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
+                      >
+                        {video.overView}
+                      </td>
+
+                      <td
+                        class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
+                      >
+                        {#if rq.isAdmin()}
+                          <div class="mb-5 mx-2 items-center">
+                            <a
+                              href="/course/{video.courseId}/videoedit/{video.id}"
+                              class="btn btn-sm">수정</a
+                            >
+                            <button on:click={() => deleteVideo(video.id)} class="btn btn-sm"
+                              >삭제</button
+                            >
+                          </div>
+                        {/if}
+                      </td>
+                      <td
+                        class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
+                      >
+                        {#if video.summaryNotes.length > 0}
+                          <a
+                            class="flex items-center gap-3 w-10 h-10 rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+                            href="/course/{video.courseId}/{video.id}/summary/{video.summaryNotes[0]
+                              .id}"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-6 h-6"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M21.75 17.25v-.228a4.5 4.5 0 0 0-.12-1.03l-2.268-9.64a3.375 3.375 0 0 0-3.285-2.602H7.923a3.375 3.375 0 0 0-3.285 2.602l-2.268 9.64a4.5 4.5 0 0 0-.12 1.03v.228m19.5 0a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3m19.5 0a3 3 0 0 0-3-3H5.25a3 3 0 0 0-3 3m16.5 0h.008v.008h-.008v-.008Zm-3 0h.008v.008h-.008v-.008Z"
+                              />
+                            </svg>
+                          </a>
+                        {:else}
+                          <a
+                            class="flex items-center gap-3 w-10 h-10 rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+                            href="/course/{video.courseId}/{video.id}/summary/write"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-6 h-6"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                              />
+                            </svg>
+                          </a>
+                        {/if}
+                      </td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        {:else}
+          <p>수강중이 아닙니다</p>
+        {/if}
       </main>
     </div>
   </div>

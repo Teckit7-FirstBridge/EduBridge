@@ -1,18 +1,15 @@
 package com.ll.edubridge.domain.course.course.controller;
 
 
+import com.ll.edubridge.domain.course.course.dto.CourseAuthDto;
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
-import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
-import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.global.app.AppConfig;
-import com.ll.edubridge.global.exceptions.CodeMsg;
-import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
-import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.KwTypeCourse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +20,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -31,7 +27,6 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Controller
 @RestController
 @RequestMapping(value = "/api/v1/courses", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -39,13 +34,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ApiV1CourseController {
     private final CourseService courseService;
     private final Rq rq;
+    private final CourseEnrollService courseEnrollService;
 
     @Getter
     public static class GetCoursesResponsebody {
         @NonNull
         private final List<CourseDto> items;
 
-        public GetCoursesResponsebody(Page<Course> page, Member currentUser) {
+        public GetCoursesResponsebody(Page<Course> page) {
             this.items = page.getContent().stream()
                     .map(course -> new CourseDto(course))
                     .toList();
@@ -65,7 +61,7 @@ public class ApiV1CourseController {
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
         Page<Course> coursePage = courseService.findByKw(kwType, kw, null, pageable);
 
-        GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage, rq.getMember());
+        GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage);
 
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
@@ -74,55 +70,24 @@ public class ApiV1CourseController {
         );
     }
 
-    @GetMapping("/{course-id}")
+    @GetMapping("/{courseId}")
     @Operation(summary = "강좌 상세 조회")
-    public RsData<CourseDto> getCourse(@PathVariable("course-id") Long id) {
-        Course course = courseService.getCourse(id);
+    public RsData<CourseDto> getCourse(@PathVariable("courseId") Long courseId) {
+        Course course = courseService.getCourse(courseId);
         CourseDto courseDto = new CourseDto(course);
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(), courseDto);
     }
 
-    @PostMapping("")
-    @Operation(summary = "강좌 등록")
-    public RsData<CreateCourseDto> createCourse(@RequestBody CreateCourseDto createCourseDto) {
-
-        if (!courseService.haveAuthority())
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
-
-        Course course = courseService.create(createCourseDto);
+    @GetMapping("/{courseId}/auth")
+    @Operation(summary = "해당 멤버가 해당 강좌를 수강 중인지")
+    public RsData<CourseAuthDto> getCourseAuth(@PathVariable("courseId") Long courseId){
 
         CreateCourseDto createdCourseDto = new CreateCourseDto(course);
 
         return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(), Msg.E200_0_CREATE_SUCCUSSED.getMsg(), createdCourseDto);
     }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "강좌 수정")
-    public RsData<CourseDto> modify(
-            @PathVariable("id") Long id,
-            @RequestBody CourseDto courseDto) {
-
-        if (!courseService.haveAuthority())
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
-
-        Course modifyCourse = courseService.modify(id, courseDto);
-
-        CourseDto modifyCourseDto = new CourseDto(modifyCourse);
-
-        return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(), Msg.E200_2_MODIFY_SUCCUSSED.getMsg(), modifyCourseDto);
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "강좌 삭제")
-    public RsData<Empty> delete(@PathVariable("id") Long id) {
-
-        if (!courseService.haveAuthority())
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
-
-        courseService.delete(id);
-
-        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(), Msg.E200_3_DELETE_SUCCUSSED.getMsg());
-    }
+ 
 }

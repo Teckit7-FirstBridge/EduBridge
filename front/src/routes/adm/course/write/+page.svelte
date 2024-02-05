@@ -18,7 +18,7 @@
     const newNoti = notieditor.editor.getMarkdown().trim();
     const newOverview = overvieweditor.editor.getMarkdown().trim();
 
-    const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/courses', {
+    const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/admin/courses', {
       // url 설정
       body: {
         title: title,
@@ -31,7 +31,7 @@
 
     if (data) {
       rq.msgInfo(data.msg); //msg
-      rq.goTo('/course');
+      rq.goTo('/adm/course');
     }
   };
 </script>
