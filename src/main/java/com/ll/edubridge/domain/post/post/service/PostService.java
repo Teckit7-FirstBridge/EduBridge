@@ -196,5 +196,17 @@ public class PostService {
         return false;
     }
 
+    @Transactional
+    public void deleteReport(Long id) {
+        Post post = this.getPost(id);
 
+        Member member = post.getWriter();
+
+        post.setReport(false);
+
+        memberService.cancelReport(member);
+
+        postRepository.save(post);
+        memberRepository.save(member);
+    }
 }

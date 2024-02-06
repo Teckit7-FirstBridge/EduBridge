@@ -17,6 +17,7 @@ import com.ll.edubridge.domain.home.admin.dto.ReportedPostDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.domain.post.post.entity.Post;
+import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import com.ll.edubridge.domain.post.post.service.PostService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -53,6 +54,8 @@ public class ApiV1AdminController {
     private final PostService postService;
     private final SummaryNoteService summaryNoteService;
     private final VideoService videoService;
+    private final PostRepository postRepository;
+
     private final Rq rq;
 
     @GetMapping(value = "/courses")
@@ -319,18 +322,15 @@ public class ApiV1AdminController {
 
     @DeleteMapping("/posts/{postId}/report")
     @Operation(summary = "게시물 신고 처리")
-    public RsData<Void> canCancelReport(@PathVariable("postId") Long id) {
-
+    public RsData<Empty> cancelReport(@PathVariable("postId") Long id) {
 
         if (!postService.canCancelReport(postService.getPost(id))) {
             throw new GlobalException(CodeMsg.E400_6_CANCEL_REPORT_FAILED.getCode(), CodeMsg.E400_6_CANCEL_REPORT_FAILED.getMessage());
         }
 
-        postService.delete(id);
+        postService.deleteReport(id);
 
         return RsData.of(Msg.E200_7_SUCCUSS_CANCEL_REPORT.getCode(),
                 Msg.E200_7_SUCCUSS_CANCEL_REPORT.getMsg());
     }
-
-
 }

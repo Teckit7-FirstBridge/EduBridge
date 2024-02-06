@@ -9,7 +9,8 @@ public enum CodeMsg {
     E400_5_NOT_REFRESHTOKEN("400-5",  "존재하지 않는 리프레시 토큰입니다."),
     E400_6_CANCEL_REPORT_FAILED("400-6", "신고 취소 실패"),
     E400_7_ALREADY_REPORT("400-7", "이미 신고하셨습니다."),
-    E404_1_DATA_NOT_FIND("404-1", "해당 데이터를 찾을 수 없습니다.");
+    E404_1_DATA_NOT_FIND("404-1", "해당 데이터를 찾을 수 없습니다."),
+    E404_2_YOU_ARE_NOT_ADMIN("404-2", "관리자만 처리할 수 있는 기능입니다.");
 
     private  final String code;
     private final String message;
