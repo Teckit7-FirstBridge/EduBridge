@@ -155,6 +155,8 @@ public class ApiV1PostController {
                 Msg.E200_5_CANCEL_RECOMMEND_SUCCUSSED.getMsg());
     }
 
+
+
     @PostMapping("/qna")
     @Operation(summary = "1대1 문의 등록")
     public RsData<QnaDto> createQna(@RequestBody QnaDto qnaDto) {
@@ -207,5 +209,19 @@ public class ApiV1PostController {
                 Msg.E200_3_DELETE_SUCCUSSED.getMsg());
     }
 
+    @PostMapping("/{postId}/report")
+    @Operation(summary = "신고하기")
+    public RsData<Void> report(@PathVariable("postId") Long id) {
 
+        Post post = postService.getPost(id);
+
+        if (!postService.canReport(rq.getMember(), postService.getPost(id))) {
+            throw new GlobalException(CodeMsg.E400_7_ALREADY_REPORT.getCode(),CodeMsg.E400_7_ALREADY_REPORT.getMessage());
+        }
+
+        postService.isReported(post);
+
+        return RsData.of(Msg.E200_8_SUCCUSS_REPORT.getCode(),
+                Msg.E200_8_SUCCUSS_REPORT.getMsg());
+    }
 }

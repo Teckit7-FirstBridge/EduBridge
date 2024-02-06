@@ -142,6 +142,13 @@ public class PostService {
         return post.getVoter().contains(member);
     }
 
+    public boolean canReport(Member member, Post post) {
+        if (member == null) return false;
+        if (post == null) return false;
+
+        return !post.isReport();
+    }
+
     public boolean haveAuthority(Long id) {
         Member member = rq.getMember();
 
@@ -181,4 +188,25 @@ public class PostService {
         return postRepository.findTop5ByReport(true);
     }
 
+    public boolean canCancelReport( Post post) {
+        if (rq.isAdmin() && post.isReport()){
+            return true;
+        }
+
+        return false;
+    }
+
+    @Transactional
+    public void deleteReport(Long id) {
+        Post post = this.getPost(id);
+
+        Member member = post.getWriter();
+
+        post.setReport(false);
+
+        memberService.cancelReport(member);
+
+        postRepository.save(post);
+        memberRepository.save(member);
+    }
 }
