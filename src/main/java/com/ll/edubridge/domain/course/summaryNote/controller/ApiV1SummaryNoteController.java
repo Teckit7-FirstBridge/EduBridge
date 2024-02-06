@@ -15,6 +15,7 @@ import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -52,7 +53,7 @@ public class ApiV1SummaryNoteController {
 
     @PostMapping("")
     @Operation(summary = "강의 요약 노트 등록")
-    public RsData<SummaryNoteDto> create(@RequestBody CreateSummaryNoteDto createSummaryNoteDto,@PathVariable Long videoid) {
+    public RsData<SummaryNoteDto> create(@Valid @RequestBody CreateSummaryNoteDto createSummaryNoteDto, @PathVariable Long videoid) {
         SummaryNote summaryNote = summaryNoteService.create(rq.getMember(), createSummaryNoteDto,videoid);
         String keywords = summaryNote.getVideo().getKeywords();
         chatService.chat(summaryNote.getId(),createSummaryNoteDto.getContent() + "\n 이 문단을 키워드:"+keywords+ "와 문단의 문맥을 기준으로해서 총점100점기준으로 채점해서 부가적인 설명을 하지말고 20점이면 20,30점이면 30처럼 점수만을 알려줘");

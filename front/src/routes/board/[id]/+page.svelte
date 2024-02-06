@@ -66,7 +66,7 @@
     }
   }
 
-  async function clickLiked() {
+  async function clickLikedPost() {
     if (post.likedByCurrentUser) {
       const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/posts/{id}/like`, {
         params: { path: { id: parseInt($page.params.id) } }
@@ -81,6 +81,34 @@
       const { data, error } = await rq.apiEndPoints().POST(`/api/v1/posts/{id}/like`, {
         params: { path: { id: parseInt($page.params.id) } }
       });
+      if (data) {
+        rq.msgInfo('좋아요!!');
+        window.location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
+    }
+  }
+
+  async function clickLikedComment(commentId: number, likedByCurrentUser: boolean) {
+    if (likedByCurrentUser) {
+      const { data, error } = await rq
+        .apiEndPoints()
+        .DELETE(`/api/v1/comments/{postId}/{commentId}/like`, {
+          params: { path: { postId: parseInt($page.params.id), commentId: commentId } }
+        });
+      if (data) {
+        rq.msgInfo('좋아요 취소');
+        window.location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
+    } else {
+      const { data, error } = await rq
+        .apiEndPoints()
+        .POST(`/api/v1/comments/{postId}/{commentId}/like`, {
+          params: { path: { postId: parseInt($page.params.id), commentId: commentId } }
+        });
       if (data) {
         rq.msgInfo('좋아요!!');
         window.location.reload();
@@ -192,7 +220,7 @@
     <div class="flex justify-center mt-20">
       <button
         class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14"
-        on:click={clickLiked}
+        on:click={clickLikedPost}
       >
         {#if post.likedByCurrentUser}
           <svg
@@ -248,7 +276,7 @@
     <div>댓글</div>
     {#each comments as comment}
       <div class="mt-8">
-        <div class="border rounded-md">
+        <div class="border rounded-md flex justify-between">
           <div>
             <div class="flex items-center">
               <div class="ml-5">
@@ -305,6 +333,45 @@
             <div class="flex items-center mx-5 mb-5">
               <span class="text-gray-600">{comment.body}</span>
             </div>
+          </div>
+          <div class="flex items-center mr-5">
+            <button
+              class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14"
+              on:click={() => clickLikedComment(comment.id, comment.likedByCurrentUser)}
+            >
+              {#if comment.likedByCurrentUser}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="red"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="red"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                  />
+                </svg>
+              {:else}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                  />
+                </svg>
+              {/if}
+              <span>{comment.voteCount}</span>
+            </button>
           </div>
         </div>
       </div>

@@ -60,14 +60,33 @@
   }
 
   async function enrollCourse() {
-    const { data, error } = await rq.apiEndPoints().POST(`/api/v1/enroll/{courseId}`, {
-      params: { path: { courseId: parseInt($page.params.id) } }
-    });
-    if (data) {
-      rq.msgInfo('수강이 등록 되었습니다.');
-      window.location.reload();
-    } else if (error) {
-      rq.msgError(error.msg);
+    const coursePrice = course.price;
+    const memberPoint = rq.member.point;
+
+    let confirmMessage = '수강등록을 하시겠습니까?';
+
+    if (memberPoint < coursePrice) {
+      confirmMessage = `수강등록을 위한 포인트가 부족합니다. (필요 포인트: ${coursePrice}, 현재 포인트: ${memberPoint})`;
+    }
+
+    const isConfirmed = confirm(confirmMessage);
+
+    if (isConfirmed) {
+      if (memberPoint < coursePrice) {
+        rq.msgError('포인트가 부족하여 수강등록을 진행할 수 없습니다.');
+        return;
+      }
+
+      const { data, error } = await rq.apiEndPoints().POST(`/api/v1/enroll/{courseId}`, {
+        params: { path: { courseId: parseInt($page.params.id) } }
+      });
+
+      if (data) {
+        rq.msgInfo('수강이 등록 되었습니다.');
+        window.location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
     }
   }
 
@@ -234,7 +253,9 @@
             {course!.title}
           </h1>
           <div class="flex">
-            <p>{course.price}원</p>
+            {#if !auth.enroll}
+              <p>{course.price}원</p>
+            {/if}
             {#if !auth.enroll}
               <button class="ml-2" on:click={enrollCourse}> 수강 등록 </button>
             {/if}

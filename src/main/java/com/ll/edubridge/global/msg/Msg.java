@@ -9,7 +9,10 @@ public enum Msg {
     E200_3_DELETE_SUCCEED("200-3","삭제 성공"),
     E200_4_RECOMMEND_SUCCEED("200-4","추천 성공"),
     E200_5_CANCEL_RECOMMEND_SUCCEED("200-5","추천 취소 성공"),
-    E200_6_LOGOUT_SUCCEED("200-6","로그아웃 성공");
+    E200_6_LOGOUT_SUCCEED("200-6","로그아웃 성공"),
+    E200_7_CANCEL_REPORT_SUCCEED("200-7", "신고 거절 성공"),
+    E200_8_REPORT_SUCCEED("200-8", "신고 성공");
+
 
     private final String code;
 

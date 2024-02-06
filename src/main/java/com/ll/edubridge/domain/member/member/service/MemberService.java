@@ -185,4 +185,8 @@ public class MemberService {
     public void save(Member member) {
         memberRepository.save(member);
     }
+
+    public void cancelReport(Member member) {
+        member.setReport(false);
+    }
 }
