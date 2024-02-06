@@ -142,6 +142,13 @@ public class PostService {
         return post.getVoter().contains(member);
     }
 
+    public boolean canReport(Member member, Post post) {
+        if (member == null) return false;
+        if (post == null) return false;
+
+        return !post.isReport();
+    }
+
     public boolean haveAuthority(Long id) {
         Member member = rq.getMember();
 
