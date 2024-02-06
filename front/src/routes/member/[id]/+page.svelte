@@ -77,7 +77,7 @@
               <h3 class="text-sm font-medium">{learningCourse.title}</h3>
               <p class="text-xs text-gray-500">
                 Attended: {summaryNotes.filter(
-                  (item) => item.videoId === learningCourse.id && item.pass
+                  (item) => item.courseId === learningCourse.id && item.pass
                 ).length}/{learningCourse.videoCount}
               </p>
             </div>

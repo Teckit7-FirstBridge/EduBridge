@@ -118,6 +118,6 @@ public class ApiV1SummaryNoteController {
     @Operation(summary = "작성자별 강의 요약노트 조회 ")
     public RsData<List<SummaryNoteDto>> getSummaryNoteByWriter(@PathVariable("writerid") Long id){
         List<SummaryNoteDto> byWriterId = summaryNoteService.findByWriterId(id).stream().map(SummaryNoteDto::new).collect(Collectors.toList());
-        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(), Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),byWriterId);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(),byWriterId);
     }
 }

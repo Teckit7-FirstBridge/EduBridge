@@ -43,6 +43,10 @@ export interface paths {
     /** 글 등록 */
     post: operations["createPost"];
   };
+  "/api/v1/posts/{postId}/report": {
+    /** 신고하기 */
+    post: operations["report"];
+  };
   "/api/v1/posts/{id}/like": {
     /** 글 추천 */
     post: operations["vote"];
@@ -176,6 +180,10 @@ export interface paths {
     /** 회원 목록 */
     get: operations["getAllMembers"];
   };
+  "/api/v1/admin/posts/{postId}/report": {
+    /** 게시물 신고 처리 */
+    delete: operations["cancelReport"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -237,9 +245,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
       authoritiesAsStringList?: string[];
-      authorities?: components["schemas"]["GrantedAuthority"][];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -258,7 +266,7 @@ export interface components {
       /** Format: int64 */
       score?: number;
       /** Format: int64 */
-      videoId?: number;
+      courseId?: number;
       pass?: boolean;
     };
     CreateCommentDto: {
@@ -406,6 +414,8 @@ export interface components {
       dailyGoal: number;
       /** Format: int32 */
       dailyAchievement: number;
+      /** Format: int32 */
+      point?: number;
     };
     RsDataLoginResponseBody: {
       resultCode: string;
@@ -970,6 +980,22 @@ export interface operations {
       };
     };
   };
+  /** 신고하기 */
+  report: {
+    parameters: {
+      path: {
+        postId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataVoid"];
+        };
+      };
+    };
+  };
   /** 글 추천 */
   vote: {
     parameters: {
@@ -1521,6 +1547,22 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetMembersResponseBody"];
+        };
+      };
+    };
+  };
+  /** 게시물 신고 처리 */
+  cancelReport: {
+    parameters: {
+      path: {
+        postId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };
