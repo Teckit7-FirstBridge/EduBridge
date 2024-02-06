@@ -13,6 +13,7 @@ import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class ApiV1CommentController {
 
     @PostMapping("")
     @Operation(summary = "댓글 등록")
-    public RsData<CreateCommentDto> createComment(@RequestBody CreateCommentDto createCommentDto) {
+    public RsData<CreateCommentDto> createComment(@Valid @RequestBody CreateCommentDto createCommentDto) {
         Comment comment = commentService.create(rq.getMember(), createCommentDto);
 
         return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(),

@@ -32,7 +32,7 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
     @Column(length = 20)
     private String nickname;
 
-    private int point = 0;
+    private int point;
 
     private boolean report;
 

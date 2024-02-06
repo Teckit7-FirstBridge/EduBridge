@@ -27,6 +27,7 @@ import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -204,7 +205,7 @@ public class ApiV1AdminController {
     @PostMapping("/{courseId}/videos")
     @Operation(summary = "강의 등록")
     public RsData<CreateVideoDto> createVideo(@PathVariable("courseId") Long courseId,
-                                              @RequestBody CreateVideoDto createVideoDto) {
+                                              @Valid @RequestBody CreateVideoDto createVideoDto) {
 
         if (!videoService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
@@ -271,7 +272,7 @@ public class ApiV1AdminController {
 
     @PostMapping("/courses")
     @Operation(summary = "강좌 등록")
-    public RsData<CreateCourseDto> createCourse(@RequestBody CreateCourseDto createCourseDto) {
+    public RsData<CreateCourseDto> createCourse(@Valid @RequestBody CreateCourseDto createCourseDto) {
 
         if (!courseService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());

@@ -193,7 +193,7 @@ export interface components {
       success: boolean;
     };
     CreateSummaryNoteDto: {
-      content?: string;
+      content: string;
     };
     Course: {
       /** Format: int64 */
@@ -281,7 +281,7 @@ export interface components {
     CreateCommentDto: {
       body: string;
       /** Format: int64 */
-      postId: number;
+      postId?: number;
     };
     CommentDto: {
       /** Format: int64 */
@@ -437,9 +437,9 @@ export interface components {
     };
     CreateVideoDto: {
       url: string;
-      overView?: string;
+      overView: string;
       /** Format: int64 */
-      courseId: number;
+      courseId?: number;
       imgUrl: string;
       keywords: string;
     };
@@ -453,10 +453,10 @@ export interface components {
       success: boolean;
     };
     CreateCourseDto: {
-      title?: string;
-      notice?: string;
-      imgUrl?: string;
-      overView?: string;
+      title: string;
+      notice: string;
+      imgUrl: string;
+      overView: string;
       /** Format: int32 */
       price?: number;
     };

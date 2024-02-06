@@ -17,6 +17,7 @@ import com.ll.edubridge.standard.base.KwTypeV1;
 import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -73,7 +74,7 @@ public class ApiV1PostController {
 
     @PostMapping("")
     @Operation(summary = "글 등록")
-    public RsData<CreatePostDto> createPost(@RequestBody CreatePostDto createPostDto) {
+    public RsData<CreatePostDto> createPost(@Valid @RequestBody CreatePostDto createPostDto) {
         Post post = postService.create(rq.getMember(), createPostDto);
 
         CreatePostDto createdPostDto = new CreatePostDto(post);
