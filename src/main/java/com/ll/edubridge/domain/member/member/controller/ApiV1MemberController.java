@@ -15,11 +15,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONUtil;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/members")
@@ -84,14 +86,18 @@ public class ApiV1MemberController {
     @GetMapping("/mypage")
     public RsData<MyPageResponseBody> mypage(){
 
-        List<CourseEnroll> courseEnrollList = rq.getMember().getCourseEnrollList();
-        MyPageDto myPageDto = new MyPageDto();
+        List<Course> learningCourses = rq.getMember().getCourseEnrollList().stream().map(courseEnroll -> courseEnroll.getCourse()).collect(Collectors.toList());
+        System.out.println("first");
+        List<Course> likeCourses = courseService.findByVoter();
+        System.out.println("second");
+        MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,1L);
+        System.out.println("third");
 
 
 
-        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(), Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+        return RsData.of("200","성공",
                 new MyPageResponseBody(
-                        new MyPageDto()
+                        myPageDto
                 ));
     }
 }
