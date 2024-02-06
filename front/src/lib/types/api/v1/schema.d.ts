@@ -231,11 +231,15 @@ export interface components {
       refreshToken?: string;
       profileImgUrl?: string;
       visitedToday?: boolean;
+      /** Format: int32 */
+      dailyGoal?: number;
+      /** Format: int32 */
+      dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
-      authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
+      authoritiesAsStringList?: string[];
+      authorities?: components["schemas"]["GrantedAuthority"][];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -396,6 +400,10 @@ export interface components {
       profileImgUrl: string;
       authorities: string[];
       visitedToday: boolean;
+      /** Format: int32 */
+      dailyGoal: number;
+      /** Format: int32 */
+      dailyAchievement: number;
     };
     RsDataLoginResponseBody: {
       resultCode: string;

@@ -2,6 +2,9 @@ package com.ll.edubridge.domain.openai;
 
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
+import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.member.member.service.MemberService;
+import com.ll.edubridge.global.rq.Rq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,9 +30,13 @@ public class ChatService {
     @Autowired
     SummaryNoteService summaryNoteService;
 
+    @Autowired
+    MemberService memberService;
+
+
     @Async
     @Transactional
-    public void chat(Long summaryNoteId,String prompt) {
+    public void chat(Long summaryNoteId, String prompt, Member member) {
         // create a request
         ChatRequest request = new ChatRequest(model, prompt);
         SummaryNote summaryNote = summaryNoteService.getSummaryNote(summaryNoteId);
@@ -42,9 +49,11 @@ public class ChatService {
             String numberOnly = response.getChoices().get(0).getMessage().getContent().replaceAll("[^\\d]", "");
             Long score = Long.parseLong((numberOnly));
             summaryNote.setScore(score);
+            if(score>=70){
+                member.setDailyAchievement(member.getDailyAchievement()+1);
+                memberService.save(member);
+            }
 
         }
-
-        // return the first response
     }
 }
