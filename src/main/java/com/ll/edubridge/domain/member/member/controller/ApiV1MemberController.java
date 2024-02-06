@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.member.member.controller;
 
 
+import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
@@ -86,9 +87,15 @@ public class ApiV1MemberController {
     @GetMapping("/mypage")
     public RsData<MyPageResponseBody> mypage(){
 
-        List<Course> learningCourses = rq.getMember().getCourseEnrollList().stream().map(courseEnroll -> courseEnroll.getCourse()).collect(Collectors.toList());
+        List<CourseDto> learningCourses = rq.getMember()
+                .getCourseEnrollList()
+                .stream()
+                .map(courseEnroll -> new CourseDto(courseEnroll.getCourse(), rq.getMember()))
+                .collect(Collectors.toList());
+
         System.out.println("first");
-        List<Course> likeCourses = courseService.findByVoter();
+        List<CourseDto> likeCourses = courseService.findByVoter().stream().map(course -> new CourseDto(course,rq.getMember())).collect(Collectors.toList());
+
         System.out.println("second");
         MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,1L);
         System.out.println("third");

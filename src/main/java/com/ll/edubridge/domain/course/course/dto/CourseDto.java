@@ -15,6 +15,7 @@ public class CourseDto {
     private int price;
     private int voteCount;
     private boolean likedByCurrentUser;
+    private int videoCount;
 
     public CourseDto(Course course, Member member) {
         this.id = course.getId();
@@ -25,6 +26,7 @@ public class CourseDto {
         this.price = course.getPrice();
         this.voteCount = course.getVoter().size();
         this.likedByCurrentUser = course.getVoter().contains(member);
+        this.videoCount = course.getVideoList().size();
     }
 
     public CourseDto() {

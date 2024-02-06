@@ -39,11 +39,10 @@ public class ChatService {
         if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
 
         }else{
-            System.out.println(response.getChoices().get(0).getMessage().getContent());
             String numberOnly = response.getChoices().get(0).getMessage().getContent().replaceAll("[^\\d]", "");
             Long score = Long.parseLong((numberOnly));
             summaryNote.setScore(score);
-            System.out.println(score);
+
         }
 
         // return the first response

@@ -25,11 +25,12 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(value = "/api/v1/courses/{videoid}/note", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/courses", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "ApiV1SummaryNoteController", description = "강의 요약노트 CRUD 컨트롤러")
 public class ApiV1SummaryNoteController {
@@ -50,20 +51,19 @@ public class ApiV1SummaryNoteController {
         }
     }
 
-    @PostMapping("")
+    @PostMapping("/{videoid}/note")
     @Operation(summary = "강의 요약 노트 등록")
     public RsData<SummaryNoteDto> create(@RequestBody CreateSummaryNoteDto createSummaryNoteDto,@PathVariable Long videoid) {
         SummaryNote summaryNote = summaryNoteService.create(rq.getMember(), createSummaryNoteDto,videoid);
         String keywords = summaryNote.getVideo().getKeywords();
         chatService.chat(summaryNote.getId(),createSummaryNoteDto.getContent() + "\n이 문단을 채점해줘. 총점 100점이 만점이야. 각 채점 기준과 기준 점수는 다음과 같아. 1) 다음의 키워드가 잘 들어갔는가. 키워드:" + keywords + " - 만점 30점.  2) 각 문장이 문맥이 매끄러운가. - 만점 20점. 3) 해당 키워드가 가진 프로그래밍 개념이 제대로 반영되었는가. - 만점 50점. 조건을 제대로 충족하지 못했다면 점수를 아주 낮게 줘. 종합 만점은 100점이야. 다른 부가적인 설명은 하지마. 세부 기준에 대한 평가도 하지마. 총점만 말해줘. '20점'처럼 오직 점수만 알려줘. 내 요약 실력을 높이기 위한 공부야. 아주 엄격하게 채점해줘.");
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
-
         return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(), Msg.E200_0_CREATE_SUCCUSSED.getMsg(), summaryNoteDto);
 
 
     }
 
-    @PutMapping("/{noteId}")
+    @PutMapping("/{videoid}/note/{noteId}")
     @Operation(summary = "강의 요약 노트 수정")
     public RsData<SummaryNoteDto> modify(
             @PathVariable("noteId") Long id,
@@ -81,7 +81,7 @@ public class ApiV1SummaryNoteController {
 
     }
 
-    @DeleteMapping("/{noteId}")
+    @DeleteMapping("/{videoid}/note/{noteId}")
     @Operation(summary = "강의 요약 노트 삭제")
     public RsData<Empty> delete(@PathVariable("noteId") Long id) {
 
@@ -92,7 +92,7 @@ public class ApiV1SummaryNoteController {
 
         return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(), Msg.E200_3_DELETE_SUCCUSSED.getMsg());
     }
-    @GetMapping("/admin")
+    @GetMapping("/{videoid}/note/admin")
     @Operation(summary = "비디오별 강의노트 조회(관리자 기능)")
     public RsData<GetSummaryNoteResponsebody> getSummaryNoteAdmin(@RequestParam(value = "page", defaultValue = "1") int page,@PathVariable Long videoid){
         int pageSize = AppConfig.getBasePageSize();
@@ -105,11 +105,18 @@ public class ApiV1SummaryNoteController {
     }
 
 
-    @GetMapping("/{note-id}")
+    @GetMapping("/{videoid}/note/{note-id}")
     @Operation(summary = "강의 요약 노트 상세 보기")
     public RsData<SummaryNoteDto> getSummaryNote(@PathVariable("note-id") Long id){
         SummaryNote summaryNote = summaryNoteService.getSummaryNote(id);
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
         return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(), Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(), summaryNoteDto);
+    }
+
+    @GetMapping("/summary/{writerid}")
+    @Operation(summary = "작성자별 강의 요약노트 조회 ")
+    public RsData<List<SummaryNoteDto>> getSummaryNoteByWriter(@PathVariable("writerid") Long id){
+        List<SummaryNoteDto> byWriterId = summaryNoteService.findByWriterId(id).stream().map(SummaryNoteDto::new).collect(Collectors.toList());
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(), Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),byWriterId);
     }
 }

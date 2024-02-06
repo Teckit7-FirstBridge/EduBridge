@@ -99,4 +99,7 @@ public class SummaryNoteService {
     public List<SummaryNote> recentSummaryNotes() {
         return summaryNoteRepository.findTop5ByOrderByIdDesc();
     }
+    public List<SummaryNote> findByWriterId(Long id){
+        return summaryNoteRepository.findByWriterId(id);
+    }
 }

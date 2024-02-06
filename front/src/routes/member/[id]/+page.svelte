@@ -5,21 +5,31 @@
 
   let learningCourses: components['schemas']['CourseDto'][] = $state();
   let favoriteCourses: components['schemas']['CourseDto'][] = $state();
-
+  let summaryNotes: components['schemas']['SummaryNoteDto'][] = $state();
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
     const { data } = await rq.apiEndPoints().GET('/api/v1/members/mypage', {});
+    console.log(data);
     learningCourses = data?.data.item.learningCourses!;
     favoriteCourses = data?.data.item.favoriteCourses!;
 
-    return { learningCourses, favoriteCourses };
+    const summaryResponse = await rq.apiEndPoints().GET(`/api/v1/courses/summary/{writerid}`, {
+      params: {
+        path: {
+          writerid: rq.member.id
+        }
+      }
+    });
+    summaryNotes = summaryResponse.data?.data!;
+    console.log(summaryNotes);
+    return { learningCourses, favoriteCourses, summaryNotes };
   }
 </script>
 
 {#await load()}
   <h2>loading...</h2>
-{:then { learningCourses, favoriteCourses }}
+{:then { learningCourses, favoriteCourses, summaryNotes }}
   <div class="max-w-4xl mx-auto my-8">
     <header class="flex h-16 items-center border-b px-4 md:px-6 justify-between">
       <a class="flex items-center gap-2"
@@ -64,13 +74,12 @@
           {#each learningCourses as learningCourse}
             <div class="flex-none w-48 p-6 bg-white rounded-lg shadow">
               <h3 class="text-sm font-medium">{learningCourse.title}</h3>
-              <p class="text-xs text-gray-500">{learningCourse.overView}</p>
+              <p class="text-xs text-gray-500">
+                Attended: {summaryNotes.filter((item) => item.id === learningCourse.id)
+                  .length}/{learningCourse.videoCount}
+              </p>
             </div>
           {/each}
-          <div class="flex-none w-48 p-6 bg-white rounded-lg shadow">
-            <h3 class="text-sm font-medium">Math</h3>
-            <p class="text-xs text-gray-500">Attended: 5/10</p>
-          </div>
         </div>
 
         <div class="flex items-center gap-2">

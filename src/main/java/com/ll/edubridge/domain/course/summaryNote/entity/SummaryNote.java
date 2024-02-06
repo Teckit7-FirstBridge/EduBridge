@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.course.summaryNote.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
@@ -24,9 +25,11 @@ public class SummaryNote extends BaseEntity {
     @Column(columnDefinition = "Text")
     private String content;
 
+    @JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Member writer;
 
+    @JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Video video;
 
