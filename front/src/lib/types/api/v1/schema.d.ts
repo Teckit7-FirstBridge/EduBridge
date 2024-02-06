@@ -414,6 +414,8 @@ export interface components {
       profileImgUrl: string;
       authorities: string[];
       visitedToday: boolean;
+      /** Format: int32 */
+      point: number;
     };
     RsDataLoginResponseBody: {
       resultCode: string;

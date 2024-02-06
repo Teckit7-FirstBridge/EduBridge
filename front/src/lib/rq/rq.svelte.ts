@@ -23,6 +23,7 @@ class Rq {
     let name = $state('');
     let profileImgUrl = $state('');
     let createDate = $state('');
+    let point = $state(0);
     let authorities: string[] = $state([]);
 
     this.member = {
@@ -55,6 +56,12 @@ class Rq {
       },
       set authorities(value: string[]) {
         authorities = value;
+      },
+      get point() {
+        return point;
+      },
+      set point(value: number) {
+        point = value;
       }
     };
   }
@@ -96,12 +103,12 @@ class Rq {
     this.member.profileImgUrl = member.profileImgUrl;
     this.member.name = member.name;
     this.member.authorities = member.authorities;
+    this.member.point = member.point;
   }
 
   public setLogout() {
     this.member.id = 0;
     this.member.createDate = '';
-    this.member.modifyDate = '';
     this.member.name = '';
     this.member.authorities = [];
   }
