@@ -155,7 +155,7 @@ public class MemberService {
     }
 
     public RsData<String> refreshAccessToken(String refreshToken) {
-        Member member = memberRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new GlobalException(CodeMsg.E400_5_NOT_REFRESHTOKEN.getCode(),CodeMsg.E400_5_NOT_REFRESHTOKEN.getMessage()));
+        Member member = memberRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new GlobalException(CodeMsg.E400_5_NOT_EXIST_REFRESHTOKEN.getCode(),CodeMsg.E400_5_NOT_EXIST_REFRESHTOKEN.getMessage()));
 
         String accessToken = authTokenService.genAccessToken(member);
 
@@ -185,5 +185,9 @@ public class MemberService {
 
     public void save(Member member) {
         memberRepository.save(member);
+    }
+
+    public void cancelReport(Member member) {
+        member.setReport(false);
     }
 }

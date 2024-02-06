@@ -63,8 +63,8 @@ public class ApiV1MemberController {
 
     @GetMapping("/me")
     public RsData<MeResponseBody> getMe() {
-        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 new MeResponseBody(
                         new MemberDto(rq.getMember())
                 )
@@ -75,8 +75,8 @@ public class ApiV1MemberController {
     public RsData<Empty> logout() {
         rq.setLogout();
 
-        return RsData.of(Msg.E200_6_SUCCUSS_LOGOUT.getCode(),
-                Msg.E200_6_SUCCUSS_LOGOUT.getMsg());
+        return RsData.of(Msg.E200_6_LOGOUT_SUCCEED.getCode(),
+                Msg.E200_6_LOGOUT_SUCCEED.getMsg());
     }
 
     public record MyPageResponseBody(@NonNull MyPageDto item){

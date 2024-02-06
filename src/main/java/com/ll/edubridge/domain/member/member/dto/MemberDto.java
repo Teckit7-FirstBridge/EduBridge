@@ -29,7 +29,8 @@ public class MemberDto { // 엔티티(JPA(보안이 민감한 정보가 들어�
     private int dailyGoal;
     @NonNull
     private int dailyAchievement;
-
+  
+    private int point;
 
     public MemberDto(Member member) {
         this.id = member.getId();
@@ -40,5 +41,6 @@ public class MemberDto { // 엔티티(JPA(보안이 민감한 정보가 들어�
         this.visitedToday = member.isVisitedToday();
         this.dailyGoal = member.getDailyGoal();
         this.dailyAchievement = member.getDailyAchievement();
+        this.point = member.getPoint();
     }
 }

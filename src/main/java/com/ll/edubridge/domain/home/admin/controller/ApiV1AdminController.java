@@ -17,6 +17,7 @@ import com.ll.edubridge.domain.home.admin.dto.ReportedPostDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.domain.post.post.entity.Post;
+import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import com.ll.edubridge.domain.post.post.service.PostService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -28,6 +29,7 @@ import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -53,6 +55,8 @@ public class ApiV1AdminController {
     private final PostService postService;
     private final SummaryNoteService summaryNoteService;
     private final VideoService videoService;
+    private final PostRepository postRepository;
+
     private final Rq rq;
 
     @GetMapping(value = "/courses")
@@ -66,8 +70,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 courseList
         );
     }
@@ -83,8 +87,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 reportedPostList
         );
     }
@@ -100,15 +104,15 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 recentMemberList
         );
     }
 
     @GetMapping(value = "/summaryNotes")
     @Operation(summary = "최신 요약노트")
-    public RsData<List<RecentSummaryNoteDto>> getSummeryNotes(){
+    public RsData<List<RecentSummaryNoteDto>> getSummeryNotes() {
 
         List<SummaryNote> recentSummaryNotes = summaryNoteService.recentSummaryNotes();
 
@@ -117,8 +121,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 recentSummaryNoteList
         );
     }
@@ -134,8 +138,8 @@ public class ApiV1AdminController {
                 .toList();
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 reportedPostList
         );
     }
@@ -158,8 +162,8 @@ public class ApiV1AdminController {
         Page<RecentMemberDto> memberPage = members.map(this::memberToDto);
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 new GetMembersResponseBody(
                         new PageDto<>(memberPage)
                 )
@@ -189,8 +193,8 @@ public class ApiV1AdminController {
         Page<RecentSummaryNoteDto> notePage = recentSummaryNotes.map(this::noteToDto);
 
         return RsData.of(
-                Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(),
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 new GetNotesResponseBody(
                         new PageDto<>(notePage)
                 )
@@ -206,7 +210,7 @@ public class ApiV1AdminController {
     @PostMapping("/{courseId}/videos")
     @Operation(summary = "강의 등록")
     public RsData<CreateVideoDto> createVideo(@PathVariable("courseId") Long courseId,
-                                              @RequestBody CreateVideoDto createVideoDto) {
+                                              @Valid @RequestBody CreateVideoDto createVideoDto) {
 
         if (!videoService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
@@ -214,22 +218,22 @@ public class ApiV1AdminController {
         Video video = videoService.create(createVideoDto);
         CreateVideoDto createdVideoDto = new CreateVideoDto(video);
 
-        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(),
-                Msg.E200_0_CREATE_SUCCUSSED.getMsg(),
+        return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
+                Msg.E200_0_CREATE_SUCCEED.getMsg(),
                 createdVideoDto);
     }
 
     @PutMapping("/{courseId}/videos/{id}")
     @Operation(summary = "강의 수정")
     public RsData<VideoDto> modifyVideo(@PathVariable("courseId") Long courseId,
-                                   @PathVariable("id") Long id,
-                                   @RequestBody VideoDto videoDto) {
+                                        @PathVariable("id") Long id,
+                                        @RequestBody VideoDto videoDto) {
 
         if (!videoService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Course course = courseService.getCourse(courseId);
-        if(course == null) {
+        if (course == null) {
             throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
@@ -242,21 +246,21 @@ public class ApiV1AdminController {
 
         VideoDto modifyVideoDto = new VideoDto(modifyVideo);
 
-        return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(),
-                Msg.E200_2_MODIFY_SUCCUSSED.getMsg(),
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
+                Msg.E200_2_MODIFY_SUCCEED.getMsg(),
                 modifyVideoDto);
     }
 
     @DeleteMapping("/{courseId}/videos/{id}")
     @Operation(summary = "강의 삭제")
     public RsData<Empty> deleteVideo(@PathVariable("courseId") Long courseId,
-                                @PathVariable("id") Long id) {
+                                     @PathVariable("id") Long id) {
 
         if (!videoService.haveAuthority())
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Course course = courseService.getCourse(courseId);
-        if(course == null) {
+        if (course == null) {
             throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
@@ -267,23 +271,23 @@ public class ApiV1AdminController {
 
         videoService.delete(id);
 
-        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(),
-                Msg.E200_3_DELETE_SUCCUSSED.getMsg());
+        return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
+                Msg.E200_3_DELETE_SUCCEED.getMsg());
     }
 
     @PostMapping("/courses")
     @Operation(summary = "강좌 등록")
-    public RsData<CreateCourseDto> createCourse(@RequestBody CreateCourseDto createCourseDto) {
+    public RsData<CreateCourseDto> createCourse(@Valid @RequestBody CreateCourseDto createCourseDto) {
 
         if (!courseService.haveAuthority())
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Course course = courseService.create(createCourseDto);
 
         CreateCourseDto createdCourseDto = new CreateCourseDto(course);
 
-        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(),
-                Msg.E200_0_CREATE_SUCCUSSED.getMsg(),
+        return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
+                Msg.E200_0_CREATE_SUCCEED.getMsg(),
                 createdCourseDto);
     }
 
@@ -294,14 +298,14 @@ public class ApiV1AdminController {
             @RequestBody CourseDto courseDto) {
 
         if (!courseService.haveAuthority())
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Course modifyCourse = courseService.modify(id, courseDto);
 
         CourseDto modifyCourseDto = new CourseDto(modifyCourse,rq.getMember());
 
-        return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(),
-                Msg.E200_2_MODIFY_SUCCUSSED.getMsg(), modifyCourseDto);
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
+                Msg.E200_2_MODIFY_SUCCEED.getMsg(), modifyCourseDto);
     }
 
     @DeleteMapping("/courses/{id}")
@@ -313,9 +317,21 @@ public class ApiV1AdminController {
 
         courseService.delete(id);
 
-        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(),
-                Msg.E200_3_DELETE_SUCCUSSED.getMsg());
+        return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
+                Msg.E200_3_DELETE_SUCCEED.getMsg());
     }
 
+    @DeleteMapping("/posts/{postId}/report")
+    @Operation(summary = "게시물 신고 처리")
+    public RsData<Empty> cancelReport(@PathVariable("postId") Long id) {
 
+        if (!postService.canCancelReport(postService.getPost(id))) {
+            throw new GlobalException(CodeMsg.E400_6_CANCEL_REPORT_FAILED.getCode(), CodeMsg.E400_6_CANCEL_REPORT_FAILED.getMessage());
+        }
+
+        postService.deleteReport(id);
+
+        return RsData.of(Msg.E200_7_CANCEL_REPORT_SUCCEED.getCode(),
+                Msg.E200_7_CANCEL_REPORT_SUCCEED.getMsg());
+    }
 }

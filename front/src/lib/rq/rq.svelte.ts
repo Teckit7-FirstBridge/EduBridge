@@ -1,6 +1,7 @@
 import { goto } from '$app/navigation';
 
 import type { components, paths } from '$lib/types/api/v1/schema';
+import { redirect } from '@sveltejs/kit';
 import createClient from 'openapi-fetch';
 
 import toastr from 'toastr';
@@ -23,6 +24,7 @@ class Rq {
     let name = $state('');
     let profileImgUrl = $state('');
     let createDate = $state('');
+    let point = $state(0);
     let authorities: string[] = $state([]);
     let dailyGoal: number = $state(0);
     let dailyAchievement: number = $state(0);
@@ -69,6 +71,7 @@ class Rq {
       },
       set dailyAchievement(value: number) {
         dailyAchievement = value;
+
       }
     };
   }

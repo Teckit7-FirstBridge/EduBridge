@@ -13,6 +13,7 @@ import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,11 +31,11 @@ public class ApiV1CommentController {
 
     @PostMapping("")
     @Operation(summary = "댓글 등록")
-    public RsData<CreateCommentDto> createComment(@RequestBody CreateCommentDto createCommentDto) {
+    public RsData<CreateCommentDto> createComment(@Valid @RequestBody CreateCommentDto createCommentDto) {
         Comment comment = commentService.create(rq.getMember(), createCommentDto);
 
-        return RsData.of(Msg.E200_0_CREATE_SUCCUSSED.getCode(),
-                Msg.E200_0_CREATE_SUCCUSSED.getMsg(), createCommentDto);
+        return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
+                Msg.E200_0_CREATE_SUCCEED.getMsg(), createCommentDto);
     }
 
     @GetMapping("/{postId}")
@@ -46,8 +47,8 @@ public class ApiV1CommentController {
                 .map((Comment comment) -> new CommentDto(comment, rq.getMember()))
                 .toList();
 
-        return RsData.of(Msg.E200_1_INQUIRY_SUCCUSSED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCUSSED.getMsg(), commentDtoList);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), commentDtoList);
     }
 
     @PutMapping("/{postId}/{commentId}")
@@ -56,12 +57,12 @@ public class ApiV1CommentController {
         if (!commentService.haveAuthority(commentId))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
-            Comment modifyComment = commentService.modify(commentId, createCommentDto);
+        Comment modifyComment = commentService.modify(commentId, createCommentDto);
 
         CommentDto modifyCommentDto = new CommentDto(modifyComment, rq.getMember());
 
-        return RsData.of(Msg.E200_2_MODIFY_SUCCUSSED.getCode(),
-                Msg.E200_2_MODIFY_SUCCUSSED.getMsg(), modifyCommentDto);
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
+                Msg.E200_2_MODIFY_SUCCEED.getMsg(), modifyCommentDto);
     }
 
     @DeleteMapping("/{postId}/{commentId}")
@@ -73,8 +74,8 @@ public class ApiV1CommentController {
 
         commentService.delete(commentId);
 
-        return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(),
-                Msg.E200_3_DELETE_SUCCUSSED.getMsg());
+        return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
+                Msg.E200_3_DELETE_SUCCEED.getMsg());
     }
 
     @PostMapping("/{postId}/{commentId}/like")
@@ -88,8 +89,8 @@ public class ApiV1CommentController {
 
         commentService.vote(commentId, member);
 
-        return RsData.of(Msg.E200_4_RECOMMEND_SUCCUSSED.getCode(),
-                Msg.E200_4_RECOMMEND_SUCCUSSED.getMsg());
+        return RsData.of(Msg.E200_4_RECOMMEND_SUCCEED.getCode(),
+                Msg.E200_4_RECOMMEND_SUCCEED.getMsg());
     }
 
     @DeleteMapping("/{postId}/{commentId}/like")
@@ -103,7 +104,7 @@ public class ApiV1CommentController {
 
         commentService.deleteVote(commentId, member);
 
-        return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCUSSED.getCode(),
-                Msg.E200_5_CANCEL_RECOMMEND_SUCCUSSED.getMsg());
+        return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getCode(),
+                Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getMsg());
     }
 }
