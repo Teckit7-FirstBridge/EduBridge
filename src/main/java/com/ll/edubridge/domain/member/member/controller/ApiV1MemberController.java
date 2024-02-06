@@ -1,7 +1,12 @@
 package com.ll.edubridge.domain.member.member.controller;
 
 
+import com.ll.edubridge.domain.course.course.dto.CourseDto;
+import com.ll.edubridge.domain.course.course.entity.Course;
+import com.ll.edubridge.domain.course.course.service.CourseService;
+import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.member.member.dto.MemberDto;
+import com.ll.edubridge.domain.member.member.dto.MyPageDto;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
@@ -11,9 +16,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONUtil;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/members")
@@ -22,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 public class ApiV1MemberController {
     private final MemberService memberService;
     private final Rq rq;
+    private final CourseService courseService;
 
     public record LoginRequestBody(@NotBlank String username, @NotBlank String password) {
     }
@@ -67,5 +77,34 @@ public class ApiV1MemberController {
 
         return RsData.of(Msg.E200_6_LOGOUT_SUCCEED.getCode(),
                 Msg.E200_6_LOGOUT_SUCCEED.getMsg());
+    }
+
+    public record MyPageResponseBody(@NonNull MyPageDto item){
+
+    }
+
+
+    @GetMapping("/mypage")
+    public RsData<MyPageResponseBody> mypage(){
+
+        List<CourseDto> learningCourses = rq.getMember()
+                .getCourseEnrollList()
+                .stream()
+                .map(courseEnroll -> new CourseDto(courseEnroll.getCourse(), rq.getMember()))
+                .collect(Collectors.toList());
+
+        System.out.println("first");
+        List<CourseDto> likeCourses = courseService.findByVoter().stream().map(course -> new CourseDto(course,rq.getMember())).collect(Collectors.toList());
+
+        System.out.println("second");
+        MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,1L);
+        System.out.println("third");
+
+
+
+        return RsData.of("200","성공",
+                new MyPageResponseBody(
+                        myPageDto
+                ));
     }
 }

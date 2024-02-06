@@ -26,6 +26,10 @@ public class MemberDto { // 엔티티(JPA(보안이 민감한 정보가 들어�
     @NonNull
     private boolean visitedToday;
     @NonNull
+    private int dailyGoal;
+    @NonNull
+    private int dailyAchievement;
+  
     private int point;
 
     public MemberDto(Member member) {
@@ -35,6 +39,8 @@ public class MemberDto { // 엔티티(JPA(보안이 민감한 정보가 들어�
         this.profileImgUrl = member.getProfileImgUrlOrDefault();
         this.authorities = member.getAuthoritiesAsStringList();
         this.visitedToday = member.isVisitedToday();
+        this.dailyGoal = member.getDailyGoal();
+        this.dailyAchievement = member.getDailyAchievement();
         this.point = member.getPoint();
     }
 }

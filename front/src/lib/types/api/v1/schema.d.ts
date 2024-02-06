@@ -70,6 +70,12 @@ export interface paths {
     /** 강의 요약 노트 등록 */
     post: operations["create_1"];
   };
+  "/api/v1/courses/{id}/like": {
+    /** 강좌 좋아요 */
+    post: operations["vote_1"];
+    /** 강좌 좋아요 취소 */
+    delete: operations["deleteVote_1"];
+  };
   "/api/v1/comments": {
     /** 댓글 등록 */
     post: operations["createComment"];
@@ -95,6 +101,9 @@ export interface paths {
     get: operations["getQnaDetail"];
     /** 1대1 문의 삭제 */
     delete: operations["deleteQna"];
+  };
+  "/api/v1/members/mypage": {
+    get: operations["mypage"];
   };
   "/api/v1/members/me": {
     get: operations["getMe"];
@@ -134,6 +143,10 @@ export interface paths {
   "/api/v1/courses/{courseId}/auth": {
     /** 해당 멤버가 해당 강좌를 수강 중인지 */
     get: operations["getCourseAuth"];
+  };
+  "/api/v1/courses/summary/{writerid}": {
+    /** 작성자별 강의 요약노트 조회 */
+    get: operations["getSummaryNoteByWriter"];
   };
   "/api/v1/comments/{postId}": {
     /** 댓글 목록 */
@@ -180,8 +193,8 @@ export interface components {
       title: string;
       body: string;
       /** Format: int32 */
-      voteCount?: number;
-      likedByCurrentUser?: boolean;
+      voteCount: number;
+      likedByCurrentUser: boolean;
     };
     RsDataPostDto: {
       resultCode: string;
@@ -189,33 +202,17 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["PostDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CreateSummaryNoteDto: {
       content: string;
-    };
-    Course: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      title?: string;
-      notice?: string;
-      imgUrl?: string;
-      overView?: string;
-      /** Format: int32 */
-      price?: number;
-      videoList?: components["schemas"]["Video"][];
-      voter?: components["schemas"]["Member"][];
     };
     CourseEnroll: {
       /** Format: int64 */
       id?: number;
       /** Format: date-time */
       createDate?: string;
-      course?: components["schemas"]["Course"];
-      member?: components["schemas"]["Member"];
     };
     GrantedAuthority: {
       authority?: string;
@@ -234,11 +231,15 @@ export interface components {
       refreshToken?: string;
       profileImgUrl?: string;
       visitedToday?: boolean;
+      /** Format: int32 */
+      dailyGoal?: number;
+      /** Format: int32 */
+      dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      profileImgUrlOrDefault?: string;
       authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
-      profileImgUrlOrDefault?: string;
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -246,37 +247,19 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["SummaryNoteDto"];
-      fail: boolean;
       success: boolean;
-    };
-    SummaryNote: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      content?: string;
-      writer?: components["schemas"]["Member"];
-      video?: components["schemas"]["Video"];
-      /** Format: int64 */
-      score?: number;
+      fail: boolean;
     };
     SummaryNoteDto: {
       /** Format: int64 */
       id?: number;
       member?: components["schemas"]["Member"];
       content?: string;
-    };
-    Video: {
       /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      url?: string;
-      imgUrl?: string;
-      overView?: string;
-      course?: components["schemas"]["Course"];
-      summaryNotes?: components["schemas"]["SummaryNote"][];
-      keywords?: string;
+      score?: number;
+      /** Format: int64 */
+      videoId?: number;
+      pass?: boolean;
     };
     CreateCommentDto: {
       body: string;
@@ -304,8 +287,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CommentDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     VideoDto: {
       /** Format: int64 */
@@ -324,8 +307,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["VideoDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CourseDto: {
       /** Format: int64 */
@@ -336,6 +319,11 @@ export interface components {
       overView?: string;
       /** Format: int32 */
       price?: number;
+      /** Format: int32 */
+      voteCount?: number;
+      likedByCurrentUser?: boolean;
+      /** Format: int32 */
+      videoCount?: number;
     };
     RsDataCourseDto: {
       resultCode: string;
@@ -343,8 +331,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CourseDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CreatePostDto: {
       title: string;
@@ -356,8 +344,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreatePostDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataVoid: {
       resultCode: string;
@@ -365,8 +353,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: Record<string, never>;
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     QnaDto: {
       /** Format: int64 */
@@ -385,8 +373,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["QnaDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     Empty: Record<string, never>;
     RsDataEmpty: {
@@ -395,8 +383,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["Empty"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     LoginRequestBody: {
       username: string;
@@ -415,7 +403,9 @@ export interface components {
       authorities: string[];
       visitedToday: boolean;
       /** Format: int32 */
-      point: number;
+      dailyGoal: number;
+      /** Format: int32 */
+      dailyAchievement: number;
     };
     RsDataLoginResponseBody: {
       resultCode: string;
@@ -423,8 +413,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["LoginResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataCreateCommentDto: {
       resultCode: string;
@@ -432,8 +422,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateCommentDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CreateVideoDto: {
       url: string;
@@ -449,8 +439,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateVideoDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CreateCourseDto: {
       title: string;
@@ -466,8 +456,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateCourseDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetPostsResponseBody: {
       itemPage: components["schemas"]["PageDtoPostDto"];
@@ -489,8 +479,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostsResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataListQnaDto: {
       resultCode: string;
@@ -498,8 +488,26 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["QnaDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
+    };
+    MyPageDto: {
+      learningCourses?: components["schemas"]["CourseDto"][];
+      favoriteCourses?: components["schemas"]["CourseDto"][];
+      /** Format: int64 */
+      goalProgress?: number;
+    };
+    MyPageResponseBody: {
+      item: components["schemas"]["MyPageDto"];
+    };
+    RsDataMyPageResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["MyPageResponseBody"];
+      success: boolean;
+      fail: boolean;
     };
     MeResponseBody: {
       item: components["schemas"]["MemberDto"];
@@ -510,8 +518,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["MeResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CourseEnrollDto: {
       /** Format: int64 */
@@ -528,8 +536,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetCourseEnrollResponsebody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetCoursesResponsebody: {
       items: components["schemas"]["CourseDto"][];
@@ -540,8 +548,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetCoursesResponsebody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetSummaryNoteResponsebody: {
       items: components["schemas"]["SummaryNoteDto"][];
@@ -552,8 +560,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetSummaryNoteResponsebody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataListVideoDto: {
       resultCode: string;
@@ -561,8 +569,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["VideoDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CourseAuthDto: {
       enroll?: boolean;
@@ -573,8 +581,17 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CourseAuthDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
+    };
+    RsDataListSummaryNoteDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["SummaryNoteDto"][];
+      success: boolean;
+      fail: boolean;
     };
     RsDataListCommentDto: {
       resultCode: string;
@@ -582,8 +599,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CommentDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RecentSummaryNoteDto: {
       /** Format: int64 */
@@ -603,8 +620,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["RecentSummaryNoteDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetNotesResponseBody: {
       itemPage?: components["schemas"]["PageDtoRecentSummaryNoteDto"];
@@ -626,8 +643,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetNotesResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     ReportedPostDto: {
       /** Format: int64 */
@@ -645,8 +662,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["ReportedPostDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RecentMemberDto: {
       /** Format: int64 */
@@ -662,8 +679,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["RecentMemberDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetMembersResponseBody: {
       itemPage?: components["schemas"]["PageDtoRecentMemberDto"];
@@ -685,8 +702,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetMembersResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RecentCourseDto: {
       /** Format: int64 */
@@ -699,8 +716,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["RecentCourseDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
   };
   responses: never;
@@ -1075,6 +1092,38 @@ export interface operations {
       };
     };
   };
+  /** 강좌 좋아요 */
+  vote_1: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataVoid"];
+        };
+      };
+    };
+  };
+  /** 강좌 좋아요 취소 */
+  deleteVote_1: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataVoid"];
+        };
+      };
+    };
+  };
   /** 댓글 등록 */
   createComment: {
     requestBody: {
@@ -1199,6 +1248,16 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  mypage: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataMyPageResponseBody"];
         };
       };
     };
@@ -1354,6 +1413,22 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataCourseAuthDto"];
+        };
+      };
+    };
+  };
+  /** 작성자별 강의 요약노트 조회 */
+  getSummaryNoteByWriter: {
+    parameters: {
+      path: {
+        writerid: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListSummaryNoteDto"];
         };
       };
     };

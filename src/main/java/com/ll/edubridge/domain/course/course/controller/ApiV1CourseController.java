@@ -6,7 +6,10 @@ import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
+import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
+import com.ll.edubridge.global.exceptions.CodeMsg;
+import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
@@ -37,13 +40,13 @@ public class ApiV1CourseController {
     private final CourseEnrollService courseEnrollService;
 
     @Getter
-    public static class GetCoursesResponsebody {
+    public class GetCoursesResponsebody {
         @NonNull
         private final List<CourseDto> items;
 
         public GetCoursesResponsebody(Page<Course> page) {
             this.items = page.getContent().stream()
-                    .map(course -> new CourseDto(course))
+                    .map(course -> new CourseDto(course,rq.getMember()))
                     .toList();
         }
     }
@@ -74,7 +77,7 @@ public class ApiV1CourseController {
     @Operation(summary = "강좌 상세 조회")
     public RsData<CourseDto> getCourse(@PathVariable("courseId") Long courseId) {
         Course course = courseService.getCourse(courseId);
-        CourseDto courseDto = new CourseDto(course);
+        CourseDto courseDto = new CourseDto(course,rq.getMember());
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(), courseDto);
@@ -87,6 +90,36 @@ public class ApiV1CourseController {
         CourseAuthDto courseAuthDto=new CourseAuthDto(courseEnrollService.isEnroll(courseId));
 
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(), Msg.E200_0_CREATE_SUCCEED.getMsg(), courseAuthDto);
+    }
+
+    @PostMapping("/{id}/like")
+    @Operation(summary = "강좌 좋아요")
+    public RsData<Void> vote(@PathVariable("id") Long id) {
+        Member member = rq.getMember();
+
+        if (!courseService.canLike(member, courseService.getCourse(id))) {
+            throw new GlobalException(CodeMsg.E400_1_ALREADY_RECOMMENDED.getCode(),CodeMsg.E400_1_ALREADY_RECOMMENDED.getMessage());
+        }
+
+        courseService.vote(id, member);
+
+        return RsData.of(Msg.E200_4_RECOMMEND_SUCCUSSED.getCode(),
+                Msg.E200_4_RECOMMEND_SUCCUSSED.getMsg());
+    }
+
+    @DeleteMapping("/{id}/like")
+    @Operation(summary = "강좌 좋아요 취소")
+    public RsData<Void> deleteVote(@PathVariable("id") Long id) {
+        Member member = rq.getMember();
+
+        if (!courseService.canCancelLike(member, courseService.getCourse(id))) {
+            throw new GlobalException(CodeMsg.E400_2_NOT_RECOMMENDED_YET.getCode(),CodeMsg.E400_2_NOT_RECOMMENDED_YET.getMessage());
+        }
+
+        courseService.deleteVote(id, member);
+
+        return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCUSSED.getCode(),
+                Msg.E200_5_CANCEL_RECOMMEND_SUCCUSSED.getMsg());
     }
 
  

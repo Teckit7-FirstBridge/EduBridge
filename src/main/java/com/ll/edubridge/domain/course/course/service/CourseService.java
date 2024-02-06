@@ -4,7 +4,9 @@ import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
+import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
@@ -24,6 +26,7 @@ import java.util.Optional;
 public class CourseService {
     private final CourseRepository courseRepository;
     private final Rq rq;
+    private final CourseEnrollRepository courseEnrollRepository;
 
     public List<Course> findAll() {
         return courseRepository.findAll();
@@ -85,13 +88,42 @@ public class CourseService {
 
         return false;
     }
-
     public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {
         return courseRepository.findByKw(kwType, kw, author, pageable);
     }
-
     public List<Course> findLatestCourse(int num) {
         return courseRepository.findLatestCourse(num);
+    }
+
+    @Transactional
+    public void vote(Long id, Member member) {
+        Course course = this.getCourse(id);
+        course.getVoter().add(member);
+        courseRepository.save(course);
+    }
+
+    @Transactional
+    public void deleteVote(Long id, Member member){
+        Course course = this.getCourse(id);
+        course.getVoter().remove(member);
+        courseRepository.save(course);
+    }
+
+    public boolean canLike(Member member, Course course) {
+        if (member == null) return false;
+        if (course == null) return false;
+
+        return !course.getVoter().contains(member);
+    }
+    public boolean canCancelLike(Member member, Course course) {
+        if (member == null) return false;
+        if (course == null) return false;
+
+        return course.getVoter().contains(member);
+    }
+
+    public List<Course> findByVoter(){
+        return courseRepository.findByVoter(rq.getMember());
     }
 
 }

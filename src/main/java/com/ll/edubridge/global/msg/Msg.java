@@ -3,6 +3,7 @@ import lombok.Getter;
 
 @Getter
 public enum Msg {
+
     E200_0_CREATE_SUCCEED("200-0", "등록 성공"),
     E200_1_INQUIRY_SUCCEED("200-1","조회 성공"),
     E200_2_MODIFY_SUCCEED("200-2","수정 성공"),

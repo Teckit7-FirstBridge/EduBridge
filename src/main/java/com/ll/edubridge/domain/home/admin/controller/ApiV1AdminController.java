@@ -302,7 +302,7 @@ public class ApiV1AdminController {
 
         Course modifyCourse = courseService.modify(id, courseDto);
 
-        CourseDto modifyCourseDto = new CourseDto(modifyCourse);
+        CourseDto modifyCourseDto = new CourseDto(modifyCourse,rq.getMember());
 
         return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
                 Msg.E200_2_MODIFY_SUCCEED.getMsg(), modifyCourseDto);

@@ -22,8 +22,10 @@ public class PostDto {
     @NonNull
     private String body;
 
+    @NonNull
     private int voteCount;
 
+    @NonNull
     private boolean likedByCurrentUser;
 
     public PostDto(Post post, Member member) {

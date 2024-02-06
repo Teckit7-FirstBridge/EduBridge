@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.course.courseEnroll.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
@@ -18,9 +19,11 @@ import static lombok.AccessLevel.PROTECTED;
 @ToString(callSuper = true)
 public class CourseEnroll extends BaseEntity {
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     private Course course;
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     private Member member;
 

@@ -169,6 +169,7 @@ public class MemberService {
 
         for (Member member : allMembers) {
             member.setVisitedToday(false);
+            member.setDailyAchievement(0);
             memberRepository.save(member);
             // System.out.println("성공");
         }

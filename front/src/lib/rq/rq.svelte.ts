@@ -26,6 +26,8 @@ class Rq {
     let createDate = $state('');
     let point = $state(0);
     let authorities: string[] = $state([]);
+    let dailyGoal: number = $state(0);
+    let dailyAchievement: number = $state(0);
 
     this.member = {
       get id() {
@@ -58,11 +60,18 @@ class Rq {
       set authorities(value: string[]) {
         authorities = value;
       },
-      get point() {
-        return point;
+      get dailyGoal() {
+        return dailyGoal;
       },
-      set point(value: number) {
-        point = value;
+      set dailyGoal(value: number) {
+        dailyGoal = value;
+      },
+      get dailyAchievement() {
+        return dailyAchievement;
+      },
+      set dailyAchievement(value: number) {
+        dailyAchievement = value;
+
       }
     };
   }
@@ -104,7 +113,8 @@ class Rq {
     this.member.profileImgUrl = member.profileImgUrl;
     this.member.name = member.name;
     this.member.authorities = member.authorities;
-    this.member.point = member.point;
+    this.member.dailyGoal = member.dailyGoal;
+    this.member.dailyAchievement = member.dailyAchievement;
   }
 
   public setLogout() {

@@ -57,6 +57,13 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
                 .fetch();
     }
 
+    @Override
+    public List<Course> findByVoter(Member member) {
+        return queryFactory.selectFrom(course)
+                .where(course.voter.contains(member))
+                .fetch();
+    }
+
 
     private void applyKeywordFilter(KwTypeCourse kwType, String kw, BooleanBuilder builder) {
         switch (kwType) {

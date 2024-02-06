@@ -16,4 +16,6 @@ public interface SummaryNoteRepository extends JpaRepository<SummaryNote, Long> 
     Page<SummaryNote> findByVideoId(Pageable pageable,Long videoid);
 
     List<SummaryNote> findTop5ByOrderByIdDesc();
+
+    List<SummaryNote> findByWriterId(Long id);
 }

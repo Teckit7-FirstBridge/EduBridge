@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.member.member.repository;
 
+import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
