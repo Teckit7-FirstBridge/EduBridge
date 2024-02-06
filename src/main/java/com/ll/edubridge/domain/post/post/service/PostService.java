@@ -136,6 +136,7 @@ public class PostService {
     }
 
     public boolean canCancelLike(Member member, Post post) {
+
         if (member == null) return false;
         if (post == null) return false;
 
