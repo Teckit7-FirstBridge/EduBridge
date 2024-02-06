@@ -188,4 +188,13 @@ public class PostService {
         return postRepository.findTop5ByReport(true);
     }
 
+    public boolean canCancelReport( Post post) {
+        if (rq.isAdmin() && post.isReport()){
+            return true;
+        }
+
+        return false;
+    }
+
+
 }

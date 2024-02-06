@@ -22,6 +22,7 @@ import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
+import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.PageDto;
@@ -52,6 +53,7 @@ public class ApiV1AdminController {
     private final PostService postService;
     private final SummaryNoteService summaryNoteService;
     private final VideoService videoService;
+    private final Rq rq;
 
     @GetMapping(value = "/courses")
     @Operation(summary = "강좌 최신순")
@@ -106,7 +108,7 @@ public class ApiV1AdminController {
 
     @GetMapping(value = "/summaryNotes")
     @Operation(summary = "최신 요약노트")
-    public RsData<List<RecentSummaryNoteDto>> getSummeryNotes(){
+    public RsData<List<RecentSummaryNoteDto>> getSummeryNotes() {
 
         List<SummaryNote> recentSummaryNotes = summaryNoteService.recentSummaryNotes();
 
@@ -220,14 +222,14 @@ public class ApiV1AdminController {
     @PutMapping("/{courseId}/videos/{id}")
     @Operation(summary = "강의 수정")
     public RsData<VideoDto> modifyVideo(@PathVariable("courseId") Long courseId,
-                                   @PathVariable("id") Long id,
-                                   @RequestBody VideoDto videoDto) {
+                                        @PathVariable("id") Long id,
+                                        @RequestBody VideoDto videoDto) {
 
         if (!videoService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Course course = courseService.getCourse(courseId);
-        if(course == null) {
+        if (course == null) {
             throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
@@ -248,13 +250,13 @@ public class ApiV1AdminController {
     @DeleteMapping("/{courseId}/videos/{id}")
     @Operation(summary = "강의 삭제")
     public RsData<Empty> deleteVideo(@PathVariable("courseId") Long courseId,
-                                @PathVariable("id") Long id) {
+                                     @PathVariable("id") Long id) {
 
         if (!videoService.haveAuthority())
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Course course = courseService.getCourse(courseId);
-        if(course == null) {
+        if (course == null) {
             throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
@@ -274,7 +276,7 @@ public class ApiV1AdminController {
     public RsData<CreateCourseDto> createCourse(@RequestBody CreateCourseDto createCourseDto) {
 
         if (!courseService.haveAuthority())
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Course course = courseService.create(createCourseDto);
 
@@ -292,7 +294,7 @@ public class ApiV1AdminController {
             @RequestBody CourseDto courseDto) {
 
         if (!courseService.haveAuthority())
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Course modifyCourse = courseService.modify(id, courseDto);
 
@@ -313,6 +315,21 @@ public class ApiV1AdminController {
 
         return RsData.of(Msg.E200_3_DELETE_SUCCUSSED.getCode(),
                 Msg.E200_3_DELETE_SUCCUSSED.getMsg());
+    }
+
+    @DeleteMapping("/posts/{postId}/report")
+    @Operation(summary = "게시물 신고 처리")
+    public RsData<Void> canCancelReport(@PathVariable("postId") Long id) {
+
+
+        if (!postService.canCancelReport(postService.getPost(id))) {
+            throw new GlobalException(CodeMsg.E400_6_CANCEL_REPORT_FAILED.getCode(), CodeMsg.E400_6_CANCEL_REPORT_FAILED.getMessage());
+        }
+
+        postService.delete(id);
+
+        return RsData.of(Msg.E200_7_SUCCUSS_CANCEL_REPORT.getCode(),
+                Msg.E200_7_SUCCUSS_CANCEL_REPORT.getMsg());
     }
 
 
