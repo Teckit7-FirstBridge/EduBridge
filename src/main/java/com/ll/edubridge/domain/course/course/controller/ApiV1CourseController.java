@@ -118,8 +118,9 @@ public class ApiV1CourseController {
 
         courseService.deleteVote(id, member);
 
-        return RsData.of(Msg.E200_4_RECOMMEND_SUCCEED.getCode(),
-                Msg.E200_4_RECOMMEND_SUCCEED.getMsg());
+
+        return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getCode(),
+                Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getMsg());
     }
 
  
