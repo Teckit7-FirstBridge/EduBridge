@@ -28,28 +28,35 @@
 {#await load()}
   <p>loading...</p>
 {:then { data: { items } }}
-  <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
-    <CourseNav></CourseNav>
-    <div class="flex flex-col flex-1">
-      <a href="/adm/course/write" class="btn mt-5 ml-6 w-[200px]"> 강좌 등록</a>
-      <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {#if items}
-            {#each items as item}
-              <a
-                href="/course/{item.id}"
-                class="p-4 border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center"
-              >
-                <h2 class="text-lg font-semibold my-2">{item.title}</h2>
-                <div class="flex justify-center my-2">
-                  <img src={item.imgUrl} />
-                </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 my-4">{item.overView}</p>
-              </a>
-            {/each}
-          {/if}
-        </div>
-      </main>
+  {#if rq.isAdmin()}
+    <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
+      <CourseNav></CourseNav>
+      <div class="flex flex-col flex-1">
+        <a href="/adm/course/write" class="btn mt-5 ml-6 w-[200px]"> 강좌 등록</a>
+        <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {#if items}
+              {#each items as item}
+                <a
+                  href="/course/{item.id}"
+                  class="p-4 border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center"
+                >
+                  <h2 class="text-lg font-semibold my-2">{item.title}</h2>
+                  <div class="flex justify-center my-2">
+                    <img src={item.imgUrl} />
+                  </div>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 my-4">{item.overView}</p>
+                </a>
+              {/each}
+            {/if}
+          </div>
+        </main>
+      </div>
     </div>
-  </div>
+  {:else}
+    <a href="/" class="btn btn-outline btn-error m-5">접근 불가 메인으로</a>
+    {#if !rq.isLogin()}
+      <a href="/member/login" class="btn btn-outline btn-error m-5">로그인</a>
+    {/if}
+  {/if}
 {/await}

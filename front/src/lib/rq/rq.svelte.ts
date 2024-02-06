@@ -1,6 +1,7 @@
 import { goto } from '$app/navigation';
 
 import type { components, paths } from '$lib/types/api/v1/schema';
+import { redirect } from '@sveltejs/kit';
 import createClient from 'openapi-fetch';
 
 import toastr from 'toastr';
