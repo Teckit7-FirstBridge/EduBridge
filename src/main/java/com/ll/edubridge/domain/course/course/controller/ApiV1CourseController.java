@@ -103,8 +103,8 @@ public class ApiV1CourseController {
 
         courseService.vote(id, member);
 
-        return RsData.of(Msg.E200_4_RECOMMEND_SUCCUSSED.getCode(),
-                Msg.E200_4_RECOMMEND_SUCCUSSED.getMsg());
+        return RsData.of(Msg.E200_4_RECOMMEND_SUCCEED.getCode(),
+                Msg.E200_4_RECOMMEND_SUCCEED.getMsg());
     }
 
     @DeleteMapping("/{id}/like")
@@ -118,8 +118,8 @@ public class ApiV1CourseController {
 
         courseService.deleteVote(id, member);
 
-        return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCUSSED.getCode(),
-                Msg.E200_5_CANCEL_RECOMMEND_SUCCUSSED.getMsg());
+        return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getCode(),
+                Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getMsg());
     }
 
  
