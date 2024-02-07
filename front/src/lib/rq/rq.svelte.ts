@@ -60,6 +60,12 @@ class Rq {
       set authorities(value: string[]) {
         authorities = value;
       },
+      get point() {
+        return dailyGoal;
+      },
+      set point(value: number) {
+        dailyGoal = value;
+      },
       get dailyGoal() {
         return dailyGoal;
       },
@@ -71,7 +77,6 @@ class Rq {
       },
       set dailyAchievement(value: number) {
         dailyAchievement = value;
-
       }
     };
   }
@@ -115,6 +120,7 @@ class Rq {
     this.member.authorities = member.authorities;
     this.member.dailyGoal = member.dailyGoal;
     this.member.dailyAchievement = member.dailyAchievement;
+    this.member.point = member.point;
   }
 
   public setLogout() {

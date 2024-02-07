@@ -154,7 +154,7 @@
           <li>
             <a
               class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-              href="#"
+              href="/member/course"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -172,30 +172,6 @@
               </svg>
 
               DashBoard
-            </a>
-          </li>
-
-          <li>
-            <a
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-              href="#"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-6 h-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
-                />
-              </svg>
-
-              공지사항
             </a>
           </li>
           <li>
@@ -242,7 +218,9 @@
               >
               <ul>
                 {#each videos as video, index}
-                  <li><a href={video.url}>강의 {index + 1}</a></li>
+                  {#if auth.enroll || rq.isAdmin()}
+                    <li><a href={video.url}>강의 {index + 1}</a></li>
+                  {/if}
                 {/each}
               </ul>
             </details>
@@ -273,49 +251,58 @@
       <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div class="flex items-center justify-between">
           <h1 class="font-semibold text-lg md:text-2xl">
-            {course!.title}
+            <div class="flex">
+              <div class="mx-4 mt-1">
+                {course!.title}
+              </div>
+              <div class=" flex justify-end gap-2 mt-1" on:click={() => clickLiked(course)}>
+                {#if course.likedByCurrentUser}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                  >
+                    <!-- 빨간색 채워진 하트 -->
+                    <path
+                      fill="red"
+                      stroke="red"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                    />
+                  </svg>{:else}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                  >
+                    <!-- 빨간색 빈 하트 -->
+                    <path
+                      fill="none"
+                      stroke="red"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                    />
+                  </svg>
+                {/if}
+              </div>
+            </div>
           </h1>
 
           <div class="flex">
-            {#if !auth.enroll}
-              <p>{course.price}원</p>
+            {#if !auth.enroll && !rq.isAdmin()}
+              <div class="flex">
+                <div class="mt-2">
+                  <p class="course-price">{course.price}원</p>
+                </div>
+                <button class="enroll-button ml-2">수강 등록</button>
+              </div>
             {/if}
-            {#if !auth.enroll}
-              <button class="ml-2" on:click={enrollCourse}> 수강 등록 </button>
-            {/if}
-            <div class=" flex justify-end gap-2" on:click={() => clickLiked(course)}>
-              {#if course.likedByCurrentUser}<svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  height="24"
-                >
-                  <!-- 빨간색 채워진 하트 -->
-                  <path
-                    fill="red"
-                    stroke="red"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                  />
-                </svg>{:else}
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                  <!-- 빨간색 빈 하트 -->
-                  <path
-                    fill="none"
-                    stroke="red"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                  />
-                </svg>
-              {/if}
-              <span>
-                {course.voteCount}
-              </span>
-            </div>
           </div>
           {#if rq.isAdmin()}
             <div class="mb-5 mx-2 items-center">

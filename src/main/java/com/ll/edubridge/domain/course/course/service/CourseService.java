@@ -6,7 +6,6 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
@@ -37,16 +36,31 @@ public class CourseService {
     }
 
 
-
     @Transactional
     public Course create(CreateCourseDto createCourseDto) {
+
+        int price = 0;
+
+        switch (createCourseDto.getGrade()){
+            case "초급":
+                break;
+            case "중급":
+                price = 5000;
+                break;
+            case "고급":
+                price = 10000;
+                break;
+        }
+
         Course course = Course.builder()
                 .title(createCourseDto.getTitle())
                 .notice(createCourseDto.getNotice())
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
-                .price(createCourseDto.getPrice())
+                .price(price)
+                .grade(createCourseDto.getGrade())
                 .build();
+
         return courseRepository.save(course);
     }
 

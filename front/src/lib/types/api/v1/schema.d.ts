@@ -326,6 +326,7 @@ export interface components {
       notice?: string;
       imgUrl?: string;
       overView?: string;
+      grade?: string;
       /** Format: int32 */
       price?: number;
       /** Format: int32 */
@@ -458,8 +459,7 @@ export interface components {
       notice: string;
       imgUrl: string;
       overView: string;
-      /** Format: int32 */
-      price?: number;
+      grade: string;
     };
     RsDataCreateCourseDto: {
       resultCode: string;
@@ -537,6 +537,8 @@ export interface components {
       courseId?: number;
       title?: string;
       imgUrl?: string;
+      /** Format: int32 */
+      price?: number;
     };
     GetCourseEnrollResponsebody: {
       items: components["schemas"]["CourseEnrollDto"][];
