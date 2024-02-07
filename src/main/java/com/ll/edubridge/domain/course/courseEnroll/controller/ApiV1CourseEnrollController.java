@@ -67,7 +67,7 @@ public class ApiV1CourseEnrollController {
 
     @GetMapping("")
     @Operation(summary = "수업 목록 조회")
-    public RsData<GetCourseEnrollResponsebody> getSummaryNote(@RequestParam(value = "page", defaultValue = "1") int page){
+    public RsData<GetCourseEnrollResponsebody> getEnrollList(@RequestParam(value = "page", defaultValue = "1") int page){
         int pageSize = AppConfig.getBasePageSize();
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "id"));
 

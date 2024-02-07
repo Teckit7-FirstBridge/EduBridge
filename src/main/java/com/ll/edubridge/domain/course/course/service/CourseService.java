@@ -102,8 +102,8 @@ public class CourseService {
 
         return false;
     }
-    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {
-        return courseRepository.findByKw(kwType, kw, author, pageable);
+    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author,String grade, Pageable pageable) {
+        return courseRepository.findByKw(kwType, kw, author,grade, pageable);
     }
     public List<Course> findLatestCourse(int num) {
         return courseRepository.findLatestCourse(num);
