@@ -47,10 +47,6 @@ export interface paths {
     /** 글 등록 */
     post: operations["createPost"];
   };
-  "/api/v1/posts/{postId}/report": {
-    /** 신고하기 */
-    post: operations["report"];
-  };
   "/api/v1/posts/{id}/like": {
     /** 글 추천 */
     post: operations["vote"];
@@ -165,6 +161,10 @@ export interface paths {
     /** 작성자별 강의 요약노트 조회 */
     get: operations["getSummaryNoteByWriter"];
   };
+  "/api/v1/courses/summary/{writerid}/{courseId}": {
+    /** 작성자별 강좌의 모든 요약노트 목록 조회 */
+    get: operations["getSummaryNoteByWriterandCourse"];
+  };
   "/api/v1/comments/{postId}": {
     /** 댓글 목록 */
     get: operations["getComments"];
@@ -192,10 +192,6 @@ export interface paths {
   "/api/v1/admin/members/list": {
     /** 회원 목록 */
     get: operations["getAllMembers"];
-  };
-  "/api/v1/admin/posts/{postId}/report": {
-    /** 게시물 신고 처리 */
-    delete: operations["cancelReport"];
   };
 }
 
@@ -252,7 +248,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["NickNameResponseBody"];
-
       fail: boolean;
       success: boolean;
     };
@@ -288,10 +283,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authoritiesAsStringList?: string[];
-      profileImgUrlOrDefault?: string;
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
+      authoritiesAsStringList?: string[];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -445,22 +439,6 @@ export interface components {
     };
     LoginResponseBody: {
       item: components["schemas"]["MemberDto"];
-    };
-    MemberDto: {
-      /** Format: int64 */
-      id: number;
-      /** Format: date-time */
-      createDate: string;
-      name: string;
-      profileImgUrl: string;
-      authorities: string[];
-      visitedToday: boolean;
-      /** Format: int32 */
-      dailyGoal: number;
-      /** Format: int32 */
-      dailyAchievement: number;
-      /** Format: int32 */
-      point?: number;
     };
     RsDataLoginResponseBody: {
       resultCode: string;
@@ -1042,22 +1020,6 @@ export interface operations {
       };
     };
   };
-  /** 신고하기 */
-  report: {
-    parameters: {
-      path: {
-        postId: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataVoid"];
-        };
-      };
-    };
-  };
   /** 글 추천 */
   vote: {
     parameters: {
@@ -1426,7 +1388,8 @@ export interface operations {
       query?: {
         page?: number;
         kw?: string;
-        kwType?: "ALL" | "TITLE" | "NAME";
+        kwType?: "ALL" | "TITLE" | "NAME" | "GRADE";
+        grade?: string;
       };
     };
     responses: {
@@ -1554,6 +1517,23 @@ export interface operations {
       };
     };
   };
+  /** 작성자별 강좌의 모든 요약노트 목록 조회 */
+  getSummaryNoteByWriterandCourse: {
+    parameters: {
+      path: {
+        writerid: number;
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListSummaryNoteDto"];
+        };
+      };
+    };
+  };
   /** 댓글 목록 */
   getComments: {
     parameters: {
@@ -1642,22 +1622,6 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetMembersResponseBody"];
-        };
-      };
-    };
-  };
-  /** 게시물 신고 처리 */
-  cancelReport: {
-    parameters: {
-      path: {
-        postId: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };

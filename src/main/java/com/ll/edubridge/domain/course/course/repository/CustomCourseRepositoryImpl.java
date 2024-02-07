@@ -4,6 +4,7 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.standard.base.KwTypeCourse;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.PathBuilder;
@@ -11,6 +12,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -26,16 +28,18 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member owner, Pageable pageable) {
+    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member owner,String grade, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (owner != null) {
             builder.and(post.writer.eq(owner));
         }
 
-
         if (kw != null && !kw.isBlank()) {
             applyKeywordFilter(kwType, kw, builder);
+        }
+        if (grade != null && !grade.isEmpty()) {
+            builder.and(course.grade.eq(grade));
         }
 
         JPAQuery<Course> cousrsesQuery = createCourseQuery(builder);
@@ -63,6 +67,7 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
                 .where(course.voter.contains(member))
                 .fetch();
     }
+
 
 
     private void applyKeywordFilter(KwTypeCourse kwType, String kw, BooleanBuilder builder) {

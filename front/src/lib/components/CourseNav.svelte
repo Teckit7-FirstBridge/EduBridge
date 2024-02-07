@@ -39,7 +39,7 @@
       내 강의실
     </a><a
       class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-      href="#"
+      href="/course?grade=초급"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -57,7 +57,7 @@
     </a>
     <a
       class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-      href="#"
+      href="/course?grade=중급"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -75,7 +75,7 @@
     </a>
     <a
       class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-      href="#"
+      href="/course?grade=고급"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
