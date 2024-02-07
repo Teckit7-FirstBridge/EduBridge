@@ -27,9 +27,6 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 public class ApiV1CourseEnrollControllerTest {
 
-//    @Mock
-//    private MemberRepository memberRepository;
-
     @Mock
     private CourseRepository courseRepository;
 
@@ -41,9 +38,6 @@ public class ApiV1CourseEnrollControllerTest {
 
     @Mock
     private CourseEnrollService courseEnrollService;
-
-//    @InjectMocks
-//    private ApiV1CourseEnrollController apiV1CourseEnrollController;
 
     @Mock
     private Rq rq;
@@ -64,14 +58,12 @@ public class ApiV1CourseEnrollControllerTest {
                 .username("testUser")
                 .point(100)
                 .build();
-        when(courseRepository.findById(123L)).thenReturn(Optional.of(mockCourse)); // 이 부분 수정
+        when(courseRepository.findById(123L)).thenReturn(Optional.of(mockCourse));
         when(memberService.findByUsername("testUser")).thenReturn(Optional.ofNullable(mockMember));
 
         ApiV1CourseEnrollController apiController = new ApiV1CourseEnrollController(courseEnrollService, courseService, rq);
         when(rq.getMember()).thenReturn(mockMember);
-        //when(rq.getMember().getPoint()).thenReturn(100);
         when(courseService.getCourse(123L)).thenReturn(mockCourse);
-        //when(courseService.getCourse(123L).getPrice()).thenReturn(1000);
 
         // When
         GlobalException exception = assertThrows(GlobalException.class, () -> {
