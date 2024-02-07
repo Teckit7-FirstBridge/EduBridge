@@ -8,6 +8,7 @@ import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
+import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
@@ -60,7 +61,9 @@ public class ApiV1CourseEnrollController {
             return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(), Msg.E200_0_CREATE_SUCCEED.getMsg());
 
         } else {
-            return RsData.of(CodeMsg.E400_1_CREATE_FAILED.getCode(), CodeMsg.E400_1_CREATE_FAILED.getMessage()); // 400 - Not found
+            throw new GlobalException(CodeMsg.E400_1_CREATE_FAILED.getCode(), CodeMsg.E400_1_CREATE_FAILED.getMessage()); // 400 - Not found
+            // RsData로 return 해줘야 하는지 체크할 것
+            // return RsData.of(CodeMsg.E400_1_CREATE_FAILED.getCode(), CodeMsg.E400_1_CREATE_FAILED.getMessage());
         }
     }
 
