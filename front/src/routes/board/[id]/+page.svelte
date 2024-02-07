@@ -66,6 +66,51 @@
     }
   }
 
+  async function reportPost() {
+    if (post.report) {
+      if (!rq.isAdmin()) {
+        alert('이미 신고된 글 입니다.');
+        return;
+      } else {
+        const confirmCancelReport = confirm('글 신고를 취소하겠습니까?');
+        if (!confirmCancelReport) {
+          return;
+        }
+
+        const { data, error } = await rq
+          .apiEndPoints()
+          .PATCH(`/api/v1/admin/posts/{postId}/report`, {
+            params: { path: { postId: parseInt($page.params.id) } }
+          });
+
+        if (data) {
+          rq.msgInfo('신고가 취소되었습니다.');
+          location.reload();
+        } else if (error) {
+          rq.msgError(error.msg);
+        }
+
+        return;
+      }
+    }
+
+    const confirmReport = confirm('글을 신고하시겠습니까?');
+    if (!confirmReport) {
+      return;
+    }
+
+    const { data, error } = await rq.apiEndPoints().PATCH(`/api/v1/posts/{postId}/report`, {
+      params: { path: { postId: parseInt($page.params.id) } }
+    });
+
+    if (data) {
+      rq.msgInfo('신고 되었습니다.');
+      location.reload();
+    } else if (error) {
+      rq.msgError(error.msg);
+    }
+  }
+
   async function clickLikedPost() {
     if (post.likedByCurrentUser) {
       const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/posts/{id}/like`, {
@@ -166,36 +211,71 @@
       <div>
         <h1 class="text-3xl font-bold mb-4">{post.title}</h1>
       </div>
-      <div>
-        <p class="text-nm space-y-1.5 p-6">
-          {(() => {
-            const now = new Date();
-            const postDate = new Date(post.createDate);
-            const seconds = Math.floor((now - postDate) / 1000);
+      <div class="flex">
+        <button class="mr-5 pb-8" on:click={reportPost}>
+          {#if post.report}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="red"
+              class="w-8 h-8"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+              />
+            </svg>
+          {:else}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="black"
+              class="w-8 h-8"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+              />
+            </svg>
+          {/if}
+        </button>
+        <div>
+          <p class="text-nm space-y-1.5 mt-1">
+            {(() => {
+              const now = new Date();
+              const postDate = new Date(post.createDate);
+              const seconds = Math.floor((now - postDate) / 1000);
 
-            let interval = seconds / 31536000;
-            if (interval > 1) {
-              return Math.floor(interval) + '년 전';
-            }
-            interval = seconds / 2592000;
-            if (interval > 1) {
-              return Math.floor(interval) + '개월 전';
-            }
-            interval = seconds / 86400;
-            if (interval > 1) {
-              return Math.floor(interval) + '일 전';
-            }
-            interval = seconds / 3600;
-            if (interval > 1) {
-              return Math.floor(interval) + '시간 전';
-            }
-            interval = seconds / 60;
-            if (interval > 1) {
-              return Math.floor(interval) + '분 전';
-            }
-            return Math.floor(seconds) + '초 전';
-          })()}
-        </p>
+              let interval = seconds / 31536000;
+              if (interval > 1) {
+                return Math.floor(interval) + '년 전';
+              }
+              interval = seconds / 2592000;
+              if (interval > 1) {
+                return Math.floor(interval) + '개월 전';
+              }
+              interval = seconds / 86400;
+              if (interval > 1) {
+                return Math.floor(interval) + '일 전';
+              }
+              interval = seconds / 3600;
+              if (interval > 1) {
+                return Math.floor(interval) + '시간 전';
+              }
+              interval = seconds / 60;
+              if (interval > 1) {
+                return Math.floor(interval) + '분 전';
+              }
+              return Math.floor(seconds) + '초 전';
+            })()}
+          </p>
+        </div>
       </div>
     </div>
 
