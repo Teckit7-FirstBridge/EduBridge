@@ -300,7 +300,7 @@
                 <div class="mt-2">
                   <p class="course-price">{course.price}원</p>
                 </div>
-                <button class="enroll-button ml-2">수강 등록</button>
+                <button on:click={enrollCourse} class="enroll-button ml-2">수강 등록</button>
               </div>
             {/if}
           </div>
