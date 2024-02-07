@@ -99,7 +99,12 @@ public class SummaryNoteService {
     public List<SummaryNote> recentSummaryNotes() {
         return summaryNoteRepository.findTop5ByOrderByIdDesc();
     }
-    public List<SummaryNote> findByWriterId(Long id){
+
+    public List<SummaryNote> findByWriterId(Long id) {
         return summaryNoteRepository.findByWriterId(id);
+    }
+
+    public List<SummaryNote> findByWriterIdAndCourseId(Long memberId, Long courseId) {
+        return summaryNoteRepository.findByWriterIdAndCourseId(memberId, courseId);
     }
 }
