@@ -98,7 +98,12 @@
       >
     </button>
     {#if rq.isLogin()}
-      <a href="/member/course" class="btn btn-ghost">내 강의실</a>
+      {#if !rq.isAdmin()}
+        <a href="/member/course" class="btn btn-ghost">내 강의실</a>
+      {/if}
+      {#if rq.isAdmin()}
+        <a href="/adm" class="btn btn-ghost">관 리 자</a>
+      {/if}
       <a href="/member/{rq.member.id}" class="btn btn-ghost">
         <img class="inline-block rounded-circle" src={rq.member.profileImgUrl} width="30" alt="" />
         {rq.member.name}
