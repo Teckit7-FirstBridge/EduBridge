@@ -210,7 +210,7 @@ public class ApiV1PostController {
                 Msg.E200_3_DELETE_SUCCEED.getMsg());
     }
 
-    @PostMapping("/{postId}/report")
+    @PatchMapping("/{postId}/report")
     @Operation(summary = "신고하기")
     public RsData<Void> report(@PathVariable("postId") Long id) {
 
