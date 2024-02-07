@@ -13,6 +13,10 @@ export interface paths {
     /** 글 삭제 */
     delete: operations["delete"];
   };
+  "/api/v1/members/nickname": {
+    /** 닉네임 수정 요청 */
+    put: operations["changenickname"];
+  };
   "/api/v1/courses/{videoid}/note/{noteId}": {
     /** 강의 요약 노트 수정 */
     put: operations["modify_1"];
@@ -107,6 +111,7 @@ export interface paths {
     delete: operations["deleteQna"];
   };
   "/api/v1/members/mypage": {
+    /** 마이 페이지 데이터 요청 */
     get: operations["mypage"];
   };
   "/api/v1/members/me": {
@@ -213,6 +218,34 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    MemberDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      name: string;
+      profileImgUrl: string;
+      authorities: string[];
+      visitedToday: boolean;
+      /** Format: int32 */
+      dailyGoal: number;
+      /** Format: int32 */
+      dailyAchievement: number;
+      /** Format: int32 */
+      point?: number;
+    };
+    NickNameResponseBody: {
+      item: components["schemas"]["MemberDto"];
+    };
+    RsDataNickNameResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["NickNameResponseBody"];
+      fail: boolean;
+      success: boolean;
+    };
     CreateSummaryNoteDto: {
       content: string;
     };
@@ -245,9 +278,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
       authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -400,22 +433,6 @@ export interface components {
     };
     LoginResponseBody: {
       item: components["schemas"]["MemberDto"];
-    };
-    MemberDto: {
-      /** Format: int64 */
-      id: number;
-      /** Format: date-time */
-      createDate: string;
-      name: string;
-      profileImgUrl: string;
-      authorities: string[];
-      visitedToday: boolean;
-      /** Format: int32 */
-      dailyGoal: number;
-      /** Format: int32 */
-      dailyAchievement: number;
-      /** Format: int32 */
-      point?: number;
     };
     RsDataLoginResponseBody: {
       resultCode: string;
@@ -792,6 +809,22 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 닉네임 수정 요청 */
+  changenickname: {
+    parameters: {
+      query: {
+        nickname: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataNickNameResponseBody"];
         };
       };
     };
@@ -1278,6 +1311,7 @@ export interface operations {
       };
     };
   };
+  /** 마이 페이지 데이터 요청 */
   mypage: {
     responses: {
       /** @description OK */

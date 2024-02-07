@@ -85,6 +85,7 @@ public class ApiV1MemberController {
 
 
     @GetMapping("/mypage")
+    @Operation(summary = "마이 페이지 데이터 요청")
     public RsData<MyPageResponseBody> mypage(){
 
         List<CourseDto> learningCourses = rq.getMember()
@@ -93,18 +94,22 @@ public class ApiV1MemberController {
                 .map(courseEnroll -> new CourseDto(courseEnroll.getCourse(), rq.getMember()))
                 .collect(Collectors.toList());
 
-        System.out.println("first");
         List<CourseDto> likeCourses = courseService.findByVoter().stream().map(course -> new CourseDto(course,rq.getMember())).collect(Collectors.toList());
 
-        System.out.println("second");
         MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,1L);
-        System.out.println("third");
-
-
-
         return RsData.of("200","성공",
                 new MyPageResponseBody(
                         myPageDto
                 ));
+    }
+
+    public record NickNameResponseBody(@NonNull MemberDto item) {
+    }
+
+    @PutMapping("/nickname")
+    @Operation(summary = "닉네임 수정 요청")
+    public RsData<NickNameResponseBody> changenickname(@RequestParam String nickname){
+
+        return null;
     }
 }

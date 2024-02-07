@@ -139,7 +139,10 @@
             </div>
           </div>
           <p class="text-xs text-gray-500">
-            {((rq.member.dailyAchievement / rq.member.dailyGoal) * 100).toFixed(2)}% Completed
+            {Math.min(
+              100,
+              parseInt(((rq.member.dailyAchievement / rq.member.dailyGoal) * 100).toFixed(2))
+            )}% Completed
           </p>
         </div>
       </div>

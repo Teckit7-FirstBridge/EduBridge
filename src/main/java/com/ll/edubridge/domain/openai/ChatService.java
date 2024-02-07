@@ -4,6 +4,7 @@ import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
+import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.rq.Rq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -49,7 +50,7 @@ public class ChatService {
             String numberOnly = response.getChoices().get(0).getMessage().getContent().replaceAll("[^\\d]", "");
             Long score = Long.parseLong((numberOnly));
             summaryNote.setScore(score);
-            if(score>=70){
+            if(score>= AppConfig.SummaryPassScore){
                 member.setDailyAchievement(member.getDailyAchievement()+1);
                 memberService.save(member);
             }
