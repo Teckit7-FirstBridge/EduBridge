@@ -13,6 +13,10 @@ export interface paths {
     /** 글 삭제 */
     delete: operations["delete"];
   };
+  "/api/v1/members/nickname": {
+    /** 닉네임 수정 요청 */
+    put: operations["changenickname"];
+  };
   "/api/v1/courses/{videoid}/note/{noteId}": {
     /** 강의 요약 노트 수정 */
     put: operations["modify_1"];
@@ -42,6 +46,10 @@ export interface paths {
     get: operations["getPosts"];
     /** 글 등록 */
     post: operations["createPost"];
+  };
+  "/api/v1/posts/{postId}/report": {
+    /** 신고하기 */
+    post: operations["report"];
   };
   "/api/v1/posts/{id}/like": {
     /** 글 추천 */
@@ -111,6 +119,7 @@ export interface paths {
     delete: operations["deleteQna"];
   };
   "/api/v1/members/mypage": {
+    /** 마이 페이지 데이터 요청 */
     get: operations["mypage"];
   };
   "/api/v1/members/me": {
@@ -184,6 +193,10 @@ export interface paths {
     /** 회원 목록 */
     get: operations["getAllMembers"];
   };
+  "/api/v1/admin/posts/{postId}/report": {
+    /** 게시물 신고 처리 */
+    delete: operations["cancelReport"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -211,6 +224,35 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["PostDto"];
+      fail: boolean;
+      success: boolean;
+    };
+    MemberDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      name: string;
+      profileImgUrl: string;
+      authorities: string[];
+      visitedToday: boolean;
+      /** Format: int32 */
+      dailyGoal: number;
+      /** Format: int32 */
+      dailyAchievement: number;
+      /** Format: int32 */
+      point?: number;
+    };
+    NickNameResponseBody: {
+      item: components["schemas"]["MemberDto"];
+    };
+    RsDataNickNameResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["NickNameResponseBody"];
+
       fail: boolean;
       success: boolean;
     };
@@ -247,6 +289,7 @@ export interface components {
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
       authoritiesAsStringList?: string[];
+      profileImgUrlOrDefault?: string;
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
     };
@@ -267,7 +310,7 @@ export interface components {
       /** Format: int64 */
       score?: number;
       /** Format: int64 */
-      videoId?: number;
+      courseId?: number;
       pass?: boolean;
     };
     CreateCommentDto: {
@@ -799,6 +842,22 @@ export interface operations {
       };
     };
   };
+  /** 닉네임 수정 요청 */
+  changenickname: {
+    parameters: {
+      query: {
+        nickname: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataNickNameResponseBody"];
+        };
+      };
+    };
+  };
   /** 강의 요약 노트 수정 */
   modify_1: {
     parameters: {
@@ -979,6 +1038,22 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataCreatePostDto"];
+        };
+      };
+    };
+  };
+  /** 신고하기 */
+  report: {
+    parameters: {
+      path: {
+        postId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataVoid"];
         };
       };
     };
@@ -1297,6 +1372,7 @@ export interface operations {
       };
     };
   };
+  /** 마이 페이지 데이터 요청 */
   mypage: {
     responses: {
       /** @description OK */
@@ -1566,6 +1642,22 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetMembersResponseBody"];
+        };
+      };
+    };
+  };
+  /** 게시물 신고 처리 */
+  cancelReport: {
+    parameters: {
+      path: {
+        postId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };
