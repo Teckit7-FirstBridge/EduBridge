@@ -12,13 +12,15 @@
     const kw = $page.url.searchParams.get('kw') ?? '';
     const kwType = ($page.url.searchParams.get('kwType') ?? 'ALL') as KwTypeCourse;
     const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
+    const grade = $page.url.searchParams.get('grade') ?? '';
 
     const { data } = await rq.apiEndPoints().GET('/api/v1/courses', {
       params: {
         query: {
           kw,
           kwType,
-          page: page_
+          page: page_,
+          grade: grade
         }
       }
     });

@@ -61,10 +61,10 @@ class Rq {
         authorities = value;
       },
       get point() {
-        return dailyGoal;
+        return point;
       },
       set point(value: number) {
-        dailyGoal = value;
+        point = value;
       },
       get dailyGoal() {
         return dailyGoal;
