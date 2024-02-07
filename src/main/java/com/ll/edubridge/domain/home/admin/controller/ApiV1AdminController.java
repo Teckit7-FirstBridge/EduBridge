@@ -321,7 +321,7 @@ public class ApiV1AdminController {
                 Msg.E200_3_DELETE_SUCCEED.getMsg());
     }
 
-    @DeleteMapping("/posts/{postId}/report")
+    @PatchMapping("/posts/{postId}/report")
     @Operation(summary = "게시물 신고 처리")
     public RsData<Empty> cancelReport(@PathVariable("postId") Long id) {
 

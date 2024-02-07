@@ -104,6 +104,14 @@ export interface paths {
     /** 강좌 등록 */
     post: operations["createCourse"];
   };
+  "/api/v1/posts/{postId}/report": {
+    /** 신고하기 */
+    patch: operations["report"];
+  };
+  "/api/v1/admin/posts/{postId}/report": {
+    /** 게시물 신고 처리 */
+    patch: operations["cancelReport"];
+  };
   "/api/v1/posts/qna/{id}": {
     /** 1대1 문의 상세 정보 */
     get: operations["getQnaDetail"];
@@ -208,6 +216,7 @@ export interface components {
       /** Format: int32 */
       voteCount: number;
       likedByCurrentUser: boolean;
+      report: boolean;
     };
     RsDataPostDto: {
       resultCode: string;
@@ -243,6 +252,7 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["NickNameResponseBody"];
+
       fail: boolean;
       success: boolean;
     };
@@ -281,6 +291,7 @@ export interface components {
       authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
       authorities?: components["schemas"]["GrantedAuthority"][];
+      profileImgUrlOrDefault?: string;
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -358,6 +369,7 @@ export interface components {
       notice?: string;
       imgUrl?: string;
       overView?: string;
+      grade?: string;
       /** Format: int32 */
       price?: number;
       /** Format: int32 */
@@ -434,6 +446,22 @@ export interface components {
     LoginResponseBody: {
       item: components["schemas"]["MemberDto"];
     };
+    MemberDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      name: string;
+      profileImgUrl: string;
+      authorities: string[];
+      visitedToday: boolean;
+      /** Format: int32 */
+      dailyGoal: number;
+      /** Format: int32 */
+      dailyAchievement: number;
+      /** Format: int32 */
+      point?: number;
+    };
     RsDataLoginResponseBody: {
       resultCode: string;
       /** Format: int32 */
@@ -474,8 +502,7 @@ export interface components {
       notice: string;
       imgUrl: string;
       overView: string;
-      /** Format: int32 */
-      price?: number;
+      grade: string;
     };
     RsDataCreateCourseDto: {
       resultCode: string;
@@ -553,6 +580,8 @@ export interface components {
       courseId?: number;
       title?: string;
       imgUrl?: string;
+      /** Format: int32 */
+      price?: number;
     };
     GetCourseEnrollResponsebody: {
       items: components["schemas"]["CourseEnrollDto"][];
@@ -1275,6 +1304,38 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataCreateCourseDto"];
+        };
+      };
+    };
+  };
+  /** 신고하기 */
+  report: {
+    parameters: {
+      path: {
+        postId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataVoid"];
+        };
+      };
+    };
+  };
+  /** 게시물 신고 처리 */
+  cancelReport: {
+    parameters: {
+      path: {
+        postId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };

@@ -12,11 +12,14 @@ public class CourseEnrollDto {
 
     private String imgUrl;
 
+    private int price;
+
 
 
     public CourseEnrollDto(CourseEnroll courseEnroll){
         this.courseId=courseEnroll.getCourse().getId();
         this.title=courseEnroll.getCourse().getTitle();
         this.imgUrl=courseEnroll.getCourse().getImgUrl();
+        this.price=courseEnroll.getCourse().getPrice();
     }
 }

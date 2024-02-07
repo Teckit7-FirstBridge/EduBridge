@@ -124,18 +124,13 @@
         {#if courses}
           {#each courses as course}
             <div class="text-center">
-              <img
-                alt="Course Thumbnail"
-                class="mx-auto mb-4 object-cover rounded-md"
-                height="200"
-                src="https://generated.vusercontent.net/placeholder.svg"
-                style="aspect-ratio: 200/200; object-fit: cover"
-                width="200"
-              />
-              <h3 class="text-2xl font-semibold mb-3">{course.title}</h3>
-              <p class="text-gray-500 dark:text-gray-400">
-                {course.overView}
-              </p>
+              <a href="/course/{course.id}">
+                <img src={course.imgUrl} />
+                <h3 class="text-2xl font-semibold mb-3">{course.title}</h3>
+                <p class="text-gray-500 dark:text-gray-400">
+                  {course.overView}
+                </p>
+              </a>
             </div>
           {/each}
         {/if}
