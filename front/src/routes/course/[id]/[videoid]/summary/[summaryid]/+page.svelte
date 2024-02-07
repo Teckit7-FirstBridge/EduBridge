@@ -59,7 +59,7 @@
       <div>
         <p class="text-gray-600 mb-2">작성자: {summarynote.member?.nickname}</p>
         <!-- 글 작성자인 경우 -->
-        {#if rq.member.id == summarynote.member?.id}
+        {#if rq.member.id == summarynote.member?.id && summarynote.score!<70}
           <div class="flex gap-2">
             <a
               href="/course/{$page.params.id}/{$page.params.videoid}/summary/{$page.params

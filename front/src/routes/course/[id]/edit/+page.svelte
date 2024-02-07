@@ -16,7 +16,7 @@
 
   async function load() {
     const { data } = await rq.apiEndPoints().GET('/api/v1/courses/{courseId}', {
-      params: { path: { 'courseId': parseInt($page.params.id) } }
+      params: { path: { courseId: parseInt($page.params.id) } }
     });
 
     initialData = data!.data;
@@ -52,59 +52,59 @@
 {#await load()}
   <h1>loading...</h1>
 {:then { initialData }}
-{#if rq.isAdmin()}
-  <div class="flex flex-col h-full px-4 py-6 md:px-6 lg:py-16 md:py-12">
-    <div class="space-y-4">
-      <div class="space-y-2">
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="course-title">Title</label
-        ><input
-          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          id="course-title"
-          placeholder="Enter title"
-          bind:value={initialData.title}
-        />
-      </div>
-      <div class="space-y-2">
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="course-noti">Notification</label
-        >
-        <ToastUiEditor
-          id="course-noti"
-          bind:this={notieditor}
-          body={initialData.notice}
-          height={'calc(60dvh - 64px)'}
-        ></ToastUiEditor>
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="course-overview">OverView</label
-        >
-        <ToastUiEditor
-          id="course-overview"
-          bind:this={overvieweditor}
-          body={initialData.overView}
-          height={'calc(60dvh - 64px)'}
-        ></ToastUiEditor>
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="course-imgUrl">ImgUrl</label
-        ><input
-          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          id="course-imgUrl"
-          placeholder="Enter ImgUrl"
-          bind:value={initialData.imgUrl}
-        />
-      </div>
+  {#if rq.isAdmin()}
+    <div class="flex flex-col h-full px-4 py-6 md:px-6 lg:py-16 md:py-12">
+      <div class="space-y-4">
+        <div class="space-y-2">
+          <label
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            for="course-title">Title</label
+          ><input
+            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            id="course-title"
+            placeholder="Enter title"
+            bind:value={initialData.title}
+          />
+        </div>
+        <div class="space-y-2">
+          <label
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            for="course-noti">Notification</label
+          >
+          <ToastUiEditor
+            id="course-noti"
+            bind:this={notieditor}
+            body={initialData.notice}
+            height={'calc(60dvh - 64px)'}
+          ></ToastUiEditor>
+          <label
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            for="course-overview">OverView</label
+          >
+          <ToastUiEditor
+            id="course-overview"
+            bind:this={overvieweditor}
+            body={initialData.overView}
+            height={'calc(60dvh - 64px)'}
+          ></ToastUiEditor>
+          <label
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            for="course-imgUrl">ImgUrl</label
+          ><input
+            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            id="course-imgUrl"
+            placeholder="Enter ImgUrl"
+            bind:value={initialData.imgUrl}
+          />
+        </div>
 
-      <button
-        on:click={Post__save}
-        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
-        >Save</button
-      >
+        <button
+          on:click={Post__save}
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
+          >Save</button
+        >
+      </div>
     </div>
-  </div>
   {:else}
     <a href="/" class="btn btn-outline btn-error m-5">접근 불가 메인으로</a>
     {#if !rq.isLogin()}

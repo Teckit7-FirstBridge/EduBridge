@@ -12,14 +12,14 @@ public class SummaryNoteDto {
     private String content;
     private Long score;
     private boolean isPass;
-    private Long videoId;
+    private Long courseId;
     public SummaryNoteDto(SummaryNote summaryNote){
         this.id = summaryNote.getId();
         this.content = summaryNote.getContent();
         this.member = summaryNote.getWriter();
         this.score = summaryNote.getScore();
         this.isPass = summaryNote.getScore() >= 70;
-        this.videoId = summaryNote.getVideo().getId();
+        this.courseId = summaryNote.getVideo().getCourse().getId();
 
     }
 }

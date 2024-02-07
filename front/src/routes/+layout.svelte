@@ -100,6 +100,7 @@
       >
     </button>
     {#if rq.isLogin()}
+      <a href="/member/course" class="btn btn-ghost">내 강의실</a>
       <a href="/member/{rq.member.id}" class="btn btn-ghost">
         <img class="inline-block rounded-circle" src={rq.member.profileImgUrl} width="30" alt="" />
         {rq.member.name}
