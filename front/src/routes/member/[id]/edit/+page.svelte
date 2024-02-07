@@ -5,12 +5,11 @@
 
   let profileImageURL = $state(''); // 초기 프로필 이미지 경로
   let nickname = $state(''); // 사용자 닉네임
-  console.log(profileImageURL);
-  console.log(nickname);
 
   async function load() {
     profileImageURL = rq.member.profileImgUrl;
     nickname = rq.member.name;
+    return { profileImageURL, nickname };
   }
   // 사용자가 이미지를 업로드하면 호출될 함수
   function handleImageUpload(event) {
@@ -28,34 +27,26 @@
 </script>
 
 {#await load()}
-    <h2>loading...</h2>
-{:then } 
-    
-{/await}
+  <h2>loading...</h2>
+{:then { profileImageURL, nickname }}
+  <div class="container mx-auto p-4">
+    <div class="profile-section flex flex-col items-center justify-center">
+      <!-- 프로필 사진 -->
+      <img src={profileImageURL} alt="프로필 사진" class="profile-picture w-64 h-64 rounded-full" />
 
-<div class="container mx-auto p-4">
-  <div class="profile-section flex flex-col items-center justify-center">
-    <!-- 프로필 사진 -->
-    <img src={profileImageURL} alt="프로필 사진" class="profile-picture w-64 h-64 rounded-full" />
+      <!-- 이미지 업로드 입력란 -->
+      <input
+        type="file"
+        class="file-upload mt-3"
+        id="profileImageUpload"
+        on:change={handleImageUpload}
+      />
 
-    <!-- 이미지 업로드 입력란 -->
-    <input
-      type="file"
-      class="file-upload mt-3"
-      id="profileImageUpload"
-      on:change={handleImageUpload}
-    />
+      <!-- 닉네임 변경 입력란 -->
+      <input type="text" placeholder="닉네임" class="nickname-input mt-3" id="nicknameInput" />
 
-    <!-- 닉네임 변경 입력란 -->
-    <input
-      type="text"
-      placeholder="닉네임"
-      class="nickname-input mt-3"
-      id="nicknameInput"
-      bind:value={nickname}
-    />
-
-    <!-- 변경 사항 적용 버튼 -->
-    <button class="submit-button mt-3">수 정</button>
+      <!-- 변경 사항 적용 버튼 -->
+      <button class="submit-button mt-3">수 정</button>
+    </div>
   </div>
-</div>
+{/await}
