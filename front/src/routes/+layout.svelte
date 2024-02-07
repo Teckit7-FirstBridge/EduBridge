@@ -49,9 +49,7 @@
         {/if}
         {#if rq.isLogin()}
           <li>
-            <button on:click={() => rq.goToTempPostEditPage()}>
-              <i class="fa-solid fa-plus"></i> 글 작성
-            </button>
+            <a href="/board/write"><i class="fa-solid fa-plus"></i> 글 작성</a>
           </li>
           <li>
             <a href="/p/myList"><i class="fa-solid fa-list-check"></i> 내 글</a>
