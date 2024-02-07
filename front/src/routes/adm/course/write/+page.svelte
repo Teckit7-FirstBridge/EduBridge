@@ -12,7 +12,7 @@
   let notieditor: any | undefined = $state();
   let title: string | undefined = $state();
   let imgUrl: string | undefined = $state();
-  let price: number | undefined = $state();
+  let grade: string | undefined = $state();
 
   const Post__save = async () => {
     const newNoti = notieditor.editor.getMarkdown().trim();
@@ -25,7 +25,7 @@
         notice: newNoti,
         overView: newOverview,
         imgUrl: imgUrl,
-        price: price
+        grade: grade
       }
     });
 
@@ -73,13 +73,18 @@
         />
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="post-price">price</label
-        ><input
-          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          id="post-price"
-          placeholder="Enter ImgUrl"
-          bind:value={price}
-        />
+          for="post-price">grade</label
+        ><select
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          id="post-grade"
+          bind:value={grade}
+          placeholder="Select Grade"
+        >
+          <option disabled selected value="">Select Grade</option>
+          <option value="초급">초급</option>
+          <option value="중급">중급</option>
+          <option value="고급">고급</option>
+        </select>
       </div>
 
       <button
