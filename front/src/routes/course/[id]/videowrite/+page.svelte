@@ -7,6 +7,23 @@
   let keywords = $state('');
 
   const submitForm = async () => {
+    if (url.length < 1) {
+      rq.msgWarning('동영상 주소를 입력 해 주세요.');
+      return;
+    }
+    if (imgUrl.length < 1) {
+      rq.msgWarning('썸네일 주소를 입력 해 주세요.');
+      return;
+    }
+    if (keywords.length < 1) {
+      rq.msgWarning('키워드를 입력 해 주세요.');
+      return;
+    }
+    if (overview.length < 1) {
+      rq.msgWarning('개요를 입력 해 주세요.');
+      return;
+    }
+
     const { data, error } = await rq.apiEndPoints().POST(`/api/v1/admin/{courseId}/videos`, {
       params: { path: { courseId: parseInt($page.params.id) } },
       body: {

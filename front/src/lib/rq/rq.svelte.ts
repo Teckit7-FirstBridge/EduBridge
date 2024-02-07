@@ -104,6 +104,10 @@ class Rq {
     toastr.error(message);
   }
 
+  public msgWarning(message: string) {
+    toastr.warning(message);
+  }
+
   public goTo(url: string) {
     goto(url);
   }

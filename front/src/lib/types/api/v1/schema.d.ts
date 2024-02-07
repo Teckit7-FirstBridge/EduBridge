@@ -283,9 +283,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
-      authoritiesAsStringList?: string[];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -1388,8 +1388,7 @@ export interface operations {
       query?: {
         page?: number;
         kw?: string;
-        kwType?: "ALL" | "TITLE" | "NAME" | "GRADE";
-        grade?: string;
+        kwType?: "ALL" | "TITLE" | "NAME";
       };
     };
     responses: {
