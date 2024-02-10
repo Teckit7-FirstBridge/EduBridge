@@ -48,14 +48,19 @@
   }
 
   async function deleteCourse() {
-    const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/admin/courses/{id}`, {
-      params: { path: { id: parseInt($page.params.id) } }
-    });
-    if (data) {
-      rq.msgInfo('강좌가 삭제되었습니다');
-      rq.goTo('/course');
-    } else if (error) {
-      rq.msgError(error.msg);
+    const isConfirmed = confirm('강좌를 삭제하시겠습니까?');
+
+    if (isConfirmed) {
+      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/admin/courses/{id}`, {
+        params: { path: { id: parseInt($page.params.id) } }
+      });
+
+      if (data) {
+        rq.msgInfo('강좌가 삭제되었습니다');
+        rq.goTo('/adm/course');
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
     }
   }
 
@@ -91,16 +96,24 @@
   }
 
   async function deleteVideo(videoId: number) {
-    const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/admin/{courseId}/videos/{id}`, {
-      params: { path: { courseId: parseInt($page.params.id), id: videoId } }
-    });
-    if (data) {
-      rq.msgInfo('동영상이 삭제 되었습니다');
-      window.location.reload();
-    } else if (error) {
-      rq.msgError(error.msg);
+    const isConfirmed = confirm('동영상을 삭제하시겠습니까?');
+
+    if (isConfirmed) {
+      const { data, error } = await rq
+        .apiEndPoints()
+        .DELETE(`/api/v1/admin/{courseId}/videos/{id}`, {
+          params: { path: { courseId: parseInt($page.params.id), id: videoId } }
+        });
+
+      if (data) {
+        rq.msgInfo('동영상이 삭제 되었습니다');
+        window.location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
     }
   }
+
   async function clickLiked(item: components['schemas']['CourseDto']) {
     if (item.likedByCurrentUser) {
       const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}/like`, {
