@@ -25,6 +25,12 @@ public class ApiSecurityConfig {
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers(HttpMethod.GET, "/api/*/posts/{id:\\d+}", "/api/*/posts")
                                 .permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/*/courses/{id:\\d+}", "/api/*/courses")
+                                .permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/*/home")
+                                .permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/*/admin")
+                                .hasRole("ADMIN")
                                 .requestMatchers("/api/*/members/login", "/api/*/members/logout")
                                 .permitAll()
                                 .anyRequest()

@@ -100,4 +100,7 @@ public class AppConfig {
 
     @Getter
     public static int basePageSize = 10;
+
+    @Getter
+    public static int SummaryPassScore = 70;
 }

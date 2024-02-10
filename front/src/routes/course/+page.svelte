@@ -2,26 +2,56 @@
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
-  import CourseNav from '../../components/CourseNav.svelte';
+  import CourseNav from '../../lib/components/CourseNav.svelte';
 
+  let likesList;
+  let courselist: components['schemas']['CourseDto'][] | undefined;
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
     const kw = $page.url.searchParams.get('kw') ?? '';
     const kwType = ($page.url.searchParams.get('kwType') ?? 'ALL') as KwTypeCourse;
     const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
+    const grade = $page.url.searchParams.get('grade') ?? '';
 
     const { data } = await rq.apiEndPoints().GET('/api/v1/courses', {
       params: {
         query: {
           kw,
           kwType,
-          page: page_
+          page: page_,
+          grade: grade
         }
       }
     });
-
+    courselist = data?.data.items;
+    likesList = data?.data.items.map((course) => course.likedByCurrentUser);
+    console.log(courselist);
     return data!;
+  }
+
+  async function clickLiked(item: components['schemas']['CourseDto']) {
+    if (item.likedByCurrentUser) {
+      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}/like`, {
+        params: { path: { id: item.id } }
+      });
+      if (data) {
+        rq.msgInfo('좋아요 취소');
+        window.location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
+    } else {
+      const { data, error } = await rq.apiEndPoints().POST(`/api/v1/courses/{id}/like`, {
+        params: { path: { id: item.id } }
+      });
+      if (data) {
+        rq.msgInfo('좋아요!!');
+        window.location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
+    }
   }
 </script>
 
@@ -31,21 +61,59 @@
   <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
     <CourseNav></CourseNav>
     <div class="flex flex-col flex-1">
-      <a href="/course/write" class="btn mt-5 ml-6 w-[200px]"> 강좌 등록</a>
       <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {#if items}
             {#each items as item}
-              <a
-                href="/course/{item.id}"
+              <div
                 class="p-4 border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center"
               >
-                <h2 class="text-lg font-semibold my-2">{item.title}</h2>
-                <div class="flex justify-center my-2">
-                  <img src={item.imgUrl} />
+                <a href="/course/{item.id}">
+                  <h2 class="text-lg font-semibold my-2">{item.title}</h2>
+                  <div class="flex justify-center my-2">
+                    <img src={item.imgUrl} />
+                  </div>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 my-4">{item.overView}</p>
+                </a>
+                <div class=" flex justify-end gap-2" on:click={() => clickLiked(item)}>
+                  {#if item.likedByCurrentUser}<svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      height="24"
+                    >
+                      <!-- 빨간색 채워진 하트 -->
+                      <path
+                        fill="red"
+                        stroke="red"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                      />
+                    </svg>{:else}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      height="24"
+                    >
+                      <!-- 빨간색 빈 하트 -->
+                      <path
+                        fill="none"
+                        stroke="red"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                      />
+                    </svg>
+                  {/if}
+                  <span>
+                    {item.voteCount}
+                  </span>
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 my-4">{item.overView}</p>
-              </a>
+              </div>
             {/each}
           {/if}
         </div>

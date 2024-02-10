@@ -21,7 +21,7 @@ spring:
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         default_batch_fetch_size: 100
@@ -77,3 +77,10 @@ custom:
     dirPath: c:/temp/eb_dev/temp
   genFile:
     dirPath: c:/temp/eb_dev
+
+openai:
+  model: gpt-4-turbo-preview
+  secret-key: ON_SECRET
+  api:
+    key: ON_SECRET
+    url: https://api.openai.com/v1/chat/completions

@@ -1,13 +1,12 @@
 package com.ll.edubridge.domain.course.courseEnroll.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -20,13 +19,12 @@ import static lombok.AccessLevel.PROTECTED;
 @ToString(callSuper = true)
 public class CourseEnroll extends BaseEntity {
 
-    private LocalDateTime cancelDate;
-
+    @JsonIgnore
     @ManyToOne(optional = false)
     private Course course;
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     private Member member;
-
 
 }

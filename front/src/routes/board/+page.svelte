@@ -2,7 +2,9 @@
   import type { components } from '$lib/types/api/v1/schema';
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
-  let posts: components['schemas']['PostDto'][] = $state([]);
+  import Pagination from '$lib/components/Pagination.svelte';
+
+  let posts: components['schemas']['PageDtoPostDto'][] = $state([]);
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -21,25 +23,32 @@
       }
     });
 
-    posts = data!.data.items;
+    posts = data!.data.itemPage?.content;
 
     return data!;
   }
 
-  function closeDropdown() {
-    document.getElementById('dropdownButton')!.tabIndex = -1;
-    setTimeout(() => {
-      document.getElementById('dropdownButton')!.tabIndex = 0;
-    }, 100);
+  function sortPostsByCreateDate(ascending = true) {
+    posts.sort((a, b) => {
+      const dateA = new Date(a.createDate);
+      const dateB = new Date(b.createDate);
+      return ascending ? dateA - dateB : dateB - dateA;
+    });
   }
+  function sortPostsByVote(ascending = true) {
+    posts.sort((a, b) => {
+      const voteA = a.voteCount;
+      const voteB = b.voteCount;
 
-  async function search(params: type) {}
+      return ascending ? voteA - voteB : voteB - voteA;
+    });
+  }
 </script>
 
 <div class="max-w-4xl mx-auto my-8">
   {#await load()}
     <p>loading...</p>
-  {:then { data: { items } }}
+  {:then { data: { itemPage } }}
     <div class="flex flex-col w-full min-h-screen p-4 md:p-6">
       <h1 class="text-3xl font-bold mb-4">Q&amp;A</h1>
 
@@ -53,8 +62,8 @@
             value={$page.url.searchParams.get('kw') ?? ''}
             autocomplete="off"
           />
-          <div class="dropdown dropdown-end">
-            <button
+          <div class="dropdown">
+            <div
               tabindex="0"
               id="dropdownButton"
               class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-gray-100 hover:text-accent-foreground h-10 px-4 py-2"
@@ -77,11 +86,102 @@
                 <path d="M7 4v16"></path>
               </svg>
               Sort by
-            </button>
-
-            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-              <li><a on:click={closeDropdown}>날짜 내림차순</a></li>
-              <li><a on:click={closeDropdown}>날짜 오름차순</a></li>
+            </div>
+            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-36">
+              <li>
+                <a
+                  class="flex justify-between"
+                  on:click={() => {
+                    sortPostsByCreateDate(false);
+                  }}
+                  ><span>날짜</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21 21 17.25"
+                    />
+                  </svg>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="flex justify-between"
+                  on:click={() => {
+                    sortPostsByCreateDate(true);
+                  }}
+                  ><span>날짜</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12"
+                    />
+                  </svg>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="flex justify-between"
+                  on:click={() => {
+                    sortPostsByVote(true);
+                  }}
+                >
+                  <span>좋아요</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12"
+                    />
+                  </svg>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="flex justify-between"
+                  on:click={() => {
+                    sortPostsByVote(false);
+                  }}
+                >
+                  <span>좋아요</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21 21 17.25"
+                    />
+                  </svg>
+                </a>
+              </li>
             </ul>
           </div>
           <select
@@ -115,8 +215,8 @@
       </form>
 
       <div class="space-y-4">
-        {#if items}
-          {#each items as item}
+        {#if posts}
+          {#each posts as item}
             <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
               <a href="/board/{item.id}">
                 <div class="flex justify-between">
@@ -204,6 +304,7 @@
             </div>
           {/each}
         {/if}
+        <Pagination page={itemPage} />
       </div>
     </div>
   {/await}

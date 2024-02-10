@@ -1,6 +1,7 @@
 import { goto } from '$app/navigation';
 
 import type { components, paths } from '$lib/types/api/v1/schema';
+import { redirect } from '@sveltejs/kit';
 import createClient from 'openapi-fetch';
 
 import toastr from 'toastr';
@@ -23,7 +24,10 @@ class Rq {
     let name = $state('');
     let profileImgUrl = $state('');
     let createDate = $state('');
+    let point = $state(0);
     let authorities: string[] = $state([]);
+    let dailyGoal: number = $state(0);
+    let dailyAchievement: number = $state(0);
 
     this.member = {
       get id() {
@@ -55,6 +59,24 @@ class Rq {
       },
       set authorities(value: string[]) {
         authorities = value;
+      },
+      get point() {
+        return point;
+      },
+      set point(value: number) {
+        point = value;
+      },
+      get dailyGoal() {
+        return dailyGoal;
+      },
+      set dailyGoal(value: number) {
+        dailyGoal = value;
+      },
+      get dailyAchievement() {
+        return dailyAchievement;
+      },
+      set dailyAchievement(value: number) {
+        dailyAchievement = value;
       }
     };
   }
@@ -82,6 +104,10 @@ class Rq {
     toastr.error(message);
   }
 
+  public msgWarning(message: string) {
+    toastr.warning(message);
+  }
+
   public goTo(url: string) {
     goto(url);
   }
@@ -96,12 +122,14 @@ class Rq {
     this.member.profileImgUrl = member.profileImgUrl;
     this.member.name = member.name;
     this.member.authorities = member.authorities;
+    this.member.dailyGoal = member.dailyGoal;
+    this.member.dailyAchievement = member.dailyAchievement;
+    this.member.point = member.point;
   }
 
   public setLogout() {
     this.member.id = 0;
     this.member.createDate = '';
-    this.member.modifyDate = '';
     this.member.name = '';
     this.member.authorities = [];
   }
@@ -112,6 +140,12 @@ class Rq {
 
   public isLogout() {
     return !this.isLogin();
+  }
+
+  public isAdmin() {
+    if (this.isLogout()) return false;
+
+    return this.member.authorities.includes('ROLE_ADMIN');
   }
 
   public async initAuth() {

@@ -22,9 +22,14 @@ public class PostDto {
     @NonNull
     private String body;
 
+    @NonNull
     private int voteCount;
 
+    @NonNull
     private boolean likedByCurrentUser;
+
+    @NonNull
+    private boolean isReport;
 
     public PostDto(Post post, Member member) {
         this.id = post.getId();
@@ -35,6 +40,7 @@ public class PostDto {
         this.body = post.getContent();
         this.voteCount = post.getVoteCount();
         this.likedByCurrentUser = post.getVoter().contains(member);
+        this.isReport = post.isReport();
     }
 
     public PostDto(){

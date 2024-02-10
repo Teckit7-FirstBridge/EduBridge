@@ -4,18 +4,19 @@ import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
+import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.post.post.entity.Post;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.standard.base.KwTypeCourse;
-import com.ll.edubridge.standard.base.KwTypeV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,25 +25,42 @@ import java.util.Optional;
 public class CourseService {
     private final CourseRepository courseRepository;
     private final Rq rq;
+    private final CourseEnrollRepository courseEnrollRepository;
 
-    public Page<Course> findAll(Pageable pageable) {
-        return courseRepository.findAll(pageable);
+    public List<Course> findAll() {
+        return courseRepository.findAll();
     }
 
     public Optional<Course> findById(Long id) {
         return courseRepository.findById(id);
     }
 
+
     @Transactional
-    public Course create(Member member, CreateCourseDto createCourseDto) {
+    public Course create(CreateCourseDto createCourseDto) {
+
+        int price = 0;
+
+        switch (createCourseDto.getGrade()){
+            case "초급":
+                break;
+            case "중급":
+                price = 5000;
+                break;
+            case "고급":
+                price = 10000;
+                break;
+        }
+
         Course course = Course.builder()
                 .title(createCourseDto.getTitle())
                 .notice(createCourseDto.getNotice())
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
-                .price(createCourseDto.getPrice())
-                .owner(member)
+                .price(price)
+                .grade(createCourseDto.getGrade())
                 .build();
+
         return courseRepository.save(course);
     }
 
@@ -70,22 +88,56 @@ public class CourseService {
         if (course.isPresent()) {
             return course.get();
         } else {
-            throw new GlobalException("404-1", "해당 강좌을 찾을 수 없습니다.");
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(),CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
     }
 
     @Transactional
-    public boolean haveAuthority(Long id) {
+    public boolean haveAuthority() {
         Member member = rq.getMember();
 
         if (member == null) return false;
 
         if (rq.isAdmin()) return true;
 
-        return true;
+        return false;
+    }
+    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author,String grade, Pageable pageable) {
+        return courseRepository.findByKw(kwType, kw, author,grade, pageable);
+    }
+    public List<Course> findLatestCourse(int num) {
+        return courseRepository.findLatestCourse(num);
     }
 
-    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {
-        return courseRepository.findByKw(kwType, kw, author, pageable);
+    @Transactional
+    public void vote(Long id, Member member) {
+        Course course = this.getCourse(id);
+        course.getVoter().add(member);
+        courseRepository.save(course);
     }
+
+    @Transactional
+    public void deleteVote(Long id, Member member){
+        Course course = this.getCourse(id);
+        course.getVoter().remove(member);
+        courseRepository.save(course);
+    }
+
+    public boolean canLike(Member member, Course course) {
+        if (member == null) return false;
+        if (course == null) return false;
+
+        return !course.getVoter().contains(member);
+    }
+    public boolean canCancelLike(Member member, Course course) {
+        if (member == null) return false;
+        if (course == null) return false;
+
+        return course.getVoter().contains(member);
+    }
+
+    public List<Course> findByVoter(){
+        return courseRepository.findByVoter(rq.getMember());
+    }
+
 }

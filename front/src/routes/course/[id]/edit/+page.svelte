@@ -6,63 +6,62 @@
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
   import axios from 'axios';
+  import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
 
-  let divNoti: HTMLDivElement | undefined = $state();
-  let divOverview: HTMLDivElement | undefined = $state();
-  let notieditor: Editor;
-  let overvieweditor: Editor;
-  let title: string | undefined = $state();
-  let imgUrl: string | undefined = $state();
+  let overvieweditor: any | undefined = $state();
+  let notieditor: any | undefined = $state();
   let initialData: components['schemas']['CourseDto'] | undefined = $state();
 
   async function load() {
-    const { data } = await rq.apiEndPoints().GET('/api/v1/courses/{course-id}', {
-      params: { path: { 'course-id': parseInt($page.params.id) } }
+    const { data } = await rq.apiEndPoints().GET('/api/v1/courses/{courseId}', {
+      params: { path: { courseId: parseInt($page.params.id) } }
     });
 
     initialData = data!.data;
-    title = initialData.title;
-    imgUrl = initialData.imgUrl;
-    return data!;
+
+    return { initialData };
   }
-  load();
-  $effect(() => {
-    notieditor = new Editor({
-      el: divNoti,
-      height: 'calc(30dvh - 60px)',
-      initialEditType: 'markdown',
-      previewStyle: 'vertical',
-      initialValue: initialData?.notice
-    });
-    overvieweditor = new Editor({
-      el: divOverview,
-      height: 'calc(50dvh - 60px)',
-      initialEditType: 'markdown',
-      previewStyle: 'vertical',
-      initialValue: initialData?.overView
-    });
-    return () => {
-      notieditor.destroy();
-      overvieweditor.destroy();
-    };
-  });
 
-  const Post__save = async () => {
-    const newNoti = notieditor.getMarkdown().trim();
-    const newOverview = overvieweditor.getMarkdown().trim();
+  const Course__save = async () => {
+    const newNoti = notieditor.editor.getMarkdown().trim();
+    const newOverview = overvieweditor.editor.getMarkdown().trim();
+    const title = initialData?.title;
+    const imgUrl = initialData?.imgUrl;
 
-    const { data, error } = await rq.apiEndPointsWithFetch(fetch).PUT('/api/v1/courses/{id}', {
-      params: { path: { id: parseInt($page.params.id) } },
-      // url 설정
-      body: {
-        id: parseInt($page.params.id),
-        ownerName: rq.member.name,
-        title: title,
-        notice: newNoti,
-        overView: newOverview,
-        imgUrl: imgUrl
-      }
-    });
+    if (title?.length < 1) {
+      console.log('dd');
+      rq.msgWarning('제목을 입력 해 주세요');
+      return;
+    }
+
+    if (newNoti.length < 1) {
+      rq.msgWarning('공지를 입력 해 주세요');
+      return;
+    }
+
+    if (newOverview.length < 1) {
+      rq.msgWarning('개요를 입력 해 주세요');
+      return;
+    }
+
+    if (imgUrl?.length < 1) {
+      rq.msgWarning('썸네일 주소를 입력 해 주세요');
+      return;
+    }
+
+    const { data, error } = await rq
+      .apiEndPointsWithFetch(fetch)
+      .PUT('/api/v1/admin/courses/{id}', {
+        params: { path: { id: parseInt($page.params.id) } },
+        // url 설정
+        body: {
+          id: parseInt($page.params.id),
+          title: title,
+          notice: newNoti,
+          overView: newOverview,
+          imgUrl: initialData?.imgUrl
+        }
+      });
 
     if (data) {
       rq.msgInfo(data.msg); //msg
@@ -71,45 +70,68 @@
   };
 </script>
 
-<div class="flex flex-col h-full px-4 py-6 md:px-6 lg:py-16 md:py-12">
-  <div class="space-y-4">
-    <div class="space-y-2">
-      <label
-        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        for="post-title">Title</label
-      ><input
-        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-        id="post-title"
-        placeholder="Enter title"
-        bind:value={title}
-      />
-    </div>
-    <div class="space-y-2">
-      <label
-        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        for="post-noti">Notification</label
-      >
-      <div bind:this={divNoti} id="post-noti"></div>
-      <label
-        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        for="post-overview">OverView</label
-      >
-      <div bind:this={divOverview} id="post-overview"></div>
-      <label
-        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        for="post-title">ImgUrl</label
-      ><input
-        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-        id="post-title"
-        placeholder="Enter ImgUrl"
-        bind:value={imgUrl}
-      />
-    </div>
+{#await load()}
+  <h1>loading...</h1>
+{:then { initialData }}
+  {#if rq.isAdmin()}
+    <div class="px-60">
+      <div class="flex flex-col h-full px-4 py-6 md:px-6 lg:py-16 md:py-12">
+        <div class="space-y-4">
+          <div class="space-y-2">
+            <label
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              for="course-title">Title</label
+            ><input
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              id="course-title"
+              placeholder="Enter title"
+              bind:value={initialData.title}
+            />
+          </div>
+          <div class="space-y-2">
+            <label
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              for="course-noti">Notification</label
+            >
+            <ToastUiEditor
+              id="course-noti"
+              bind:this={notieditor}
+              body={initialData.notice}
+              height={'calc(60dvh - 64px)'}
+            ></ToastUiEditor>
+            <label
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              for="course-overview">OverView</label
+            >
+            <ToastUiEditor
+              id="course-overview"
+              bind:this={overvieweditor}
+              body={initialData.overView}
+              height={'calc(60dvh - 64px)'}
+            ></ToastUiEditor>
+            <label
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              for="course-imgUrl">ImgUrl</label
+            ><input
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              id="course-imgUrl"
+              placeholder="Enter ImgUrl"
+              bind:value={initialData.imgUrl}
+            />
+          </div>
 
-    <button
-      on:click={Post__save}
-      class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
-      >Save</button
-    >
-  </div>
-</div>
+          <button
+            on:click={Course__save}
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
+            >Save</button
+          >
+        </div>
+      </div>
+    </div>
+  {:else}
+    <a href="/" class="btn btn-outline btn-error m-5">접근 불가 메인으로</a>
+    {#if !rq.isLogin()}
+      <a href="/member/login" class="btn btn-outline btn-error m-5">로그인</a>
+    {/if}
+  {/if}
+{/await}

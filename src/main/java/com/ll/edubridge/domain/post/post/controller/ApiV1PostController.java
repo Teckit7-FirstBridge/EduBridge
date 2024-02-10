@@ -7,14 +7,17 @@ import com.ll.edubridge.domain.post.post.dto.QnaDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.service.PostService;
 import com.ll.edubridge.global.app.AppConfig;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
+import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.KwTypeV1;
+import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Getter;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,21 +40,12 @@ public class ApiV1PostController {
     private final PostService postService;
     private final Rq rq;
 
-    @Getter
-    public static class GetPostsResponseBody {
-        @NonNull
-        private final List<PostDto> items;
 
-        public GetPostsResponseBody(Page<Post> page, Member currentUser) {
-            this.items = page.getContent().stream()
-                    .map(post -> new PostDto(post, currentUser))
-                    .toList();
-        }
+    public record GetPostsResponseBody(@NonNull PageDto<PostDto> itemPage) {
     }
 
-
     @GetMapping(value = "")
-    @Operation(summary = "글 다건조회")
+    @Operation(summary = "글 다건 조회")
     public RsData<GetPostsResponseBody> getPosts(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "") String kw,
@@ -61,25 +55,32 @@ public class ApiV1PostController {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
-        Page<Post> postPage = postService.findByKw(kwType, kw, null, true, pageable);
+        Page<Post> posts = postService.findByKw(kwType, kw, null, true, pageable);
 
-        GetPostsResponseBody responseBody = new GetPostsResponseBody(postPage, rq.getMember());
+        Page<PostDto> postPage = posts.map(this::postToDto);
 
         return RsData.of(
-                "200-1",
-                "성공",
-                responseBody
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                new GetPostsResponseBody(new PageDto<>(postPage))
         );
+
+    }
+    private PostDto postToDto(Post post) {
+        PostDto dto = new PostDto(post, rq.getMember());
+
+        return dto;
     }
 
     @PostMapping("")
     @Operation(summary = "글 등록")
-    public RsData<CreatePostDto> createPost(@RequestBody CreatePostDto createPostDto) {
+    public RsData<CreatePostDto> createPost(@Valid @RequestBody CreatePostDto createPostDto) {
         Post post = postService.create(rq.getMember(), createPostDto);
 
         CreatePostDto createdPostDto = new CreatePostDto(post);
 
-        return RsData.of("200-0", "등록 성공", createdPostDto);
+        return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
+                Msg.E200_0_CREATE_SUCCEED.getMsg(), createdPostDto);
     }
 
     @GetMapping("/{id}")
@@ -88,10 +89,11 @@ public class ApiV1PostController {
         Post post = postService.getPost(id);
 
         if (!postService.canRead(post))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         PostDto postDto = new PostDto(post, rq.getMember());
-        return RsData.of("200-1", "성공", postDto);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), postDto);
     }
 
     @PutMapping("/{id}")
@@ -101,13 +103,14 @@ public class ApiV1PostController {
             @RequestBody PostDto postDto) {
 
         if (!postService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         Post modifyPost = postService.modify(id, postDto);
 
         PostDto modifyPostDto = new PostDto(modifyPost, rq.getMember());
 
-        return RsData.of("200-2", "수정 성공", modifyPostDto);
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
+                Msg.E200_2_MODIFY_SUCCEED.getMsg(), modifyPostDto);
     }
 
     @DeleteMapping("/{id}")
@@ -115,11 +118,12 @@ public class ApiV1PostController {
     public RsData<Empty> delete(@PathVariable("id") Long id) {
 
         if (!postService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         postService.delete(id);
 
-        return RsData.of("200-3", "삭제 성공");
+        return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
+                Msg.E200_3_DELETE_SUCCEED.getMsg());
     }
 
     @PostMapping("/{id}/like")
@@ -128,12 +132,13 @@ public class ApiV1PostController {
         Member member = rq.getMember();
 
         if (!postService.canLike(member, postService.getPost(id))) {
-            throw new GlobalException("400-1", "이미 추천하셨습니다.");
+            throw new GlobalException(CodeMsg.E400_1_ALREADY_RECOMMENDED.getCode(),CodeMsg.E400_1_ALREADY_RECOMMENDED.getMessage());
         }
 
         postService.vote(id, member);
 
-        return RsData.of("200-4", "추천 성공");
+        return RsData.of(Msg.E200_4_RECOMMEND_SUCCEED.getCode(),
+                Msg.E200_4_RECOMMEND_SUCCEED.getMsg());
     }
 
     @DeleteMapping("/{id}/like")
@@ -142,13 +147,16 @@ public class ApiV1PostController {
         Member member = rq.getMember();
 
         if (!postService.canCancelLike(member, postService.getPost(id))) {
-            throw new GlobalException("400-2", "추천을 하지 않았습니다.");
+            throw new GlobalException(CodeMsg.E400_2_NOT_RECOMMENDED_YET.getCode(),CodeMsg.E400_2_NOT_RECOMMENDED_YET.getMessage());
         }
 
         postService.deleteVote(id, member);
 
-        return RsData.of("200-5", "추천 취소 성공");
+        return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getCode(),
+                Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getMsg());
     }
+
+
 
     @PostMapping("/qna")
     @Operation(summary = "1대1 문의 등록")
@@ -157,7 +165,8 @@ public class ApiV1PostController {
 
         QnaDto createdQnaDto = new QnaDto(post);
 
-        return RsData.of("200-0", "등록 성공", createdQnaDto);
+        return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
+                Msg.E200_0_CREATE_SUCCEED.getMsg(), createdQnaDto);
     }
 
     @GetMapping("/qna")
@@ -171,7 +180,8 @@ public class ApiV1PostController {
                 .map(QnaDto::new)
                 .collect(Collectors.toList());
 
-        return RsData.of("200-1", "조회 성공", qnaDtoList);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), qnaDtoList);
     }
 
     @GetMapping("/qna/{id}")
@@ -180,10 +190,11 @@ public class ApiV1PostController {
         Post post = postService.getPost(id);
 
         if (!postService.canRead(post))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         QnaDto qnaDto = new QnaDto(post);
-        return RsData.of("200-1", "성공", qnaDto);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), qnaDto);
     }
 
     @DeleteMapping("/qna/{id}")
@@ -191,12 +202,27 @@ public class ApiV1PostController {
     public RsData<Empty> deleteQna(@PathVariable("id") Long id) {
 
         if (!postService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         postService.delete(id);
 
-        return RsData.of("200-3", "삭제 성공");
+        return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
+                Msg.E200_3_DELETE_SUCCEED.getMsg());
     }
 
+    @PatchMapping("/{postId}/report")
+    @Operation(summary = "신고하기")
+    public RsData<Void> report(@PathVariable("postId") Long id) {
 
+        Post post = postService.getPost(id);
+
+        if (!postService.canReport(rq.getMember(), postService.getPost(id))) {
+            throw new GlobalException(CodeMsg.E400_7_ALREADY_REPORT.getCode(),CodeMsg.E400_7_ALREADY_REPORT.getMessage());
+        }
+
+        postService.isReported(post);
+
+        return RsData.of(Msg.E200_8_REPORT_SUCCEED.getCode(),
+                Msg.E200_8_REPORT_SUCCEED.getMsg());
+    }
 }

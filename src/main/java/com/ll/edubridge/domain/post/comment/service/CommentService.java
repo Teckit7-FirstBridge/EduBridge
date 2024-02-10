@@ -5,6 +5,7 @@ import com.ll.edubridge.domain.post.comment.dto.CreateCommentDto;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.comment.repository.CommentRepository;
 import com.ll.edubridge.domain.post.post.service.PostService;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
@@ -102,7 +103,7 @@ public class CommentService {
         if (comment.isPresent()) {
             return comment.get();
         } else {
-            throw new GlobalException("404-1", "comment를 찾을 수 없습니다");
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(),CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
     }
 
