@@ -40,7 +40,7 @@
             <div class="mb-5">
               <div class="flex justify-col justify-end">
                 <div>
-                  <h2 class="text-2xl font-semibold text-gray-800">멤버 관리</h2>
+                  <h2 class="text-2xl font-semibold text-gray-800">사용자 관리</h2>
                 </div>
               </div>
               <div class="mt-3 bg-white shadow overflow-hidden rounded-md">
