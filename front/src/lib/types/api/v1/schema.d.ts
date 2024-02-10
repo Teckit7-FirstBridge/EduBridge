@@ -283,8 +283,8 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
       authoritiesAsStringList?: string[];
+      authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
     };
     RsDataSummaryNoteDto: {
@@ -299,12 +299,17 @@ export interface components {
     SummaryNoteDto: {
       /** Format: int64 */
       id?: number;
+      /** Format: date-time */
+      createDate?: string;
       member?: components["schemas"]["Member"];
       content?: string;
       /** Format: int64 */
       score?: number;
       /** Format: int64 */
       courseId?: number;
+      /** Format: int64 */
+      videoId?: number;
+      courseName?: string;
       pass?: boolean;
     };
     CreateCommentDto: {

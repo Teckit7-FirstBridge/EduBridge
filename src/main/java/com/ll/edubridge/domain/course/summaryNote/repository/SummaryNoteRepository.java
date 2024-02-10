@@ -21,10 +21,6 @@ public interface SummaryNoteRepository extends JpaRepository<SummaryNote, Long> 
 
     List<SummaryNote> findByWriterId(Long id);
 
-    @Query("select "
-            + "s.id, s.content, s.createDate, s.score "
-            + "from SummaryNote s "
-            + "where (s.video.course.id = :courseId) "
-            + "and (s.writer.id = :memberId)")
+    @Query("from SummaryNote s where s.video.course.id = :courseId and s.writer.id = :memberId order by s.video.id asc")
     List<SummaryNote> findByWriterIdAndCourseId(Long memberId, Long courseId);
 }
