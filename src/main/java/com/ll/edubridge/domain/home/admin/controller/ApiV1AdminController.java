@@ -10,10 +10,7 @@ import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
 import com.ll.edubridge.domain.course.video.dto.VideoDto;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.course.video.service.VideoService;
-import com.ll.edubridge.domain.home.admin.dto.RecentCourseDto;
-import com.ll.edubridge.domain.home.admin.dto.RecentMemberDto;
-import com.ll.edubridge.domain.home.admin.dto.RecentSummaryNoteDto;
-import com.ll.edubridge.domain.home.admin.dto.ReportedPostDto;
+import com.ll.edubridge.domain.home.admin.dto.*;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.domain.post.post.entity.Post;
@@ -124,6 +121,23 @@ public class ApiV1AdminController {
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 recentSummaryNoteList
+        );
+    }
+
+    @GetMapping(value = "/qna")
+    @Operation(summary = "최신 문의")
+    public RsData<List<AdminQnaDto>> getQna() {
+
+        List<Post> recentQna = postService.recentQna();
+
+        List<AdminQnaDto> recentQnaList = recentQna.stream()
+                .map(AdminQnaDto::new)
+                .toList();
+
+        return RsData.of(
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                recentQnaList
         );
     }
 
@@ -333,5 +347,36 @@ public class ApiV1AdminController {
 
         return RsData.of(Msg.E200_7_CANCEL_REPORT_SUCCEED.getCode(),
                 Msg.E200_7_CANCEL_REPORT_SUCCEED.getMsg());
+    }
+
+    public record GetQnaResponseBody(@NonNull PageDto<AdminQnaDto> itemPage) {
+    }
+
+    @GetMapping(value = "/qna/list")
+    @Operation(summary = "1대1 문의 목록")
+    public RsData<GetQnaResponseBody> getAllQna(
+            @RequestParam(defaultValue = "1") int page) {
+
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+
+        Page<Post> qna = postService.findAllQna(pageable);
+
+        Page<AdminQnaDto> qnaPage = qna.map(this::qnaToDto);
+
+        return RsData.of(
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                new GetQnaResponseBody(
+                        new PageDto<>(qnaPage)
+                )
+        );
+    }
+
+    private AdminQnaDto qnaToDto(Post post) {
+        AdminQnaDto dto = new AdminQnaDto(post);
+
+        return dto;
     }
 }

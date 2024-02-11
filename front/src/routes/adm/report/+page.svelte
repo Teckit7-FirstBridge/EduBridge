@@ -3,7 +3,7 @@
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
   import Pagination from '$lib/components/Pagination.svelte';
-  import CourseNav from '../../../lib/components/CourseNavAdm.svelte';
+  import CourseNav from '../../../lib/components/AdmNav.svelte';
 
   let reportPost: components['schemas']['ReportedPostDto'][] = $state();
 

@@ -185,6 +185,14 @@ export interface paths {
     /** 신고 게시물 목록 */
     get: operations["getAllReportedPosts"];
   };
+  "/api/v1/admin/qna": {
+    /** 최신 문의 */
+    get: operations["getQna"];
+  };
+  "/api/v1/admin/qna/list": {
+    /** 1대1 문의 목록 */
+    get: operations["getAllQna"];
+  };
   "/api/v1/admin/members": {
     /** 회원 최신순 */
     get: operations["getMembers"];
@@ -283,8 +291,8 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
+      authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
     };
     RsDataSummaryNoteDto: {
@@ -408,26 +416,6 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    QnaDto: {
-      /** Format: int64 */
-      id: number;
-      /** Format: date-time */
-      createDate: string;
-      /** Format: int64 */
-      authorId: number;
-      authorName: string;
-      title: string;
-      body: string;
-    };
-    RsDataQnaDto: {
-      resultCode: string;
-      /** Format: int32 */
-      statusCode: number;
-      msg: string;
-      data: components["schemas"]["QnaDto"];
-      fail: boolean;
-      success: boolean;
-    };
     Empty: Record<string, never>;
     RsDataEmpty: {
       resultCode: string;
@@ -519,12 +507,32 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    QnaDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      /** Format: int64 */
+      authorId: number;
+      authorName: string;
+      title: string;
+      body: string;
+    };
     RsDataListQnaDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
       data: components["schemas"]["QnaDto"][];
+      fail: boolean;
+      success: boolean;
+    };
+    RsDataQnaDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["QnaDto"];
       fail: boolean;
       success: boolean;
     };
@@ -701,6 +709,46 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["ReportedPostDto"][];
+      fail: boolean;
+      success: boolean;
+    };
+    AdminQnaDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      authorName: string;
+      title: string;
+    };
+    RsDataListAdminQnaDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["AdminQnaDto"][];
+      fail: boolean;
+      success: boolean;
+    };
+    GetQnaResponseBody: {
+      itemPage?: components["schemas"]["PageDtoAdminQnaDto"];
+    };
+    PageDtoAdminQnaDto: {
+      /** Format: int64 */
+      totalElementsCount: number;
+      /** Format: int64 */
+      pageElementsCount: number;
+      /** Format: int64 */
+      totalPagesCount: number;
+      /** Format: int32 */
+      number: number;
+      content: components["schemas"]["AdminQnaDto"][];
+    };
+    RsDataGetQnaResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetQnaResponseBody"];
       fail: boolean;
       success: boolean;
     };
@@ -1072,14 +1120,14 @@ export interface operations {
   createQna: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["QnaDto"];
+        "application/json": components["schemas"]["CreatePostDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataQnaDto"];
+          "application/json": components["schemas"]["RsDataCreatePostDto"];
         };
       };
     };
@@ -1600,6 +1648,33 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataListReportedPostDto"];
+        };
+      };
+    };
+  };
+  /** 최신 문의 */
+  getQna: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListAdminQnaDto"];
+        };
+      };
+    };
+  };
+  /** 1대1 문의 목록 */
+  getAllQna: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetQnaResponseBody"];
         };
       };
     };
