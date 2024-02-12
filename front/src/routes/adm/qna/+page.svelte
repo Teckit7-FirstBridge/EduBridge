@@ -5,14 +5,14 @@
   import Pagination from '$lib/components/Pagination.svelte';
   import CourseNav from '../../../lib/components/AdmNav.svelte';
 
-  let members: components['schemas']['PageDtoRecentMemberDto'][] = $state();
+  let qna: components['schemas']['PageDtoAdminQnaDto'][] = $state();
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
     const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
 
-    const { data } = await rq.apiEndPoints().GET(`/api/v1/admin/members/list`, {
+    const { data } = await rq.apiEndPoints().GET(`/api/v1/admin/qna/list`, {
       params: {
         query: {
           page: page_
@@ -20,7 +20,7 @@
       }
     });
 
-    members = data!.data.itemPage?.content;
+    qna = data!.data.itemPage?.content;
 
     return data!;
   }
@@ -36,11 +36,11 @@
       </div>
       <div class="py-8 px-56 w-full">
         <div>
-          {#if members && members.length > 0}
+          {#if qna && qna.length > 0}
             <div class="mb-5">
               <div class="flex justify-col justify-end">
                 <div>
-                  <h2 class="text-2xl font-semibold text-gray-800">사용자 관리</h2>
+                  <h2 class="text-2xl font-semibold text-gray-800">1대1 문의 관리</h2>
                 </div>
               </div>
               <div class="mt-3 bg-white shadow overflow-hidden rounded-md">
@@ -51,39 +51,35 @@
                         scope="col"
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        이름
+                        문의 제목
                       </th>
                       <th
                         scope="col"
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        가입일
+                        작성자
                       </th>
                       <th
                         scope="col"
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        신고
+                        작성일
                       </th>
                     </tr>
                   </thead>
                   <tbody class="bg-white divide-y divide-gray-200">
-                    {#each members as item}
+                    {#each qna as item}
                       <tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          <a href="/" class="text-blue-600 hover:text-blue-900">
-                            {item.name}
+                          <a href="/member/qna/{item.id}" class="text-blue-600 hover:text-blue-900">
+                            {item.title}
                           </a>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {item.authorName}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {`${new Date(item.createDate).getFullYear()}년 ${new Date(item.createDate).getMonth() + 1}월 ${new Date(item.createDate).getDate()}일`}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          <div
-                            class={`inline-flex px-2 text-xs font-semibold rounded-full ${item.report ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}
-                          >
-                            {item.report ? '신고됨' : '신고 없음'}
-                          </div>
                         </td>
                       </tr>
                     {/each}

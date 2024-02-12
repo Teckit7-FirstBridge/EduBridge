@@ -53,8 +53,13 @@
               <a href="/board/write"><i class="fa-solid fa-plus"></i> 글 작성</a>
             </li>
             <li>
-              <a href="/p/myList"><i class="fa-solid fa-list-check"></i> 내 글</a>
+              <a href="/board/myList"><i class="fa-solid fa-list-check"></i> 내 글</a>
             </li>
+            {#if !rq.isAdmin()}
+              <li>
+                <a href="/member/qna"><i class="fa-solid fa-list-check"></i> 1대1 문의</a>
+              </li>
+            {/if}
             <li>
               <button on:click={() => rq.logout()}>
                 <i class="fa-solid fa-right-from-bracket"></i> 로그아웃

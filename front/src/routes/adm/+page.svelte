@@ -1,13 +1,13 @@
 <script lang="ts">
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
-  import CourseNav from '../../lib/components/CourseNavAdm.svelte';
+  import CourseNav from '../../lib/components/AdmNav.svelte';
   import { onMount } from 'svelte';
 
   let recentCourse: components['schemas']['RecentCourseDto'][] = $state();
   let recentMember: components['schemas']['RecentMemberDto'][] = $state();
   let reportPost: components['schemas']['ReportedPostDto'][] = $state();
-  let recentNote: components['schemas']['RecentSummaryNoteDto'][] = $state();
+  let recentQna: components['schemas']['AdminQnaDto'][] = $state();
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -16,25 +16,26 @@
     const responseMember = await rq.apiEndPoints().GET(`/api/v1/admin/members`);
     const responseReportPost = await rq.apiEndPoints().GET(`/api/v1/admin/reports`);
     const responseNote = await rq.apiEndPoints().GET(`/api/v1/admin/summaryNotes`);
+    const responseQna = await rq.apiEndPoints().GET(`/api/v1/admin/qna`);
 
     recentCourse = responseCourse.data?.data!;
     recentMember = responseMember.data?.data!;
     reportPost = responseReportPost.data?.data!;
-    recentNote = responseNote.data?.data!;
+    recentQna = responseQna.data?.data!;
 
-    return { recentCourse, recentMember, reportPost, recentNote };
+    return { recentCourse, recentMember, reportPost, recentQna };
   }
 </script>
 
 {#await load()}
   <p class="text-center">loading...</p>
-{:then { recentCourse, recentMember, reportPost, recentNote }}
+{:then { recentCourse, recentMember, reportPost, recentQna }}
   {#if rq.isAdmin()}
     <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
       <div>
         <CourseNav></CourseNav>
       </div>
-      <div class="flex py-4 pl-16 flex-1">
+      <div class="flex py-4 px-16 flex-1">
         <div class="w-1/2">
           <div class="flex-1 p-4">
             {#if recentCourse && recentCourse.length > 0}
@@ -46,7 +47,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/course"
-                      class="inline-block px-2 py-1 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                      class="inline-block px-2 py-1 bg-gray-100 text-blue-600 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-blue-600"
                       >+</a
                     >
                   </div>
@@ -91,7 +92,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/member"
-                      class="inline-block px-2 py-1 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                      class="inline-block px-2 py-1 bg-gray-100 text-blue-600 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-blue-600"
                       >+</a
                     >
                   </div>
@@ -151,77 +152,6 @@
         </div>
         <div class="px-16 w-1/2">
           <div class="flex-1 p-4">
-            {#if recentNote && recentNote.length > 0}
-              <div class="mb-5">
-                <div class="flex justify-col justify-end">
-                  <div>
-                    <h2 class="text-2xl font-semibold text-gray-800">요약 노트 관리</h2>
-                  </div>
-                  <div class="ml-2 mt-1">
-                    <a
-                      href="/adm/note"
-                      class="inline-block px-2 py-1 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-                      >+</a
-                    >
-                  </div>
-                </div>
-                <div class="mt-3 bg-white shadow overflow-hidden rounded-md">
-                  <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                      <tr>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                          강좌명
-                        </th>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                          작성일
-                        </th>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                          작성자
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                      {#each recentNote as item}
-                        <tr>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            <a
-                              href="/course/{item.courseId}/{item.videoId}/summary/{item.id}"
-                              class="text-blue-600 hover:text-blue-900"
-                            >
-                              {item.courseName}
-                            </a>
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {`${new Date(item.createDate).getFullYear()}년 ${new Date(item.createDate).getMonth() + 1}월 ${new Date(item.createDate).getDate()}일`}
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            <a
-                              href="/course/{item.courseId}/{item.videoId}/summary/{item.id}"
-                              class="text-blue-600 hover:text-blue-900"
-                            >
-                              {item.name}
-                            </a>
-                          </td>
-                        </tr>
-                      {/each}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            {:else}
-              <p>요약 노트가 없습니다.</p>
-            {/if}
-          </div>
-          <div class="flex-1 p-4">
             {#if reportPost && reportPost.length > 0}
               <div>
                 <div class="flex justify-col justify-end">
@@ -231,7 +161,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/report"
-                      class="inline-block px-2 py-1 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                      class="inline-block px-2 py-1 bg-gray-100 text-blue-600 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-blue-600"
                       >+</a
                     >
                   </div>
@@ -291,6 +221,69 @@
               </div>
             {:else}
               <p>신고된 글이 없습니다.</p>
+            {/if}
+          </div>
+          <div class="flex-1 p-4">
+            {#if recentQna && recentQna.length > 0}
+              <div>
+                <div class="flex justify-col justify-end">
+                  <div>
+                    <h2 class="text-2xl font-semibold text-gray-800">문의 관리</h2>
+                  </div>
+                  <div class="ml-2 mt-1">
+                    <a
+                      href="/adm/qna"
+                      class="inline-block px-2 py-1 bg-gray-100 text-blue-600 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-blue-600"
+                      >+</a
+                    >
+                  </div>
+                </div>
+                <div class="mt-3 bg-white shadow overflow-hidden rounded-md">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          제목
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          작성자
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          작성일
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      {#each recentQna as qna}
+                        <tr>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <a href="/board/{qna.id}" class="text-blue-600 hover:text-blue-900">
+                              {qna.title}
+                            </a></td
+                          >
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {qna.authorName}
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {`${new Date(qna.createDate).getFullYear()}년 ${new Date(qna.createDate).getMonth() + 1}월 ${new Date(qna.createDate).getDate()}일`}
+                          </td>
+                        </tr>
+                      {/each}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            {:else}
+              <p>문의 글이 없습니다.</p>
             {/if}
           </div>
         </div>
