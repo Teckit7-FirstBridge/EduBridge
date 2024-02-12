@@ -14,4 +14,6 @@ public interface CourseRepository extends JpaRepository<Course, Long>,CustomCour
     Page<Course> findAll(Pageable pageable);
 
     Optional<Course> findById(Long id);
+
+    List<Course> findTop5ByOrderByIdDesc();
 }

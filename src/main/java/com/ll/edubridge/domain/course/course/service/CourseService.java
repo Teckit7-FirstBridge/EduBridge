@@ -152,6 +152,7 @@ public class CourseService {
     }
 
 
-
-
+    public List<Course> findRecentCourse() {
+        return courseRepository.findTop5ByOrderByIdDesc();
+    }
 }
