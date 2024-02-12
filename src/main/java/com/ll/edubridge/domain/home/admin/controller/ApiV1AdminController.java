@@ -336,14 +336,19 @@ public class ApiV1AdminController {
     }
 
     @PatchMapping("/posts/{postId}/report")
-    @Operation(summary = "게시물 신고 처리")
+    @Operation(summary = "게시물 신고 취소")
     public RsData<Empty> cancelReport(@PathVariable("postId") Long id) {
 
         if (!postService.canCancelReport(postService.getPost(id))) {
             throw new GlobalException(CodeMsg.E400_6_CANCEL_REPORT_FAILED.getCode(), CodeMsg.E400_6_CANCEL_REPORT_FAILED.getMessage());
         }
 
+        Member member = postService.getPost(id).getWriter();
+
         postService.deleteReport(id);
+
+        if (postService.hasNotReported(member))
+            memberService.cancelReport(member);
 
         return RsData.of(Msg.E200_7_CANCEL_REPORT_SUCCEED.getCode(),
                 Msg.E200_7_CANCEL_REPORT_SUCCEED.getMsg());
