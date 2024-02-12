@@ -19,11 +19,11 @@
     });
     videos = responseVideos.data?.data!;
 
-    const { data } = await rq.apiEndPoints().GET(`/api/v1/courses/{videoid}/note/{note-id}`, {
+    const { data } = await rq.apiEndPoints().GET(`/api/v1/courses/{videoId}/note/{noteId}`, {
       params: {
         path: {
-          videoid: parseInt($page.params.videoid),
-          'note-id': parseInt($page.params.summaryid)
+          videoId: parseInt($page.params.videoid),
+          noteId: parseInt($page.params.summaryid)
         }
       }
     });
@@ -33,9 +33,9 @@
     return { videos, summarynote };
   }
   const submitForm = async () => {
-    const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/courses/{videoid}/note/{noteId}`, {
+    const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/courses/{videoId}/note/{noteId}`, {
       params: {
-        path: { videoid: parseInt($page.params.videoid), noteId: parseInt($page.params.summaryid) }
+        path: { videoId: parseInt($page.params.videoid), noteId: parseInt($page.params.summaryid) }
       },
       body: {
         content
@@ -43,6 +43,8 @@
     });
     if (data) {
       rq.goTo(`/course/${$page.params.id}/${$page.params.videoid}/summary/${data.data.id}`);
+    } else if (error) {
+      rq.msgError('이미 통과 된 요약노트는 수정이 불가합니다.');
     }
   };
 </script>

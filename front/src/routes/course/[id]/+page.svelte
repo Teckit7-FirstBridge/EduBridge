@@ -68,7 +68,7 @@
     const isConfirmed = confirm('강좌를 공개하시겠습니까?');
 
     if (isConfirmed) {
-      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startorstop`, {
+      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startOrStop`, {
         params: { path: { courseId: parseInt($page.params.id) } }
       });
 
@@ -85,7 +85,7 @@
     const isConfirmed = confirm('강좌를 비공개 하시겠습니까?');
 
     if (isConfirmed) {
-      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startorstop`, {
+      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startOrStop`, {
         params: { path: { courseId: parseInt($page.params.id) } }
       });
 
