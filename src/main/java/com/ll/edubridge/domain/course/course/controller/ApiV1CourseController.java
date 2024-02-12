@@ -14,6 +14,7 @@ import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.KwTypeCourse;
+import com.nimbusds.jose.util.JSONObjectUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
@@ -57,11 +58,18 @@ public class ApiV1CourseController {
             @RequestParam(defaultValue = "ALL") KwTypeCourse kwType,
             @RequestParam(defaultValue = "") String grade
     ) {
-
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
-        Page<Course> coursePage = courseService.findByKw(kwType, kw, null,grade, pageable);
+
+        Page<Course> coursePage;
+        if (rq.isAdmin()) {
+            coursePage = courseService.findByKwAdmin(kwType, kw, null, grade, pageable);
+            System.out.println("chanwooadmin");
+        } else {
+            coursePage = courseService.findByKw(kwType, kw, null, grade, pageable);
+            System.out.println("chanwoo");
+        }
 
         GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage);
 
@@ -69,6 +77,7 @@ public class ApiV1CourseController {
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 responseBody
+
         );
     }
 

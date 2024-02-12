@@ -6,6 +6,24 @@
 
   let likesList;
   let courselist: components['schemas']['CourseDto'][] | undefined;
+
+  function removeMarkdown(markdownText) {
+    // 정규 표현식을 사용하여 마크다운 문법 제거
+    const text = markdownText
+      .replace(/!\[[^\]]*\]\([^\)]*\)/g, '') // 이미지 링크 제거
+      .replace(/\[[^\]]*\]\([^\)]*\)/g, '') // 일반 링크 제거
+      .replace(/#{1,6} /g, '') // 헤더 제거
+      .replace(/(\*\*|__)(.*?)\1/g, '$2') // 볼드 제거
+      .replace(/(\*|_)(.*?)\1/g, '$2') // 이탤릭 제거
+      .replace(/~~(.*?)~~/g, '$1') // 취소선 제거
+      .replace(/`{3}[\s\S]*?`{3}/g, '') // 코드 블록 제거
+      .replace(/`(.+?)`/g, '$1') // 인라인 코드 제거
+      .replace(/\n/g, ' ') // 줄바꿈을 공백으로 변경
+      .trim();
+
+    return text;
+  }
+
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
@@ -73,7 +91,10 @@
                   <div class="flex justify-center my-2">
                     <img src={item.imgUrl} />
                   </div>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 my-4">{item.overView}</p>
+
+                  <p class="text-sm text-gray-500 dark:text-gray-400 my-4">
+                    {removeMarkdown(item.overView)}
+                  </p>
                 </a>
                 <div class=" flex justify-end gap-2" on:click={() => clickLiked(item)}>
                   {#if item.likedByCurrentUser}<svg

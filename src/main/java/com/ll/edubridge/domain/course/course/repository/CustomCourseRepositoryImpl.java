@@ -51,6 +51,30 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
 
         return PageableExecutionUtils.getPage(cousrsesQuery.fetch(), pageable, totalQuery::fetchOne);
     }
+    public Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member owner,String grade, Pageable pageable) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (owner != null) {
+            builder.and(post.writer.eq(owner));
+        }
+
+        if (kw != null && !kw.isBlank()) {
+            applyKeywordFilter(kwType, kw, builder);
+        }
+        if (grade != null && !grade.isEmpty()) {
+            builder.and(course.grade.eq(grade));
+        }
+
+        JPAQuery<Course> cousrsesQuery = createCourseQueryAdmin(builder);
+        applySorting(pageable, cousrsesQuery);
+
+        cousrsesQuery.offset(pageable.getOffset()).limit(pageable.getPageSize());
+
+        JPAQuery<Long> totalQuery = createTotalQueryAdmin(builder);
+
+        return PageableExecutionUtils.getPage(cousrsesQuery.fetch(), pageable, totalQuery::fetchOne);
+    }
+
 
     @Override
     public List<Course> findLatestCourse(int num) {
@@ -83,6 +107,12 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
         return queryFactory
                 .select(course)
                 .from(course)
+                .where(builder).where(course.confirm);
+    }
+    private JPAQuery<Course> createCourseQueryAdmin(BooleanBuilder builder) {
+        return queryFactory
+                .select(course)
+                .from(course)
                 .where(builder);
     }
 
@@ -97,6 +127,16 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
         return queryFactory
                 .select(course.count())
                 .from(course)
+                .where(builder).where(course.confirm);
+
+    }
+
+    private JPAQuery<Long> createTotalQueryAdmin(BooleanBuilder builder) {
+        return queryFactory
+                .select(course.count())
+                .from(course)
                 .where(builder);
     }
+
+
 }
