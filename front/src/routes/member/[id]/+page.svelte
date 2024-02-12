@@ -129,7 +129,7 @@
               ></path></svg
             ><span class="text-sm font-medium">Goals Progress</span>
           </div>
-          <span>Daily Goal:{rq.member.dailyGoal}</span>
+          <span>Daily Goal:{dailyGoal}</span>
         </div>
         <div class="p-4 bg-white rounded-lg shadow">
           <div class="relative pt-1">
