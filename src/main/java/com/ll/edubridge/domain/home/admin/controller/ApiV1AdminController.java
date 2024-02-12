@@ -237,6 +237,14 @@ public class ApiV1AdminController {
                 createdVideoDto);
     }
 
+    @PutMapping("/{courseId}/startorstop")
+    @Operation(summary = "강좌 공개 or 비공개")
+    public RsData<CourseDto> startOrStopCourse(@PathVariable("courseId") Long courseId){
+        Course course = courseService.startOrstop(courseId);
+        CourseDto courseDto = new CourseDto(course,rq.getMember());
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),Msg.E200_2_MODIFY_SUCCEED.getMsg(),courseDto);
+    }
+
     @PutMapping("/{courseId}/videos/{id}")
     @Operation(summary = "강의 수정")
     public RsData<VideoDto> modifyVideo(@PathVariable("courseId") Long courseId,

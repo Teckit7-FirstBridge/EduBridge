@@ -36,6 +36,10 @@ public class Course extends BaseEntity {
 
     private int price;
 
+    @Column
+    @Builder.Default
+    private Boolean confirm = false;
+
     @Column(length = 20)
     private String grade;
 
