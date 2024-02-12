@@ -237,7 +237,7 @@ public class ApiV1AdminController {
                 createdVideoDto);
     }
 
-    @PutMapping("/{courseId}/startorstop")
+    @PutMapping("/{courseId}/startOrStop")
     @Operation(summary = "강좌 공개 or 비공개")
     public RsData<CourseDto> startOrStopCourse(@PathVariable("courseId") Long courseId){
         Course course = courseService.startOrstop(courseId);

@@ -43,7 +43,7 @@ public class ApiV1CourseEnrollController {
 
         public GetCourseEnrollResponsebody(Page<CourseEnroll> page) {
             this.items = page.getContent().stream()
-                    .map(courseEnroll -> new CourseEnrollDto(courseEnroll))
+                    .map(CourseEnrollDto::new)
                     .toList();
         }
     }
