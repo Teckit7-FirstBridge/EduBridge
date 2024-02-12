@@ -14,18 +14,19 @@ import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.KwTypeCourse;
-import com.nimbusds.jose.util.JSONObjectUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -65,10 +66,8 @@ public class ApiV1CourseController {
         Page<Course> coursePage;
         if (rq.isAdmin()) {
             coursePage = courseService.findByKwAdmin(kwType, kw, null, grade, pageable);
-            System.out.println("chanwooadmin");
         } else {
             coursePage = courseService.findByKw(kwType, kw, null, grade, pageable);
-            System.out.println("chanwoo");
         }
 
         GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage);
