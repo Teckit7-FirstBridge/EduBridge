@@ -80,6 +80,7 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
     public List<Course> findLatestCourse(int num) {
 
         return queryFactory.selectFrom(course)
+                .where(course.confirm)
                 .orderBy(course.createDate.desc())
                 .limit(num)
                 .fetch();
