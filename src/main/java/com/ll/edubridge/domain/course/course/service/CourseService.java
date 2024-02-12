@@ -140,8 +140,8 @@ public class CourseService {
         return course.getVoter().contains(member);
     }
 
-    public List<Course> findByVoter(){
-        return courseRepository.findByVoter(rq.getMember());
+    public List<Course> findByVoter(Member member){
+        return courseRepository.findByVoter(member);
     }
 
     @Transactional

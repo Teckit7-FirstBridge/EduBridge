@@ -2,11 +2,10 @@ package com.ll.edubridge.domain.member.member.controller;
 
 
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
-import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.member.member.dto.MemberDto;
 import com.ll.edubridge.domain.member.member.dto.MyPageDto;
+import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
@@ -16,7 +15,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONUtil;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -84,32 +82,24 @@ public class ApiV1MemberController {
     }
 
 
-    @GetMapping("/mypage")
+    @GetMapping("/{id}")
     @Operation(summary = "마이 페이지 데이터 요청")
-    public RsData<MyPageResponseBody> mypage(){
+    public RsData<MyPageResponseBody> myPage(@PathVariable("id") Long id){
+        Member member = memberService.getMember(id);
 
-        List<CourseDto> learningCourses = rq.getMember()
+        List<CourseDto> learningCourses = member
                 .getCourseEnrollList()
                 .stream()
-                .map(courseEnroll -> new CourseDto(courseEnroll.getCourse(), rq.getMember()))
+                .map(courseEnroll -> new CourseDto(courseEnroll.getCourse(), member))
                 .collect(Collectors.toList());
 
-        List<CourseDto> likeCourses = courseService.findByVoter().stream().map(course -> new CourseDto(course,rq.getMember())).collect(Collectors.toList());
+        List<CourseDto> likeCourses = courseService.findByVoter(member).stream().map(course -> new CourseDto(course,member)).collect(Collectors.toList());
 
-        MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,1L);
+        MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,member);
         return RsData.of("200","성공",
                 new MyPageResponseBody(
                         myPageDto
                 ));
     }
 
-    public record NickNameResponseBody(@NonNull MemberDto item) {
-    }
-
-    @PutMapping("/nickname")
-    @Operation(summary = "닉네임 수정 요청")
-    public RsData<NickNameResponseBody> changenickname(@RequestParam String nickname){
-
-        return null;
-    }
 }

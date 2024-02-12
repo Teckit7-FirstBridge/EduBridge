@@ -30,7 +30,7 @@
   <p class="text-center">loading...</p>
 {:then { data: { itemPage } }}
   {#if rq.isAdmin()}
-    <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="flex">
       <div>
         <CourseNav></CourseNav>
       </div>

@@ -22,8 +22,8 @@
 {#await load()}
   <p>loading...</p>
 {:then { enrolls }}
-  <div class="flex h-screen dark:bg-gray-900">
-    <div class="flex flex-col w-64 border-r bg-gray-100/40 border-gray-200 dark:border-gray-800">
+  <div class="flex">
+    <div class="flex flex-col w-64 border-r">
       <div class="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-800">
         <a class="flex items-center gap-2 font-semibold" href="/"
           ><svg
@@ -84,7 +84,6 @@
                 <div class="flex justify-center my-2">
                   <img src={enroll.imgUrl} />
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 my-4">가격 및 정보</p>
               </div>
             </a>
           {/each}

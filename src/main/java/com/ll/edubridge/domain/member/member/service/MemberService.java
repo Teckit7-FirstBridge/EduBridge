@@ -97,6 +97,19 @@ public class MemberService {
         return memberRepository.findAll(pageable);
     }
 
+    public Optional<Member> findById(Long id) {
+        return memberRepository.findById(id);
+    }
+
+    public Member getMember(Long id) {
+        Optional<Member> member = this.findById(id);
+        if (member.isPresent()) {
+            return member.get();
+        } else {
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(),CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
+        }
+    }
+
 
     public record AuthAndMakeTokensResponseBody(
             @NonNull

@@ -118,9 +118,9 @@ export interface paths {
     /** 1대1 문의 삭제 */
     delete: operations["deleteQna"];
   };
-  "/api/v1/members/mypage": {
+  "/api/v1/members/{id}": {
     /** 마이 페이지 데이터 요청 */
-    get: operations["mypage"];
+    get: operations["myPage"];
   };
   "/api/v1/members/me": {
     get: operations["getMe"];
@@ -295,6 +295,10 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+<<<<<<< HEAD
+      authoritiesAsStringList?: string[];
+=======
+>>>>>>> 4822944ceebda411f8280eed786a37327ee48661
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
       authoritiesAsStringList?: string[];
@@ -544,8 +548,10 @@ export interface components {
     MyPageDto: {
       learningCourses?: components["schemas"]["CourseDto"][];
       favoriteCourses?: components["schemas"]["CourseDto"][];
-      /** Format: int64 */
-      goalProgress?: number;
+      /** Format: int32 */
+      dailyAchievement?: number;
+      /** Format: int32 */
+      dailyGoal?: number;
     };
     MyPageResponseBody: {
       item: components["schemas"]["MyPageDto"];
@@ -1409,7 +1415,12 @@ export interface operations {
     };
   };
   /** 마이 페이지 데이터 요청 */
-  mypage: {
+  myPage: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
     responses: {
       /** @description OK */
       200: {
