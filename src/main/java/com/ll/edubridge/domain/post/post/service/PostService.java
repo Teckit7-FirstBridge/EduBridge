@@ -196,6 +196,10 @@ public class PostService {
         return postRepository.findTop5ByReport(true);
     }
 
+    public boolean hasNotReported(Member member) {
+        return postRepository.findPostsByWriterAndReportTrue(member).isEmpty();
+    }
+
     public boolean canCancelReport( Post post) {
         if (rq.isAdmin() && post.isReport()){
             return true;
@@ -208,14 +212,9 @@ public class PostService {
     public void deleteReport(Long id) {
         Post post = this.getPost(id);
 
-        Member member = post.getWriter();
-
         post.setReport(false);
 
-        memberService.cancelReport(member);
-
         postRepository.save(post);
-        memberRepository.save(member);
     }
 
     public Page<Post> findAllQna(Pageable pageable) {
