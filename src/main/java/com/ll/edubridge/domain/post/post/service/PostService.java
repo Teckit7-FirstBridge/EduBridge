@@ -203,7 +203,7 @@ public class PostService {
     }
 
     public boolean hasNotReported(Member member) {
-        return postRepository.findPostsByWriterAndReportTrue(member).isEmpty();
+        return postRepository.findByWriterAndReport(member, true).isEmpty();
     }
 
     public boolean canCancelReport( Post post) {

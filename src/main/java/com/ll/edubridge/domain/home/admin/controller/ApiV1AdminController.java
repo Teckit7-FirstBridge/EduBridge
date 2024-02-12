@@ -355,8 +355,9 @@ public class ApiV1AdminController {
 
         postService.deleteReport(id);
 
-        if (postService.hasNotReported(member))
+        if (postService.hasNotReported(member)){
             memberService.cancelReport(member);
+        }
 
         return RsData.of(Msg.E200_7_CANCEL_REPORT_SUCCEED.getCode(),
                 Msg.E200_7_CANCEL_REPORT_SUCCEED.getMsg());
