@@ -156,8 +156,6 @@ public class ApiV1PostController {
                 Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getMsg());
     }
 
-
-
     @PostMapping("/qna")
     @Operation(summary = "1대1 문의 등록")
     public RsData<CreatePostDto> createQna(@Valid @RequestBody CreatePostDto createPostDto) {
@@ -167,6 +165,19 @@ public class ApiV1PostController {
 
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
                 Msg.E200_0_CREATE_SUCCEED.getMsg(), createdQnaDto);
+    }
+
+    @GetMapping("/myList")
+    @Operation(summary = "내 글 목록")
+    public RsData<List<PostDto>> getMyPosts() {
+        List<Post> myPosts = postService.getMyPosts();
+
+        List<PostDto> postDtoList = myPosts.stream()
+                .map(PostDto::new)
+                .collect(Collectors.toList());
+
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), postDtoList);
     }
 
     @GetMapping("/qna")
