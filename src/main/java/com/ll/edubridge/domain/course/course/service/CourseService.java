@@ -102,9 +102,13 @@ public class CourseService {
 
         return false;
     }
+    public Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member author,String grade, Pageable pageable) {
+        return courseRepository.findByKwAdmin(kwType, kw, author,grade, pageable);
+    }
     public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author,String grade, Pageable pageable) {
         return courseRepository.findByKw(kwType, kw, author,grade, pageable);
     }
+
     public List<Course> findLatestCourse(int num) {
         return courseRepository.findLatestCourse(num);
     }
@@ -139,5 +143,15 @@ public class CourseService {
     public List<Course> findByVoter(Member member){
         return courseRepository.findByVoter(member);
     }
+
+    @Transactional
+    public Course startOrstop(Long courseId){
+        Course course = this.getCourse(courseId);
+        course.setConfirm(!course.getConfirm());
+        return courseRepository.save(course);
+    }
+
+
+
 
 }

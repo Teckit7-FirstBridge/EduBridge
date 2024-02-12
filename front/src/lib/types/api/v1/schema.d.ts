@@ -35,6 +35,10 @@ export interface paths {
     /** 강의 삭제 */
     delete: operations["deleteVideo"];
   };
+  "/api/v1/admin/{courseId}/startorstop": {
+    /** 강좌 공개 or 비공개 */
+    put: operations["startOrStopCourse"];
+  };
   "/api/v1/admin/courses/{id}": {
     /** 강좌 수정 */
     put: operations["modifyCourse"];
@@ -291,9 +295,13 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+<<<<<<< HEAD
       authoritiesAsStringList?: string[];
+=======
+>>>>>>> 4822944ceebda411f8280eed786a37327ee48661
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
+      authoritiesAsStringList?: string[];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -384,6 +392,7 @@ export interface components {
       likedByCurrentUser?: boolean;
       /** Format: int32 */
       videoCount?: number;
+      confirm?: boolean;
     };
     RsDataCourseDto: {
       resultCode: string;
@@ -1000,6 +1009,22 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 강좌 공개 or 비공개 */
+  startOrStopCourse: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataCourseDto"];
         };
       };
     };

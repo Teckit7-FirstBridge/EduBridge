@@ -29,7 +29,6 @@
       }
     });
     summarynote = data?.data!;
-    console.log(data);
     return { summarynote };
   }
 </script>
@@ -58,6 +57,9 @@
 
       <div>
         <p class="text-gray-600 mb-2">작성자: {summarynote.member?.nickname}</p>
+        {#if summarynote.score! > 0}
+          <p class="text-gray-600 mb-2">점 수: {summarynote.score}</p>
+        {/if}
         <!-- 글 작성자인 경우 -->
         {#if rq.member.id == summarynote.member?.id && summarynote.score!<70}
           <div class="flex gap-2">

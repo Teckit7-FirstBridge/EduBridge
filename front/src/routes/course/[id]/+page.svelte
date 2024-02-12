@@ -64,6 +64,41 @@
     }
   }
 
+  async function startCourse() {
+    const isConfirmed = confirm('강좌를 공개하시겠습니까?');
+
+    if (isConfirmed) {
+      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startorstop`, {
+        params: { path: { courseId: parseInt($page.params.id) } }
+      });
+
+      if (data) {
+        rq.msgInfo('강좌가 공개되었습니다');
+        window.location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+        window.location.reload();
+      }
+    }
+  }
+  async function stopCourse() {
+    const isConfirmed = confirm('강좌를 비공개 하시겠습니까?');
+
+    if (isConfirmed) {
+      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startorstop`, {
+        params: { path: { courseId: parseInt($page.params.id) } }
+      });
+
+      if (data) {
+        rq.msgInfo('강좌가 비공개되었습니다');
+        window.location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+        window.location.reload();
+      }
+    }
+  }
+
   async function enrollCourse() {
     const coursePrice = course.price;
     const memberPoint = rq.member.point;
@@ -302,6 +337,11 @@
             <div class="mb-5 mx-2 items-center">
               <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
               <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
+              {#if !course.confirm}
+                <button on:click={startCourse} class="btn btn-sm">강좌 공개</button>
+              {:else}
+                <button on:click={stopCourse} class="btn btn-sm">강좌 비공개</button>
+              {/if}
             </div>
           {/if}
         </div>
