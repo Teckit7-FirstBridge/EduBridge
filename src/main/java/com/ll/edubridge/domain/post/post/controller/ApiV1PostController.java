@@ -160,10 +160,10 @@ public class ApiV1PostController {
 
     @PostMapping("/qna")
     @Operation(summary = "1대1 문의 등록")
-    public RsData<QnaDto> createQna(@RequestBody QnaDto qnaDto) {
-        Post post = postService.createQna(rq.getMember(), qnaDto);
+    public RsData<CreatePostDto> createQna(@Valid @RequestBody CreatePostDto createPostDto) {
+        Post post = postService.createQna(rq.getMember(), createPostDto);
 
-        QnaDto createdQnaDto = new QnaDto(post);
+        CreatePostDto createdQnaDto = new CreatePostDto(post);
 
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
                 Msg.E200_0_CREATE_SUCCEED.getMsg(), createdQnaDto);
@@ -189,7 +189,7 @@ public class ApiV1PostController {
     public RsData<QnaDto> getQnaDetail(@PathVariable("id") Long id) {
         Post post = postService.getPost(id);
 
-        if (!postService.canRead(post))
+        if (!postService.canReadQna(post))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         QnaDto qnaDto = new QnaDto(post);

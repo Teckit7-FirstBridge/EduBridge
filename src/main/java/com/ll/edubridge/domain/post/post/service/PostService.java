@@ -5,7 +5,6 @@ import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.domain.post.post.dto.CreatePostDto;
 import com.ll.edubridge.domain.post.post.dto.PostDto;
-import com.ll.edubridge.domain.post.post.dto.QnaDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -46,11 +45,11 @@ public class PostService {
     }
 
     @Transactional
-    public Post createQna(Member member, QnaDto qnaDto) {
+    public Post createQna(Member member, CreatePostDto createPostDto) {
         Post post = Post.builder()
                 .writer(member)
-                .title(qnaDto.getTitle())
-                .content(qnaDto.getBody())
+                .title(createPostDto.getTitle())
+                .content(createPostDto.getBody())
                 .published(false)
                 .build();
 
@@ -170,6 +169,14 @@ public class PostService {
         return true;
     }
 
+    public boolean canReadQna(Post post) {
+        Member member = rq.getMember();
+
+        if(rq.isAdmin()||member.getId().equals(post.getWriter().getId())) return true;
+
+        return false;
+    }
+
     public Page<Post> findByPublished(boolean published, Pageable pageable) {
         return postRepository.findByPublishedOrderByIdDesc(published, pageable);
     }
@@ -210,4 +217,13 @@ public class PostService {
         postRepository.save(post);
         memberRepository.save(member);
     }
+
+    public Page<Post> findAllQna(Pageable pageable) {
+        return postRepository.findByPublished(false, pageable);
+    }
+
+    public List<Post> recentQna() {
+      return postRepository.findTop5ByPublished(false);
+    }
+
 }
