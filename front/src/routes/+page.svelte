@@ -26,17 +26,6 @@
 
     return courses;
   }
-
-  let activeSlide = 0;
-  const totalSlides = 2; // 슬라이드 총 개수
-
-  function nextSlide() {
-    activeSlide = (activeSlide + 1) % totalSlides;
-  }
-
-  function previousSlide() {
-    activeSlide = (activeSlide - 1 + totalSlides) % totalSlides;
-  }
 </script>
 
 {#await load()}
