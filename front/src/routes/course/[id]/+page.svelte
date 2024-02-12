@@ -48,14 +48,19 @@
   }
 
   async function deleteCourse() {
-    const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/admin/courses/{id}`, {
-      params: { path: { id: parseInt($page.params.id) } }
-    });
-    if (data) {
-      rq.msgInfo('강좌가 삭제되었습니다');
-      rq.goTo('/course');
-    } else if (error) {
-      rq.msgError(error.msg);
+    const isConfirmed = confirm('강좌를 삭제하시겠습니까?');
+
+    if (isConfirmed) {
+      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/admin/courses/{id}`, {
+        params: { path: { id: parseInt($page.params.id) } }
+      });
+
+      if (data) {
+        rq.msgInfo('강좌가 삭제되었습니다');
+        rq.goTo('/adm/course');
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
     }
   }
 
@@ -91,16 +96,24 @@
   }
 
   async function deleteVideo(videoId: number) {
-    const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/admin/{courseId}/videos/{id}`, {
-      params: { path: { courseId: parseInt($page.params.id), id: videoId } }
-    });
-    if (data) {
-      rq.msgInfo('동영상이 삭제 되었습니다');
-      window.location.reload();
-    } else if (error) {
-      rq.msgError(error.msg);
+    const isConfirmed = confirm('동영상을 삭제하시겠습니까?');
+
+    if (isConfirmed) {
+      const { data, error } = await rq
+        .apiEndPoints()
+        .DELETE(`/api/v1/admin/{courseId}/videos/{id}`, {
+          params: { path: { courseId: parseInt($page.params.id), id: videoId } }
+        });
+
+      if (data) {
+        rq.msgInfo('동영상이 삭제 되었습니다');
+        window.location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
     }
   }
+
   async function clickLiked(item: components['schemas']['CourseDto']) {
     if (item.likedByCurrentUser) {
       const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}/like`, {
@@ -177,7 +190,7 @@
           <li>
             <a
               class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-              href="#"
+              href="/course/{course.id}/notes"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -229,25 +242,6 @@
       </div>
     </div>
     <div class="flex flex-col">
-      <header class="flex h-14 lg:h-[60px] items-center gap-4 border-b px-6 dark:bg-gray-800/40">
-        <a class="lg:hidden" href="#"
-          ><svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="h-6 w-6"
-          >
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg
-          ><span class="sr-only"> Home </span></a
-        >
-      </header>
       <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div class="flex items-center justify-between">
           <h1 class="font-semibold text-lg md:text-2xl">

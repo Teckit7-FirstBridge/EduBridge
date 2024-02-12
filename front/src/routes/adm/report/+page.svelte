@@ -33,13 +33,6 @@
               <div>
                 <h2 class="text-2xl font-semibold text-gray-800">신고 글 관리</h2>
               </div>
-              <div class="ml-2 mt-1">
-                <a
-                  href="/adm/report"
-                  class="inline-block px-2 py-1 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-                  >+</a
-                >
-              </div>
             </div>
             <div class="mt-3 bg-white shadow overflow-hidden rounded-md">
               <table class="min-w-full divide-y divide-gray-200">

@@ -41,28 +41,38 @@
   }
 
   async function deletePost() {
-    const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/posts/{id}`, {
-      params: { path: { id: parseInt($page.params.id) } }
-    });
-    if (data) {
-      rq.msgInfo('게시글이 삭제되었습니다');
-      rq.goTo('/board');
-    } else if (error) {
-      rq.msgError(error.msg);
+    const isConfirmed = confirm('게시물을 삭제하시겠습니까?');
+
+    if (isConfirmed) {
+      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/posts/{id}`, {
+        params: { path: { id: parseInt($page.params.id) } }
+      });
+
+      if (data) {
+        rq.msgInfo(data.msg);
+        rq.goTo('/board');
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
     }
   }
 
   async function deleteComment(commentId: number) {
-    const { data, error } = await rq
-      .apiEndPoints()
-      .DELETE(`/api/v1/comments/{postId}/{commentId}`, {
-        params: { path: { postId: parseInt($page.params.id), commentId: commentId } }
-      });
-    if (data) {
-      rq.msgInfo('댓글이 삭제되었습니다');
-      location.reload();
-    } else if (error) {
-      rq.msgError(error.msg);
+    const isConfirmed = confirm('댓글을 삭제하시겠습니까?');
+
+    if (isConfirmed) {
+      const { data, error } = await rq
+        .apiEndPoints()
+        .DELETE(`/api/v1/comments/{postId}/{commentId}`, {
+          params: { path: { postId: parseInt($page.params.id), commentId: commentId } }
+        });
+
+      if (data) {
+        rq.msgInfo(data.msg);
+        location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
     }
   }
 
@@ -107,7 +117,8 @@
       rq.msgInfo('신고 되었습니다.');
       location.reload();
     } else if (error) {
-      rq.msgError(error.msg);
+      rq.msgError('로그인 후 이용 해 주세요');
+      rq.goTo('/member/login');
     }
   }
 
@@ -130,7 +141,8 @@
         rq.msgInfo('좋아요!!');
         window.location.reload();
       } else if (error) {
-        rq.msgError(error.msg);
+        rq.msgError('로그인 후 이용 해 주세요');
+        rq.goTo('/member/login');
       }
     }
   }
@@ -158,7 +170,8 @@
         rq.msgInfo('좋아요!!');
         window.location.reload();
       } else if (error) {
-        rq.msgError(error.msg);
+        rq.msgError('로그인 후 이용 해 주세요');
+        rq.goTo('/member/login');
       }
     }
   }
@@ -336,21 +349,22 @@
         <span>{post.voteCount}</span>
       </button>
     </div>
-    <div class="border-t mb-8 mt-10"></div>
-    <div>
-      <h1>Comment</h1>
-
-      <div class="mt-8 flex gap-2 items-center">
-        <textarea
-          id="commentbody"
-          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
-          rows="4"
-          placeholder="댓글을 입력하세요..."
-          bind:value={body}
-        ></textarea>
-        <button class="mt-2 btn" on:click={Comment__save}>댓글 등록</button>
+    {#if rq.isLogin()}
+      <div class="border-t mb-8 mt-10"></div>
+      <div>
+        <h1>Comment</h1>
+        <div class="mt-8 flex gap-2 items-center">
+          <textarea
+            id="commentbody"
+            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            rows="4"
+            placeholder="댓글을 입력하세요..."
+            bind:value={body}
+          ></textarea>
+          <button class="mt-2 btn" on:click={Comment__save}>댓글 등록</button>
+        </div>
       </div>
-    </div>
+    {/if}
 
     <div class="border-t my-8"></div>
     <div>댓글</div>

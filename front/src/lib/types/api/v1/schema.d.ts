@@ -127,7 +127,7 @@ export interface paths {
   };
   "/api/v1/enroll": {
     /** 수업 목록 조회 */
-    get: operations["getSummaryNote"];
+    get: operations["getEnrollList"];
   };
   "/api/v1/courses": {
     /** 강좌 다건 조회 */
@@ -135,7 +135,7 @@ export interface paths {
   };
   "/api/v1/courses/{videoid}/note/{note-id}": {
     /** 강의 요약 노트 상세 보기 */
-    get: operations["getSummaryNote_1"];
+    get: operations["getSummaryNote"];
   };
   "/api/v1/courses/{videoid}/note/admin": {
     /** 비디오별 강의노트 조회(관리자 기능) */
@@ -299,12 +299,17 @@ export interface components {
     SummaryNoteDto: {
       /** Format: int64 */
       id?: number;
+      /** Format: date-time */
+      createDate?: string;
       member?: components["schemas"]["Member"];
       content?: string;
       /** Format: int64 */
       score?: number;
       /** Format: int64 */
       courseId?: number;
+      /** Format: int64 */
+      videoId?: number;
+      courseName?: string;
       pass?: boolean;
     };
     CreateCommentDto: {
@@ -1367,7 +1372,7 @@ export interface operations {
     };
   };
   /** 수업 목록 조회 */
-  getSummaryNote: {
+  getEnrollList: {
     parameters: {
       query?: {
         page?: number;
@@ -1389,6 +1394,7 @@ export interface operations {
         page?: number;
         kw?: string;
         kwType?: "ALL" | "TITLE" | "NAME";
+        grade?: string;
       };
     };
     responses: {
@@ -1401,7 +1407,7 @@ export interface operations {
     };
   };
   /** 강의 요약 노트 상세 보기 */
-  getSummaryNote_1: {
+  getSummaryNote: {
     parameters: {
       path: {
         "note-id": number;
