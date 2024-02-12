@@ -414,10 +414,8 @@
                       <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
                         <img
                           alt="Video thumbnail"
-                          class="aspect-square rounded-md object-cover mt-2"
-                          height="64"
+                          class="rounded-md object-cover mt-2 w-60"
                           src={video.imgUrl}
-                          width="64"
                           on:click={() => window.open(video.url, '_blank')}
                         />
                       </td>
