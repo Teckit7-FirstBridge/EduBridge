@@ -1,7 +1,7 @@
 <script lang="ts">
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
-  import CourseNav from '../../lib/components/AdmNav.svelte';
+  import AdmNav from '../../lib/components/AdmNav.svelte';
   import { onMount } from 'svelte';
 
   let recentCourse: components['schemas']['RecentCourseDto'][] = $state();
@@ -31,13 +31,13 @@
   <p class="text-center">loading...</p>
 {:then { recentCourse, recentMember, reportPost, recentQna }}
   {#if rq.isAdmin()}
-    <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="flex">
       <div>
-        <CourseNav></CourseNav>
+        <AdmNav></AdmNav>
       </div>
-      <div class="flex py-4 px-16 flex-1">
-        <div class="w-1/2">
-          <div class="flex-1 p-4">
+      <div class="flex py-4 px-16 grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2">
+        <div>
+          <div class="p-4">
             {#if recentCourse && recentCourse.length > 0}
               <div class="mb-5">
                 <div class="flex justify-col justify-end">
@@ -47,7 +47,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/course"
-                      class="inline-block px-2 py-1 bg-gray-100 text-blue-600 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-blue-600"
+                      class="inline-block px-2 py-1 bg-gray-100 text-gray-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-gray-600"
                       >+</a
                     >
                   </div>
@@ -82,7 +82,7 @@
               <p>강좌가 없습니다.</p>
             {/if}
           </div>
-          <div class="flex-1 p-4">
+          <div class="p-4">
             {#if recentMember && recentMember.length > 0}
               <div>
                 <div class="flex justify-col justify-end">
@@ -92,7 +92,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/member"
-                      class="inline-block px-2 py-1 bg-gray-100 text-blue-600 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-blue-600"
+                      class="inline-block px-2 py-1 bg-gray-100 text-gray-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-gray-600"
                       >+</a
                     >
                   </div>
@@ -150,8 +150,8 @@
             {/if}
           </div>
         </div>
-        <div class="px-16 w-1/2">
-          <div class="flex-1 p-4">
+        <div class="px-16">
+          <div class="p-4">
             {#if reportPost && reportPost.length > 0}
               <div>
                 <div class="flex justify-col justify-end">
@@ -161,7 +161,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/report"
-                      class="inline-block px-2 py-1 bg-gray-100 text-blue-600 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-blue-600"
+                      class="inline-block px-2 py-1 bg-gray-100 text-gray-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-gray-600"
                       >+</a
                     >
                   </div>
@@ -223,7 +223,7 @@
               <p>신고된 글이 없습니다.</p>
             {/if}
           </div>
-          <div class="flex-1 p-4">
+          <div class="p-4">
             {#if recentQna && recentQna.length > 0}
               <div>
                 <div class="flex justify-col justify-end">
@@ -233,7 +233,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/qna"
-                      class="inline-block px-2 py-1 bg-gray-100 text-blue-600 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-blue-600"
+                      class="inline-block px-2 py-1 bg-gray-100 text-gray-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-gray-600"
                       >+</a
                     >
                   </div>

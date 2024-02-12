@@ -89,31 +89,3 @@ main {
 .enroll-button:hover {
   background-color: #0056b3;
 }
-
-/* 기본 스타일 */
-.footer a {
-  padding: 10px;
-  font-size: 1rem;
-}
-
-/* 화면 크기가 600px 이하일 때 적용되는 스타일 */
-@media (max-width: 600px) {
-  .footer a {
-    padding: 5px;
-    font-size: 0.8rem;
-  }
-}
-
-/* 화면 크기가 400px 이하일 때 적용되는 스타일 */
-@media (max-width: 400px) {
-  .footer a {
-    display: block; /* 각 링크를 블록 요소로 만들어서 새로운 줄에 표시 */
-    margin-bottom: 5px; /* 링크 사이의 마진 추가 */
-    font-size: 0.7rem;
-  }
-
-  .footer svg {
-    width: 16px; /* SVG 아이콘 크기 감소 */
-    height: 16px;
-  }
-}

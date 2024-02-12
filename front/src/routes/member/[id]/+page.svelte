@@ -9,9 +9,14 @@
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
-    const { data } = await rq.apiEndPoints().GET('/api/v1/members/mypage', {});
+    const { data } = await rq.apiEndPoints().GET('/api/v1/members/{id}', {
+      params: { path: { id: parseInt($page.params.id) } }
+    });
     learningCourses = data?.data.item.learningCourses!;
     favoriteCourses = data?.data.item.favoriteCourses!;
+
+    const dailyAchievement = data?.data.item.dailyAchievement;
+    const dailyGoal = data?.data.item.dailyGoal;
 
     const summaryResponse = await rq.apiEndPoints().GET(`/api/v1/courses/summary/{writerid}`, {
       params: {
@@ -24,13 +29,13 @@
     console.log(summaryNotes);
     console.log(learningCourses);
 
-    return { learningCourses, favoriteCourses, summaryNotes };
+    return { learningCourses, favoriteCourses, summaryNotes, dailyAchievement, dailyGoal };
   }
 </script>
 
 {#await load()}
   <h2>loading...</h2>
-{:then { learningCourses, favoriteCourses, summaryNotes }}
+{:then { learningCourses, favoriteCourses, summaryNotes, dailyAchievement, dailyGoal }}
   <div class="max-w-4xl mx-auto my-8">
     <header class="flex h-16 items-center border-b px-4 md:px-6 justify-between">
       <a class="flex items-center gap-2"
@@ -50,9 +55,6 @@
           ></path><path d="M12 3v6"></path></svg
         ><span class="text-lg font-semibold">My Page</span></a
       >
-      <div class="ml-auto flex gap-4">
-        <a class="text-sm font-medium" href="#"> Change Nickname </a>
-      </div>
     </header>
     <main class="flex-1 p-4 md:p-6">
       <div class="grid gap-4">
@@ -134,15 +136,12 @@
             <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200">
               <div
                 class="transition-all duration-500 ease-in-out bg-green-500 h-full"
-                style="width: {(rq.member.dailyAchievement / rq.member.dailyGoal) * 100}%;"
+                style="width: {(dailyAchievement / dailyGoal) * 100}%;"
               ></div>
             </div>
           </div>
           <p class="text-xs text-gray-500">
-            {Math.min(
-              100,
-              parseInt(((rq.member.dailyAchievement / rq.member.dailyGoal) * 100).toFixed(2))
-            )}% Completed
+            {Math.min(100, parseInt(((dailyAchievement / dailyGoal) * 100).toFixed(2)))}% Completed
           </p>
         </div>
       </div>
