@@ -77,7 +77,7 @@ public class VideoService {
 
     @Transactional
     public List<Video> findByCourseId(Long courseId) {
-        return videoRepository.findByCourseId(courseId);
+        return videoRepository.findByCourseIdOrderByIdAsc(courseId);
     }
 
     @Transactional
