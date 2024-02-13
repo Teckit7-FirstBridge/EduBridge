@@ -49,6 +49,11 @@
       return;
     }
 
+    if (!imgUrl.includes('jpg')) {
+      rq.msgWarning('썸네일 url을 jpg 형식으로 입력 해 주세요');
+      return;
+    }
+
     const { data, error } = await rq
       .apiEndPointsWithFetch(fetch)
       .PUT('/api/v1/admin/courses/{id}', {

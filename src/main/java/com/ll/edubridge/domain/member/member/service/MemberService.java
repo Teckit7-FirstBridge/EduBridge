@@ -200,6 +200,7 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    @Transactional
     public void cancelReport(Member member) {
         member.setReport(false);
         memberRepository.save(member);

@@ -79,77 +79,23 @@
   <div class="flex">
     <CourseNav></CourseNav>
     <div class="flex flex-col flex-1">
-<<<<<<< HEAD
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="p-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {#if items}
           {#each items as item}
             <div
-              class="p-4 border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center"
+              class="border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center"
             >
               <a href="/course/{item.id}">
                 <h2 class="text-lg font-semibold my-2">{item.title}</h2>
                 <div class="flex justify-center my-2">
                   <img src={item.imgUrl} />
-=======
-      <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {#if items}
-            {#each items as item}
-              <div
-                class="p-4 border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center"
-              >
-                <a href="/course/{item.id}">
-                  <h2 class="text-lg font-semibold my-2">{item.title}</h2>
-                  <div class="flex justify-center my-2">
-                    <img src={item.imgUrl} />
-                  </div>
-
-                  <p class="text-sm text-gray-500 dark:text-gray-400 my-4">
-                    {removeMarkdown(item.overView)}
-                  </p>
-                </a>
-                <div class=" flex justify-end gap-2" on:click={() => clickLiked(item)}>
-                  {#if item.likedByCurrentUser}<svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      height="24"
-                    >
-                      <!-- 빨간색 채워진 하트 -->
-                      <path
-                        fill="red"
-                        stroke="red"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                      />
-                    </svg>{:else}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      height="24"
-                    >
-                      <!-- 빨간색 빈 하트 -->
-                      <path
-                        fill="none"
-                        stroke="red"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                      />
-                    </svg>
-                  {/if}
-                  <span>
-                    {item.voteCount}
-                  </span>
->>>>>>> 4822944ceebda411f8280eed786a37327ee48661
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 my-4">{item.overView}</p>
+
+                <p class="text-sm text-gray-500 dark:text-gray-400 my-4">
+                  {removeMarkdown(item.overView)}
+                </p>
               </a>
-              <div class=" flex justify-end gap-2" on:click={() => clickLiked(item)}>
+              <div class=" flex justify-end gap-2 p-2" on:click={() => clickLiked(item)}>
                 {#if item.likedByCurrentUser}<svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"

@@ -68,7 +68,7 @@
     const isConfirmed = confirm('강좌를 공개하시겠습니까?');
 
     if (isConfirmed) {
-      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startorstop`, {
+      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startOrStop`, {
         params: { path: { courseId: parseInt($page.params.id) } }
       });
 
@@ -85,7 +85,7 @@
     const isConfirmed = confirm('강좌를 비공개 하시겠습니까?');
 
     if (isConfirmed) {
-      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startorstop`, {
+      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startOrStop`, {
         params: { path: { courseId: parseInt($page.params.id) } }
       });
 
@@ -414,10 +414,8 @@
                       <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
                         <img
                           alt="Video thumbnail"
-                          class="aspect-square rounded-md object-cover mt-2"
-                          height="64"
+                          class="rounded-md object-cover mt-2 w-60"
                           src={video.imgUrl}
-                          width="64"
                           on:click={() => window.open(video.url, '_blank')}
                         />
                       </td>

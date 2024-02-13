@@ -60,7 +60,7 @@ public class ApiV1AdminController {
     @Operation(summary = "강좌 최신순")
     public RsData<List<RecentCourseDto>> getRecentCourses() {
 
-        List<Course> recentCourses = courseService.findLatestCourse(5);
+        List<Course> recentCourses = courseService.findRecentCourse();
 
         List<RecentCourseDto> courseList = recentCourses.stream()
                 .map(RecentCourseDto::new)
@@ -355,8 +355,9 @@ public class ApiV1AdminController {
 
         postService.deleteReport(id);
 
-        if (postService.hasNotReported(member))
+        if (postService.hasNotReported(member)){
             memberService.cancelReport(member);
+        }
 
         return RsData.of(Msg.E200_7_CANCEL_REPORT_SUCCEED.getCode(),
                 Msg.E200_7_CANCEL_REPORT_SUCCEED.getMsg());

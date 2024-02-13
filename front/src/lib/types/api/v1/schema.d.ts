@@ -13,11 +13,9 @@ export interface paths {
     /** 글 삭제 */
     delete: operations["delete"];
   };
-  "/api/v1/members/nickname": {
-    /** 닉네임 수정 요청 */
-    put: operations["changenickname"];
-  };
-  "/api/v1/courses/{videoid}/note/{noteId}": {
+  "/api/v1/courses/{videoId}/note/{noteId}": {
+    /** 강의 요약 노트 상세 보기 */
+    get: operations["getSummaryNote"];
     /** 강의 요약 노트 수정 */
     put: operations["modify_1"];
     /** 강의 요약 노트 삭제 */
@@ -35,7 +33,7 @@ export interface paths {
     /** 강의 삭제 */
     delete: operations["deleteVideo"];
   };
-  "/api/v1/admin/{courseId}/startorstop": {
+  "/api/v1/admin/{courseId}/startOrStop": {
     /** 강좌 공개 or 비공개 */
     put: operations["startOrStopCourse"];
   };
@@ -74,7 +72,7 @@ export interface paths {
     /** 수강 등록 */
     post: operations["create"];
   };
-  "/api/v1/courses/{videoid}/note": {
+  "/api/v1/courses/{videoId}/note": {
     /** 강의 요약 노트 등록 */
     post: operations["create_1"];
   };
@@ -109,7 +107,7 @@ export interface paths {
     patch: operations["report"];
   };
   "/api/v1/admin/posts/{postId}/report": {
-    /** 게시물 신고 처리 */
+    /** 게시물 신고 취소 */
     patch: operations["cancelReport"];
   };
   "/api/v1/posts/qna/{id}": {
@@ -117,6 +115,10 @@ export interface paths {
     get: operations["getQnaDetail"];
     /** 1대1 문의 삭제 */
     delete: operations["deleteQna"];
+  };
+  "/api/v1/posts/myList": {
+    /** 내 글 목록 */
+    get: operations["getMyPosts"];
   };
   "/api/v1/members/{id}": {
     /** 마이 페이지 데이터 요청 */
@@ -137,11 +139,7 @@ export interface paths {
     /** 강좌 다건 조회 */
     get: operations["getCourses"];
   };
-  "/api/v1/courses/{videoid}/note/{note-id}": {
-    /** 강의 요약 노트 상세 보기 */
-    get: operations["getSummaryNote"];
-  };
-  "/api/v1/courses/{videoid}/note/admin": {
+  "/api/v1/courses/{videoId}/note/admin": {
     /** 비디오별 강의노트 조회(관리자 기능) */
     get: operations["getSummaryNoteAdmin"];
   };
@@ -161,11 +159,11 @@ export interface paths {
     /** 해당 멤버가 해당 강좌를 수강 중인지 */
     get: operations["getCourseAuth"];
   };
-  "/api/v1/courses/summary/{writerid}": {
+  "/api/v1/courses/summary/{writerId}": {
     /** 작성자별 강의 요약노트 조회 */
     get: operations["getSummaryNoteByWriter"];
   };
-  "/api/v1/courses/summary/{writerid}/{courseId}": {
+  "/api/v1/courses/summary/{writerId}/{courseId}": {
     /** 작성자별 강좌의 모든 요약노트 목록 조회 */
     get: operations["getSummaryNoteByWriterandCourse"];
   };
@@ -235,34 +233,6 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    MemberDto: {
-      /** Format: int64 */
-      id: number;
-      /** Format: date-time */
-      createDate: string;
-      name: string;
-      profileImgUrl: string;
-      authorities: string[];
-      visitedToday: boolean;
-      /** Format: int32 */
-      dailyGoal: number;
-      /** Format: int32 */
-      dailyAchievement: number;
-      /** Format: int32 */
-      point?: number;
-    };
-    NickNameResponseBody: {
-      item: components["schemas"]["MemberDto"];
-    };
-    RsDataNickNameResponseBody: {
-      resultCode: string;
-      /** Format: int32 */
-      statusCode: number;
-      msg: string;
-      data: components["schemas"]["NickNameResponseBody"];
-      fail: boolean;
-      success: boolean;
-    };
     CreateSummaryNoteDto: {
       content: string;
     };
@@ -295,13 +265,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-<<<<<<< HEAD
       authoritiesAsStringList?: string[];
-=======
->>>>>>> 4822944ceebda411f8280eed786a37327ee48661
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
-      authoritiesAsStringList?: string[];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -442,6 +408,22 @@ export interface components {
     LoginResponseBody: {
       item: components["schemas"]["MemberDto"];
     };
+    MemberDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      name: string;
+      profileImgUrl: string;
+      authorities: string[];
+      visitedToday: boolean;
+      /** Format: int32 */
+      dailyGoal: number;
+      /** Format: int32 */
+      dailyAchievement: number;
+      /** Format: int32 */
+      point?: number;
+    };
     RsDataLoginResponseBody: {
       resultCode: string;
       /** Format: int32 */
@@ -542,6 +524,15 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["QnaDto"];
+      fail: boolean;
+      success: boolean;
+    };
+    RsDataListPostDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["PostDto"][];
       fail: boolean;
       success: boolean;
     };
@@ -884,18 +875,18 @@ export interface operations {
       };
     };
   };
-  /** 닉네임 수정 요청 */
-  changenickname: {
+  /** 강의 요약 노트 상세 보기 */
+  getSummaryNote: {
     parameters: {
-      query: {
-        nickname: string;
+      path: {
+        noteId: number;
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "*/*": components["schemas"]["RsDataNickNameResponseBody"];
+          "application/json": components["schemas"]["RsDataSummaryNoteDto"];
         };
       };
     };
@@ -1205,7 +1196,7 @@ export interface operations {
   create_1: {
     parameters: {
       path: {
-        videoid: number;
+        videoId: number;
       };
     };
     requestBody: {
@@ -1366,7 +1357,7 @@ export interface operations {
       };
     };
   };
-  /** 게시물 신고 처리 */
+  /** 게시물 신고 취소 */
   cancelReport: {
     parameters: {
       path: {
@@ -1410,6 +1401,17 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 내 글 목록 */
+  getMyPosts: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListPostDto"];
         };
       };
     };
@@ -1486,22 +1488,6 @@ export interface operations {
       };
     };
   };
-  /** 강의 요약 노트 상세 보기 */
-  getSummaryNote: {
-    parameters: {
-      path: {
-        "note-id": number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataSummaryNoteDto"];
-        };
-      };
-    };
-  };
   /** 비디오별 강의노트 조회(관리자 기능) */
   getSummaryNoteAdmin: {
     parameters: {
@@ -1509,7 +1495,7 @@ export interface operations {
         page?: number;
       };
       path: {
-        videoid: number;
+        videoId: number;
       };
     };
     responses: {
@@ -1590,7 +1576,7 @@ export interface operations {
   getSummaryNoteByWriter: {
     parameters: {
       path: {
-        writerid: number;
+        writerId: number;
       };
     };
     responses: {
@@ -1606,7 +1592,7 @@ export interface operations {
   getSummaryNoteByWriterandCourse: {
     parameters: {
       path: {
-        writerid: number;
+        writerId: number;
         courseId: number;
       };
     };

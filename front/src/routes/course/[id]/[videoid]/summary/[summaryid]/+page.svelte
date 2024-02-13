@@ -5,10 +5,10 @@
 
   let summarynote: components['schemas']['SummaryNoteDto'];
   async function deleteSummary() {
-    const { data } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{videoid}/note/{noteId}`, {
+    const { data } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{videoId}/note/{noteId}`, {
       params: {
         path: {
-          videoid: parseInt($page.params.videoid),
+          videoId: parseInt($page.params.videoid),
           noteId: parseInt($page.params.summaryid)
         }
       }
@@ -20,11 +20,11 @@
   }
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
-    const { data } = await rq.apiEndPoints().GET(`/api/v1/courses/{videoid}/note/{note-id}`, {
+    const { data } = await rq.apiEndPoints().GET(`/api/v1/courses/{videoId}/note/{noteId}`, {
       params: {
         path: {
-          videoid: parseInt($page.params.videoid),
-          'note-id': parseInt($page.params.summaryid)
+          videoId: parseInt($page.params.videoid),
+          noteId: parseInt($page.params.summaryid)
         }
       }
     });

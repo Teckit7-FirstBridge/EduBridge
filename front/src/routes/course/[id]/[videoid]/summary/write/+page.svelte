@@ -21,8 +21,8 @@
     return { videos };
   }
   const submitForm = async () => {
-    const { data, error } = await rq.apiEndPoints().POST(`/api/v1/courses/{videoid}/note`, {
-      params: { path: { videoid: parseInt($page.params.videoid) } },
+    const { data, error } = await rq.apiEndPoints().POST(`/api/v1/courses/{videoId}/note`, {
+      params: { path: { videoId: parseInt($page.params.videoid) } },
       body: {
         content
       }
