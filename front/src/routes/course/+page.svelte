@@ -95,8 +95,10 @@
                     {item.grade}
                   </div>
                 </div>
-                <div class="flex justify-center my-2">
-                  <img src={item.imgUrl} />
+                <div class="flex justify-center p-2">
+                  <div class="image-container4">
+                    <img src={item.imgUrl} class="rounded-image" />
+                  </div>
                 </div>
 
                 <p class="text-sm text-gray-500 dark:text-gray-400 my-4">

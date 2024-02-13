@@ -57,7 +57,9 @@
           {#each courses as course}
             <div class="text-center">
               <a href="/course/{course.id}">
-                <img src={course.imgUrl} />
+                <div class="image-container mb-2">
+                  <img src={course.imgUrl} class="rounded-image" />
+                </div>
                 <h3 class="text-2xl font-semibold mb-3">{course.title}</h3>
                 <p class="text-gray-500 dark:text-gray-400">
                   {course.overView}
