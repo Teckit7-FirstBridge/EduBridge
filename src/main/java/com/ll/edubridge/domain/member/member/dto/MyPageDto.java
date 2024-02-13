@@ -15,9 +15,7 @@ public class MyPageDto {
 
     private List<CourseDto> favoriteCourses;
 
-    private int dailyAchievement;
-
-    private int dailyGoal;
+    private Member member;
 
     public MyPageDto() {
     }
@@ -25,8 +23,7 @@ public class MyPageDto {
     public MyPageDto(List<CourseDto> learningCourses, List<CourseDto> favoriteCourses, Member member) {
         this.learningCourses = learningCourses;
         this.favoriteCourses = favoriteCourses;
-        this.dailyAchievement = member.getDailyAchievement();
-        this.dailyGoal = member.getDailyGoal();
+        this.member = member;
 
     }
 

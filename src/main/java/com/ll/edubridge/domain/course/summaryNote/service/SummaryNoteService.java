@@ -56,11 +56,7 @@ public class SummaryNoteService {
                 .video(video)
                 .build();
 
-        // 포인트 지급 -> 로컬 테스트 실패
-        Course course = summaryNote.getVideo().getCourse();
-        int point = member.getPoint() + course.getPrice()/10;
-        member.setPoint(point);
-        memberService.save(member);
+
 
         return summaryNoteRepository.save(summaryNote);
     }

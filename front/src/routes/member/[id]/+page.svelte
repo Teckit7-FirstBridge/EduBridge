@@ -2,6 +2,7 @@
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
+  import { memo } from 'react';
 
   let learningCourses: components['schemas']['CourseDto'][] = $state();
   let favoriteCourses: components['schemas']['CourseDto'][] = $state();
@@ -15,13 +16,14 @@
     learningCourses = data?.data.item.learningCourses!;
     favoriteCourses = data?.data.item.favoriteCourses!;
 
-    const dailyAchievement = data?.data.item.dailyAchievement;
-    const dailyGoal = data?.data.item.dailyGoal;
+    const dailyAchievement = data?.data.item.member?.dailyAchievement;
+    const dailyGoal = data?.data.item.member?.dailyGoal;
+    const member = data?.data.item.member;
 
     const summaryResponse = await rq.apiEndPoints().GET(`/api/v1/courses/summary/{writerid}`, {
       params: {
         path: {
-          writerid: rq.member.id
+          writerid: member.id
         }
       }
     });
@@ -29,13 +31,13 @@
     console.log(summaryNotes);
     console.log(learningCourses);
 
-    return { learningCourses, favoriteCourses, summaryNotes, dailyAchievement, dailyGoal };
+    return { learningCourses, favoriteCourses, summaryNotes, dailyAchievement, dailyGoal, member };
   }
 </script>
 
 {#await load()}
   <h2>loading...</h2>
-{:then { learningCourses, favoriteCourses, summaryNotes, dailyAchievement, dailyGoal }}
+{:then { learningCourses, favoriteCourses, summaryNotes, dailyAchievement, dailyGoal, member }}
   <div class="max-w-4xl mx-auto my-8">
     <header class="flex h-16 items-center border-b px-4 md:px-6 justify-between">
       <a class="flex items-center gap-2"
@@ -55,6 +57,7 @@
           ></path><path d="M12 3v6"></path></svg
         ><span class="text-lg font-semibold">My Page</span></a
       >
+      <p>point: {member?.point}</p>
     </header>
     <main class="flex-1 p-4 md:p-6">
       <div class="grid gap-4">

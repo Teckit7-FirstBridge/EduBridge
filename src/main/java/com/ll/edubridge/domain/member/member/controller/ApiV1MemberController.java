@@ -37,6 +37,16 @@ public class ApiV1MemberController {
     public record LoginResponseBody(@NonNull MemberDto item) {
     }
 
+    public record isLoginResponseBody(@NonNull Boolean isLogin){
+
+    }
+    @GetMapping("/isLogin")
+    @Operation(summary = "로그인 여부 확인")
+    public RsData<isLoginResponseBody> isLogin(){
+
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),Msg.E200_1_INQUIRY_SUCCEED.getMsg(),new isLoginResponseBody(rq.isLogin()));
+    }
+
     @PostMapping(value = "/login")
     @Operation(summary = "로그인, accessToken, refreshToken 쿠키 생성됨")
     public RsData<LoginResponseBody> login(@Valid @RequestBody LoginRequestBody body) {
@@ -92,7 +102,6 @@ public class ApiV1MemberController {
                 .stream()
                 .map(courseEnroll -> new CourseDto(courseEnroll.getCourse(), member))
                 .collect(Collectors.toList());
-
         List<CourseDto> likeCourses = courseService.findByVoter(member).stream().map(course -> new CourseDto(course,member)).collect(Collectors.toList());
 
         MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,member);

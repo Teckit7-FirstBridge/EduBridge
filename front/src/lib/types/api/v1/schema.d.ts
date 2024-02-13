@@ -127,6 +127,10 @@ export interface paths {
   "/api/v1/members/me": {
     get: operations["getMe"];
   };
+  "/api/v1/members/isLogin": {
+    /** 로그인 여부 확인 */
+    get: operations["isLogin"];
+  };
   "/api/v1/home": {
     /** 홈화면 최신 강좌 N개조회 */
     get: operations["getPosts_1"];
@@ -265,9 +269,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
+      authoritiesAsStringList?: string[];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -539,10 +543,7 @@ export interface components {
     MyPageDto: {
       learningCourses?: components["schemas"]["CourseDto"][];
       favoriteCourses?: components["schemas"]["CourseDto"][];
-      /** Format: int32 */
-      dailyAchievement?: number;
-      /** Format: int32 */
-      dailyGoal?: number;
+      member?: components["schemas"]["Member"];
     };
     MyPageResponseBody: {
       item: components["schemas"]["MyPageDto"];
@@ -567,6 +568,18 @@ export interface components {
       data: components["schemas"]["MeResponseBody"];
       fail: boolean;
       success: boolean;
+    };
+    RsDataIsLoginResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["isLoginResponseBody"];
+      fail: boolean;
+      success: boolean;
+    };
+    isLoginResponseBody: {
+      isLogin: boolean;
     };
     CourseEnrollDto: {
       /** Format: int64 */
@@ -1438,6 +1451,17 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataMeResponseBody"];
+        };
+      };
+    };
+  };
+  /** 로그인 여부 확인 */
+  isLogin: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataIsLoginResponseBody"];
         };
       };
     };
