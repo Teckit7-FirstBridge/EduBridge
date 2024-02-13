@@ -83,10 +83,18 @@
         {#if items}
           {#each items as item}
             <div
-              class="border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center"
+              class="border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center pt-2"
             >
               <a href="/course/{item.id}">
-                <h2 class="text-lg font-semibold my-2">{item.title}</h2>
+                <div class="flex justify-center gap-2">
+                  <h2 class="text-lg font-semibold my-1 ml-2">{item.title}</h2>
+
+                  <div
+                    class={`inline-flex px-2 text-lg font-semibold rounded-full mt-1 my-1 ${item.grade === '초급' ? 'bg-blue-100 text-blue-800' : item.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
+                  >
+                    {item.grade}
+                  </div>
+                </div>
                 <div class="flex justify-center my-2">
                   <img src={item.imgUrl} />
                 </div>
