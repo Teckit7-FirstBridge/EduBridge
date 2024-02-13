@@ -77,14 +77,17 @@
         </div>
         <div class="flex gap-4 overflow-auto">
           {#each learningCourses as learningCourse}
-            <div class="flex-none w-48 p-6 bg-white rounded-lg shadow">
+            <a
+              href="/course/{learningCourse.id}"
+              class="flex-none w-48 p-6 bg-white rounded-lg shadow"
+            >
               <h3 class="text-sm font-medium">{learningCourse.title}</h3>
               <p class="text-xs text-gray-500">
                 Attended: {summaryNotes.filter(
                   (item) => item.courseId === learningCourse.id && item.pass
                 ).length}/{learningCourse.videoCount}
               </p>
-            </div>
+            </a>
           {/each}
         </div>
 
@@ -107,10 +110,13 @@
         </div>
         <div class="flex gap-4 overflow-auto">
           {#each favoriteCourses as favoriteCourse}
-            <div class="flex-none w-48 p-6 bg-white rounded-lg shadow">
+            <a
+              href="/course/{favoriteCourse.id}"
+              class="flex-none w-48 p-6 bg-white rounded-lg shadow"
+            >
               <h3 class="text-sm font-medium">{favoriteCourse.title}</h3>
-              <p class="text-xs text-gray-500">{favoriteCourse.price}</p>
-            </div>
+              <p class="text-xs text-gray-500">{favoriteCourse.price} 원</p>
+            </a>
           {/each}
         </div>
         <div class="flex justify-between gap-2">
