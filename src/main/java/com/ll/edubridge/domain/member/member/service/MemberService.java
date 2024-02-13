@@ -176,16 +176,15 @@ public class MemberService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정
+    @Scheduled(cron = "0 0 9 * * ?") // 매일 자정
     public void resetVisitedToday() {
         List<Member> allMembers = this.getAllMembers();
 
         for (Member member : allMembers) {
             member.setVisitedToday(false);
             member.setDailyAchievement(0);
-            memberRepository.save(member);
-            // System.out.println("성공");
         }
+        memberRepository.saveAll(allMembers);
     }
 
     private List<Member> getAllMembers() {
