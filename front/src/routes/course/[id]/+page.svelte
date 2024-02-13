@@ -394,29 +394,29 @@
         {#if auth.enroll || rq.isAdmin()}
           <div class="border shadow-sm rounded-lg">
             <div class="relative w-full overflow-auto">
-              <table class="w-full caption-bottom text-sm">
+              <table class="w-full table-fixed caption-bottom text-sm">
                 <thead class="[&amp;_tr]:border-b">
                   <tr
                     class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                   >
                     <th
-                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 max-w-[150px]"
+                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-40"
                     >
                       동영상
                     </th>
 
                     <th
-                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
+                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell w-32"
                     >
                       개요
                     </th>
                     <th
-                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
+                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell w-20"
                     >
                     </th>
 
                     <th
-                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
+                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell w-20"
                     >
                       요약 노트
                     </th>
@@ -429,12 +429,13 @@
                       class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                     >
                       <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
-                        <img
-                          alt="Video thumbnail"
-                          class="rounded-md object-cover mt-2 w-60"
-                          src={video.imgUrl}
-                          on:click={() => window.open(video.url, '_blank')}
-                        />
+                        <div class="image-container2">
+                          <img
+                            class="rounded-image"
+                            src={video.imgUrl}
+                            on:click={() => window.open(video.url, '_blank')}
+                          />
+                        </div>
                       </td>
                       <td
                         class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"

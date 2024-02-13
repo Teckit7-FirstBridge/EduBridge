@@ -70,7 +70,9 @@
                     </div>
                   </div>
                   <div class="flex justify-center my-2">
-                    <img src={item.imgUrl} />
+                    <div class="image-container3">
+                      <img src={item.imgUrl} class="rounded-image" />
+                    </div>
                   </div>
                   <p class="text-sm text-gray-500 dark:text-gray-400 my-4">
                     {removeMarkdown(item.overView)}

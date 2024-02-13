@@ -89,3 +89,47 @@ main {
 .enroll-button:hover {
   background-color: #0056b3;
 }
+
+.image-container {
+  height: 210px; 
+  width: 100%; 
+  overflow: hidden; 
+  border-radius: 15px; 
+}
+
+.rounded-image {
+  width: 100%; 
+  height: auto; 
+  object-fit: cover; 
+  object-position: center -40px; 
+}
+
+.image-container2 {
+  height: 220px;
+  width: 100%; 
+  overflow: hidden;
+  border-radius: 15px; 
+}
+
+.image-container3 {
+  height: 200px;
+  width: 100%; 
+  overflow: hidden;
+  border-radius: 15px; 
+}
+
+.image-container4 {
+  height: 215px; 
+  width: 100%; 
+  overflow: hidden; 
+  border-radius: 15px; 
+}
+
+.equal-width-th {
+  width: 25%; /* 각 th 요소가 전체 너비의 25%를 차지하도록 설정 */
+}
+
+.table-fixed {
+  table-layout: fixed; /* 테이블의 레이아웃을 고정시킵니다 */
+  width: 100%; /* 테이블의 전체 너비를 100%로 설정 */
+}
