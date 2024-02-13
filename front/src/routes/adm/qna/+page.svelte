@@ -88,7 +88,7 @@
               </div>
             </div>
           {:else}
-            <p>요약 노트가 없습니다.</p>
+            <p>등록된 문의가 없습니다.</p>
           {/if}
           <div class="mt-4 flex justify-center">
             <Pagination page={itemPage} />
