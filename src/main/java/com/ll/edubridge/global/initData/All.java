@@ -29,7 +29,7 @@ public class All {
             @Transactional
             @Override
             public void run(ApplicationArguments args) throws Exception {
-                if (memberService.findByUsername("system").isPresent()) return;
+                if (memberService.findByUsername("admin").isPresent()) return;
 
                 String memberAdminPassword = AppConfig.isProd() ? prodMemberAdminPassword : "1234";
 
