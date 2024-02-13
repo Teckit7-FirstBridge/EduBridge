@@ -13,6 +13,13 @@
   let dto: components['schemas']['PostDto'][] = $state([]);
   let toastUiEditor: any | undefined = $state();
   async function load() {
+    const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
+    const { isLogin } = isLoginResponse.data?.data!;
+    if (!isLogin) {
+      rq.msgWarning('로그인이 필요한 서비스 입니다');
+      rq.goTo('/member/login');
+    }
+
     const { data } = await rq.apiEndPoints().GET('/api/v1/posts/{id}', {
       params: { path: { id: parseInt($page.params.id) } }
     });

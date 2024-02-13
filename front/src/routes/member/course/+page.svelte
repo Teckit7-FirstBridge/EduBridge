@@ -7,6 +7,13 @@
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
+    const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
+    const { isLogin } = isLoginResponse.data?.data!;
+    if (!isLogin) {
+      rq.msgWarning('로그인이 필요한 서비스 입니다');
+      rq.goTo('/member/login');
+    }
+
     const { data } = await rq.apiEndPoints().GET('/api/v1/enroll', {
       params: {
         query: {}
