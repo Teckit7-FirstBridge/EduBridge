@@ -2,7 +2,6 @@
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
-  import { memo } from 'react';
 
   let learningCourses: components['schemas']['CourseDto'][] = $state();
   let favoriteCourses: components['schemas']['CourseDto'][] = $state();
