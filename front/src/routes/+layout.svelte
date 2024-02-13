@@ -50,9 +50,6 @@
           {/if}
           {#if rq.isLogin()}
             <li>
-              <a href="/board/write"><i class="fa-solid fa-plus"></i> 글 작성</a>
-            </li>
-            <li>
               <a href="/board/myList"><i class="fa-solid fa-list-check"></i> 내 글</a>
             </li>
             {#if !rq.isAdmin()}
