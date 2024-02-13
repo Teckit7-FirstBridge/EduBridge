@@ -265,9 +265,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
-      profileImgUrlOrDefault?: string;
       authoritiesAsStringList?: string[];
+      profileImgUrlOrDefault?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -539,10 +539,7 @@ export interface components {
     MyPageDto: {
       learningCourses?: components["schemas"]["CourseDto"][];
       favoriteCourses?: components["schemas"]["CourseDto"][];
-      /** Format: int32 */
-      dailyAchievement?: number;
-      /** Format: int32 */
-      dailyGoal?: number;
+      member?: components["schemas"]["Member"];
     };
     MyPageResponseBody: {
       item: components["schemas"]["MyPageDto"];
