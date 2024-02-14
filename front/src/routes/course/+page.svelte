@@ -97,7 +97,7 @@
                 </div>
                 <div class="flex justify-center p-2">
                   <div class="image-container4">
-                    <img src={item.imgUrl} class="rounded-image" />
+                    <img src={item.imgUrl} class="rounded-image2" />
                   </div>
                 </div>
 
