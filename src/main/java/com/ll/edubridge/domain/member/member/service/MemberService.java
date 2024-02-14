@@ -176,7 +176,7 @@ public class MemberService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 10 0 * * ?") // 매일 자정
+    @Scheduled(cron = "0 0 15 * * ?") // 매일 자정
     public void resetVisitedToday() {
         List<Member> allMembers = this.getAllMembers();
 
