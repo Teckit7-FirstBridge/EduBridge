@@ -400,7 +400,7 @@
     <div>댓글 ({post.commentCount})</div>
 
     {#each bestComment as comment}
-      <div class="rounded-sm bg-gray-100">
+      <div class="rounded-md bg-yellow-100">
         <div class="border-b flex justify-between">
           <div>
             <div class="flex items-center">
@@ -522,7 +522,7 @@
 
     {#each comments as comment}
       <div class="">
-        <div class="border-b flex justify-between">
+        <div class="border-b rounded-sm flex justify-between">
           <div>
             <div class="flex items-center">
               <div class="ml-5">
