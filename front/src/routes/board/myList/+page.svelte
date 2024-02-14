@@ -40,7 +40,7 @@
                     class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
                     type="button"
                     on:click={() => {
-                      location.href = '/member/qna/write';
+                      location.href = '/member/board/write';
                     }}
                   >
                     글 작성
