@@ -400,7 +400,7 @@
     <div>댓글 ({post.commentCount})</div>
 
     {#each bestComment as comment}
-      <div class="rounded-sm">
+      <div class="rounded-md bg-yellow-50">
         <div class="border-b flex justify-between">
           <div>
             <div class="flex items-center">
@@ -455,7 +455,7 @@
                 {/if}
                 {#if rq.member.id == comment.authorId || rq.isAdmin()}
                   <div>
-                    <button class="text-xs" on:click={() => deleteComment(comment.id)}>삭제</button>
+                    <button class="text-xs" on:click={() => deleteComment(comment)}>삭제</button>
                   </div>
                 {/if}
               </div>
@@ -467,7 +467,7 @@
           <div class="flex items-center mr-5">
             <button
               class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14"
-              on:click={() => clickLikedComment(comment.id, comment.likedByCurrentUser)}
+              on:click={() => clickLikedComment(comment)}
             >
               {#if comment.likedByCurrentUser}
                 <svg
@@ -522,7 +522,7 @@
 
     {#each comments as comment}
       <div class="">
-        <div class="border-b flex justify-between">
+        <div class="border-b rounded-sm flex justify-between">
           <div>
             <div class="flex items-center">
               <div class="ml-5">
