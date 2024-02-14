@@ -12,10 +12,13 @@ public class AdminCourseDto {
     private String title;
     @NonNull
     private String grade;
+    @NonNull
+    private int enrollCount;
 
     public AdminCourseDto(Course course) {
         this.id = course.getId();
         this.title = course.getTitle();
         this.grade = course.getGrade();
+        this.enrollCount = course.getCourseEnrollList().size();
     }
 }

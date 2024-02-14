@@ -4,6 +4,8 @@ import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
+import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
+import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
@@ -14,7 +16,6 @@ import com.ll.edubridge.domain.home.admin.dto.*;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.domain.post.post.entity.Post;
-import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import com.ll.edubridge.domain.post.post.service.PostService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -52,7 +53,7 @@ public class ApiV1AdminController {
     private final PostService postService;
     private final SummaryNoteService summaryNoteService;
     private final VideoService videoService;
-    private final PostRepository postRepository;
+    private final CourseEnrollService courseEnrollService;
 
     private final Rq rq;
 
@@ -155,6 +156,24 @@ public class ApiV1AdminController {
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 reportedPostList
+        );
+    }
+
+    @GetMapping(value = "/{courseId}/enroll")
+    @Operation(summary = "강좌별 수강생 목록")
+    public RsData<List<AdminCourseEnrollDto>> getEnrollByCourseId(
+            @PathVariable("courseId") Long courseId) {
+
+        List<CourseEnroll> courseEnrolls = courseEnrollService.findByCourseId(courseId);
+
+        List<AdminCourseEnrollDto> enrollList = courseEnrolls.stream()
+                .map(AdminCourseEnrollDto::new)
+                .toList();
+
+        return RsData.of(
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                enrollList
         );
     }
 

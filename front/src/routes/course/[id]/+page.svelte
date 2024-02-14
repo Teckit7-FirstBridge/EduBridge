@@ -8,9 +8,16 @@
     window.location.href = videoUrl;
   }
 
+  let modal;
+
+  function openModal() {
+    modal.showModal();
+  }
+
   let course: components['schemas']['CourseDto'] = $state();
   let videos: components['schemas']['VideoDto'][] = $state();
   let auth: components['schemas']['CourseAuthDto'] = $state();
+  let enroll: components['schemas']['AdminCourseEnrollDto'] = $state();
 
   let overviewviewr: any | undefined = $state();
   let notiviewer: any | undefined = $state();
@@ -41,6 +48,15 @@
     });
     course = responseCourse.data?.data!;
 
+    const responseEnroll = await rq.apiEndPoints().GET(`/api/v1/admin/{courseId}/enroll`, {
+      params: {
+        path: {
+          courseId: parseInt($page.params.id)
+        }
+      }
+    });
+    enroll = responseEnroll.data?.data!;
+
     const responseAuth = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}/auth`, {
       params: {
         path: {
@@ -50,7 +66,7 @@
     });
     auth = responseAuth.data?.data!;
 
-    return { videos, course, auth };
+    return { videos, course, auth, enroll };
   }
 
   async function deleteCourse() {
@@ -182,7 +198,7 @@
 
 {#await load()}
   <div>loading...</div>
-{:then { videos, course, auth }}
+{:then { videos, course, auth, enroll }}
   <div class="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
     <div class="hidden w-64 border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
       <div class="flex h-full max-h-screen flex-col gap-2">
@@ -284,7 +300,11 @@
               <ul>
                 {#each videos as video, index}
                   {#if auth.enroll || rq.isAdmin()}
-                    <li><a href={video.url}>강의 {index + 1}</a></li>
+                    <li>
+                      <a href={video.url} target="_blank" rel="noopener noreferrer"
+                        >강의 {index + 1}</a
+                      >
+                    </li>
                   {/if}
                 {/each}
               </ul>
@@ -358,6 +378,26 @@
                 <button on:click={startCourse} class="btn btn-sm">강좌 공개</button>
               {:else}
                 <button on:click={stopCourse} class="btn btn-sm">강좌 비공개</button>
+                <button onclick={openModal} class="btn btn-sm">수강생 목록</button>
+                <dialog id="my_modal_3" class="modal" bind:this={modal}>
+                  <div class="modal-box">
+                    <form method="dialog">
+                      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                        >✕</button
+                      >
+                    </form>
+                    <div class="flex flex-col p-6 bg-white shadow rounded-lg">
+                      <h2 class="text-xl font-semibold mb-4 border-b pb-2">수강생 목록</h2>
+                      {#each enroll as enroll}
+                        <div
+                          class="py-2 px-4 bg-gray-100 rounded-md mb-2 shadow-sm hover:bg-gray-200 transition-colors"
+                        >
+                          {enroll.name}
+                        </div>
+                      {/each}
+                    </div>
+                  </div>
+                </dialog>
               {/if}
             </div>
           {/if}

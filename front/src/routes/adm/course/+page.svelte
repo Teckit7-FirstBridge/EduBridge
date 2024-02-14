@@ -68,6 +68,9 @@
                     >
                       {item.grade}
                     </div>
+                    <div class="font-medium text-lg mt-1">
+                      [수강 인원 : {item.enrollCount}명]
+                    </div>
                   </div>
                   <div class="flex justify-center my-2">
                     <div class="flex justify-center p-2 bg-black rounded-lg">

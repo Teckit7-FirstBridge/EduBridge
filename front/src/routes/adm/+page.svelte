@@ -68,6 +68,12 @@
                         >
                           등급
                         </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          수강 인원
+                        </th>
                       </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -84,6 +90,9 @@
                             >
                               {item.grade}
                             </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {item.enrollCount}명
                           </td>
                         </tr>
                       {/each}

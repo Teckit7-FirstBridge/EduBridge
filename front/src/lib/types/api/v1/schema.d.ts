@@ -175,6 +175,10 @@ export interface paths {
     /** 댓글 목록 */
     get: operations["getComments"];
   };
+  "/api/v1/admin/{courseId}/enroll": {
+    /** 강좌별 수강생 목록 */
+    get: operations["getEnrollByCourseId"];
+  };
   "/api/v1/admin/summaryNotes": {
     /** 최신 요약노트 */
     get: operations["getSummeryNotes"];
@@ -365,6 +369,8 @@ export interface components {
       /** Format: int32 */
       videoCount?: number;
       confirm?: boolean;
+      /** Format: int32 */
+      enrollCount?: number;
     };
     RsDataCourseDto: {
       resultCode: string;
@@ -668,6 +674,20 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    AdminCourseEnrollDto: {
+      /** Format: int64 */
+      id?: number;
+      name?: string;
+    };
+    RsDataListAdminCourseEnrollDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["AdminCourseEnrollDto"][];
+      fail: boolean;
+      success: boolean;
+    };
     AdminSummaryNoteDto: {
       /** Format: int64 */
       id: number;
@@ -819,6 +839,8 @@ export interface components {
       id: number;
       title: string;
       grade: string;
+      /** Format: int32 */
+      enrollCount: number;
     };
     RsDataListAdminCourseDto: {
       resultCode: string;
@@ -1649,6 +1671,22 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataListCommentDto"];
+        };
+      };
+    };
+  };
+  /** 강좌별 수강생 목록 */
+  getEnrollByCourseId: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListAdminCourseEnrollDto"];
         };
       };
     };
