@@ -9,7 +9,7 @@
   }
 
   let course: components['schemas']['CourseDto'] = $state();
-  let videos: components['schemas']['VideoDto'][] = $state();
+  let videos = $state<components['schemas']['VideoDto'][]>([]);
   let auth: components['schemas']['CourseAuthDto'] = $state();
 
   let overviewviewr: any | undefined = $state();
@@ -136,19 +136,19 @@
     }
   }
 
-  async function deleteVideo(videoId: number) {
+  async function deleteVideo(video: components['schemas']['VideoDto']) {
     const isConfirmed = confirm('동영상을 삭제하시겠습니까?');
 
     if (isConfirmed) {
       const { data, error } = await rq
         .apiEndPoints()
         .DELETE(`/api/v1/admin/{courseId}/videos/{id}`, {
-          params: { path: { courseId: parseInt($page.params.id), id: videoId } }
+          params: { path: { courseId: parseInt($page.params.id), id: video.id } }
         });
 
       if (data) {
         rq.msgInfo('동영상이 삭제 되었습니다');
-        window.location.reload();
+        videos.splice(videos.indexOf(video), 1);
       } else if (error) {
         rq.msgError(error.msg);
       }
@@ -440,7 +440,7 @@
                               href="/course/{video.courseId}/videoedit/{video.id}"
                               class="btn btn-sm">수정</a
                             >
-                            <button on:click={() => deleteVideo(video.id)} class="btn btn-sm"
+                            <button on:click={() => deleteVideo(video)} class="btn btn-sm"
                               >삭제</button
                             >
                           </div>

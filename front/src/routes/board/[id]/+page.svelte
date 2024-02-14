@@ -17,6 +17,7 @@
   let body: string | undefined = $state();
   let div: HTMLDivElement;
 
+  let likedNum: number = $state();
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
     const responseComment = await rq.apiEndPoints().GET(`/api/v1/comments/{postId}`, {
@@ -57,19 +58,19 @@
     }
   }
 
-  async function deleteComment(commentId: number) {
+  async function deleteComment(comment: components['schemas']['CommentDto']) {
     const isConfirmed = confirm('댓글을 삭제하시겠습니까?');
 
     if (isConfirmed) {
       const { data, error } = await rq
         .apiEndPoints()
         .DELETE(`/api/v1/comments/{postId}/{commentId}`, {
-          params: { path: { postId: parseInt($page.params.id), commentId: commentId } }
+          params: { path: { postId: parseInt($page.params.id), commentId: comment.id } }
         });
 
       if (data) {
         rq.msgInfo(data.msg);
-        location.reload();
+        comments.splice(comments.indexOf(comment), 1);
       } else if (error) {
         rq.msgError(error.msg);
       }
@@ -419,7 +420,7 @@
                 {/if}
                 {#if rq.member.id == comment.authorId || rq.isAdmin()}
                   <div>
-                    <button class="text-xs" on:click={() => deleteComment(comment.id)}>삭제</button>
+                    <button class="text-xs" on:click={() => deleteComment(comment)}>삭제</button>
                   </div>
                 {/if}
               </div>
