@@ -5,14 +5,20 @@ import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 @Getter
-public class RecentCourseDto {
+public class AdminCourseDto {
     @NonNull
     private Long id;
     @NonNull
     private String title;
+    @NonNull
+    private String grade;
+    @NonNull
+    private int enrollCount;
 
-    public RecentCourseDto(Course course) {
+    public AdminCourseDto(Course course) {
         this.id = course.getId();
         this.title = course.getTitle();
+        this.grade = course.getGrade();
+        this.enrollCount = course.getCourseEnrollList().size();
     }
 }

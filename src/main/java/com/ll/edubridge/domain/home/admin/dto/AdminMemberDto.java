@@ -6,7 +6,7 @@ import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 @Getter
-public class RecentMemberDto {
+public class AdminMemberDto {
     @NonNull
     private long id;
     @NonNull
@@ -16,7 +16,7 @@ public class RecentMemberDto {
     @NonNull
     private boolean report;
 
-    public RecentMemberDto(Member member) {
+    public AdminMemberDto(Member member) {
         this.id = member.getId();
         this.createDate = member.getCreateDate();
         this.name = member.getName();

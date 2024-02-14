@@ -18,6 +18,7 @@ public class CourseDto {
     private boolean likedByCurrentUser;
     private int videoCount;
     private Boolean confirm;
+    private int enrollCount;
 
     public CourseDto(Course course, Member member) {
         this.id = course.getId();
@@ -31,6 +32,7 @@ public class CourseDto {
         this.likedByCurrentUser = course.getVoter().contains(member);
         this.videoCount = course.getVideoList().size();
         this.confirm = course.getConfirm();
+        this.enrollCount = course.getCourseEnrollList().size();
     }
 
     public CourseDto() {

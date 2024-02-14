@@ -175,6 +175,10 @@ export interface paths {
     /** 댓글 목록 */
     get: operations["getComments"];
   };
+  "/api/v1/admin/{courseId}/enroll": {
+    /** 강좌별 수강생 목록 */
+    get: operations["getEnrollByCourseId"];
+  };
   "/api/v1/admin/summaryNotes": {
     /** 최신 요약노트 */
     get: operations["getSummeryNotes"];
@@ -226,6 +230,8 @@ export interface components {
       /** Format: int32 */
       voteCount: number;
       likedByCurrentUser: boolean;
+      /** Format: int32 */
+      commentCount: number;
       report: boolean;
     };
     RsDataPostDto: {
@@ -269,9 +275,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
-      authoritiesAsStringList?: string[];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -363,6 +369,8 @@ export interface components {
       /** Format: int32 */
       videoCount?: number;
       confirm?: boolean;
+      /** Format: int32 */
+      enrollCount?: number;
     };
     RsDataCourseDto: {
       resultCode: string;
@@ -512,6 +520,8 @@ export interface components {
       authorName: string;
       title: string;
       body: string;
+      /** Format: int32 */
+      commentCount: number;
     };
     RsDataListQnaDto: {
       resultCode: string;
@@ -664,7 +674,21 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    RecentSummaryNoteDto: {
+    AdminCourseEnrollDto: {
+      /** Format: int64 */
+      id?: number;
+      name?: string;
+    };
+    RsDataListAdminCourseEnrollDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["AdminCourseEnrollDto"][];
+      fail: boolean;
+      success: boolean;
+    };
+    AdminSummaryNoteDto: {
       /** Format: int64 */
       id: number;
       name: string;
@@ -675,20 +699,21 @@ export interface components {
       courseId: number;
       /** Format: date-time */
       createDate: string;
+      pass: boolean;
     };
-    RsDataListRecentSummaryNoteDto: {
+    RsDataListAdminSummaryNoteDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["RecentSummaryNoteDto"][];
+      data: components["schemas"]["AdminSummaryNoteDto"][];
       fail: boolean;
       success: boolean;
     };
     GetNotesResponseBody: {
-      itemPage?: components["schemas"]["PageDtoRecentSummaryNoteDto"];
+      itemPage?: components["schemas"]["PageDtoAdminSummaryNoteDto"];
     };
-    PageDtoRecentSummaryNoteDto: {
+    PageDtoAdminSummaryNoteDto: {
       /** Format: int64 */
       totalElementsCount: number;
       /** Format: int64 */
@@ -697,7 +722,7 @@ export interface components {
       totalPagesCount: number;
       /** Format: int32 */
       number: number;
-      content: components["schemas"]["RecentSummaryNoteDto"][];
+      content: components["schemas"]["AdminSummaryNoteDto"][];
     };
     RsDataGetNotesResponseBody: {
       resultCode: string;
@@ -734,6 +759,8 @@ export interface components {
       createDate: string;
       authorName: string;
       title: string;
+      /** Format: int32 */
+      commentCount: number;
     };
     RsDataListAdminQnaDto: {
       resultCode: string;
@@ -767,7 +794,7 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    RecentMemberDto: {
+    AdminMemberDto: {
       /** Format: int64 */
       id: number;
       /** Format: date-time */
@@ -775,19 +802,19 @@ export interface components {
       name: string;
       report: boolean;
     };
-    RsDataListRecentMemberDto: {
+    RsDataListAdminMemberDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["RecentMemberDto"][];
+      data: components["schemas"]["AdminMemberDto"][];
       fail: boolean;
       success: boolean;
     };
     GetMembersResponseBody: {
-      itemPage?: components["schemas"]["PageDtoRecentMemberDto"];
+      itemPage?: components["schemas"]["PageDtoAdminMemberDto"];
     };
-    PageDtoRecentMemberDto: {
+    PageDtoAdminMemberDto: {
       /** Format: int64 */
       totalElementsCount: number;
       /** Format: int64 */
@@ -796,7 +823,7 @@ export interface components {
       totalPagesCount: number;
       /** Format: int32 */
       number: number;
-      content: components["schemas"]["RecentMemberDto"][];
+      content: components["schemas"]["AdminMemberDto"][];
     };
     RsDataGetMembersResponseBody: {
       resultCode: string;
@@ -807,17 +834,20 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    RecentCourseDto: {
+    AdminCourseDto: {
       /** Format: int64 */
       id: number;
       title: string;
+      grade: string;
+      /** Format: int32 */
+      enrollCount: number;
     };
-    RsDataListRecentCourseDto: {
+    RsDataListAdminCourseDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["RecentCourseDto"][];
+      data: components["schemas"]["AdminCourseDto"][];
       fail: boolean;
       success: boolean;
     };
@@ -1333,7 +1363,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListRecentCourseDto"];
+          "application/json": components["schemas"]["RsDataListAdminCourseDto"];
         };
       };
     };
@@ -1645,13 +1675,29 @@ export interface operations {
       };
     };
   };
+  /** 강좌별 수강생 목록 */
+  getEnrollByCourseId: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListAdminCourseEnrollDto"];
+        };
+      };
+    };
+  };
   /** 최신 요약노트 */
   getSummeryNotes: {
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListRecentSummaryNoteDto"];
+          "application/json": components["schemas"]["RsDataListAdminSummaryNoteDto"];
         };
       };
     };
@@ -1727,7 +1773,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListRecentMemberDto"];
+          "application/json": components["schemas"]["RsDataListAdminMemberDto"];
         };
       };
     };

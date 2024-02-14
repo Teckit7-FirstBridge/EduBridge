@@ -30,6 +30,8 @@ public class PostDto {
 
     @NonNull
     private boolean isReport;
+    @NonNull
+    private int commentCount;
 
     public PostDto(Post post, Member member) {
         this.id = post.getId();
@@ -41,6 +43,7 @@ public class PostDto {
         this.voteCount = post.getVoteCount();
         this.likedByCurrentUser = post.getVoter().contains(member);
         this.isReport = post.isReport();
+        this.commentCount = post.getCommentList().size();
     }
 
     public PostDto(){
