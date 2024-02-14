@@ -6,6 +6,7 @@
   import type { components } from '$lib/types/api/v1/schema';
   import { page } from '$app/stores';
   import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
+  import { comment } from 'postcss';
 
   let comments: components['schemas']['CommentDto'][] = $state();
   let bestComment: components['schemas']['CommentDto'][] = $state();
@@ -18,6 +19,11 @@
   let body: string | undefined = $state();
   let div: HTMLDivElement;
 
+  let likedNum: number = $state(0);
+  let likedByCurrentUser: Boolean = $state(false);
+
+  let commentLikedNum: number[] = $state([]);
+  let commentLikedByCurrentUser: Boolean[] = $state([]);
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
     const responseComment = await rq.apiEndPoints().GET(`/api/v1/comments/{postId}`, {
@@ -28,6 +34,8 @@
       }
     });
     comments = responseComment.data?.data!;
+    commentLikedNum = comments.map((comment) => comment.voteCount!);
+    commentLikedByCurrentUser = comments.map((comment) => comment.likedByCurrentUser!);
 
     const responseBestComment = await rq.apiEndPoints().GET(`/api/v1/comments/{postId}/top`, {
       params: {
@@ -46,6 +54,8 @@
       }
     });
     post = responsePost.data?.data!;
+    likedNum = post.voteCount;
+    likedByCurrentUser = post.likedByCurrentUser;
 
     return { comments, post };
   }
@@ -67,19 +77,19 @@
     }
   }
 
-  async function deleteComment(commentId: number) {
+  async function deleteComment(comment: components['schemas']['CommentDto']) {
     const isConfirmed = confirm('댓글을 삭제하시겠습니까?');
 
     if (isConfirmed) {
       const { data, error } = await rq
         .apiEndPoints()
         .DELETE(`/api/v1/comments/{postId}/{commentId}`, {
-          params: { path: { postId: parseInt($page.params.id), commentId: commentId } }
+          params: { path: { postId: parseInt($page.params.id), commentId: comment.id } }
         });
 
       if (data) {
         rq.msgInfo(data.msg);
-        location.reload();
+        comments.splice(comments.indexOf(comment), 1);
       } else if (error) {
         rq.msgError(error.msg);
       }
@@ -133,13 +143,14 @@
   }
 
   async function clickLikedPost() {
-    if (post.likedByCurrentUser) {
+    if (likedByCurrentUser) {
       const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/posts/{id}/like`, {
         params: { path: { id: parseInt($page.params.id) } }
       });
       if (data) {
         rq.msgInfo('좋아요 취소');
-        window.location.reload();
+        likedByCurrentUser = false;
+        likedNum -= 1;
       } else if (error) {
         rq.msgError(error.msg);
       }
@@ -149,7 +160,9 @@
       });
       if (data) {
         rq.msgInfo('좋아요!!');
-        window.location.reload();
+        likedByCurrentUser = true;
+
+        likedNum += 1;
       } else if (error) {
         rq.msgError('로그인 후 이용 해 주세요');
         rq.goTo('/member/login');
@@ -157,16 +170,18 @@
     }
   }
 
-  async function clickLikedComment(commentId: number, likedByCurrentUser: boolean) {
-    if (likedByCurrentUser) {
+  async function clickLikedComment(comment: components['schemas']['CommentDto']) {
+    if (commentLikedByCurrentUser[comments.indexOf(comment)]) {
       const { data, error } = await rq
         .apiEndPoints()
         .DELETE(`/api/v1/comments/{postId}/{commentId}/like`, {
-          params: { path: { postId: parseInt($page.params.id), commentId: commentId } }
+          params: { path: { postId: parseInt($page.params.id), commentId: comment.id } }
         });
       if (data) {
         rq.msgInfo('좋아요 취소');
-        window.location.reload();
+        commentLikedByCurrentUser[comments.indexOf(comment)] =
+          !commentLikedByCurrentUser[comments.indexOf(comment)];
+        commentLikedNum[comments.indexOf(comment)] -= 1;
       } else if (error) {
         rq.msgError(error.msg);
       }
@@ -174,11 +189,13 @@
       const { data, error } = await rq
         .apiEndPoints()
         .POST(`/api/v1/comments/{postId}/{commentId}/like`, {
-          params: { path: { postId: parseInt($page.params.id), commentId: commentId } }
+          params: { path: { postId: parseInt($page.params.id), commentId: comment.id } }
         });
       if (data) {
         rq.msgInfo('좋아요!!');
-        window.location.reload();
+        commentLikedByCurrentUser[comments.indexOf(comment)] =
+          !commentLikedByCurrentUser[comments.indexOf(comment)];
+        commentLikedNum[comments.indexOf(comment)] += 1;
       } else if (error) {
         rq.msgError('로그인 후 이용 해 주세요');
         rq.goTo('/member/login');
@@ -329,7 +346,7 @@
         class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14"
         on:click={clickLikedPost}
       >
-        {#if post.likedByCurrentUser}
+        {#if likedByCurrentUser}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="red"
@@ -360,7 +377,7 @@
             />
           </svg>
         {/if}
-        <span>{post.voteCount}</span>
+        <span>{likedNum}</span>
       </button>
     </div>
     {#if rq.isLogin()}
@@ -555,7 +572,7 @@
                 {/if}
                 {#if rq.member.id == comment.authorId || rq.isAdmin()}
                   <div>
-                    <button class="text-xs" on:click={() => deleteComment(comment.id)}>삭제</button>
+                    <button class="text-xs" on:click={() => deleteComment(comment)}>삭제</button>
                   </div>
                 {/if}
               </div>
@@ -567,9 +584,9 @@
           <div class="flex items-center mr-5">
             <button
               class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14"
-              on:click={() => clickLikedComment(comment.id, comment.likedByCurrentUser)}
+              on:click={() => clickLikedComment(comment)}
             >
-              {#if comment.likedByCurrentUser}
+              {#if commentLikedByCurrentUser[comments.indexOf(comment)]}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="red"
@@ -600,7 +617,7 @@
                   />
                 </svg>
               {/if}
-              <span>{comment.voteCount}</span>
+              <span>{commentLikedNum[comments.indexOf(comment)]}</span>
             </button>
           </div>
         </div>
