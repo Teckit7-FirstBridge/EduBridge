@@ -10,7 +10,8 @@
     modal.showModal();
   }
 
-  const login = async () => {
+  const login = async (event) => {
+    event.preventDefault();
     const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/members/login', {
       // url 설정
       body: {
@@ -70,22 +71,25 @@
     >
     <dialog id="my_modal_3" class="modal" bind:this={modal}>
       <div class="modal-box">
-        <form method="dialog">
-          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <div class="flex flex-col p-6">
+        <form on:submit={login} class="flex flex-col p-6">
+          <!-- 폼에 on:submit 이벤트 추가 -->
+          <button
+            type="button"
+            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            onclick={() => modal.close()}>✕</button
+          >
           <label for="username">아이디</label>
-          <input type="username" placeholder="username" class="w-2/3 mb-2" bind:value={username} />
+          <input type="text" placeholder="username" class="w-2/3 mb-2" bind:value={username} />
           <label for="password">비밀번호</label>
           <input type="password" placeholder="password" class="max-w-xs" bind:value={password} />
-        </div>
-        <div class="flex justify-center">
-          <button
-            on:click={login}
-            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
-            >관리자 로그인</button
-          >
-        </div>
+          <div class="flex justify-center">
+            <button
+              type="submit"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
+              >관리자 로그인</button
+            >
+          </div>
+        </form>
       </div>
     </dialog>
   </div>
