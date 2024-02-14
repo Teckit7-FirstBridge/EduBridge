@@ -89,3 +89,20 @@ main {
 .enroll-button:hover {
   background-color: #0056b3;
 }
+
+.rounded-container {
+  width: 100%; 
+  height: auto; 
+  object-fit: cover; 
+  object-position: center 0px; 
+}
+
+
+.equal-width-th {
+  width: 25%; /* 각 th 요소가 전체 너비의 25%를 차지하도록 설정 */
+}
+
+.table-fixed {
+  table-layout: fixed; /* 테이블의 레이아웃을 고정시킵니다 */
+  width: 100%; /* 테이블의 전체 너비를 100%로 설정 */
+}

@@ -5,7 +5,7 @@
   import Pagination from '$lib/components/Pagination.svelte';
   import CourseNav from '../../../lib/components/AdmNav.svelte';
 
-  let members: components['schemas']['PageDtoRecentMemberDto'][] = $state();
+  let members: components['schemas']['PageDtoAdminMemberDto'][] = $state();
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -71,7 +71,7 @@
                     {#each members as item}
                       <tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          <a href="/" class="text-blue-600 hover:text-blue-900">
+                          <a href="/member/{item.id}" class="text-blue-600 hover:text-blue-900">
                             {item.name}
                           </a>
                         </td>

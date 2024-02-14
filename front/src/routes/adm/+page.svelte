@@ -4,8 +4,8 @@
   import AdmNav from '../../lib/components/AdmNav.svelte';
   import { onMount } from 'svelte';
 
-  let recentCourse: components['schemas']['RecentCourseDto'][] = $state();
-  let recentMember: components['schemas']['RecentMemberDto'][] = $state();
+  let recentCourse: components['schemas']['AdminCourseDto'][] = $state();
+  let recentMember: components['schemas']['AdminMemberDto'][] = $state();
   let reportPost: components['schemas']['ReportedPostDto'][] = $state();
   let recentQna: components['schemas']['AdminQnaDto'][] = $state();
 
@@ -47,7 +47,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/course"
-                      class="inline-block px-2 py-1 bg-gray-100 text-gray-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-gray-600"
+                      class="inline-block px-2 py-1 bg-blue-100 text-blue-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out"
                       >+</a
                     >
                   </div>
@@ -60,7 +60,19 @@
                           scope="col"
                           class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                          강좌 목록
+                          강좌 제목
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          등급
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          수강 인원
                         </th>
                       </tr>
                     </thead>
@@ -71,6 +83,16 @@
                             <a href="/course/{item.id}" class="text-blue-600 hover:text-blue-900">
                               {item.title}
                             </a>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <div
+                              class={`inline-flex px-2 text-sm font-semibold rounded-full mt-1 my-1 ${item.grade === '초급' ? 'bg-blue-100 text-blue-800' : item.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
+                            >
+                              {item.grade}
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {item.enrollCount}명
                           </td>
                         </tr>
                       {/each}
@@ -92,7 +114,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/member"
-                      class="inline-block px-2 py-1 bg-gray-100 text-gray-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-gray-600"
+                      class="inline-block px-2 py-1 bg-blue-100 text-blue-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out"
                       >+</a
                     >
                   </div>
@@ -161,7 +183,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/report"
-                      class="inline-block px-2 py-1 bg-gray-100 text-gray-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-gray-600"
+                      class="inline-block px-2 py-1 bg-blue-100 text-blue-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out"
                       >+</a
                     >
                   </div>
@@ -233,7 +255,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/qna"
-                      class="inline-block px-2 py-1 bg-gray-100 text-gray-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-gray-600"
+                      class="inline-block px-2 py-1 bg-blue-100 text-blue-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out"
                       >+</a
                     >
                   </div>
@@ -260,6 +282,12 @@
                         >
                           작성일
                         </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          처리 여부
+                        </th>
                       </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -275,6 +303,13 @@
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {`${new Date(qna.createDate).getFullYear()}년 ${new Date(qna.createDate).getMonth() + 1}월 ${new Date(qna.createDate).getDate()}일`}
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <div
+                              class={`inline-flex px-2 text-xs font-semibold rounded-full ${qna.commentCount == 0 ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'}`}
+                            >
+                              {qna.commentCount == 0 ? '미완료' : '처리 완료'}
+                            </div>
                           </td>
                         </tr>
                       {/each}

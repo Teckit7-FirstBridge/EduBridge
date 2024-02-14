@@ -58,11 +58,24 @@
               {#each items as item}
                 <a
                   href="/course/{item.id}"
-                  class="p-4 border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center"
+                  class="border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center"
                 >
-                  <h2 class="text-lg font-semibold my-2">{item.title}</h2>
+                  <div class="flex justify-center gap-2">
+                    <h2 class="text-lg font-semibold my-1 ml-2">{item.title}</h2>
+
+                    <div
+                      class={`inline-flex px-2 text-lg font-semibold rounded-full mt-1 my-1 ${item.grade === '초급' ? 'bg-blue-100 text-blue-800' : item.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
+                    >
+                      {item.grade}
+                    </div>
+                    <div class="font-medium text-lg mt-1">
+                      [수강 인원 : {item.enrollCount}명]
+                    </div>
+                  </div>
                   <div class="flex justify-center my-2">
-                    <img src={item.imgUrl} />
+                    <div class="flex justify-center p-2 bg-black rounded-lg">
+                      <img src={item.imgUrl} />
+                    </div>
                   </div>
                   <p class="text-sm text-gray-500 dark:text-gray-400 my-4">
                     {removeMarkdown(item.overView)}

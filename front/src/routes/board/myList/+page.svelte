@@ -43,7 +43,7 @@
                       location.href = '/member/qna/write';
                     }}
                   >
-                    write
+                    글 작성
                   </button>
                 </div>
               </div>

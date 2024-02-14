@@ -353,7 +353,6 @@
     {#if rq.isLogin()}
       <div class="border-t mb-8 mt-10"></div>
       <div>
-        <h1>Comment</h1>
         <div class="mt-8 flex gap-2 items-center">
           <textarea
             id="commentbody"
@@ -368,7 +367,7 @@
     {/if}
 
     <div class="border-t my-8"></div>
-    <div>댓글</div>
+    <div>댓글 ({post.commentCount})</div>
     {#each comments as comment}
       <div class="mt-8">
         <div class="border rounded-md flex justify-between">

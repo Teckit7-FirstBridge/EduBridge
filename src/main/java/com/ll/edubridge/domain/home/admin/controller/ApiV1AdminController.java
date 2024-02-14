@@ -4,6 +4,8 @@ import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
+import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
+import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
@@ -14,7 +16,6 @@ import com.ll.edubridge.domain.home.admin.dto.*;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.domain.post.post.entity.Post;
-import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import com.ll.edubridge.domain.post.post.service.PostService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -52,18 +53,18 @@ public class ApiV1AdminController {
     private final PostService postService;
     private final SummaryNoteService summaryNoteService;
     private final VideoService videoService;
-    private final PostRepository postRepository;
+    private final CourseEnrollService courseEnrollService;
 
     private final Rq rq;
 
     @GetMapping(value = "/courses")
     @Operation(summary = "강좌 최신순")
-    public RsData<List<RecentCourseDto>> getRecentCourses() {
+    public RsData<List<AdminCourseDto>> getRecentCourses() {
 
         List<Course> recentCourses = courseService.findRecentCourse();
 
-        List<RecentCourseDto> courseList = recentCourses.stream()
-                .map(RecentCourseDto::new)
+        List<AdminCourseDto> courseList = recentCourses.stream()
+                .map(AdminCourseDto::new)
                 .toList();
 
         return RsData.of(
@@ -92,12 +93,12 @@ public class ApiV1AdminController {
 
     @GetMapping(value = "/members")
     @Operation(summary = "회원 최신순")
-    public RsData<List<RecentMemberDto>> getMembers() {
+    public RsData<List<AdminMemberDto>> getMembers() {
 
         List<Member> recentMembers = memberService.recentMembers();
 
-        List<RecentMemberDto> recentMemberList = recentMembers.stream()
-                .map(RecentMemberDto::new)
+        List<AdminMemberDto> recentMemberList = recentMembers.stream()
+                .map(AdminMemberDto::new)
                 .toList();
 
         return RsData.of(
@@ -109,12 +110,12 @@ public class ApiV1AdminController {
 
     @GetMapping(value = "/summaryNotes")
     @Operation(summary = "최신 요약노트")
-    public RsData<List<RecentSummaryNoteDto>> getSummeryNotes() {
+    public RsData<List<AdminSummaryNoteDto>> getSummeryNotes() {
 
         List<SummaryNote> recentSummaryNotes = summaryNoteService.recentSummaryNotes();
 
-        List<RecentSummaryNoteDto> recentSummaryNoteList = recentSummaryNotes.stream()
-                .map(RecentSummaryNoteDto::new)
+        List<AdminSummaryNoteDto> recentSummaryNoteList = recentSummaryNotes.stream()
+                .map(AdminSummaryNoteDto::new)
                 .toList();
 
         return RsData.of(
@@ -158,7 +159,25 @@ public class ApiV1AdminController {
         );
     }
 
-    public record GetMembersResponseBody(@NonNull PageDto<RecentMemberDto> itemPage) {
+    @GetMapping(value = "/{courseId}/enroll")
+    @Operation(summary = "강좌별 수강생 목록")
+    public RsData<List<AdminCourseEnrollDto>> getEnrollByCourseId(
+            @PathVariable("courseId") Long courseId) {
+
+        List<CourseEnroll> courseEnrolls = courseEnrollService.findByCourseId(courseId);
+
+        List<AdminCourseEnrollDto> enrollList = courseEnrolls.stream()
+                .map(AdminCourseEnrollDto::new)
+                .toList();
+
+        return RsData.of(
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                enrollList
+        );
+    }
+
+    public record GetMembersResponseBody(@NonNull PageDto<AdminMemberDto> itemPage) {
     }
 
     @GetMapping(value = "/members/list")
@@ -173,7 +192,7 @@ public class ApiV1AdminController {
 
         Page<Member> members = memberService.findAll(pageable);
 
-        Page<RecentMemberDto> memberPage = members.map(this::memberToDto);
+        Page<AdminMemberDto> memberPage = members.map(this::memberToDto);
 
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
@@ -184,13 +203,13 @@ public class ApiV1AdminController {
         );
     }
 
-    private RecentMemberDto memberToDto(Member member) {
-        RecentMemberDto dto = new RecentMemberDto(member);
+    private AdminMemberDto memberToDto(Member member) {
+        AdminMemberDto dto = new AdminMemberDto(member);
 
         return dto;
     }
 
-    public record GetNotesResponseBody(@NonNull PageDto<RecentSummaryNoteDto> itemPage) {
+    public record GetNotesResponseBody(@NonNull PageDto<AdminSummaryNoteDto> itemPage) {
     }
 
     @GetMapping(value = "/summaryNotes/list")
@@ -204,7 +223,7 @@ public class ApiV1AdminController {
 
         Page<SummaryNote> recentSummaryNotes = summaryNoteService.findAll(pageable);
 
-        Page<RecentSummaryNoteDto> notePage = recentSummaryNotes.map(this::noteToDto);
+        Page<AdminSummaryNoteDto> notePage = recentSummaryNotes.map(this::noteToDto);
 
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
@@ -215,8 +234,8 @@ public class ApiV1AdminController {
         );
     }
 
-    private RecentSummaryNoteDto noteToDto(SummaryNote summaryNote) {
-        RecentSummaryNoteDto dto = new RecentSummaryNoteDto(summaryNote);
+    private AdminSummaryNoteDto noteToDto(SummaryNote summaryNote) {
+        AdminSummaryNoteDto dto = new AdminSummaryNoteDto(summaryNote);
 
         return dto;
     }

@@ -8,9 +8,16 @@
     window.location.href = videoUrl;
   }
 
+  let modal;
+
+  function openModal() {
+    modal.showModal();
+  }
+
   let course: components['schemas']['CourseDto'] = $state();
   let videos = $state<components['schemas']['VideoDto'][]>([]);
   let auth: components['schemas']['CourseAuthDto'] = $state();
+  let enroll: components['schemas']['AdminCourseEnrollDto'] = $state();
 
   let overviewviewr: any | undefined = $state();
   let notiviewer: any | undefined = $state();
@@ -41,6 +48,15 @@
     });
     course = responseCourse.data?.data!;
 
+    const responseEnroll = await rq.apiEndPoints().GET(`/api/v1/admin/{courseId}/enroll`, {
+      params: {
+        path: {
+          courseId: parseInt($page.params.id)
+        }
+      }
+    });
+    enroll = responseEnroll.data?.data!;
+
     const responseAuth = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}/auth`, {
       params: {
         path: {
@@ -50,7 +66,7 @@
     });
     auth = responseAuth.data?.data!;
 
-    return { videos, course, auth };
+    return { videos, course, auth, enroll };
   }
 
   async function deleteCourse() {
@@ -182,7 +198,7 @@
 
 {#await load()}
   <div>loading...</div>
-{:then { videos, course, auth }}
+{:then { videos, course, auth, enroll }}
   <div class="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
     <div class="hidden w-64 border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
       <div class="flex h-full max-h-screen flex-col gap-2">
@@ -207,73 +223,88 @@
         <ul class="menu w-56 rounded-box">
           <li>
             <a
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-bold transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
               href="/member/course"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
-                stroke-width="1.5"
+                fill="none"
                 stroke="currentColor"
-                class="w-6 h-6"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="feather feather-home"
+                ><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline
+                  points="9 22 9 12 15 12 15 22"
+                /></svg
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-                />
-              </svg>
 
-              DashBoard
+              내 강의실
             </a>
           </li>
           <li>
             <a
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-bold transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
               href="/course/{course.id}/notes"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
-                stroke-width="1.5"
+                fill="none"
                 stroke="currentColor"
-                class="w-6 h-6"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="feather feather-edit"
+                ><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path
+                  d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                /></svg
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"
-                />
-              </svg>
 
               요약 노트
             </a>
           </li>
           <li>
             <details open>
-              <summary
+              <summary class="font-bold"
                 ><svg
                   xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
+                  width="24"
+                  height="24"
                   viewBox="0 0 24 24"
-                  stroke-width="1.5"
+                  fill="none"
                   stroke="currentColor"
-                  class="w-6 h-6"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="feather feather-list"
+                  ><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line
+                    x1="8"
+                    y1="18"
+                    x2="21"
+                    y2="18"
+                  /><line x1="3" y1="6" x2="3.01" y2="6" /><line
+                    x1="3"
+                    y1="12"
+                    x2="3.01"
+                    y2="12"
+                  /><line x1="3" y1="18" x2="3.01" y2="18" /></svg
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                  />
-                </svg>
                 강의 목록</summary
               >
               <ul>
                 {#each videos as video, index}
                   {#if auth.enroll || rq.isAdmin()}
-                    <li><a href={video.url}>강의 {index + 1}</a></li>
+                    <li>
+                      <a href={video.url} target="_blank" rel="noopener noreferrer"
+                        >강의 {index + 1}</a
+                      >
+                    </li>
                   {/if}
                 {/each}
               </ul>
@@ -347,6 +378,26 @@
                 <button on:click={startCourse} class="btn btn-sm">강좌 공개</button>
               {:else}
                 <button on:click={stopCourse} class="btn btn-sm">강좌 비공개</button>
+                <button onclick={openModal} class="btn btn-sm">수강생 목록</button>
+                <dialog id="my_modal_3" class="modal" bind:this={modal}>
+                  <div class="modal-box">
+                    <form method="dialog">
+                      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                        >✕</button
+                      >
+                    </form>
+                    <div class="flex flex-col p-6 bg-white shadow rounded-lg">
+                      <h2 class="text-xl font-semibold mb-4 border-b pb-2">수강생 목록</h2>
+                      {#each enroll as enroll}
+                        <div
+                          class="py-2 px-4 bg-gray-100 rounded-md mb-2 shadow-sm hover:bg-gray-200 transition-colors"
+                        >
+                          {enroll.name}
+                        </div>
+                      {/each}
+                    </div>
+                  </div>
+                </dialog>
               {/if}
             </div>
           {/if}
@@ -383,29 +434,29 @@
         {#if auth.enroll || rq.isAdmin()}
           <div class="border shadow-sm rounded-lg">
             <div class="relative w-full overflow-auto">
-              <table class="w-full caption-bottom text-sm">
+              <table class="w-full table-fixed caption-bottom text-sm">
                 <thead class="[&amp;_tr]:border-b">
                   <tr
                     class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                   >
                     <th
-                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 max-w-[150px]"
+                      class="h-12 px-4 text-left align-middle font-semi-bold text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-40"
                     >
                       동영상
                     </th>
 
                     <th
-                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
+                      class="h-12 px-4 text-left align-middle font-semi-bold text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell w-32"
                     >
                       개요
                     </th>
                     <th
-                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
+                      class="h-12 px-4 text-left align-middle font-semi-bold text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell w-20"
                     >
                     </th>
 
                     <th
-                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
+                      class="h-12 px-4 text-left align-middle font-semi-bold text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell w-20"
                     >
                       요약 노트
                     </th>
@@ -417,10 +468,11 @@
                     <tr
                       class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                     >
-                      <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
+                      <td
+                        class="p-4 align-middle rounded-lg [&amp;:has([role=checkbox])]:pr-0 font-medium"
+                      >
                         <img
-                          alt="Video thumbnail"
-                          class="rounded-md object-cover mt-2 w-60"
+                          class="rounded-lg"
                           src={video.imgUrl}
                           on:click={() => window.open(video.url, '_blank')}
                         />

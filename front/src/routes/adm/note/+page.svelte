@@ -5,7 +5,7 @@
   import Pagination from '$lib/components/Pagination.svelte';
   import CourseNav from '../../../lib/components/AdmNav.svelte';
 
-  let notes: components['schemas']['PageDtoRecentSummaryNoteDto'][] = $state();
+  let notes: components['schemas']['PageDtoAdminSummaryNoteDto'][] = $state();
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -65,6 +65,12 @@
                       >
                         작성자
                       </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        통과 여부
+                      </th>
                     </tr>
                   </thead>
                   <tbody class="bg-white divide-y divide-gray-200">
@@ -83,6 +89,13 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {item.name}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          <p
+                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                          >
+                            {item.pass ? 'Pass' : 'Fail'}
+                          </p>
                         </td>
                       </tr>
                     {/each}

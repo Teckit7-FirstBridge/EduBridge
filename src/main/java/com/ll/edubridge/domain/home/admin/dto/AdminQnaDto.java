@@ -16,6 +16,8 @@ public class AdminQnaDto {
     private String authorName;
     @NonNull
     private String title;
+    @NonNull
+    private int commentCount;
 
 
     public AdminQnaDto(Post post) {
@@ -23,5 +25,6 @@ public class AdminQnaDto {
         this.createDate = post.getCreateDate();
         this.authorName = post.getWriter().getNickname();
         this.title = post.getTitle();
+        this.commentCount = post.getCommentList().size();
     }
 }
