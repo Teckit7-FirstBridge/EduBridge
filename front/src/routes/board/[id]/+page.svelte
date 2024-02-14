@@ -220,45 +220,50 @@
   <h1>loading...</h1>
 {:then { comments, post }}
   <div class="max-w-4xl mx-auto my-8">
-    <div class="flex justify-between">
+    <div>
+      <h1 class="text-3xl font-bold mb-4">{post.title}</h1>
+    </div>
+    <div class="flex justify-between mr-6">
       <div>
-        <h1 class="text-3xl font-bold mb-4">{post.title}</h1>
+        <p class="text-gray-600 mb-2">작성자: {post.authorName}</p>
       </div>
       <div class="flex">
-        <button class="mr-5 pb-8" on:click={reportPost}>
-          {#if post.report}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="red"
-              class="w-8 h-8"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
-              />
-            </svg>
-          {:else}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="black"
-              class="w-8 h-8"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
-              />
-            </svg>
-          {/if}
-        </button>
         <div>
+          <button class="mr-5 pb-8" on:click={reportPost}>
+            {#if post.report}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="red"
+                class="w-8 h-8"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+                />
+              </svg>
+            {:else}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="black"
+                class="w-8 h-8"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+                />
+              </svg>
+            {/if}
+          </button>
+        </div>
+        <div class="flex-1">
           <p class="text-nm space-y-1.5 mt-1">
             {(() => {
               const now = new Date();
@@ -292,8 +297,7 @@
       </div>
     </div>
 
-    <div class="justify-between flex items-center mt-3 mb-20">
-      <p class="text-gray-600 mb-2">작성자: {post.authorName}</p>
+    <div class="justify-end flex items-center mt-3 mb-20">
       <div class="flex">
         {#if rq.member.id == post.authorId || rq.isAdmin()}
           <div class="mb-5 mx-2 flex">
@@ -307,7 +311,7 @@
         {/if}
       </div>
     </div>
-    <div class=" border-">
+    <div>
       <ToastUiEditor body={post.body} viewer={true}></ToastUiEditor>
     </div>
     <div class="flex justify-center mt-20">

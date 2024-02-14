@@ -106,3 +106,7 @@ main {
   table-layout: fixed; /* 테이블의 레이아웃을 고정시킵니다 */
   width: 100%; /* 테이블의 전체 너비를 100%로 설정 */
 }
+
+toastui-editor-contents {
+  font-size: 20px;
+}
