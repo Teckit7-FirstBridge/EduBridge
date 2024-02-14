@@ -117,7 +117,7 @@ public class CommentService {
     }
 
     public List<Comment> findTop2(Long postId) {
-        return commentRepository.findTop2ByPostIdOrderByVoteCountDesc(postId);
+        return commentRepository.findBestComment(postId);
     }
 }
 
