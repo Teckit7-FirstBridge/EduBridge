@@ -50,7 +50,7 @@
         <ul class="menu w-56 rounded-box">
           <li>
             <a
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-bold transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
               href="/member/course"
             >
               <svg
@@ -69,12 +69,12 @@
                 /></svg
               >
 
-              DashBoard
+              내 강의실
             </a>
           </li>
           <li>
             <a
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-bold transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
               href="/course/{parseInt($page.params.id)}/notes"
             >
               <svg
@@ -98,7 +98,7 @@
           </li>
           <li>
             <a
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-bold transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
               href="/course/{parseInt($page.params.id)}"
             >
               <svg

@@ -352,7 +352,6 @@
     {#if rq.isLogin()}
       <div class="border-t mb-8 mt-10"></div>
       <div>
-        <h1>Comment</h1>
         <div class="mt-8 flex gap-2 items-center">
           <textarea
             id="commentbody"

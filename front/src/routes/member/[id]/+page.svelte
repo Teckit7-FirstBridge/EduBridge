@@ -57,7 +57,7 @@
             ></path><path d="M12 3v6"></path></svg
           ><span class="text-lg font-semibold">My Page</span></a
         >
-        <p>point: {member?.point}</p>
+        <p>포인트 : {member?.point}</p>
       </header>
       <main class="flex-1 p-4 md:p-6">
         <div class="grid gap-4">
@@ -74,7 +74,7 @@
               stroke-linejoin="round"
               class="h-6 w-6"
               ><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg
-            ><span class="text-sm font-medium">Learning Status</span>
+            ><span class="text-lg font-medium">강좌별 수강 진도</span>
           </div>
           <div class="flex gap-4 overflow-auto">
             {#each learningCourses as learningCourse}
@@ -84,7 +84,7 @@
               >
                 <h3 class="text-sm font-medium">{learningCourse.title}</h3>
                 <p class="text-xs text-gray-500">
-                  Attended: {summaryNotes.filter(
+                  진도 : {summaryNotes.filter(
                     (item) => item.courseId === learningCourse.id && item.pass
                   ).length}/{learningCourse.videoCount}
                 </p>
@@ -107,7 +107,7 @@
               ><path
                 d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
               ></path></svg
-            ><span class="text-sm font-medium">Favorite Courses</span>
+            ><span class="text-lg font-medium">좋아요 한 강좌</span>
           </div>
           <div class="flex gap-4 overflow-auto">
             {#each favoriteCourses as favoriteCourse}
@@ -136,9 +136,8 @@
                 ><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path
                   d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
                 ></path></svg
-              ><span class="text-sm font-medium">Goals Progress</span>
+              ><span class="text-lg font-medium">오늘의 목표 : 요약노트 {dailyGoal}개</span>
             </div>
-            <span>Daily Goal:{dailyGoal}</span>
           </div>
           <div class="p-4 bg-white rounded-lg shadow">
             <div class="relative pt-1">
@@ -150,8 +149,7 @@
               </div>
             </div>
             <p class="text-xs text-gray-500">
-              {Math.min(100, parseInt(((dailyAchievement / dailyGoal) * 100).toFixed(2)))}%
-              Completed
+              {Math.min(100, parseInt(((dailyAchievement / dailyGoal) * 100).toFixed(2)))}% 진행
             </p>
           </div>
         </div>

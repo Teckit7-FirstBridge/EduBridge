@@ -223,7 +223,7 @@
         <ul class="menu w-56 rounded-box">
           <li>
             <a
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-bold transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
               href="/member/course"
             >
               <svg
@@ -242,12 +242,12 @@
                 /></svg
               >
 
-              DashBoard
+              내 강의실
             </a>
           </li>
           <li>
             <a
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-bold transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
               href="/course/{course.id}/notes"
             >
               <svg
@@ -271,7 +271,7 @@
           </li>
           <li>
             <details open>
-              <summary
+              <summary class="font-bold"
                 ><svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -440,23 +440,23 @@
                     class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                   >
                     <th
-                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-40"
+                      class="h-12 px-4 text-left align-middle font-semi-bold text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-40"
                     >
                       동영상
                     </th>
 
                     <th
-                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell w-32"
+                      class="h-12 px-4 text-left align-middle font-semi-bold text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell w-32"
                     >
                       개요
                     </th>
                     <th
-                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell w-20"
+                      class="h-12 px-4 text-left align-middle font-semi-bold text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell w-20"
                     >
                     </th>
 
                     <th
-                      class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell w-20"
+                      class="h-12 px-4 text-left align-middle font-semi-bold text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell w-20"
                     >
                       요약 노트
                     </th>

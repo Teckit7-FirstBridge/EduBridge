@@ -66,7 +66,7 @@
             <div
               tabindex="0"
               id="dropdownButton"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-gray-100 hover:text-accent-foreground h-10 px-4 py-2"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-gray-100 hover:text-accent-foreground h-10 px-4 py-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +85,7 @@
                 <path d="m3 8 4-4 4 4"></path>
                 <path d="M7 4v16"></path>
               </svg>
-              Sort by
+              정렬
             </div>
             <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-36">
               <li>
@@ -130,7 +130,7 @@
           </div>
           <select
             name="kwType"
-            class="select select-bordered"
+            class="select select-bordered font-bold"
             value={$page.url.searchParams.get('kwType') ?? 'ALL'}
           >
             <option value="ALL">전체</option>
@@ -140,20 +140,20 @@
           </select>
 
           <button
-            class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
+            class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
             type="submit"
           >
-            Search
+            검색하기
           </button>
 
           <button
-            class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
+            class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
             type="button"
             on:click={() => {
               location.href = '/board/write';
             }}
           >
-            Write
+            글 작성
           </button>
         </div>
       </form>
