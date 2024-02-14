@@ -31,6 +31,10 @@
     summarynote = data?.data!;
     return { summarynote };
   }
+
+  function goBack() {
+    window.history.back();
+  }
 </script>
 
 {#await load()}
@@ -38,7 +42,7 @@
 {:then { summarynote }}
   <div class="max-w-4xl mx-auto my-8">
     <div class="flex items-center justify-between mt-3 mb-20">
-      <a href="/course/{$page.params.id}" class="btn btn-sm flex items-center gap-2">
+      <a on:click={goBack} class="btn btn-sm flex items-center gap-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -57,14 +61,14 @@
 
       <div>
         <p class="text-gray-600 mb-2">작성자: {summarynote.member?.nickname}</p>
-        {#if summarynote.score! > 0}
+        {#if summarynote.score! >= 0}
           <div class="flex gap-2">
             <div>
               <p class="text-gray-600 mb-2">점 수: {summarynote.score}</p>
             </div>
             <div>
               <p
-                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                class={`inline-flex px-2 text-xs leading-5 font-semibold rounded-full ${!summarynote.pass ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}
               >
                 {summarynote.pass ? 'Pass' : 'Fail'}
               </p>

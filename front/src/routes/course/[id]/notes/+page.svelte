@@ -28,7 +28,7 @@
 {:then { notes }}
   <div class="flex h-screen">
     <div class="hidden w-64 border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
-      <div class="flex h-full max-h-screen flex-col gap-2">
+      <div class="flex flex-col gap-2">
         <div class="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-800">
           <a class="flex items-center gap-2 font-semibold" href="/"
             ><svg
@@ -151,7 +151,7 @@
                       <div class="ml-2 flex-shrink-0 flex">
                         <p class="text-sm text-gray-500 mr-2">점수: {item.score}</p>
                         <p
-                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                          class={`inline-flex px-2 text-xs leading-5 font-semibold rounded-full ${!item.pass ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}
                         >
                           {item.pass ? 'Pass' : 'Fail'}
                         </p>
