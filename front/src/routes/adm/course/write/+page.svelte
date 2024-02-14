@@ -93,10 +93,18 @@
             for="post-overview">OverView</label
           >
           <ToastUiEditor bind:this={overvieweditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
-          <label
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            for="post-imgUrl">ImgUrl</label
-          ><input
+          <div>
+            <label
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              for="course-imgUrl mr-4">ImgUrl</label
+            ><label
+              class="ml-4 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
+              for="course-imgUrl"
+            >
+              https://img.youtube.com/vi/VIDEO-ID/0.jpg
+            </label>
+          </div>
+          <input
             class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             id="post-imgUrl"
             placeholder="Enter ImgUrl"

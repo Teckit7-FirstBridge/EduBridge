@@ -67,9 +67,17 @@
             />
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="video-imgUrl">
-              img URL
-            </label>
+            <div class="mb-2">
+              <label
+                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                for="course-imgUrl mr-4">ImgUrl</label
+              ><label
+                class="ml-4 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
+                for="course-imgUrl"
+              >
+                https://img.youtube.com/vi/VIDEO-ID/0.jpg
+              </label>
+            </div>
             <input
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="video-imgUrl"

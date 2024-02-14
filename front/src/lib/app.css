@@ -90,47 +90,13 @@ main {
   background-color: #0056b3;
 }
 
-.image-container {
-  height: 210px; 
-  width: 100%; 
-  overflow: hidden; 
-  border-radius: 15px; 
-}
-
-.rounded-image {
+.rounded-container {
   width: 100%; 
   height: auto; 
   object-fit: cover; 
-  object-position: center -40px; 
+  object-position: center 0px; 
 }
 
-.rounded-image2 {
-  width: 100%; 
-  height: auto; 
-  object-fit: cover; 
-  object-position: center -50px; 
-}
-
-.image-container2 {
-  height: 220px;
-  width: 100%; 
-  overflow: hidden;
-  border-radius: 15px; 
-}
-
-.image-container3 {
-  height: 200px;
-  width: 100%; 
-  overflow: hidden;
-  border-radius: 15px; 
-}
-
-.image-container4 {
-  height: 275px; 
-  width: 500px; 
-  overflow: hidden; 
-  border-radius: 15px; 
-}
 
 .equal-width-th {
   width: 25%; /* 각 th 요소가 전체 너비의 25%를 차지하도록 설정 */

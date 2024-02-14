@@ -428,14 +428,14 @@
                     <tr
                       class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                     >
-                      <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
-                        <div class="image-container2">
-                          <img
-                            class="rounded-image"
-                            src={video.imgUrl}
-                            on:click={() => window.open(video.url, '_blank')}
-                          />
-                        </div>
+                      <td
+                        class="p-4 align-middle rounded-lg [&amp;:has([role=checkbox])]:pr-0 font-medium"
+                      >
+                        <img
+                          class="rounded-lg"
+                          src={video.imgUrl}
+                          on:click={() => window.open(video.url, '_blank')}
+                        />
                       </td>
                       <td
                         class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
