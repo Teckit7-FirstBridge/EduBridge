@@ -738,6 +738,8 @@ export interface components {
       createDate: string;
       authorName: string;
       title: string;
+      /** Format: int32 */
+      commentCount: number;
     };
     RsDataListAdminQnaDto: {
       resultCode: string;
