@@ -17,7 +17,7 @@ public class CustomCommentRepositoryImpl implements CustomCommentRepository{
         QComment comment = QComment.comment;
         List<Comment> topComments = queryFactory
                 .selectFrom(comment)
-                .where(comment.voteCount.goe(2).and(comment.post.id.eq(postId))) // voteCount가 5 이상인 조건
+                .where(comment.voteCount.goe(5).and(comment.post.id.eq(postId))) // voteCount가 5 이상인 조건
                 .orderBy(comment.voteCount.desc()) // voteCount 기준 내림차순 정렬
                 .limit(2) // 상위 2개만 조회
                 .fetch();
