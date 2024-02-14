@@ -92,7 +92,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           <p
-                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                            class={`inline-flex px-2 text-xs leading-5 font-semibold rounded-full ${!item.pass ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}
                           >
                             {item.pass ? 'Pass' : 'Fail'}
                           </p>
