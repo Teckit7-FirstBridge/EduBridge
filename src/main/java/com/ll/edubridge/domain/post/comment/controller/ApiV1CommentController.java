@@ -51,6 +51,19 @@ public class ApiV1CommentController {
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(), commentDtoList);
     }
 
+    @GetMapping("/{postId}/top")
+    @Operation(summary = "추천수 탑2 댓글")
+    public RsData<List<CommentDto>> getTopComments(@PathVariable("postId") Long postId) {
+        List<Comment> comments = commentService.findTop2(postId);
+
+        List<CommentDto> commentDtoList = comments.stream()
+                .map((Comment comment) -> new CommentDto(comment, rq.getMember()))
+                .toList();
+
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), commentDtoList);
+    }
+
     @PutMapping("/{postId}/{commentId}")
     @Operation(summary = "댓글 수정")
     public RsData<CommentDto> modifyComment(@PathVariable("commentId") Long commentId, @RequestBody CreateCommentDto createCommentDto) {
