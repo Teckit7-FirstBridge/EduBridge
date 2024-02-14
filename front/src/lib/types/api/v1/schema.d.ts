@@ -175,6 +175,10 @@ export interface paths {
     /** 댓글 목록 */
     get: operations["getComments"];
   };
+  "/api/v1/comments/{postId}/top": {
+    /** 추천수 탑2 댓글 */
+    get: operations["getTopComments"];
+  };
   "/api/v1/admin/{courseId}/enroll": {
     /** 강좌별 수강생 목록 */
     get: operations["getEnrollByCourseId"];
@@ -275,9 +279,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      profileImgUrlOrDefault?: string;
       authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
-      profileImgUrlOrDefault?: string;
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -1661,6 +1665,22 @@ export interface operations {
   };
   /** 댓글 목록 */
   getComments: {
+    parameters: {
+      path: {
+        postId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListCommentDto"];
+        };
+      };
+    };
+  };
+  /** 추천수 탑2 댓글 */
+  getTopComments: {
     parameters: {
       path: {
         postId: number;

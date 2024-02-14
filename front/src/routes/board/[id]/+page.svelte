@@ -8,6 +8,7 @@
   import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
 
   let comments: components['schemas']['CommentDto'][] = $state();
+  let bestComment: components['schemas']['CommentDto'][] = $state();
   let post: components['schemas']['PostDto'] = $state();
   let editor: Editor;
   let commentEditOpen: number | null = $state();
@@ -27,6 +28,15 @@
       }
     });
     comments = responseComment.data?.data!;
+
+    const responseBestComment = await rq.apiEndPoints().GET(`/api/v1/comments/{postId}/top`, {
+      params: {
+        path: {
+          postId: parseInt($page.params.id)
+        }
+      }
+    });
+    bestComment = responseBestComment.data?.data!;
 
     const responsePost = await rq.apiEndPointsWithFetch(fetch).GET(`/api/v1/posts/{id}`, {
       params: {
@@ -371,9 +381,131 @@
 
     <div class="border-t my-8"></div>
     <div>댓글 ({post.commentCount})</div>
+
+    {#each bestComment as comment}
+      <div class="rounded-sm">
+        <div class="border-b flex justify-between">
+          <div>
+            <div class="flex items-center">
+              <div class="ml-5">
+                <span class="font-bold mr-2">{comment.authorName}</span>
+                <span
+                  class="inline-flex px-2 font-semibold rounded-full mt-1 my-1 bg-red-100 text-red-800"
+                  >Best</span
+                >
+              </div>
+              <div>
+                <p class="text-nm space-y-1.5 p-6">
+                  {(() => {
+                    const now = new Date();
+                    const commentDate = new Date(comment.createDate);
+                    const seconds = Math.floor((now - commentDate) / 1000);
+
+                    let interval = seconds / 31536000;
+                    if (interval > 1) {
+                      return Math.floor(interval) + '년 전';
+                    }
+                    interval = seconds / 2592000;
+                    if (interval > 1) {
+                      return Math.floor(interval) + '개월 전';
+                    }
+                    interval = seconds / 86400;
+                    if (interval > 1) {
+                      return Math.floor(interval) + '일 전';
+                    }
+                    interval = seconds / 3600;
+                    1;
+                    if (interval > 1) {
+                      return Math.floor(interval) + '시간 전';
+                    }
+                    interval = seconds / 60;
+                    if (interval > 1) {
+                      return Math.floor(interval) + '분 전';
+                    }
+                    return Math.floor(seconds) + '초 전';
+                  })()}
+                </p>
+              </div>
+              <div class="flex justify-end flex gap-2 text-gray-400">
+                {#if rq.member.id == comment.authorId}
+                  <button
+                    class="text-xs"
+                    on:click={() => {
+                      commentEditOpen = comment.id;
+                    }}>수정</button
+                  >
+                  <p>/</p>
+                {/if}
+                {#if rq.member.id == comment.authorId || rq.isAdmin()}
+                  <div>
+                    <button class="text-xs" on:click={() => deleteComment(comment.id)}>삭제</button>
+                  </div>
+                {/if}
+              </div>
+            </div>
+            <div class="flex items-center mx-5 mb-5">
+              <span class="text-gray-600">{comment.body}</span>
+            </div>
+          </div>
+          <div class="flex items-center mr-5">
+            <button
+              class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14"
+              on:click={() => clickLikedComment(comment.id, comment.likedByCurrentUser)}
+            >
+              {#if comment.likedByCurrentUser}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="red"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="red"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                  />
+                </svg>
+              {:else}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                  />
+                </svg>
+              {/if}
+              <span>{comment.voteCount}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      {#if commentEditOpen == comment.id}
+        <div class="flex justify-center items-center">
+          <textarea
+            class="w-full px-3 py-2 h-20 border rounded-md focus:outline-none focus:border-blue-500 mt-4 mx-2"
+            rows="4"
+            bind:value={comment.body}
+          ></textarea>
+
+          <button class="btn" on:click={() => fetchModiComment(comment.id, comment.body)}
+            >저장</button
+          >
+        </div>
+      {/if}
+    {/each}
+
     {#each comments as comment}
-      <div class="mt-8">
-        <div class="border rounded-md flex justify-between">
+      <div class="">
+        <div class="border-b flex justify-between">
           <div>
             <div class="flex items-center">
               <div class="ml-5">
@@ -399,6 +531,7 @@
                       return Math.floor(interval) + '일 전';
                     }
                     interval = seconds / 3600;
+                    1;
                     if (interval > 1) {
                       return Math.floor(interval) + '시간 전';
                     }
