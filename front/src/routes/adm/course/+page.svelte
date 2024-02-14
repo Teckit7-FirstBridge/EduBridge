@@ -58,7 +58,7 @@
               {#each items as item}
                 <a
                   href="/course/{item.id}"
-                  class="p-4 border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center"
+                  class="border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center"
                 >
                   <div class="flex justify-center gap-2">
                     <h2 class="text-lg font-semibold my-1 ml-2">{item.title}</h2>
@@ -70,8 +70,8 @@
                     </div>
                   </div>
                   <div class="flex justify-center my-2">
-                    <div class="image-container3">
-                      <img src={item.imgUrl} class="rounded-image" />
+                    <div class="flex justify-center p-2 bg-black rounded-lg">
+                      <img src={item.imgUrl} />
                     </div>
                   </div>
                   <p class="text-sm text-gray-500 dark:text-gray-400 my-4">
