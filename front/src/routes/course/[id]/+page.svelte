@@ -18,6 +18,7 @@
   let videos = $state<components['schemas']['VideoDto'][]>([]);
   let auth: components['schemas']['CourseAuthDto'] = $state();
   let enroll: components['schemas']['AdminCourseEnrollDto'] = $state();
+  let courseConfirm: Boolean = $state();
 
   let overviewviewr: any | undefined = $state();
   let notiviewer: any | undefined = $state();
@@ -47,6 +48,7 @@
       }
     });
     course = responseCourse.data?.data!;
+    courseConfirm = course.confirm!;
 
     const responseEnroll = await rq.apiEndPoints().GET(`/api/v1/admin/{courseId}/enroll`, {
       params: {
@@ -96,7 +98,8 @@
 
       if (data) {
         rq.msgInfo('강좌가 공개되었습니다');
-        window.location.reload();
+        courseConfirm = true;
+        // window.location.reload();
       } else if (error) {
         rq.msgError(error.msg);
         window.location.reload();
@@ -113,7 +116,8 @@
 
       if (data) {
         rq.msgInfo('강좌가 비공개되었습니다');
-        window.location.reload();
+        courseConfirm = false;
+        // window.location.reload();
       } else if (error) {
         rq.msgError(error.msg);
         window.location.reload();
@@ -374,7 +378,7 @@
             <div class="mb-5 mx-2 items-center">
               <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
               <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
-              {#if !course.confirm}
+              {#if !courseConfirm}
                 <button on:click={startCourse} class="btn btn-sm">강좌 공개</button>
               {:else}
                 <button on:click={stopCourse} class="btn btn-sm">강좌 비공개</button>

@@ -4,8 +4,9 @@
   import type { components } from '$lib/types/api/v1/schema';
   import CourseNav from '../../lib/components/CourseNav.svelte';
 
-  let likesList;
   let courselist: components['schemas']['CourseDto'][] | undefined;
+  let likesList: Boolean[] = $state([]);
+  let voteNumList: number[] = $state([]);
 
   function removeMarkdown(markdownText) {
     // 정규 표현식을 사용하여 마크다운 문법 제거
@@ -42,20 +43,22 @@
         }
       }
     });
-    courselist = data?.data.items;
-    likesList = data?.data.items.map((course) => course.likedByCurrentUser);
-    console.log(courselist);
-    return data!;
+    courselist = data?.data.items!;
+    likesList = courselist!.map((course) => course!.likedByCurrentUser!);
+    voteNumList = courselist!.map((course) => course!.voteCount!);
+
+    return { courselist }!;
   }
 
   async function clickLiked(item: components['schemas']['CourseDto']) {
-    if (item.likedByCurrentUser) {
+    if (likesList[courselist!.indexOf(item)]) {
       const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}/like`, {
         params: { path: { id: item.id } }
       });
       if (data) {
         rq.msgInfo('좋아요 취소');
-        window.location.reload();
+        likesList[courselist!.indexOf(item)] = !likesList[courselist!.indexOf(item)];
+        voteNumList[courselist!.indexOf(item)] -= 1;
       } else if (error) {
         rq.msgError(error.msg);
       }
@@ -65,7 +68,8 @@
       });
       if (data) {
         rq.msgInfo('좋아요!!');
-        window.location.reload();
+        likesList[courselist!.indexOf(item)] = !likesList[courselist!.indexOf(item)];
+        voteNumList[courselist!.indexOf(item)] += 1;
       } else if (error) {
         rq.msgError(error.msg);
       }
@@ -75,13 +79,13 @@
 
 {#await load()}
   <p>loading...</p>
-{:then { data: { items } }}
+{:then { courselist }}
   <div class="flex">
     <CourseNav></CourseNav>
     <div class="flex flex-col flex-1">
       <div class="p-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {#if items}
-          {#each items as item}
+        {#if courselist}
+          {#each courselist as item}
             <div
               class="border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center pt-2"
             >
@@ -104,7 +108,8 @@
                 </p>
               </a>
               <div class=" flex justify-end gap-2 p-2" on:click={() => clickLiked(item)}>
-                {#if item.likedByCurrentUser}<svg
+                {#if likesList[courselist.indexOf(item)]}
+                  <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     width="24"
@@ -138,7 +143,7 @@
                   </svg>
                 {/if}
                 <span>
-                  {item.voteCount}
+                  {voteNumList[courselist!.indexOf(item)]}
                 </span>
               </div>
             </div>

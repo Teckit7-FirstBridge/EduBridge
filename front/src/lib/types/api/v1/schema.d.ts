@@ -275,9 +275,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
+      authoritiesAsStringList?: string[];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -685,8 +685,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminCourseEnrollDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     AdminSummaryNoteDto: {
       /** Format: int64 */
@@ -706,12 +706,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
-      data: components["schemas"]["RecentSummaryNoteDto"][];
-=======
       data: components["schemas"]["AdminSummaryNoteDto"][];
-      fail: boolean;
->>>>>>> b6ce7e42726ac1536f93faedd5fe49e2ada557df
       success: boolean;
       fail: boolean;
     };
@@ -812,12 +807,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
-      data: components["schemas"]["RecentMemberDto"][];
-=======
       data: components["schemas"]["AdminMemberDto"][];
-      fail: boolean;
->>>>>>> b6ce7e42726ac1536f93faedd5fe49e2ada557df
       success: boolean;
       fail: boolean;
     };
@@ -857,12 +847,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-<<<<<<< HEAD
-      data: components["schemas"]["RecentCourseDto"][];
-=======
       data: components["schemas"]["AdminCourseDto"][];
-      fail: boolean;
->>>>>>> b6ce7e42726ac1536f93faedd5fe49e2ada557df
       success: boolean;
       fail: boolean;
     };
