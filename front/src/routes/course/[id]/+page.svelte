@@ -15,9 +15,10 @@
   }
 
   let course: components['schemas']['CourseDto'] = $state();
-  let videos: components['schemas']['VideoDto'][] = $state();
+  let videos = $state<components['schemas']['VideoDto'][]>([]);
   let auth: components['schemas']['CourseAuthDto'] = $state();
   let enroll: components['schemas']['AdminCourseEnrollDto'] = $state();
+  let courseConfirm: Boolean = $state();
 
   let overviewviewr: any | undefined = $state();
   let notiviewer: any | undefined = $state();
@@ -47,6 +48,7 @@
       }
     });
     course = responseCourse.data?.data!;
+    courseConfirm = course.confirm!;
 
     const responseEnroll = await rq.apiEndPoints().GET(`/api/v1/admin/{courseId}/enroll`, {
       params: {
@@ -96,7 +98,8 @@
 
       if (data) {
         rq.msgInfo('강좌가 공개되었습니다');
-        window.location.reload();
+        courseConfirm = true;
+        // window.location.reload();
       } else if (error) {
         rq.msgError(error.msg);
         window.location.reload();
@@ -113,7 +116,8 @@
 
       if (data) {
         rq.msgInfo('강좌가 비공개되었습니다');
-        window.location.reload();
+        courseConfirm = false;
+        // window.location.reload();
       } else if (error) {
         rq.msgError(error.msg);
         window.location.reload();
@@ -152,19 +156,19 @@
     }
   }
 
-  async function deleteVideo(videoId: number) {
+  async function deleteVideo(video: components['schemas']['VideoDto']) {
     const isConfirmed = confirm('동영상을 삭제하시겠습니까?');
 
     if (isConfirmed) {
       const { data, error } = await rq
         .apiEndPoints()
         .DELETE(`/api/v1/admin/{courseId}/videos/{id}`, {
-          params: { path: { courseId: parseInt($page.params.id), id: videoId } }
+          params: { path: { courseId: parseInt($page.params.id), id: video.id } }
         });
 
       if (data) {
         rq.msgInfo('동영상이 삭제 되었습니다');
-        window.location.reload();
+        videos.splice(videos.indexOf(video), 1);
       } else if (error) {
         rq.msgError(error.msg);
       }
@@ -374,7 +378,7 @@
             <div class="mb-5 mx-2 items-center">
               <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
               <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
-              {#if !course.confirm}
+              {#if !courseConfirm}
                 <button on:click={startCourse} class="btn btn-sm">강좌 공개</button>
               {:else}
                 <button on:click={stopCourse} class="btn btn-sm">강좌 비공개</button>
@@ -492,7 +496,7 @@
                               href="/course/{video.courseId}/videoedit/{video.id}"
                               class="btn btn-sm">수정</a
                             >
-                            <button on:click={() => deleteVideo(video.id)} class="btn btn-sm"
+                            <button on:click={() => deleteVideo(video)} class="btn btn-sm"
                               >삭제</button
                             >
                           </div>
