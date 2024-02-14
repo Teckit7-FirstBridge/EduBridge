@@ -24,6 +24,9 @@
 
   let commentLikedNum: number[] = $state([]);
   let commentLikedByCurrentUser: Boolean[] = $state([]);
+  let bestCommentLikedNum: number[] = $state([]);
+  let bestCommentLikedByCurrentUser: Boolean[] = $state([]);
+
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
     const responseComment = await rq.apiEndPoints().GET(`/api/v1/comments/{postId}`, {
@@ -45,6 +48,8 @@
       }
     });
     bestComment = responseBestComment.data?.data!;
+    bestCommentLikedByCurrentUser = bestComment.map((comment) => comment.likedByCurrentUser!);
+    bestCommentLikedNum = bestComment.map((comment) => comment.voteCount!);
 
     const responsePost = await rq.apiEndPointsWithFetch(fetch).GET(`/api/v1/posts/{id}`, {
       params: {
@@ -179,6 +184,11 @@
         });
       if (data) {
         rq.msgInfo('좋아요 취소');
+
+        let index = bestComment.findIndex((com) => com.id == comment.id);
+        bestCommentLikedByCurrentUser[index] = !commentLikedByCurrentUser[index];
+        bestCommentLikedNum[index] -= 1;
+
         commentLikedByCurrentUser[comments.indexOf(comment)] =
           !commentLikedByCurrentUser[comments.indexOf(comment)];
         commentLikedNum[comments.indexOf(comment)] -= 1;
@@ -193,9 +203,52 @@
         });
       if (data) {
         rq.msgInfo('좋아요!!');
+        let index = bestComment.findIndex((com) => com.id == comment.id);
+        bestCommentLikedByCurrentUser[index] = !commentLikedByCurrentUser[index];
+        bestCommentLikedNum[index] += 1;
         commentLikedByCurrentUser[comments.indexOf(comment)] =
           !commentLikedByCurrentUser[comments.indexOf(comment)];
         commentLikedNum[comments.indexOf(comment)] += 1;
+      } else if (error) {
+        rq.msgError('로그인 후 이용 해 주세요');
+        rq.goTo('/member/login');
+      }
+    }
+  }
+
+  async function clickLikedBestComment(comment: components['schemas']['CommentDto']) {
+    if (bestCommentLikedByCurrentUser[bestComment.indexOf(comment)]) {
+      const { data, error } = await rq
+        .apiEndPoints()
+        .DELETE(`/api/v1/comments/{postId}/{commentId}/like`, {
+          params: { path: { postId: parseInt($page.params.id), commentId: comment.id } }
+        });
+      if (data) {
+        rq.msgInfo('좋아요 취소');
+
+        let index = comments.findIndex((com) => com.id == comment.id);
+        commentLikedByCurrentUser[index] = !commentLikedByCurrentUser[index];
+        commentLikedNum[index] -= 1;
+        bestCommentLikedByCurrentUser[bestComment.indexOf(comment)] =
+          !bestCommentLikedByCurrentUser[bestComment.indexOf(comment)];
+        bestCommentLikedNum[bestComment.indexOf(comment)] -= 1;
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
+    } else {
+      const { data, error } = await rq
+        .apiEndPoints()
+        .POST(`/api/v1/comments/{postId}/{commentId}/like`, {
+          params: { path: { postId: parseInt($page.params.id), commentId: comment.id } }
+        });
+      if (data) {
+        rq.msgInfo('좋아요!!');
+        let index = comments.findIndex((com) => com.id == comment.id);
+        commentLikedByCurrentUser[index] = !commentLikedByCurrentUser[index];
+        commentLikedNum[index] += 1;
+        bestCommentLikedByCurrentUser[bestComment.indexOf(comment)] =
+          !bestCommentLikedByCurrentUser[bestComment.indexOf(comment)];
+        bestCommentLikedNum[bestComment.indexOf(comment)] += 1;
       } else if (error) {
         rq.msgError('로그인 후 이용 해 주세요');
         rq.goTo('/member/login');
@@ -398,7 +451,6 @@
 
     <div class="border-t my-8"></div>
     <div>댓글 ({post.commentCount})</div>
-
     {#each bestComment as comment}
       <div class="rounded-md bg-yellow-50">
         <div class="border-b flex justify-between">
@@ -467,9 +519,9 @@
           <div class="flex items-center mr-5">
             <button
               class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14"
-              on:click={() => clickLikedComment(comment)}
+              on:click={() => clickLikedBestComment(comment)}
             >
-              {#if comment.likedByCurrentUser}
+              {#if bestCommentLikedByCurrentUser[bestComment.indexOf(comment)]}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="red"
@@ -500,7 +552,7 @@
                   />
                 </svg>
               {/if}
-              <span>{comment.voteCount}</span>
+              <span>{bestCommentLikedNum[bestComment.indexOf(comment)]}</span>
             </button>
           </div>
         </div>
