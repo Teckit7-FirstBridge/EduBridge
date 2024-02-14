@@ -47,7 +47,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/course"
-                      class="inline-block px-2 py-1 bg-gray-100 text-gray-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-gray-600"
+                      class="inline-block px-2 py-1 bg-blue-100 text-blue-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out"
                       >+</a
                     >
                   </div>
@@ -92,7 +92,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/member"
-                      class="inline-block px-2 py-1 bg-gray-100 text-gray-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-gray-600"
+                      class="inline-block px-2 py-1 bg-blue-100 text-blue-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out"
                       >+</a
                     >
                   </div>
@@ -161,7 +161,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/report"
-                      class="inline-block px-2 py-1 bg-gray-100 text-gray-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-gray-600"
+                      class="inline-block px-2 py-1 bg-blue-100 text-blue-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out"
                       >+</a
                     >
                   </div>
@@ -233,7 +233,7 @@
                   <div class="ml-2 mt-1">
                     <a
                       href="/adm/qna"
-                      class="inline-block px-2 py-1 bg-gray-100 text-gray-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out border-2 border-gray-600"
+                      class="inline-block px-2 py-1 bg-blue-100 text-blue-800 font-bold text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:text-white hover:shadow-lg focus:bg-gray-200 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-300 active:shadow-lg transition duration-150 ease-in-out"
                       >+</a
                     >
                   </div>
