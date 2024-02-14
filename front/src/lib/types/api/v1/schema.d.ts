@@ -668,7 +668,7 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    RecentSummaryNoteDto: {
+    AdminSummaryNoteDto: {
       /** Format: int64 */
       id: number;
       name: string;
@@ -679,20 +679,21 @@ export interface components {
       courseId: number;
       /** Format: date-time */
       createDate: string;
+      pass: boolean;
     };
-    RsDataListRecentSummaryNoteDto: {
+    RsDataListAdminSummaryNoteDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["RecentSummaryNoteDto"][];
+      data: components["schemas"]["AdminSummaryNoteDto"][];
       fail: boolean;
       success: boolean;
     };
     GetNotesResponseBody: {
-      itemPage?: components["schemas"]["PageDtoRecentSummaryNoteDto"];
+      itemPage?: components["schemas"]["PageDtoAdminSummaryNoteDto"];
     };
-    PageDtoRecentSummaryNoteDto: {
+    PageDtoAdminSummaryNoteDto: {
       /** Format: int64 */
       totalElementsCount: number;
       /** Format: int64 */
@@ -701,7 +702,7 @@ export interface components {
       totalPagesCount: number;
       /** Format: int32 */
       number: number;
-      content: components["schemas"]["RecentSummaryNoteDto"][];
+      content: components["schemas"]["AdminSummaryNoteDto"][];
     };
     RsDataGetNotesResponseBody: {
       resultCode: string;
@@ -773,7 +774,7 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    RecentMemberDto: {
+    AdminMemberDto: {
       /** Format: int64 */
       id: number;
       /** Format: date-time */
@@ -781,19 +782,19 @@ export interface components {
       name: string;
       report: boolean;
     };
-    RsDataListRecentMemberDto: {
+    RsDataListAdminMemberDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["RecentMemberDto"][];
+      data: components["schemas"]["AdminMemberDto"][];
       fail: boolean;
       success: boolean;
     };
     GetMembersResponseBody: {
-      itemPage?: components["schemas"]["PageDtoRecentMemberDto"];
+      itemPage?: components["schemas"]["PageDtoAdminMemberDto"];
     };
-    PageDtoRecentMemberDto: {
+    PageDtoAdminMemberDto: {
       /** Format: int64 */
       totalElementsCount: number;
       /** Format: int64 */
@@ -802,7 +803,7 @@ export interface components {
       totalPagesCount: number;
       /** Format: int32 */
       number: number;
-      content: components["schemas"]["RecentMemberDto"][];
+      content: components["schemas"]["AdminMemberDto"][];
     };
     RsDataGetMembersResponseBody: {
       resultCode: string;
@@ -813,17 +814,18 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    RecentCourseDto: {
+    AdminCourseDto: {
       /** Format: int64 */
       id: number;
       title: string;
+      grade: string;
     };
-    RsDataListRecentCourseDto: {
+    RsDataListAdminCourseDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["RecentCourseDto"][];
+      data: components["schemas"]["AdminCourseDto"][];
       fail: boolean;
       success: boolean;
     };
@@ -1339,7 +1341,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListRecentCourseDto"];
+          "application/json": components["schemas"]["RsDataListAdminCourseDto"];
         };
       };
     };
@@ -1657,7 +1659,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListRecentSummaryNoteDto"];
+          "application/json": components["schemas"]["RsDataListAdminSummaryNoteDto"];
         };
       };
     };
@@ -1733,7 +1735,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListRecentMemberDto"];
+          "application/json": components["schemas"]["RsDataListAdminMemberDto"];
         };
       };
     };

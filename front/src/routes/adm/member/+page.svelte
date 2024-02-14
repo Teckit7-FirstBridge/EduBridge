@@ -5,7 +5,7 @@
   import Pagination from '$lib/components/Pagination.svelte';
   import CourseNav from '../../../lib/components/AdmNav.svelte';
 
-  let members: components['schemas']['PageDtoRecentMemberDto'][] = $state();
+  let members: components['schemas']['PageDtoAdminMemberDto'][] = $state();
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');

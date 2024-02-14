@@ -4,8 +4,8 @@
   import AdmNav from '../../lib/components/AdmNav.svelte';
   import { onMount } from 'svelte';
 
-  let recentCourse: components['schemas']['RecentCourseDto'][] = $state();
-  let recentMember: components['schemas']['RecentMemberDto'][] = $state();
+  let recentCourse: components['schemas']['AdminCourseDto'][] = $state();
+  let recentMember: components['schemas']['AdminMemberDto'][] = $state();
   let reportPost: components['schemas']['ReportedPostDto'][] = $state();
   let recentQna: components['schemas']['AdminQnaDto'][] = $state();
 
@@ -60,7 +60,13 @@
                           scope="col"
                           class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                          강좌 목록
+                          강좌 제목
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          등급
                         </th>
                       </tr>
                     </thead>
@@ -71,6 +77,13 @@
                             <a href="/course/{item.id}" class="text-blue-600 hover:text-blue-900">
                               {item.title}
                             </a>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <div
+                              class={`inline-flex px-2 text-sm font-semibold rounded-full mt-1 my-1 ${item.grade === '초급' ? 'bg-blue-100 text-blue-800' : item.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
+                            >
+                              {item.grade}
+                            </div>
                           </td>
                         </tr>
                       {/each}

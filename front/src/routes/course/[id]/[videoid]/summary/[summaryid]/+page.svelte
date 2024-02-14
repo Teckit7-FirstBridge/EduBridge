@@ -58,7 +58,18 @@
       <div>
         <p class="text-gray-600 mb-2">작성자: {summarynote.member?.nickname}</p>
         {#if summarynote.score! > 0}
-          <p class="text-gray-600 mb-2">점 수: {summarynote.score}</p>
+          <div class="flex gap-2">
+            <div>
+              <p class="text-gray-600 mb-2">점 수: {summarynote.score}</p>
+            </div>
+            <div>
+              <p
+                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+              >
+                {summarynote.pass ? 'Pass' : 'Fail'}
+              </p>
+            </div>
+          </div>
         {/if}
         <!-- 글 작성자인 경우 -->
         {#if rq.member.id == summarynote.member?.id && summarynote.score!<70}

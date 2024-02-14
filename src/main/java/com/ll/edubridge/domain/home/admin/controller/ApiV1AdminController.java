@@ -58,12 +58,12 @@ public class ApiV1AdminController {
 
     @GetMapping(value = "/courses")
     @Operation(summary = "강좌 최신순")
-    public RsData<List<RecentCourseDto>> getRecentCourses() {
+    public RsData<List<AdminCourseDto>> getRecentCourses() {
 
         List<Course> recentCourses = courseService.findRecentCourse();
 
-        List<RecentCourseDto> courseList = recentCourses.stream()
-                .map(RecentCourseDto::new)
+        List<AdminCourseDto> courseList = recentCourses.stream()
+                .map(AdminCourseDto::new)
                 .toList();
 
         return RsData.of(
@@ -92,12 +92,12 @@ public class ApiV1AdminController {
 
     @GetMapping(value = "/members")
     @Operation(summary = "회원 최신순")
-    public RsData<List<RecentMemberDto>> getMembers() {
+    public RsData<List<AdminMemberDto>> getMembers() {
 
         List<Member> recentMembers = memberService.recentMembers();
 
-        List<RecentMemberDto> recentMemberList = recentMembers.stream()
-                .map(RecentMemberDto::new)
+        List<AdminMemberDto> recentMemberList = recentMembers.stream()
+                .map(AdminMemberDto::new)
                 .toList();
 
         return RsData.of(
@@ -109,12 +109,12 @@ public class ApiV1AdminController {
 
     @GetMapping(value = "/summaryNotes")
     @Operation(summary = "최신 요약노트")
-    public RsData<List<RecentSummaryNoteDto>> getSummeryNotes() {
+    public RsData<List<AdminSummaryNoteDto>> getSummeryNotes() {
 
         List<SummaryNote> recentSummaryNotes = summaryNoteService.recentSummaryNotes();
 
-        List<RecentSummaryNoteDto> recentSummaryNoteList = recentSummaryNotes.stream()
-                .map(RecentSummaryNoteDto::new)
+        List<AdminSummaryNoteDto> recentSummaryNoteList = recentSummaryNotes.stream()
+                .map(AdminSummaryNoteDto::new)
                 .toList();
 
         return RsData.of(
@@ -158,7 +158,7 @@ public class ApiV1AdminController {
         );
     }
 
-    public record GetMembersResponseBody(@NonNull PageDto<RecentMemberDto> itemPage) {
+    public record GetMembersResponseBody(@NonNull PageDto<AdminMemberDto> itemPage) {
     }
 
     @GetMapping(value = "/members/list")
@@ -173,7 +173,7 @@ public class ApiV1AdminController {
 
         Page<Member> members = memberService.findAll(pageable);
 
-        Page<RecentMemberDto> memberPage = members.map(this::memberToDto);
+        Page<AdminMemberDto> memberPage = members.map(this::memberToDto);
 
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
@@ -184,13 +184,13 @@ public class ApiV1AdminController {
         );
     }
 
-    private RecentMemberDto memberToDto(Member member) {
-        RecentMemberDto dto = new RecentMemberDto(member);
+    private AdminMemberDto memberToDto(Member member) {
+        AdminMemberDto dto = new AdminMemberDto(member);
 
         return dto;
     }
 
-    public record GetNotesResponseBody(@NonNull PageDto<RecentSummaryNoteDto> itemPage) {
+    public record GetNotesResponseBody(@NonNull PageDto<AdminSummaryNoteDto> itemPage) {
     }
 
     @GetMapping(value = "/summaryNotes/list")
@@ -204,7 +204,7 @@ public class ApiV1AdminController {
 
         Page<SummaryNote> recentSummaryNotes = summaryNoteService.findAll(pageable);
 
-        Page<RecentSummaryNoteDto> notePage = recentSummaryNotes.map(this::noteToDto);
+        Page<AdminSummaryNoteDto> notePage = recentSummaryNotes.map(this::noteToDto);
 
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
@@ -215,8 +215,8 @@ public class ApiV1AdminController {
         );
     }
 
-    private RecentSummaryNoteDto noteToDto(SummaryNote summaryNote) {
-        RecentSummaryNoteDto dto = new RecentSummaryNoteDto(summaryNote);
+    private AdminSummaryNoteDto noteToDto(SummaryNote summaryNote) {
+        AdminSummaryNoteDto dto = new AdminSummaryNoteDto(summaryNote);
 
         return dto;
     }
