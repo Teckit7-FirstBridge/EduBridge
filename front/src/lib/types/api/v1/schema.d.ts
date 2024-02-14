@@ -226,6 +226,8 @@ export interface components {
       /** Format: int32 */
       voteCount: number;
       likedByCurrentUser: boolean;
+      /** Format: int32 */
+      commentCount: number;
       report: boolean;
     };
     RsDataPostDto: {
@@ -269,9 +271,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
-      authoritiesAsStringList?: string[];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -512,6 +514,8 @@ export interface components {
       authorName: string;
       title: string;
       body: string;
+      /** Format: int32 */
+      commentCount: number;
     };
     RsDataListQnaDto: {
       resultCode: string;

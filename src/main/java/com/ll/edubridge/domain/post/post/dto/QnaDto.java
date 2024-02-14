@@ -20,6 +20,8 @@ public class QnaDto {
     private String title;
     @NonNull
     private String body;
+    @NonNull
+    private int commentCount;
 
 
     public QnaDto(Post post) {
@@ -29,5 +31,6 @@ public class QnaDto {
         this.authorName = post.getWriter().getNickname();
         this.title = post.getTitle();
         this.body = post.getContent();
+        this.commentCount = post.getCommentList().size();
     }
 }
