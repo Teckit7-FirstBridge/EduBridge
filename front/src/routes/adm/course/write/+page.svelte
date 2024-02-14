@@ -73,7 +73,7 @@
         <div class="space-y-2">
           <label
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            for="post-title">Title</label
+            for="post-title">강좌 제목</label
           ><input
             class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             id="post-title"
@@ -84,19 +84,19 @@
         <div class="space-y-2">
           <label
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            for="post-noti">Notification</label
+            for="post-noti">공지사항</label
           >
           <div bind:this={divNoti} id="post-noti"></div>
           <ToastUiEditor bind:this={notieditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
           <label
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            for="post-overview">OverView</label
+            for="post-overview">강좌 개요</label
           >
           <ToastUiEditor bind:this={overvieweditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
           <div>
             <label
               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              for="course-imgUrl mr-4">ImgUrl</label
+              for="course-imgUrl mr-4">강좌 이미지 Url</label
             ><label
               class="ml-4 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
               for="course-imgUrl"
@@ -112,12 +112,12 @@
           />
           <label
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            for="post-price">grade</label
+            for="post-price">강좌 등급</label
           ><select
             class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             id="post-grade"
             bind:value={grade}
-            placeholder="Select Grade"
+            placeholder="등급 선택"
           >
             <option disabled selected value="">Select Grade</option>
             <option value="초급">초급</option>
@@ -129,7 +129,7 @@
         <button
           on:click={Course__save}
           class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
-          >Save</button
+          >저장</button
         >
       </div>
     </div>

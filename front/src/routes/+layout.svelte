@@ -37,24 +37,32 @@
         >
           {#if rq.isAdmin()}
             <li>
-              <a href="/adm"><i class="fa-solid fa-right-to-bracket"></i> 관리자</a>
+              <a href="/adm" class="font-semi-bold"
+                ><i class="fa-solid fa-right-to-bracket"></i> 관리자</a
+              >
             </li>
           {/if}
           {#if rq.isLogout()}
             <li>
-              <a href="/member/login"><i class="fa-solid fa-right-to-bracket"></i> 로그인</a>
+              <a class="font-semi-bold" href="/member/login"
+                ><i class="fa-solid fa-right-to-bracket"></i> 로그인</a
+              >
             </li>
           {/if}
           {#if rq.isLogin()}
             <li>
-              <a href="/board/myList"><i class="fa-solid fa-list-check"></i> 내 글</a>
+              <a class="font-semi-bold" href="/board/myList"
+                ><i class="fa-solid fa-list-check"></i> 내 글</a
+              >
             </li>
             {#if !rq.isAdmin()}
               <li>
-                <a href="/member/qna"><i class="fa-solid fa-list-check"></i> 1대1 문의</a>
+                <a class="font-semi-bold" href="/member/qna"
+                  ><i class="fa-solid fa-list-check"></i> 1대1 문의</a
+                >
               </li>
             {/if}
-            <li>
+            <li class="font-semi-bold">
               <button on:click={() => rq.logout()}>
                 <i class="fa-solid fa-right-from-bracket"></i> 로그아웃
               </button>
@@ -64,12 +72,12 @@
       </div>
     </div>
     <div class="flex-1">
-      <a href="/board" class="btn btn-ghost">게 시 판</a>
-      <a href="/course" class="btn btn-ghost">강의</a>
+      <a href="/board" class="btn btn-ghost font-semi-bold">게 시 판</a>
+      <a href="/course" class="btn btn-ghost font-semi-bold">강의</a>
     </div>
   </div>
   <div class="flex-1 flex justify-center">
-    <a href="/">EduBridge</a>
+    <a href="/" class="font-bold">EduBridge</a>
   </div>
 
   <div class="flex-1 justify-end">
@@ -104,10 +112,10 @@
       {#if rq.isLogin()}
         <div>
           {#if !rq.isAdmin()}
-            <a href="/member/course" class="btn btn-ghost">내 강의실</a>
+            <a href="/member/course" class="btn btn-ghost font-semi-bold">내 강의실</a>
           {/if}
           {#if rq.isAdmin()}
-            <a href="/adm" class="btn btn-ghost">관 리 자</a>
+            <a href="/adm" class="btn btn-ghost font-semi-bold">관 리 자</a>
           {/if}
         </div>
         <div>
