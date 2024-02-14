@@ -56,7 +56,7 @@
         >
           <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="video-url">
-              Video URL
+              강의 Url
             </label>
             <input
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -70,7 +70,7 @@
             <div class="mb-2">
               <label
                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                for="course-imgUrl mr-4">ImgUrl</label
+                for="course-imgUrl mr-4">강의 썸네일 Url</label
               ><label
                 class="ml-4 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
                 for="course-imgUrl"
@@ -100,7 +100,7 @@
           </div>
           <div class="mb-6">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="video-summary">
-              OverView
+              강의 개요
             </label>
             <textarea
               class=" h-40 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
