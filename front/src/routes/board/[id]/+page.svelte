@@ -13,6 +13,7 @@
   let post: components['schemas']['PostDto'] = $state();
   let editor: Editor;
   let commentEditOpen: number | null = $state();
+  let isReport: Boolean = $state(false);
 
   let postId = parseInt($page.params.id);
 
@@ -59,6 +60,7 @@
       }
     });
     post = responsePost.data?.data!;
+    isReport = post.report;
     likedNum = post.voteCount;
     likedByCurrentUser = post.likedByCurrentUser;
 
@@ -102,7 +104,7 @@
   }
 
   async function reportPost() {
-    if (post.report) {
+    if (isReport) {
       if (!rq.isAdmin()) {
         alert('이미 신고된 글 입니다.');
         return;
@@ -120,7 +122,7 @@
 
         if (data) {
           rq.msgInfo('신고가 취소되었습니다.');
-          location.reload();
+          isReport = !isReport;
         } else if (error) {
           rq.msgError(error.msg);
         }
@@ -140,7 +142,7 @@
 
     if (data) {
       rq.msgInfo('신고 되었습니다.');
-      location.reload();
+      isReport = !isReport;
     } else if (error) {
       rq.msgError('로그인 후 이용 해 주세요');
       rq.goTo('/member/login');
@@ -310,7 +312,7 @@
       <div class="flex">
         <div>
           <button class="mr-5 pb-8" on:click={reportPost}>
-            {#if post.report}
+            {#if isReport}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
