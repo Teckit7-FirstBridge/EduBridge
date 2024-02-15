@@ -117,9 +117,14 @@
   <h1>loading...</h1>
 {:then { comments, qna }}
   <div class="max-w-4xl mx-auto my-8">
-    <div class="flex justify-between">
-      <div>
-        <h1 class="text-3xl font-bold mb-4">{qna.title}</h1>
+    <div class="flex justify-between my-8">
+      <div class="flex">
+        <h1 class="text-3xl font-bold">{qna.title}</h1>
+        <div
+          class={`inline-flex mx-2 my-1 px-2 pt-1 text-sm font-semibold rounded-full ${qna.commentCount == 0 ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'}`}
+        >
+          {qna.commentCount == 0 ? '미완료' : '답변 완료'}
+        </div>
       </div>
       <div class="flex">
         <div>

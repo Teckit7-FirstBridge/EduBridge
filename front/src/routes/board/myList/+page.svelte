@@ -56,11 +56,18 @@
                     <a href="/board/{item.id}">
                       <div class="flex justify-between">
                         <div class="flex flex-col space-y-1.5 p-6">
-                          <h3
-                            class="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight"
-                          >
-                            {item.title}
-                          </h3>
+                          <div class="flex">
+                            <h3
+                              class="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight"
+                            >
+                              {item.title}
+                            </h3>
+                            <h3
+                              class="text-lg font-semibold whitespace-nowrap leading-none tracking-tight"
+                            >
+                              ({item.commentCount})
+                            </h3>
+                          </div>
                         </div>
                         <p class="text-sm space-y-1.5 p-6">
                           {(() => {
