@@ -19,10 +19,10 @@
     const dailyGoal = data?.data.item.member?.dailyGoal;
     const member = data?.data.item.member;
 
-    const summaryResponse = await rq.apiEndPoints().GET(`/api/v1/courses/summary/{writerid}`, {
+    const summaryResponse = await rq.apiEndPoints().GET(`/api/v1/courses/summary/{writerId}`, {
       params: {
         path: {
-          writerid: member.id
+          writerId: member.id
         }
       }
     });
@@ -115,8 +115,14 @@
                 href="/course/{favoriteCourse.id}"
                 class="flex-none w-48 p-6 bg-white rounded-lg shadow"
               >
-                <h3 class="text-sm font-medium">{favoriteCourse.title}</h3>
-                <p class="text-xs text-gray-500">{favoriteCourse.price} 원</p>
+                <div class="flex">
+                  <h3 class="text-sm mt-1 font-medium">{favoriteCourse.title}</h3>
+                  <div
+                    class={`inline-flex px-2 text-xs font-semibold rounded-full py-1 mx-2 ${favoriteCourse.grade === '초급' ? 'bg-blue-100 text-blue-800' : favoriteCourse.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
+                  >
+                    {favoriteCourse.grade}
+                  </div>
+                </div>
               </a>
             {/each}
           </div>
