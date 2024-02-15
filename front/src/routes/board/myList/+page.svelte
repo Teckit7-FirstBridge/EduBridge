@@ -58,7 +58,7 @@
                         <div class="flex flex-col space-y-1.5 p-6">
                           <div class="flex">
                             <h3
-                              class="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight"
+                              class="mr-2 text-2xl font-semibold whitespace-nowrap leading-none tracking-tight"
                             >
                               {item.title}
                             </h3>
