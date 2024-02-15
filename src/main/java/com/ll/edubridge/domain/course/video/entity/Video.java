@@ -22,6 +22,9 @@ public class Video extends BaseEntity {
     @Column(length = 150)
     private String url;
 
+    @Column(length = 150)
+    private String imgUrl;
+
     @Column(length = 300)
     private String overView;
 
@@ -30,5 +33,8 @@ public class Video extends BaseEntity {
 
     @OneToMany(mappedBy = "video", cascade = CascadeType.REMOVE)
     private List<SummaryNote> summaryNotes;
+
+    @Column(length = 100)
+    private String keywords;
 
 }

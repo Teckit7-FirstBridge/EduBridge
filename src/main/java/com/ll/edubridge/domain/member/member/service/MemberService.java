@@ -2,12 +2,15 @@ package com.ll.edubridge.domain.member.member.service;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.global.security.SecurityUser;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,11 @@ public class MemberService {
 
     @Transactional
     public RsData<Member> join(String username, String password) {
+        return join(username, password, username, "");
+    }
+
+    @Transactional
+    public RsData<Member> join(String username, String password, String nickname, String profileImgUrl) {
         if (findByUsername(username).isPresent()) {
             return RsData.of("400-2", "이미 존재하는 회원입니다.");
         }
@@ -35,11 +43,35 @@ public class MemberService {
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .refreshToken(authTokenService.genRefreshToken())
+                .nickname(nickname)
+                .profileImgUrl(profileImgUrl)
                 .build();
         memberRepository.save(member);
 
         return RsData.of("200", "%s님 환영합니다. 회원가입이 완료되었습니다. 로그인 후 이용해주세요.".formatted(member.getUsername()), member);
     }
+
+    @Transactional
+    public RsData<Member> modifyOrJoin(String username, String providerTypeCode, String nickname, String profileImgUrl) {
+        Member member = findByUsername(username).orElse(null);
+
+        if (member == null) {
+            return join(
+                    username, "", nickname, profileImgUrl
+            );
+        }
+
+        return modify(member, nickname, profileImgUrl);
+    }
+
+    @Transactional
+    public RsData<Member> modify(Member member, String nickname, String profileImgUrl) {
+        member.setNickname(nickname);
+        member.setProfileImgUrl(profileImgUrl);
+
+        return RsData.of("200-2","회원정보가 수정되었습니다.".formatted(member.getUsername()), member);
+    }
+
 
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
@@ -57,21 +89,45 @@ public class MemberService {
         return join(username, "");
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class AuthAndMakeTokensResponseBody {
-        private Member member;
-        private String accessToken;
-        private String refreshToken;
+    public void isReported(Member member) {
+        member.setReport(true);
+    }
+
+    public Page<Member> findAll(Pageable pageable) {
+        return memberRepository.findAll(pageable);
+    }
+
+    public Optional<Member> findById(Long id) {
+        return memberRepository.findById(id);
+    }
+
+    public Member getMember(Long id) {
+        Optional<Member> member = this.findById(id);
+        if (member.isPresent()) {
+            return member.get();
+        } else {
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(),CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
+        }
+    }
+
+
+    public record AuthAndMakeTokensResponseBody(
+            @NonNull
+            Member member,
+            @NonNull
+            String accessToken,
+            @NonNull
+            String refreshToken
+    ) {
     }
 
     @Transactional
     public RsData<AuthAndMakeTokensResponseBody> authAndMakeTokens(String username, String password) {
         Member member = findByUsername(username)
-                .orElseThrow(() -> new GlobalException("400-1", "해당 유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new GlobalException(CodeMsg.E400_3_NO_EXIST_USER.getCode(),CodeMsg.E400_3_NO_EXIST_USER.getMessage()));
 
         if (!passwordMatches(member, password))
-            throw new GlobalException("400-2", "비밀번호가 일치하지 않습니다.");
+            throw new GlobalException(CodeMsg.E400_4_NOT_CORRECT_PASSWORD.getCode(),CodeMsg.E400_4_NOT_CORRECT_PASSWORD.getMessage() );
 
         String refreshToken = member.getRefreshToken();
         String accessToken = authTokenService.genAccessToken(member);
@@ -112,10 +168,40 @@ public class MemberService {
     }
 
     public RsData<String> refreshAccessToken(String refreshToken) {
-        Member member = memberRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new GlobalException("400-1", "존재하지 않는 리프레시 토큰입니다."));
+        Member member = memberRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new GlobalException(CodeMsg.E400_5_NOT_EXIST_REFRESHTOKEN.getCode(),CodeMsg.E400_5_NOT_EXIST_REFRESHTOKEN.getMessage()));
 
         String accessToken = authTokenService.genAccessToken(member);
 
         return RsData.of("200-1", "토큰 갱신 성공", accessToken);
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 0 15 * * ?") // 매일 자정
+    public void resetVisitedToday() {
+        List<Member> allMembers = this.getAllMembers();
+
+        for (Member member : allMembers) {
+            member.setVisitedToday(false);
+            member.setDailyAchievement(0);
+        }
+        memberRepository.saveAll(allMembers);
+    }
+
+    private List<Member> getAllMembers() {
+        return memberRepository.findAll();
+    }
+
+    public List<Member> recentMembers() {
+        return memberRepository.findTop5ByOrderByIdDesc();
+    }
+
+    public void save(Member member) {
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    public void cancelReport(Member member) {
+        member.setReport(false);
+        memberRepository.save(member);
     }
 }

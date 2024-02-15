@@ -31,7 +31,7 @@ public class Post extends BaseEntity {
     //  1대1 문의는 자동 으로 비밀글 설정
     private boolean published;
 
-    private boolean report = false;
+    private boolean report;
 
     @ManyToOne(optional = false)
     private Member writer;
