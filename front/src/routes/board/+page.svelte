@@ -2,7 +2,9 @@
   import type { components } from '$lib/types/api/v1/schema';
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
-  let posts: components['schemas']['PostDto'][] = $state([]);
+  import Pagination from '$lib/components/Pagination.svelte';
+
+  let posts: components['schemas']['PageDtoPostDto'][] = $state([]);
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -21,9 +23,9 @@
       }
     });
 
-    posts = data!.data.items;
+    posts = data!.data.itemPage?.content;
 
-    return posts;
+    return data!;
   }
 
   function sortPostsByCreateDate(ascending = true) {
@@ -46,7 +48,7 @@
 <div class="max-w-4xl mx-auto my-8">
   {#await load()}
     <p>loading...</p>
-  {:then posts}
+  {:then { data: { itemPage } }}
     <div class="flex flex-col w-full min-h-screen p-4 md:p-6">
       <h1 class="text-3xl font-bold mb-4">Q&amp;A</h1>
 
@@ -64,7 +66,7 @@
             <div
               tabindex="0"
               id="dropdownButton"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-gray-100 hover:text-accent-foreground h-10 px-4 py-2"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-gray-100 hover:text-accent-foreground h-10 px-4 py-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +85,7 @@
                 <path d="m3 8 4-4 4 4"></path>
                 <path d="M7 4v16"></path>
               </svg>
-              Sort by
+              정렬
             </div>
             <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-36">
               <li>
@@ -92,21 +94,7 @@
                   on:click={() => {
                     sortPostsByCreateDate(false);
                   }}
-                  ><span>날짜</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-6 h-6"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21 21 17.25"
-                    />
-                  </svg>
+                  ><span>날짜 최신 순</span>
                 </a>
               </li>
               <li>
@@ -115,21 +103,7 @@
                   on:click={() => {
                     sortPostsByCreateDate(true);
                   }}
-                  ><span>날짜</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-6 h-6"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12"
-                    />
-                  </svg>
+                  ><span>날짜 오래된 순</span>
                 </a>
               </li>
               <li>
@@ -139,21 +113,7 @@
                     sortPostsByVote(true);
                   }}
                 >
-                  <span>좋아요</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-6 h-6"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12"
-                    />
-                  </svg>
+                  <span>좋아요 적은 순</span>
                 </a>
               </li>
               <li>
@@ -163,28 +123,14 @@
                     sortPostsByVote(false);
                   }}
                 >
-                  <span>좋아요</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-6 h-6"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21 21 17.25"
-                    />
-                  </svg>
+                  <span>좋아요 많은 순</span>
                 </a>
               </li>
             </ul>
           </div>
           <select
             name="kwType"
-            class="select select-bordered"
+            class="select select-bordered font-bold"
             value={$page.url.searchParams.get('kwType') ?? 'ALL'}
           >
             <option value="ALL">전체</option>
@@ -194,20 +140,20 @@
           </select>
 
           <button
-            class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
+            class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
             type="submit"
           >
-            Search
+            검색하기
           </button>
 
           <button
-            class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
+            class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
             type="button"
             on:click={() => {
               location.href = '/board/write';
             }}
           >
-            Write
+            글 작성
           </button>
         </div>
       </form>
@@ -219,11 +165,18 @@
               <a href="/board/{item.id}">
                 <div class="flex justify-between">
                   <div class="flex flex-col space-y-1.5 p-6">
-                    <h3
-                      class="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight"
-                    >
-                      {item.title}
-                    </h3>
+                    <div class="flex">
+                      <h3
+                        class="mr-2 text-2xl font-semibold whitespace-nowrap leading-none tracking-tight"
+                      >
+                        {item.title}
+                      </h3>
+                      <h3
+                        class="text-lg font-semibold whitespace-nowrap leading-none tracking-tight"
+                      >
+                        ({item.commentCount})
+                      </h3>
+                    </div>
                   </div>
                   <p class="text-sm space-y-1.5 p-6">
                     {(() => {
@@ -302,6 +255,7 @@
             </div>
           {/each}
         {/if}
+        <Pagination page={itemPage} />
       </div>
     </div>
   {/await}

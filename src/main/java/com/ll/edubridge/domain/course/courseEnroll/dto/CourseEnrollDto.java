@@ -3,17 +3,23 @@ package com.ll.edubridge.domain.course.courseEnroll.dto;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 public class CourseEnrollDto {
 
-    private Long id;
-    private LocalDateTime cancelDate;
+    private Long courseId;
+
+    private String title;
+
+    private String imgUrl;
+
+    private int price;
+
+
 
     public CourseEnrollDto(CourseEnroll courseEnroll){
-        this.id = courseEnroll.getId();
-        this.cancelDate = courseEnroll.getCancelDate();
-
+        this.courseId=courseEnroll.getCourse().getId();
+        this.title=courseEnroll.getCourse().getTitle();
+        this.imgUrl=courseEnroll.getCourse().getImgUrl();
+        this.price=courseEnroll.getCourse().getPrice();
     }
 }

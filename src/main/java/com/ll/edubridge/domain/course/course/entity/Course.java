@@ -1,5 +1,7 @@
 package com.ll.edubridge.domain.course.course.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
@@ -32,14 +34,23 @@ public class Course extends BaseEntity {
     @Column(length = 500)
     private String overView;
 
-    @ManyToOne(optional = false)
-    private Member owner;
-
     private int price;
 
+    @Column
+    @Builder.Default
+    private Boolean confirm = false;
+
+    @Column(length = 20)
+    private String grade;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     private List<Video> videoList;
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<CourseEnroll> courseEnrollList;
+
+    @JsonIgnore
     @ManyToMany
     Set<Member> voter;
 }

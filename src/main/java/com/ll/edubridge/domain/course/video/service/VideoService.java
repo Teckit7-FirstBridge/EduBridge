@@ -1,12 +1,12 @@
 package com.ll.edubridge.domain.course.video.service;
 
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
 import com.ll.edubridge.domain.course.video.dto.VideoDto;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.course.video.repository.VideoRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +31,7 @@ public class VideoService {
                 .overView(createVideoDto.getOverView())
                 .course(courseService.getCourse(createVideoDto.getCourseId()))
                 .imgUrl(createVideoDto.getImgUrl())
+                .keywords(createVideoDto.getKeywords())
                 .build();
         return videoRepository.save(video);
     }
@@ -41,7 +42,8 @@ public class VideoService {
 
         video.setUrl(videoDto.getUrl());
         video.setOverView(videoDto.getOverView());
-        video.setImgUrl(video.getImgUrl());
+        video.setImgUrl(videoDto.getImgUrl());
+        video.setKeywords(videoDto.getKeywords());
 
         return videoRepository.save(video);
     }
@@ -58,7 +60,7 @@ public class VideoService {
         if (video.isPresent()) {
             return video.get();
         } else {
-            throw new GlobalException("404-1", "해당 영상을 찾을 수 없습니다.");
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
     }
 
@@ -75,7 +77,7 @@ public class VideoService {
 
     @Transactional
     public List<Video> findByCourseId(Long courseId) {
-        return videoRepository.findByCourseId(courseId);
+        return videoRepository.findByCourseIdOrderByIdAsc(courseId);
     }
 
     @Transactional
@@ -84,15 +86,13 @@ public class VideoService {
     }
 
     @Transactional
-    public boolean haveAuthority(Long courseId) {
+    public boolean haveAuthority() {
         Member member = rq.getMember();
-
-        Optional<Course> course = courseService.findById(courseId);
 
         if (member == null) return false;
 
         if (rq.isAdmin()) return true;
 
-        return course.get().getOwner().equals(member);
+        return false;
     }
 }

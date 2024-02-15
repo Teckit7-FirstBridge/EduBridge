@@ -1,20 +1,19 @@
 package com.ll.edubridge.domain.course.course.controller;
 
 
+import com.ll.edubridge.domain.course.course.dto.CourseAuthDto;
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
-import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
+import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.post.post.controller.ApiV1PostController;
-import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.app.AppConfig;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
+import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
-import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.KwTypeCourse;
-import com.ll.edubridge.standard.base.KwTypeV1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
@@ -24,7 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -32,7 +30,6 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Controller
 @RestController
 @RequestMapping(value = "/api/v1/courses", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -40,84 +37,96 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ApiV1CourseController {
     private final CourseService courseService;
     private final Rq rq;
+    private final CourseEnrollService courseEnrollService;
 
     @Getter
-    public static class GetCoursesResponsebody{
+    public class GetCoursesResponsebody {
         @NonNull
         private final List<CourseDto> items;
 
-        public GetCoursesResponsebody(Page<Course> page, Member currentUser) {
+        public GetCoursesResponsebody(Page<Course> page) {
             this.items = page.getContent().stream()
-                    .map(course -> new CourseDto(course))
+                    .map(course -> new CourseDto(course,rq.getMember()))
                     .toList();
         }
     }
 
     @GetMapping(value = "")
     @Operation(summary = "강좌 다건 조회")
-    public RsData<GetCoursesResponsebody> getPosts(
+    public RsData<GetCoursesResponsebody> getCourses(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "") String kw,
-            @RequestParam(defaultValue = "ALL") KwTypeCourse kwType
+            @RequestParam(defaultValue = "ALL") KwTypeCourse kwType,
+            @RequestParam(defaultValue = "") String grade
     ) {
-
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
-        Page<Course> coursePage = courseService.findByKw(kwType, kw, null,  pageable);
 
-        GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage, rq.getMember());
+        Page<Course> coursePage;
+        if (rq.isAdmin()) {
+            coursePage = courseService.findByKwAdmin(kwType, kw, null, grade, pageable);
+        } else {
+            coursePage = courseService.findByKw(kwType, kw, null, grade, pageable);
+        }
+
+        GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage);
 
         return RsData.of(
-                "200-1",
-                "성공",
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 responseBody
+
         );
     }
 
-    @GetMapping("/{course-id}")
+    @GetMapping("/{courseId}")
     @Operation(summary = "강좌 상세 조회")
-    public RsData<CourseDto> getCourse(@PathVariable("course-id") Long id){
-        Course course = courseService.getCourse(id);
-        CourseDto courseDto = new CourseDto(course);
-        return RsData.of("200-1", "성공", courseDto);
+    public RsData<CourseDto> getCourse(@PathVariable("courseId") Long courseId) {
+        Course course = courseService.getCourse(courseId);
+        CourseDto courseDto = new CourseDto(course,rq.getMember());
+
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), courseDto);
     }
 
-    @PostMapping("")
-    @Operation(summary = "강좌 등록")
-    public RsData<CreateCourseDto> createCourse(@RequestBody CreateCourseDto createCourseDto) {
-        Course course = courseService.create(rq.getMember(), createCourseDto);
+    @GetMapping("/{courseId}/auth")
+    @Operation(summary = "해당 멤버가 해당 강좌를 수강 중인지")
+    public RsData<CourseAuthDto> getCourseAuth(@PathVariable("courseId") Long courseId){
 
-        CreateCourseDto createdCourseDto = new CreateCourseDto(course);
+        CourseAuthDto courseAuthDto=new CourseAuthDto(courseEnrollService.isEnroll(courseId));
 
-        return RsData.of("200-0", "등록 성공", createdCourseDto);
+        return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(), Msg.E200_0_CREATE_SUCCEED.getMsg(), courseAuthDto);
     }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "강좌 수정")
-    public RsData<CourseDto> modify(
-            @PathVariable("id") Long id,
-            @RequestBody CourseDto courseDto) {
+    @PostMapping("/{id}/like")
+    @Operation(summary = "강좌 좋아요")
+    public RsData<Void> vote(@PathVariable("id") Long id) {
+        Member member = rq.getMember();
 
-        if(!courseService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+        if (!courseService.canLike(member, courseService.getCourse(id))) {
+            throw new GlobalException(CodeMsg.E400_1_ALREADY_RECOMMENDED.getCode(),CodeMsg.E400_1_ALREADY_RECOMMENDED.getMessage());
+        }
 
-        Course modifyCourse = courseService.modify(id, courseDto);
+        courseService.vote(id, member);
 
-        CourseDto modifyCourseDto = new CourseDto(modifyCourse);
-
-        return RsData.of("200-2", "수정 성공", modifyCourseDto);
+        return RsData.of(Msg.E200_4_RECOMMEND_SUCCEED.getCode(),
+                Msg.E200_4_RECOMMEND_SUCCEED.getMsg());
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "강좌 삭제")
-    public RsData<Empty> delete(@PathVariable("id") Long id) {
+    @DeleteMapping("/{id}/like")
+    @Operation(summary = "강좌 좋아요 취소")
+    public RsData<Void> deleteVote(@PathVariable("id") Long id) {
+        Member member = rq.getMember();
 
-        if(!courseService.haveAuthority(id))
-            throw new GlobalException("403-1", "권한이 없습니다.");
+        if (!courseService.canCancelLike(member, courseService.getCourse(id))) {
+            throw new GlobalException(CodeMsg.E400_2_NOT_RECOMMENDED_YET.getCode(),CodeMsg.E400_2_NOT_RECOMMENDED_YET.getMessage());
+        }
 
-        courseService.delete(id);
+        courseService.deleteVote(id, member);
 
-        return RsData.of("200-3", "삭제 성공");
+
+        return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getCode(),
+                Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getMsg());
     }
 }

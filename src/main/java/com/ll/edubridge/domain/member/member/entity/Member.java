@@ -32,9 +32,9 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
     @Column(length = 20)
     private String nickname;
 
-    private int point = 0;
+    private int point;
 
-    private boolean report = false;
+    private boolean report;
 
     @Column(unique = true)
     private String refreshToken;
@@ -43,8 +43,12 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
 
     private boolean visitedToday;
 
+    @Builder.Default
+    private int dailyGoal = 3;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private int dailyAchievement;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CourseEnroll> courseEnrollList;
 
     public String getProfileImgUrlOrDefault() {

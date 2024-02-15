@@ -58,3 +58,55 @@ main {
 .rounded-circle {
   border-radius: 50%; /* 이미지를 동그라미로 만듭니다. */
 }
+
+.course-info {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.course-price {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.enroll-button {
+  margin-left: 20px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.enroll-button:hover {
+  background-color: #0056b3;
+}
+
+.rounded-container {
+  width: 100%; 
+  height: auto; 
+  object-fit: cover; 
+  object-position: center 0px; 
+}
+
+
+.equal-width-th {
+  width: 25%; /* 각 th 요소가 전체 너비의 25%를 차지하도록 설정 */
+}
+
+.table-fixed {
+  table-layout: fixed; /* 테이블의 레이아웃을 고정시킵니다 */
+  width: 100%; /* 테이블의 전체 너비를 100%로 설정 */
+}
+
+toastui-editor-contents {
+  font-size: 20px;
+}

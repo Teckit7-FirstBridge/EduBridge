@@ -13,65 +13,79 @@
 </script>
 
 <header class="navbar bg-base-100 shadow">
-  <div class="flex-none">
-    <div class="dropdown">
-      <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          ><path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h7"
-          /></svg
+  <div class="flex-1">
+    <div class="flex-none">
+      <div class="dropdown">
+        <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            ><path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h7"
+            /></svg
+          >
+        </div>
+        <ul
+          tabindex="0"
+          class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
         >
+          {#if rq.isAdmin()}
+            <li>
+              <a href="/adm" class="font-semi-bold"
+                ><i class="fa-solid fa-right-to-bracket"></i> 관리자</a
+              >
+            </li>
+          {/if}
+          {#if rq.isLogout()}
+            <li>
+              <a class="font-semi-bold" href="/member/login"
+                ><i class="fa-solid fa-right-to-bracket"></i> 로그인</a
+              >
+            </li>
+          {/if}
+          {#if rq.isLogin()}
+            <li>
+              <a class="font-semi-bold" href="/board/myList"
+                ><i class="fa-solid fa-list-check"></i> 내 글</a
+              >
+            </li>
+            {#if !rq.isAdmin()}
+              <li>
+                <a class="font-semi-bold" href="/member/qna"
+                  ><i class="fa-solid fa-list-check"></i> 1대1 문의</a
+                >
+              </li>
+            {/if}
+            <li class="font-semi-bold">
+              <button on:click={() => rq.logout()}>
+                <i class="fa-solid fa-right-from-bracket"></i> 로그아웃
+              </button>
+            </li>
+          {/if}
+        </ul>
       </div>
-      <ul
-        tabindex="0"
-        class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-      >
-        <li>
-          <a href="/board"><i class="fa-solid fa-list"></i> 글</a>
-        </li>
-        {#if rq.isLogout()}
-          <li>
-            <a href="/member/login"><i class="fa-solid fa-right-to-bracket"></i> 로그인</a>
-          </li>
-        {/if}
-        {#if rq.isLogin()}
-          <li>
-            <button on:click={() => rq.goToTempPostEditPage()}>
-              <i class="fa-solid fa-plus"></i> 글 작성
-            </button>
-          </li>
-          <li>
-            <a href="/p/myList"><i class="fa-solid fa-list-check"></i> 내 글</a>
-          </li>
-          <li>
-            <button on:click={() => rq.logout()}>
-              <i class="fa-solid fa-right-from-bracket"></i> 로그아웃
-            </button>
-          </li>
-        {/if}
-      </ul>
+    </div>
+    <div class="flex-1">
+      <a href="/board" class="btn btn-ghost font-semi-bold">게 시 판</a>
+      <a href="/course" class="btn btn-ghost font-semi-bold">강의</a>
     </div>
   </div>
-  <div class="flex-1">
-    <a href="/board" class="btn btn-ghost">게 시 판</a>
-    <a href="/course" class="btn btn-ghost">강의</a>
-  </div>
-  <div class="flex-1">
-    <a href="/">EduBridge</a>
+  <div class="flex-1 flex justify-center">
+    <a href="/" class="font-bold">EduBridge</a>
   </div>
 
-  <div class="flex-none">
-    <button
-      class="btn btn-ghost"
-      onclick={() => {
+  <div class="flex-1 justify-end">
+    <div class="flex-none flex justify-col">
+      <div>
+        <button
+          class="btn btn-ghost"
+          onclick={() => {
         const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
         const searchFormInputSearch = (document.querySelector('#searchFormModal input[type=search]') as HTMLDialogElement);
 
@@ -79,27 +93,44 @@
 
         searchFormInputSearch.focus();
       }}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        ><path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-        /></svg
-      >
-    </button>
-    {#if rq.isLogin()}
-      <a href="/member/me" class="btn btn-ghost">
-        <img class="inline-block rounded-circle" src={rq.member.profileImgUrl} width="30" alt="" />
-        {rq.member.name}
-      </a>
-    {/if}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            ><path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            /></svg
+          >
+        </button>
+      </div>
+      {#if rq.isLogin()}
+        <div>
+          {#if !rq.isAdmin()}
+            <a href="/member/course" class="btn btn-ghost font-semi-bold">내 강의실</a>
+          {/if}
+          {#if rq.isAdmin()}
+            <a href="/adm" class="btn btn-ghost font-semi-bold">관 리 자</a>
+          {/if}
+        </div>
+        <div>
+          <a href="/member/{rq.member.id}" class="btn btn-ghost">
+            <img
+              class="inline-block rounded-circle"
+              src={rq.member.profileImgUrl}
+              width="30"
+              alt=""
+            />
+            {rq.member.name}
+          </a>
+        </div>
+      {/if}
+    </div>
   </div>
   <dialog id="searchFormModal" class="modal">
     <div class="modal-box">

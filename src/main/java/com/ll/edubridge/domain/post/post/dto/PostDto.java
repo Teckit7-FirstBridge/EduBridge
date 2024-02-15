@@ -22,9 +22,16 @@ public class PostDto {
     @NonNull
     private String body;
 
+    @NonNull
     private int voteCount;
 
+    @NonNull
     private boolean likedByCurrentUser;
+
+    @NonNull
+    private boolean isReport;
+    @NonNull
+    private int commentCount;
 
     public PostDto(Post post, Member member) {
         this.id = post.getId();
@@ -35,9 +42,22 @@ public class PostDto {
         this.body = post.getContent();
         this.voteCount = post.getVoteCount();
         this.likedByCurrentUser = post.getVoter().contains(member);
+        this.isReport = post.isReport();
+        this.commentCount = post.getCommentList().size();
     }
 
     public PostDto(){
 
+    }
+
+    public PostDto(Post post) {
+        this.id = post.getId();
+        this.createDate = post.getCreateDate();
+        this.authorId = post.getWriter().getId();
+        this.authorName = post.getWriter().getNickname();
+        this.title = post.getTitle();
+        this.body = post.getContent();
+        this.voteCount = post.getVoteCount();
+        this.isReport = post.isReport();
     }
 }

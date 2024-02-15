@@ -2,136 +2,77 @@ package com.ll.edubridge.domain.course.video.controller;
 
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
-import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
 import com.ll.edubridge.domain.course.video.dto.VideoDto;
 import com.ll.edubridge.domain.course.video.entity.Video;
+import com.ll.edubridge.domain.course.video.mapper.VideoMapper;
 import com.ll.edubridge.domain.course.video.service.VideoService;
+import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
+import com.ll.edubridge.global.msg.Msg;
+import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
-import com.ll.edubridge.standard.base.Empty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(value = "/api/v1", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/courses", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "VideoController", description = "강의 CRUD 컨트롤러")
 public class ApiV1VideoController {
     private final VideoService videoService;
     private final CourseService courseService;
+    private final Rq rq;
 
-    @GetMapping("/courses/{courseId}/videos")
+    @GetMapping("/{courseId}/videos")
     @Operation(summary = "강의 리스트")
     public RsData<List<VideoDto>> getVideos(@PathVariable("courseId") Long courseId) {
 
         Course course = courseService.getCourse(courseId);
         if(course == null) {
-            throw new GlobalException("404-1", "해당 강좌를 찾을 수 없습니다.");
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
         List<Video> videos = videoService.findByCourseId(courseId);
-
         List<VideoDto> videoDtoList = videos.stream()
-                .map(VideoDto::new)
+                .map(video -> VideoMapper.toDto(video,rq.getMember().getId()))
                 .toList();
 
         return RsData.of(
-                "200-1",
-                "성공",
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 videoDtoList
         );
     }
 
-    @GetMapping("/courses/{courseId}/videos/{id}")
+    @GetMapping("/{courseId}/videos/{id}")
     @Operation(summary = "특정 강의")
     public RsData<VideoDto> getVideos(@PathVariable("courseId") Long courseId,
                                       @PathVariable("id") Long id) {
 
         Course course = courseService.getCourse(courseId);
         if(course == null) {
-            throw new GlobalException("404-1", "해당 강좌를 찾을 수 없습니다.");
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
         Video video = videoService.findByCourseIdAndId(courseId, id);
         if (video == null) {
-            throw new GlobalException("404-1", "해당 강의를 찾을 수 없습니다.");
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
 
         VideoDto videoDto = new VideoDto(video);
 
         return RsData.of(
-                "200-1",
-                "성공",
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 videoDto
         );
     }
 
-    @PostMapping("/admin/{courseId}/videos")
-    @Operation(summary = "강의 등록")
-    public RsData<CreateVideoDto> createVideo(@PathVariable("courseId") Long courseId,
-                                              @RequestBody CreateVideoDto createVideoDto) {
-
-        if (!videoService.haveAuthority(courseId))
-            throw new GlobalException("403-1", "권한이 없습니다.");
-
-        Video video = videoService.create(createVideoDto);
-        CreateVideoDto createdVideoDto = new CreateVideoDto(video);
-
-        return RsData.of("200-0", "등록 성공", createdVideoDto);
-    }
-
-    @PutMapping("/admin/{courseId}/videos/{id}")
-    @Operation(summary = "강의 수정")
-    public RsData<VideoDto> modify(@PathVariable("courseId") Long courseId,
-                                   @PathVariable("id") Long id,
-                                   @RequestBody VideoDto videoDto) {
-
-        if (!videoService.haveAuthority(courseId))
-            throw new GlobalException("403-1", "권한이 없습니다.");
-
-        Course course = courseService.getCourse(courseId);
-        if(course == null) {
-            throw new GlobalException("404-1", "해당 강좌를 찾을 수 없습니다.");
-        }
-
-        Video video = videoService.findByCourseIdAndId(courseId, id);
-        if (video == null) {
-            throw new GlobalException("404-1", "해당 강의를 찾을 수 없습니다.");
-        }
-
-        Video modifyVideo = videoService.modify(id, videoDto);
-
-        VideoDto modifyVideoDto = new VideoDto(modifyVideo);
-
-        return RsData.of("200-2", "수정 성공", modifyVideoDto);
-    }
-
-    @DeleteMapping("/admin/{courseId}/videos/{id}")
-    @Operation(summary = "강의 삭제")
-    public RsData<Empty> delete(@PathVariable("courseId") Long courseId,
-                                @PathVariable("id") Long id) {
-
-        if (!videoService.haveAuthority(courseId))
-            throw new GlobalException("403-1", "권한이 없습니다.");
-
-        Course course = courseService.getCourse(courseId);
-        if(course == null) {
-            throw new GlobalException("404-1", "해당 강좌를 찾을 수 없습니다.");
-        }
-
-        Video video = videoService.findByCourseIdAndId(courseId, id);
-        if (video == null) {
-            throw new GlobalException("404-1", "해당 강의를 찾을 수 없습니다.");
-        }
-
-        videoService.delete(id);
-
-        return RsData.of("200-3", "삭제 성공");
-    }
 }

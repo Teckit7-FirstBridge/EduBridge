@@ -19,6 +19,17 @@ public class AppConfig {
         this.jwtSecretKey = jwtSecretKey;
     }
 
+    private static String activeProfile;
+
+    @Value("${spring.profiles.active}")
+    public void setActiveProfile(String activeProfile) {
+        this.activeProfile = activeProfile;
+    }
+
+    public static boolean isProd() {
+        return activeProfile.equals("prod");
+    }
+
     @Getter
     private static long accessTokenExpirationSec;
 
@@ -100,4 +111,7 @@ public class AppConfig {
 
     @Getter
     public static int basePageSize = 10;
+
+    @Getter
+    public static int SummaryPassScore = 70;
 }
