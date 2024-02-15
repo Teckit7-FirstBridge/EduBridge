@@ -26,7 +26,7 @@
 {#await load()}
   <p class="text-center">loading...</p>
 {:then { notes }}
-  <div class="flex h-screen">
+  <div class="flex">
     <div class="hidden w-64 border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
       <div class="flex flex-col gap-2">
         <div class="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-800">

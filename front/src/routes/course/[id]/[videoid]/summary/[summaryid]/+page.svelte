@@ -42,7 +42,7 @@
 {:then { summarynote }}
   <div class="max-w-4xl mx-auto my-8">
     <div class="flex items-center justify-between mt-3 mb-20">
-      <a on:click={goBack} class="btn btn-sm flex items-center gap-2">
+      <a href="/course/{$page.params.id}" class="btn btn-sm flex items-center gap-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

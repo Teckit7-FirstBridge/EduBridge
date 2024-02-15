@@ -1,6 +1,6 @@
 <script lang="ts">
   import rq from '$lib/rq/rq.svelte';
-  import type { PageDto } from '$lib/types/index';
+  import type { PageDto } from '$lib/types';
 
   const { page, pageDelta = 1 } = $props<{ page: PageDto; pageDelta?: number }>();
 

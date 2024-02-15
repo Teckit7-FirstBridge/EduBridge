@@ -5,10 +5,21 @@
   import Pagination from '$lib/components/Pagination.svelte';
   import CourseNav from '../../../lib/components/AdmNav.svelte';
 
-  let qna: components['schemas']['PageDtoAdminQnaDto'][] = $state();
+  let qna: components['schemas']['PageDtoAdminQnaDto'][] = $state([]);
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
+    console.log('dd');
+
+    const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
+
+    const { data } = await rq.apiEndPoints().GET(`/api/v1/admin/qna/list`, {
+      params: {
+        query: {
+          page: page_
+        }
+      }
+    });
 
     const isAdminResponse = await rq.apiEndPoints().GET(`/api/v1/members/isAdmin`);
     const { isAdmin } = isAdminResponse.data?.data!;
@@ -22,16 +33,6 @@
       rq.msgWarning('관리자 로그인 후 이용 해 주세요');
       rq.goTo('/member/login');
     }
-
-    const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
-
-    const { data } = await rq.apiEndPoints().GET(`/api/v1/admin/qna/list`, {
-      params: {
-        query: {
-          page: page_
-        }
-      }
-    });
 
     qna = data!.data.itemPage?.content;
 

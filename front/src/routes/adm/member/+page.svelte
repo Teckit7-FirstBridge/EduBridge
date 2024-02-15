@@ -10,6 +10,16 @@
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
+    const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
+
+    const { data } = await rq.apiEndPoints().GET(`/api/v1/admin/members/list`, {
+      params: {
+        query: {
+          page: page_
+        }
+      }
+    });
+
     const isAdminResponse = await rq.apiEndPoints().GET(`/api/v1/members/isAdmin`);
     const { isAdmin } = isAdminResponse.data?.data!;
     const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
@@ -22,16 +32,6 @@
       rq.msgWarning('관리자 로그인 후 이용 해 주세요');
       rq.goTo('/member/login');
     }
-
-    const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
-
-    const { data } = await rq.apiEndPoints().GET(`/api/v1/admin/members/list`, {
-      params: {
-        query: {
-          page: page_
-        }
-      }
-    });
 
     members = data!.data.itemPage?.content;
 
