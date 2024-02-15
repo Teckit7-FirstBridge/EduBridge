@@ -131,6 +131,10 @@ export interface paths {
     /** 로그인 여부 확인 */
     get: operations["isLogin"];
   };
+  "/api/v1/members/isAdmin": {
+    /** 관리자 여부 확인 */
+    get: operations["isAdmin"];
+  };
   "/api/v1/home": {
     /** 홈화면 최신 강좌 N개조회 */
     get: operations["getPosts_1"];
@@ -279,8 +283,8 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
       authoritiesAsStringList?: string[];
+      authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
     };
     RsDataSummaryNoteDto: {
@@ -594,6 +598,18 @@ export interface components {
     };
     isLoginResponseBody: {
       isLogin: boolean;
+    };
+    RsDataIsAdminResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["isAdminResponseBody"];
+      fail: boolean;
+      success: boolean;
+    };
+    isAdminResponseBody: {
+      isAdmin: boolean;
     };
     CourseEnrollDto: {
       /** Format: int64 */
@@ -1496,6 +1512,17 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataIsLoginResponseBody"];
+        };
+      };
+    };
+  };
+  /** 관리자 여부 확인 */
+  isAdmin: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataIsAdminResponseBody"];
         };
       };
     };

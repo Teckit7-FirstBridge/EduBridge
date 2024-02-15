@@ -6,6 +6,23 @@
   let imgUrl = $state('');
   let keywords = $state('');
 
+  async function load() {
+    if (import.meta.env.SSR) throw new Error('CSR ONLY');
+
+    const isAdminResponse = await rq.apiEndPoints().GET(`/api/v1/members/isAdmin`);
+    const { isAdmin } = isAdminResponse.data?.data!;
+    const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
+    const { isLogin } = isLoginResponse.data?.data!;
+    if (!isAdmin && isLogin) {
+      rq.msgError('관리자 권한이 없습니다');
+      rq.goTo('/');
+    }
+    if (!isAdmin && !isLogin) {
+      rq.msgWarning('관리자 로그인 후 이용 해 주세요');
+      rq.goTo('/member/login');
+    }
+  }
+
   const submitForm = async () => {
     if (url.length < 1) {
       rq.msgWarning('동영상 주소를 입력 해 주세요.');
@@ -44,7 +61,9 @@
   };
 </script>
 
-{#if rq.isAdmin()}
+{#await load()}
+  <p>loading...</p>
+{:then}
   <div
     class="min-h-screen w-full flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8"
   >
@@ -116,9 +135,4 @@
       </div>
     </div>
   </div>
-{:else}
-  <a href="/" class="btn btn-outline btn-error m-5">접근 불가 메인으로</a>
-  {#if !rq.isLogin()}
-    <a href="/member/login" class="btn btn-outline btn-error m-5">로그인</a>
-  {/if}
-{/if}
+{/await}

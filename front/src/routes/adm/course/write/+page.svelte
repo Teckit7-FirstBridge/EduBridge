@@ -14,6 +14,23 @@
   let imgUrl: '';
   let grade: '';
 
+  async function load() {
+    if (import.meta.env.SSR) throw new Error('CSR ONLY');
+
+    const isAdminResponse = await rq.apiEndPoints().GET(`/api/v1/members/isAdmin`);
+    const { isAdmin } = isAdminResponse.data?.data!;
+    const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
+    const { isLogin } = isLoginResponse.data?.data!;
+    if (!isAdmin && isLogin) {
+      rq.msgError('관리자 권한이 없습니다');
+      rq.goTo('/');
+    }
+    if (!isAdmin && !isLogin) {
+      rq.msgWarning('관리자 로그인 후 이용 해 주세요');
+      rq.goTo('/member/login');
+    }
+  }
+
   const Course__save = async () => {
     const newNoti = notieditor.editor.getMarkdown().trim();
     const newOverview = overvieweditor.editor.getMarkdown().trim();
@@ -66,7 +83,9 @@
   };
 </script>
 
-{#if rq.isAdmin()}
+{#await load()}
+  <p>loading...</p>
+{:then}
   <div class="px-60">
     <div class="flex flex-col h-full px-4 py-6 md:px-6 lg:py-16 md:py-12">
       <div class="space-y-4">
@@ -134,9 +153,4 @@
       </div>
     </div>
   </div>
-{:else}
-  <a href="/" class="btn btn-outline btn-error m-5">접근 불가 메인으로</a>
-  {#if !rq.isLogin()}
-    <a href="/member/login" class="btn btn-outline btn-error m-5">로그인</a>
-  {/if}
-{/if}
+{/await}
