@@ -322,10 +322,15 @@
         <div class="flex items-center justify-between">
           <h1 class="font-semibold text-lg md:text-2xl">
             <div class="flex">
-              <div class="mx-4 mt-1">
+              <div class="mx-2 mt-1">
                 {course!.title}
               </div>
-              <div class=" flex justify-end gap-2 mt-1" on:click={() => clickLiked(course)}>
+              <div
+                class={`inline-flex px-2 text-lg font-semibold rounded-full mt-1 my-1 ${course.grade === '초급' ? 'bg-blue-100 text-blue-800' : course.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
+              >
+                {course.grade}
+              </div>
+              <div class=" flex justify-end gap-2 mt-1 ml-2" on:click={() => clickLiked(course)}>
                 {#if course.likedByCurrentUser}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

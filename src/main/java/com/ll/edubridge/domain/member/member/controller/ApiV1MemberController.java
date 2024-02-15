@@ -40,6 +40,18 @@ public class ApiV1MemberController {
     public record isLoginResponseBody(@NonNull Boolean isLogin){
 
     }
+
+    public record isAdminResponseBody(@NonNull Boolean isAdmin){
+
+    }
+    @GetMapping("/isAdmin")
+    @Operation(summary = "관리자 여부 확인")
+    public RsData<isAdminResponseBody> isAdmin(){
+
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),Msg.E200_1_INQUIRY_SUCCEED.getMsg(),new isAdminResponseBody(rq.isAdmin()));
+    }
+
+
     @GetMapping("/isLogin")
     @Operation(summary = "로그인 여부 확인")
     public RsData<isLoginResponseBody> isLogin(){

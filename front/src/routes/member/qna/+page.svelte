@@ -56,6 +56,11 @@
                           <div class="flex items-center justify-between">
                             <div class="ml-2 flex-shrink-0 flex">
                               <p class="text-xl text-gray-500 mr-2">{item.title}</p>
+                              <div
+                                class={`inline-flex px-2 py-1 mt-1 text-xs font-semibold rounded-full ${item.commentCount == 0 ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'}`}
+                              >
+                                {item.commentCount == 0 ? '미완료' : '답변 완료'}
+                              </div>
                             </div>
                             <div class="ml-2 flex-shrink-0 flex">
                               <p class="text-sm text-gray-500">

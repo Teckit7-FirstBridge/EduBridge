@@ -13,6 +13,19 @@
   let initialData: components['schemas']['CourseDto'] | undefined = $state();
 
   async function load() {
+    const isAdminResponse = await rq.apiEndPoints().GET(`/api/v1/members/isAdmin`);
+    const { isAdmin } = isAdminResponse.data?.data!;
+    const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
+    const { isLogin } = isLoginResponse.data?.data!;
+    if (!isAdmin && isLogin) {
+      rq.msgError('관리자 권한이 없습니다');
+      rq.goTo('/');
+    }
+    if (!isAdmin && !isLogin) {
+      rq.msgWarning('관리자 로그인 후 이용 해 주세요');
+      rq.goTo('/member/login');
+    }
+
     const { data } = await rq.apiEndPoints().GET('/api/v1/courses/{courseId}', {
       params: { path: { courseId: parseInt($page.params.id) } }
     });
