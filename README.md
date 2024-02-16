@@ -22,35 +22,36 @@ TECH!T back-end 7기 1차 프로젝트 : 교육 영상 플랫폼 EduBridge
 
 <br><br>
 
-## 3. 프로덕트 세부
+## 3. 프로덕트 세부 (주요 페이지 소개)
 
-### 메인 홈 & 소셜 로그인 (카카오 / 구글)
+### 1) 메인 홈 & 소셜 로그인 (카카오 / 구글)
 ![프로덕트1](https://github.com/Teckit7-FirstBridge/EduBridge/assets/101785754/4d43bfae-21f9-42ba-b8ea-1a0b28cd2f81)
-
+---
 <br>
 
-### 마이 페이지
+### 2) 마이 페이지
 ![프로덕트2](https://github.com/Teckit7-FirstBridge/EduBridge/assets/101785754/f5985124-271e-4412-811c-f422fe76fd48)
-
+---
 <br>
 
-### 강좌 페이지
+### 3) 강좌 페이지
 ![프로덕트3](https://github.com/Teckit7-FirstBridge/EduBridge/assets/101785754/82d64b97-2512-4f6e-a911-06454393c149)
-
+---
 <br>
 
-### QnA 게시판
+### 4) QnA 게시판
 ![프로덕트4](https://github.com/Teckit7-FirstBridge/EduBridge/assets/101785754/f962e648-31be-48c1-8129-ec666b93d377)
-
+---
 <br>
 
-### 관리자 페이지
+### 5) 관리자 페이지
 ![프로덕트5](https://github.com/Teckit7-FirstBridge/EduBridge/assets/101785754/334474cb-e538-44da-83da-21ddc260405f)
 
 
 <br><br>
  
 ## 4. 실행 방법
+
 1. 사이트 접속 (도메인 사용 기간 이후에는 접근 불가) <br>
 : https://www.eb.kys.blue/
 
@@ -72,7 +73,8 @@ TECH!T back-end 7기 1차 프로젝트 : 교육 영상 플랫폼 EduBridge
     npm run dev
     ```
       - npm이 설치되어 있지 않은 경우
-        + Node.js 설치
+        + Node.js 설치 <br>
+           https://nodejs.org/en/download/current
         + IntelliJ 또는 기본 터미널에서 다음 실행
           ```bash
           npm config set legacy-peer-deps true
