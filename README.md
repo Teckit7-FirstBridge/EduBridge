@@ -58,7 +58,7 @@ TECH!T back-end 7기 1차 프로젝트 : 교육 영상 플랫폼 EduBridge
     
     1) **git clone** 
     ```bash
-    git clone https://github.com/harriet221/EduBridge
+    git clone https://github.com/Teckit7-FirstBridge/EduBridge.git
     ```
     
     2) **IntelliJ IDEA - 백엔드 서버** <br>
