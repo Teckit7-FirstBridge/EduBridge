@@ -38,7 +38,7 @@
   <h2>loading...</h2>
 {:then { learningCourses, favoriteCourses, summaryNotes, dailyAchievement, dailyGoal, member }}
   {#if rq.member.id == member.id || rq.isAdmin()}
-    <div class="max-w-4xl mx-auto my-8">
+    <div class="max-w-4xl mx-auto my-4">
       <header class="flex h-16 items-center border-b px-4 md:px-6 justify-between">
         <a class="flex items-center gap-2"
           ><svg

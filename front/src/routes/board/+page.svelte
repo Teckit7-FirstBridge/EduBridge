@@ -49,19 +49,11 @@
   {#await load()}
     <p>loading...</p>
   {:then { data: { itemPage } }}
-    <div class="flex flex-col w-full min-h-screen p-4 md:p-6">
+    <div class="flex flex-col w-full min-h-screen px-4 md:px-6">
       <h1 class="text-3xl font-bold mb-4">Q&amp;A</h1>
 
       <form action="/board" class="bg-base rounded flex flex-col gap-6">
-        <div class="flex items-center gap-4 mb-6">
-          <input
-            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-grow"
-            placeholder="검색어"
-            name="kw"
-            type="search"
-            value={$page.url.searchParams.get('kw') ?? ''}
-            autocomplete="off"
-          />
+        <div class="flex flex-row gap-2 justify-end">
           <div class="dropdown">
             <div
               tabindex="0"
@@ -130,7 +122,7 @@
           </div>
           <select
             name="kwType"
-            class="select select-bordered font-bold"
+            class="mt-1 select select-bordered select-sm font-bold focus:outline-none focus:ring-0"
             value={$page.url.searchParams.get('kwType') ?? 'ALL'}
           >
             <option value="ALL">전체</option>
@@ -138,6 +130,16 @@
             <option value="BODY">내용</option>
             <option value="NAME">작성자</option>
           </select>
+        </div>
+        <div class="flex items-center gap-4 mb-6">
+          <input
+            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-grow"
+            placeholder="검색어"
+            name="kw"
+            type="search"
+            value={$page.url.searchParams.get('kw') ?? ''}
+            autocomplete="off"
+          />
 
           <button
             class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"

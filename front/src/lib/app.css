@@ -110,3 +110,45 @@ main {
 toastui-editor-contents {
   font-size: 20px;
 }
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #000; /* 배경색 설정 */
+  color: white; /* 텍스트 색상 설정 */
+  text-align: center;
+  padding: 10px; /* 패딩으로 푸터 높이 조정 */
+}
+
+body {
+  padding-bottom: 100px; /* 푸터 높이에 맞게 조정 */
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: -100%; /* 초기에는 화면 왼쪽 밖에 위치 */
+  width: 250px;
+  height: 100%;
+  background: #f3f4f6; /* light gray */
+  transition: left 0.3s;
+  z-index: 100;
+}
+.drawer.open {
+  left: 0; /* 사이드바가 열렸을 때 위치 */
+}
+.overlay {
+  display: none; /* 기본적으로 오버레이는 표시하지 않음 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* 반투명한 검정색 배경 */
+  z-index: 99;
+}
+.overlay.show {
+  display: block; /* 사이드바가 열렸을 때 오버레이 표시 */
+}
