@@ -24,12 +24,12 @@ html > body {
   flex-direction: column;
 }
 
-토스트 UI 에디터에 폰트 적용 /
+
 html > body .ProseMirror,
 html > body .toastui-editor-contents,
 html > body .toastui-editor-defaultUI {
   font-family: var(--base-font-family);
-  font-size: 10rem;
+  font-size: 20px;
 }
 
 

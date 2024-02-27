@@ -380,61 +380,63 @@
         </div>
       </div>
 
-      <div class="justify-end flex items-center mt-3 mb-20">
-        <div class="flex">
-          {#if rq.member.id == post.authorId || rq.isAdmin()}
-            <div class="mb-5 mx-2 flex">
-              <a class="btn btn-sm" on:click={deletePost}>글 삭제</a>
-            </div>
-          {/if}
-          {#if rq.member.id == post.authorId}
-            <div class="mb-5 mx-2 flex">
-              <a href="/board/{post.id}/edit" class="btn btn-sm">글 수정</a>
-            </div>
-          {/if}
-        </div>
-      </div>
       <div>
-        <ToastUiEditor body={post.body} viewer={true}></ToastUiEditor>
-      </div>
-      <div class="flex justify-center mt-20">
-        <button
-          class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14"
-          on:click={clickLikedPost}
-        >
-          {#if likedByCurrentUser}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="red"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="red"
-              class="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-              />
-            </svg>
-          {:else}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-              />
-            </svg>
-          {/if}
-          <span>{likedNum}</span>
-        </button>
+        <div class="flex-1 flex justify-end items-center mt-3 mb-5">
+          <div class="flex">
+            {#if rq.member.id == post.authorId || rq.isAdmin()}
+              <div class="mb-5 mx-2 flex">
+                <a class="btn btn-sm" on:click={deletePost}>글 삭제</a>
+              </div>
+            {/if}
+            {#if rq.member.id == post.authorId}
+              <div class="mb-5 mx-2 flex">
+                <a href="/board/{post.id}/edit" class="btn btn-sm">글 수정</a>
+              </div>
+            {/if}
+          </div>
+        </div>
+        <div class="flex-1 text-lg">
+          <ToastUiEditor body={post.body} viewer={true}></ToastUiEditor>
+        </div>
+        <div class="flex flex-1 justify-center mt-20">
+          <button
+            class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14"
+            on:click={clickLikedPost}
+          >
+            {#if likedByCurrentUser}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="red"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="red"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                />
+              </svg>
+            {:else}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                />
+              </svg>
+            {/if}
+            <span>{likedNum}</span>
+          </button>
+        </div>
       </div>
       {#if rq.isLogin()}
         <div class="border-t mb-8 mt-10"></div>
