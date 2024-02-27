@@ -167,17 +167,33 @@ public class ApiV1PostController {
                 Msg.E200_0_CREATE_SUCCEED.getMsg(), createdQnaDto);
     }
 
+    public record GetMyPostsResponseBody(@NonNull PageDto<PostDto> itemPage) {
+    }
+
     @GetMapping("/myList")
     @Operation(summary = "내 글 목록")
-    public RsData<List<PostDto>> getMyPosts() {
-        List<Post> myPosts = postService.getMyPosts();
+    public RsData<GetMyPostsResponseBody> getMyPosts(
+            @RequestParam(defaultValue = "1") int page
+    ) {
 
-        List<PostDto> postDtoList = myPosts.stream()
-                .map(PostDto::new)
-                .collect(Collectors.toList());
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+        Page<Post> posts = postService.getMyPosts(pageable);
 
-        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), postDtoList);
+        Page<PostDto> postPage = posts.map(this::postMyToDto);
+
+        return RsData.of(
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                new GetMyPostsResponseBody(new PageDto<>(postPage))
+        );
+    }
+
+    private PostDto postMyToDto(Post post) {
+        PostDto dto = new PostDto(post, rq.getMember());
+
+        return dto;
     }
 
     @GetMapping("/qna")

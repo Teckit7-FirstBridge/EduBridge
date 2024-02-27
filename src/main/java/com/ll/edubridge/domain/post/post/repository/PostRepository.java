@@ -13,7 +13,7 @@ public interface PostRepository extends JpaRepository<Post, Long>, CustomPostRep
 
     Page<Post> findByReport(Pageable pageable, boolean report);
 
-    List<Post> findByWriterAndPublished(Member member, boolean isPublished);
+    Page<Post> findByWriterAndPublished(Member member, boolean isPublished, Pageable pageable);
 
     List<Post> findTop5ByReport(boolean report);
 

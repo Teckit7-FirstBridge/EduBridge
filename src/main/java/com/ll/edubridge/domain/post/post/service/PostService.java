@@ -181,16 +181,19 @@ public class PostService {
         return postRepository.findByPublishedOrderByIdDesc(published, pageable);
     }
 
-    public List<Post> getMyPosts() {
+    public Page<Post> getMyPosts(Pageable pageable) {
         Member member = rq.getMember();
 
-        return postRepository.findByWriterAndPublished(member, true);
+
+        return postRepository.findByWriterAndPublished(member,true, pageable);
     }
 
-    public List<Post> getMyQna() {
+
+
+    public Page<Post> getMyQna(Pageable pageable) {
         Member member = rq.getMember();
 
-        return postRepository.findByWriterAndPublished(member, false);
+        return postRepository.findByWriterAndPublished(member, false, pageable);
     }
 
 
