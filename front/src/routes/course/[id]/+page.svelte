@@ -3,15 +3,30 @@
   import type { components } from '$lib/types/api/v1/schema';
   import { page } from '$app/stores';
   import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
+  import { writable } from 'svelte/store';
 
   function goToVideo(videoUrl) {
     window.location.href = videoUrl;
   }
 
+  let selectedOverView = writable('');
+  let modalenroll;
   let modal;
 
-  function openModal() {
-    modal.showModal();
+  function openModal(overView) {
+    selectedOverView.set(overView); // 선택된 개요 업데이트
+    modal.showModal(); // 모달 열기
+  }
+
+  function openModalEnRoll() {
+    modalenroll.showModal();
+  }
+
+  let isDrawerOpen = false;
+
+  function toggleDrawer() {
+    isDrawerOpen = !isDrawerOpen;
+    console.log(isDrawerOpen);
   }
 
   let course: components['schemas']['CourseDto'] = $state();
@@ -203,120 +218,7 @@
 {#await load()}
   <div>loading...</div>
 {:then { videos, course, auth, enroll }}
-  <div class="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
-    <div class="hidden w-64 border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
-      <div class="flex h-full max-h-screen flex-col gap-2">
-        <div class="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-800">
-          <a class="flex items-center gap-2 font-semibold" href="/"
-            ><svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="h-6 w-6"
-            >
-              <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path></svg
-            ><span class="">EduBridge</span></a
-          >
-        </div>
-        <ul class="menu w-56 rounded-box">
-          <li>
-            <a
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-bold transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-              href="/member/course"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="feather feather-home"
-                ><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline
-                  points="9 22 9 12 15 12 15 22"
-                /></svg
-              >
-
-              내 강의실
-            </a>
-          </li>
-          <li>
-            <a
-              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-bold transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-              href="/course/{course.id}/notes"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="feather feather-edit"
-                ><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path
-                  d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-                /></svg
-              >
-
-              요약 노트
-            </a>
-          </li>
-          <li>
-            <details open>
-              <summary class="font-bold"
-                ><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="feather feather-list"
-                  ><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line
-                    x1="8"
-                    y1="18"
-                    x2="21"
-                    y2="18"
-                  /><line x1="3" y1="6" x2="3.01" y2="6" /><line
-                    x1="3"
-                    y1="12"
-                    x2="3.01"
-                    y2="12"
-                  /><line x1="3" y1="18" x2="3.01" y2="18" /></svg
-                >
-                강의 목록</summary
-              >
-              <ul>
-                {#each videos as video, index}
-                  {#if auth.enroll || rq.isAdmin()}
-                    <li>
-                      <a href={video.url} target="_blank" rel="noopener noreferrer"
-                        >강의 {index + 1}</a
-                      >
-                    </li>
-                  {/if}
-                {/each}
-              </ul>
-            </details>
-          </li>
-        </ul>
-      </div>
-    </div>
+  <div class="flex w-full justify-center items-center">
     <div class="flex flex-col">
       <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div class="flex items-center justify-between">
@@ -387,8 +289,8 @@
                 <button on:click={startCourse} class="btn btn-sm">강좌 공개</button>
               {:else}
                 <button on:click={stopCourse} class="btn btn-sm">강좌 비공개</button>
-                <button onclick={openModal} class="btn btn-sm">수강생 목록</button>
-                <dialog id="my_modal_3" class="modal" bind:this={modal}>
+                <button onclick={openModalEnRoll} class="btn btn-sm">수강생 목록</button>
+                <dialog id="my_modal_3" class="modal" bind:this={modalenroll}>
                   <div class="modal-box">
                     <form method="dialog">
                       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -486,15 +388,26 @@
                           on:click={() => window.open(video.url, '_blank')}
                         />
                       </td>
-                      <td
-                        class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
-                      >
-                        {video.overView}
+                      <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                        <button
+                          class="whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50h-10 px-10 bg-white text-black w-[50px] flex items-center justify-center py-3 rounded-md shadow-md"
+                          onclick={() => openModal(video.overView)}>개요 열기</button
+                        >
+                        <dialog id="my_modal_3" class="modal" bind:this={modal}>
+                          <div class="modal-box">
+                            <form class="flex flex-col p-6">
+                              <button
+                                type="button"
+                                class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                                onclick={() => modal.close()}>✕</button
+                              >
+                              {$selectedOverView}
+                            </form>
+                          </div>
+                        </dialog>
                       </td>
 
-                      <td
-                        class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
-                      >
+                      <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                         {#if rq.isAdmin()}
                           <div class="mb-5 mx-2 items-center">
                             <a
@@ -507,9 +420,7 @@
                           </div>
                         {/if}
                       </td>
-                      <td
-                        class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell"
-                      >
+                      <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                         {#if video.summaryNotes.length > 0}
                           <a
                             class="flex items-center gap-3 w-10 h-10 rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
