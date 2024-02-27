@@ -24,15 +24,15 @@ html > body {
   flex-direction: column;
 }
 
-/* 토스트 UI 에디터에 폰트 적용 /
+토스트 UI 에디터에 폰트 적용 /
 html > body .ProseMirror,
 html > body .toastui-editor-contents,
 html > body .toastui-editor-defaultUI {
   font-family: var(--base-font-family);
-  font-size: 1rem;
+  font-size: 10rem;
 }
 
-/ 기본 CSS */
+
 .form-control .label .label-text {
   opacity: 0.8;
 }
