@@ -184,7 +184,6 @@ public class PostService {
     public Page<Post> getMyPosts(Pageable pageable) {
         Member member = rq.getMember();
 
-
         return postRepository.findByWriterAndPublishedOrderByIdDesc(member,true, pageable);
     }
 
