@@ -6,6 +6,10 @@
 
   let posts: components['schemas']['PageDtoPostDto'][] = $state([]);
 
+  function formatTitle(title) {
+    return title.length > 8 ? `${title.substring(0, 8)}...` : title;
+  }
+
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
@@ -49,7 +53,7 @@
   {#await load()}
     <p>loading...</p>
   {:then { data: { itemPage } }}
-    <div class="flex flex-col w-full min-h-screen px-4 md:px-6">
+    <div class="flex flex-col w-full max-w-screen min-h-screen px-4 md:px-6">
       <h1 class="text-3xl font-bold mb-4">Q&amp;A</h1>
 
       <form action="/board" class="bg-base rounded flex flex-col gap-6">
@@ -171,7 +175,7 @@
                       <h3
                         class="mr-2 text-2xl font-semibold whitespace-nowrap leading-none tracking-tight"
                       >
-                        {item.title}
+                        {formatTitle(item.title)}
                       </h3>
                       <h3
                         class="text-lg font-semibold whitespace-nowrap leading-none tracking-tight"
