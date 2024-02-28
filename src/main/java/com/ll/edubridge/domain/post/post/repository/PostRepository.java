@@ -22,4 +22,6 @@ public interface PostRepository extends JpaRepository<Post, Long>, CustomPostRep
     List<Post> findTop5ByPublished(boolean published);
 
     List<Post> findByWriterAndReport(Member writer, boolean report);
+
+    Page<Post> findByWriterAndPublishedOrderByIdDesc(Member member, boolean published, Pageable pageable);
 }

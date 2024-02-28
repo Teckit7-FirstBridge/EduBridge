@@ -9,6 +9,8 @@ import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final Rq rq;
     private final PostService postService;
+
+    public Page<Comment> getMyComment(Pageable pageable) {
+        Member member = rq.getMember();
+
+        return commentRepository.findByWriter(member, pageable);
+    }
 
     // 권한 검사 기능
     public boolean haveAuthority(Long id) {
@@ -120,4 +128,3 @@ public class CommentService {
         return commentRepository.findBestComment(postId);
     }
 }
-
