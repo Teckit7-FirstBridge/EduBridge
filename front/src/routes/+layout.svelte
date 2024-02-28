@@ -60,7 +60,7 @@
             </li>
             {#if !rq.isAdmin()}
               <li>
-                <a class="font-semi-bold" href="/member/qna"
+                <a class="font-semi-bold" href="/qna"
                   ><i class="fa-regular fa-circle-question"></i> 1대1 문의</a
                 >
               </li>
@@ -91,13 +91,13 @@
 <footer class=" bottom-0 w-full bg-white text-gray-300">
   <div class="container mx-auto flex justify-around items-center">
     <div class="flex flex-col items-center flex-1">
-      <a href="/board">
+      <a href="/qna">
         <div>
           <div class="w-9 h-9 text-xl flex items-center justify-center">
-            <i class="text-2xl ml-5 fa-solid fa-circle-question"></i>
+            <i class="text-2xl fa-solid fa-circle-question"></i>
           </div>
         </div>
-        <p>1대1 문의</p>
+        <p>문의</p>
       </a>
     </div>
 
@@ -108,7 +108,7 @@
             <i class="text-2xl fa-solid fa-comments"></i>
           </div>
         </div>
-        <p>Q&A</p>
+        <p>질문</p>
       </a>
     </div>
     <div class="flex flex-col items-center flex-1">
