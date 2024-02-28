@@ -4,6 +4,9 @@
   import { untrack } from 'svelte';
   import rq from '$lib/rq/rq.svelte';
 
+  let isMypage = $page.url.pathname.includes('/member/');
+  let isCourse = $page.url.pathname.includes('/course');
+
   const { children } = $props();
   rq.effect(async () => {
     untrack(() => {
@@ -52,13 +55,13 @@
           {#if rq.isLogin()}
             <li>
               <a class="font-semi-bold" href="/board/myList"
-                ><i class="fa-solid fa-list-check"></i> 내 글</a
+                ><i class="fa-solid fa-list-check"></i> 내 Q&A</a
               >
             </li>
             {#if !rq.isAdmin()}
               <li>
-                <a class="font-semi-bold" href="/member/qna"
-                  ><i class="fa-solid fa-list-check"></i> 1대1 문의</a
+                <a class="font-semi-bold" href="/qna"
+                  ><i class="fa-regular fa-circle-question"></i> 1대1 문의</a
                 >
               </li>
             {/if}
@@ -85,26 +88,41 @@
 // v0 by Vercel.
 // https://v0.dev/t/6BHvI4qIs6U
 -->
-<footer class=" bottom-0 w-full bg-blue-950 text-white">
-  <div class="container mx-auto px-4 flex justify-around items-center">
+<footer class=" bottom-0 w-full bg-white text-gray-300">
+  <div class="container mx-auto flex justify-around items-center">
     <div class="flex flex-col items-center flex-1">
-      <a href="/course">
+      <a href="/qna">
         <div>
           <div class="w-9 h-9 text-xl flex items-center justify-center">
-            <i class="text-2xl fa-solid fa-book"></i>
+            <i class="text-2xl fa-solid fa-circle-question"></i>
           </div>
         </div>
-        <p>강좌</p>
+        <p>문의</p>
       </a>
     </div>
+
     <div class="flex flex-col items-center flex-1">
       <a href="/board">
         <div>
           <div class="w-9 h-9 text-xl flex items-center justify-center">
-            <i class="text-2xl fa-solid fa-question"></i>
+            <i class="text-2xl fa-solid fa-comments"></i>
           </div>
         </div>
-        <p>Q&A</p>
+        <p>질문</p>
+      </a>
+    </div>
+    <div class="flex flex-col items-center flex-1">
+      <a href="/course">
+        <div>
+          <div
+            class={isCourse
+              ? 'w-9 h-9 text-xl flex items-center justify-center text-blue-600'
+              : 'w-9 h-9 text-xl flex items-center justify-center text-gray-300'}
+          >
+            <i class="text-2xl fa-solid fa-book"></i>
+          </div>
+        </div>
+        <p class={isCourse ? 'text-blue-600' : 'text-gray-300'}>강좌</p>
       </a>
     </div>
     <div class="flex flex-col items-center flex-1">
@@ -133,11 +151,15 @@
         {#if rq.isLogin()}
           <a href="/member/{rq.member.id}">
             <div>
-              <div class="w-9 h-9 text-xl flex items-center justify-center">
+              <div
+                class={isMypage
+                  ? 'w-9 h-9 text-xl flex items-center justify-center text-blue-600'
+                  : 'w-9 h-9 text-xl flex items-center justify-center text-gray-300'}
+              >
                 <i class="text-3xl ml-1 fa-regular fa-circle-user"></i>
               </div>
             </div>
-            <p>내정보</p>
+            <p class={isMypage ? 'text-blue-600' : 'text-gray-300'}>내정보</p>
           </a>
         {:else}
           <a href="/member/login">
