@@ -51,7 +51,7 @@
 </script>
 
 <!-- 탭 추가 -->
-<div class="tabs flex mx-4">
+<div class="tabs flex px-4 max-w-4xl mx-auto">
   <div class="mt-2">
     <button
       class={`text-2xl font-semibold mr-2 ${selectedTab === 'posts' ? 'text-blue-600' : 'text-black'}`}
