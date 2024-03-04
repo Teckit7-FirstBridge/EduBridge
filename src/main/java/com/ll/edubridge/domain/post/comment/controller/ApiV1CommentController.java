@@ -46,6 +46,19 @@ public class ApiV1CommentController {
                 Msg.E200_0_CREATE_SUCCEED.getMsg(), createCommentDto);
     }
 
+    @GetMapping("/{postId}")
+    @Operation(summary = "댓글 목록")
+    public RsData<List<CommentDto>> getComments(@PathVariable("postId") Long postId) {
+        List<Comment> comments = commentService.findByPostId(postId);
+
+        List<CommentDto> commentDtoList = comments.stream()
+                .map((Comment comment) -> new CommentDto(comment, rq.getMember()))
+                .toList();
+
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), commentDtoList);
+    }
+
     public record GetCommentResponseBody(@NonNull PageDto<CommentDto> itemPage) {
     }
 

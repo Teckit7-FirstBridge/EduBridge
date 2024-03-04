@@ -195,7 +195,7 @@ public class ApiV1PostController {
         return dto;
     }
 
-    public record GetQnaResponseBody(@NonNull PageDto<PostDto> itemPage) {
+    public record GetQnaResponseBody(@NonNull PageDto<QnaDto> itemPage) {
     }
 
     @GetMapping("/qna")
@@ -210,7 +210,7 @@ public class ApiV1PostController {
         // PostService에서 모든 QnA 게시물을 가져오기
         Page<Post> qna = postService.getMyQna(pageable);
 
-        Page<PostDto> qnaPage = qna.map(this::postQnaDto);
+        Page<QnaDto> qnaPage = qna.map(this::postQnaDto);
 
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
@@ -219,8 +219,8 @@ public class ApiV1PostController {
 
     }
 
-    private PostDto postQnaDto(Post post) {
-        PostDto dto = new PostDto(post, rq.getMember());
+    private QnaDto postQnaDto(Post post) {
+        QnaDto dto = new QnaDto(post);
 
         return dto;
     }
