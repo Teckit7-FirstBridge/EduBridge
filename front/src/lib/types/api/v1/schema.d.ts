@@ -183,6 +183,10 @@ export interface paths {
     /** 추천수 탑2 댓글 */
     get: operations["getTopComments"];
   };
+  "/api/v1/comments/myList": {
+    /** 내 댓글 목록 */
+    get: operations["getComments_1"];
+  };
   "/api/v1/admin/{courseId}/enroll": {
     /** 강좌별 수강생 목록 */
     get: operations["getEnrollByCourseId"];
@@ -326,6 +330,7 @@ export interface components {
       authorId: number;
       authorName: string;
       body: string;
+      postTitle: string;
       likedByCurrentUser?: boolean;
       /** Format: int64 */
       postId: number;
@@ -518,6 +523,20 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    GetQnaResponseBody: {
+      itemPage: components["schemas"]["PageDtoQnaDto"];
+    };
+    PageDtoQnaDto: {
+      /** Format: int64 */
+      totalElementsCount: number;
+      /** Format: int64 */
+      pageElementsCount: number;
+      /** Format: int64 */
+      totalPagesCount: number;
+      /** Format: int32 */
+      number: number;
+      content: components["schemas"]["QnaDto"][];
+    };
     QnaDto: {
       /** Format: int64 */
       id: number;
@@ -531,12 +550,12 @@ export interface components {
       /** Format: int32 */
       commentCount: number;
     };
-    RsDataListQnaDto: {
+    RsDataGetQnaResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["QnaDto"][];
+      data: components["schemas"]["GetQnaResponseBody"];
       fail: boolean;
       success: boolean;
     };
@@ -549,12 +568,15 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    RsDataListPostDto: {
+    GetMyPostsResponseBody: {
+      itemPage: components["schemas"]["PageDtoPostDto"];
+    };
+    RsDataGetMyPostsResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["PostDto"][];
+      data: components["schemas"]["GetMyPostsResponseBody"];
       fail: boolean;
       success: boolean;
     };
@@ -694,6 +716,29 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    GetCommentResponseBody: {
+      itemPage: components["schemas"]["PageDtoCommentDto"];
+    };
+    PageDtoCommentDto: {
+      /** Format: int64 */
+      totalElementsCount: number;
+      /** Format: int64 */
+      pageElementsCount: number;
+      /** Format: int64 */
+      totalPagesCount: number;
+      /** Format: int32 */
+      number: number;
+      content: components["schemas"]["CommentDto"][];
+    };
+    RsDataGetCommentResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetCommentResponseBody"];
+      fail: boolean;
+      success: boolean;
+    };
     AdminCourseEnrollDto: {
       /** Format: int64 */
       id?: number;
@@ -788,29 +833,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminQnaDto"][];
-      fail: boolean;
-      success: boolean;
-    };
-    GetQnaResponseBody: {
-      itemPage?: components["schemas"]["PageDtoAdminQnaDto"];
-    };
-    PageDtoAdminQnaDto: {
-      /** Format: int64 */
-      totalElementsCount: number;
-      /** Format: int64 */
-      pageElementsCount: number;
-      /** Format: int64 */
-      totalPagesCount: number;
-      /** Format: int32 */
-      number: number;
-      content: components["schemas"]["AdminQnaDto"][];
-    };
-    RsDataGetQnaResponseBody: {
-      resultCode: string;
-      /** Format: int32 */
-      statusCode: number;
-      msg: string;
-      data: components["schemas"]["GetQnaResponseBody"];
       fail: boolean;
       success: boolean;
     };
@@ -1188,11 +1210,16 @@ export interface operations {
   };
   /** 1대1 문의 목록 */
   getMyQna: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListQnaDto"];
+          "application/json": components["schemas"]["RsDataGetQnaResponseBody"];
         };
       };
     };
@@ -1470,11 +1497,16 @@ export interface operations {
   };
   /** 내 글 목록 */
   getMyPosts: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListPostDto"];
+          "application/json": components["schemas"]["RsDataGetMyPostsResponseBody"];
         };
       };
     };
@@ -1718,6 +1750,22 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataListCommentDto"];
+        };
+      };
+    };
+  };
+  /** 내 댓글 목록 */
+  getComments_1: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetCommentResponseBody"];
         };
       };
     };

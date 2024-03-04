@@ -44,7 +44,9 @@
   // https://v0.dev/t/BlOM8H6hEQ8
   -->
 <div class="">
-  <div class="mt-5 text-2xl mx-2">1대1 문의</div>
+  <div class="max-w-lg mx-auto text-2xl text-blue-600 w-full px-4 sm:px-6 lg:px-8 mt-2">
+    1대1 문의
+  </div>
   <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8 mt-2">
     <div class="space-y-4">
       <div class="space-y-2">
@@ -65,11 +67,13 @@
         >
         <ToastUiEditor bind:this={toastUiEditor} />
       </div>
-      <button
-        on:click={Post__save}
-        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
-        >저장</button
-      >
+      <div class="flex justify-end">
+        <button
+          on:click={Post__save}
+          class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
+          >저장</button
+        >
+      </div>
     </div>
   </div>
 </div>

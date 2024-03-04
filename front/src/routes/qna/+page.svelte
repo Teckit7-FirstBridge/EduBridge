@@ -2,8 +2,9 @@
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
+  import Pagination from '$lib/components/Pagination.svelte';
 
-  let qna: components['schemas']['QnaDto'][] = $state();
+  let qna: components['schemas']['PageDtoQnaDto'][] = $state();
 
   function formatTitle(title) {
     return title.length > 8 ? `${title.substring(0, 8)}...` : title;
@@ -11,6 +12,8 @@
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
+    const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
+
     const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
     const { isLogin } = isLoginResponse.data?.data!;
     if (!isLogin) {
@@ -18,18 +21,24 @@
       rq.goTo('/member/login');
     }
 
-    const { data } = await rq.apiEndPoints().GET(`/api/v1/posts/qna`);
+    const { data } = await rq.apiEndPoints().GET(`/api/v1/posts/qna`, {
+      params: {
+        query: {
+          page: page_
+        }
+      }
+    });
 
-    qna = data!.data;
+    qna = data!.data.itemPage?.content;
 
-    return { qna };
+    return data!;
   }
 </script>
 
 <div class="max-w-4xl mx-auto my-8">
   {#await load()}
     <p class="text-center">loading...</p>
-  {:then { qna }}
+  {:then { data: { itemPage } }}
     <div class="flex flex-col w-full max-w-screen min-h-screen px-4 md:px-6">
       <div class="space-y-4">
         <div>
@@ -112,6 +121,9 @@
                   <p>등록된 1대1 문의가 없습니다.</p>
                 </div>
               {/if}
+              <div class="mt-4 flex justify-center">
+                <Pagination page={itemPage} />
+              </div>
             </div>
           </div>
         </div>
