@@ -21,7 +21,6 @@ public class NotificationService {
     // 메시지 알림
     public SseEmitter subscribe(Long userId) {
 
-
         // 1. 현재 클라이언트를 위한 sseEmitter 객체 생성
         SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
         
@@ -53,7 +52,7 @@ public class NotificationService {
         if (NotificationController.sseEmitters.containsKey(userId)) {
             SseEmitter sseEmitter = NotificationController.sseEmitters.get(userId);
             try {
-                sseEmitter.send(SseEmitter.event().name("addComment").data("댓글이 달렸습니다."));
+                sseEmitter.send(SseEmitter.event().name("addComment").data("답변이 등록되었습니다."));
             } catch (Exception e) {
                 NotificationController.sseEmitters.remove(userId);
             }
@@ -79,11 +78,6 @@ public class NotificationService {
 
     // 포인트 알림 - 출석 당사자 에게
     public void notifyAttendPoint(Long memberId) {
-//        Member member = memberRepository.findById(memberId).orElseThrow(
-//                () -> new IllegalArgumentException("계정이 존재하지 않습니다.")
-//        );
-
-//        Long userId = member.getId();
         if (NotificationController.sseEmitters.containsKey(memberId)) {
             SseEmitter sseEmitter = NotificationController.sseEmitters.get(memberId);
             try {

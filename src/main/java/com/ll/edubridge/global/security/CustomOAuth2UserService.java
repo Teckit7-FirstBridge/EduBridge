@@ -59,7 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             member.setVisitedToday(true);
             int point = member.getPoint() + 500;
             member.setPoint(point);
-            notificationService.notifyAttendPoint(member.getId());
+            notificationService.notifyAttendPoint(member.getId()); // 포인트 지급 알림
         }
 
         return new SecurityUser(member.getId(), member.getUsername(), member.getPassword(), member.getAuthorities());
