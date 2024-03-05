@@ -9,6 +9,13 @@
     untrack(() => {
       rq.initAuth();
     });
+    let sse = new EventSource(
+      `${import.meta.env.VITE_CORE_API_BASE_URL}/api/notification/subscribe?id=${rq.member.id}`
+    );
+    sse.addEventListener('addComment', (e) => {
+      // const data = JSON.parse(e.data);
+      rq.msgInfo('댓글이 달렸습니다');
+    });
   });
 </script>
 
