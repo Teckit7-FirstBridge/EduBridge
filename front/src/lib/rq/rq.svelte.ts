@@ -95,6 +95,10 @@ class Rq {
       credentials: 'include'
     });
   }
+  public msgInfoUrl(message: string, url: string) {
+    toastr.info(message);
+    window.location.href = url;
+  }
 
   public msgInfo(message: string) {
     toastr.info(message);
