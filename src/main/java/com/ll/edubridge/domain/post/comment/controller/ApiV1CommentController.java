@@ -11,6 +11,7 @@ import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
+import com.ll.edubridge.global.sse.NotificationService;
 import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,12 +37,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ApiV1CommentController {
     private final CommentService commentService;
     private final Rq rq;
-
+    private final NotificationService notificationService;
     @PostMapping("")
     @Operation(summary = "댓글 등록")
     public RsData<CreateCommentDto> createComment(@Valid @RequestBody CreateCommentDto createCommentDto) {
         Comment comment = commentService.create(rq.getMember(), createCommentDto);
 
+
+        notificationService.notifyComment(comment.getPost().getId());
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
                 Msg.E200_0_CREATE_SUCCEED.getMsg(), createCommentDto);
     }
