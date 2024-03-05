@@ -34,7 +34,7 @@
 
     if (data) {
       rq.msgInfo(data.msg); //msg
-      rq.goTo('/member/qna');
+      rq.goTo('/qna');
     }
   };
 </script>
@@ -43,16 +43,18 @@
   // v0 by Vercel.
   // https://v0.dev/t/BlOM8H6hEQ8
   -->
-<div class="px-60">
-  <div class="mt-5 text-2xl">1대1 문의</div>
-  <div class="flex flex-col h-full px-4 md:px-2 lg:py-10 md:py-6">
+<div class="">
+  <div class="max-w-lg mx-auto text-2xl text-blue-600 w-full px-4 sm:px-6 lg:px-8 mt-2">
+    1대1 문의
+  </div>
+  <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8 mt-2">
     <div class="space-y-4">
       <div class="space-y-2">
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="post-title">제목</label
         ><input
-          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-blue-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           id="post-title"
           placeholder="Enter title"
           bind:value={title}
@@ -65,11 +67,13 @@
         >
         <ToastUiEditor bind:this={toastUiEditor} />
       </div>
-      <button
-        on:click={Post__save}
-        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
-        >저장</button
-      >
+      <div class="flex justify-end">
+        <button
+          on:click={Post__save}
+          class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
+          >저장</button
+        >
+      </div>
     </div>
   </div>
 </div>

@@ -8,6 +8,10 @@
   let likesList: Boolean[] = $state([]);
   let voteNumList: number[] = $state([]);
 
+  function formatTitle(title) {
+    return title.length > 11 ? `${title.substring(0, 11)}...` : title;
+  }
+
   function removeMarkdown(markdownText) {
     // 정규 표현식을 사용하여 마크다운 문법 제거
     const text = markdownText
@@ -172,7 +176,7 @@
             >
               <a href="/course/{item.id}">
                 <div class="flex justify-center gap-2">
-                  <h2 class="text-lg font-semibold my-1 ml-2">{item.title}</h2>
+                  <h2 class="text-lg font-semibold my-1 ml-2">{formatTitle(item.title)}</h2>
 
                   <div
                     class={`inline-flex px-2 text-lg font-semibold rounded-full mt-1 my-1 ${item.grade === '초급' ? 'bg-yellow-100 text-yellow-800' : item.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}

@@ -9,7 +9,6 @@
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
-    console.log('dd');
 
     const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
 

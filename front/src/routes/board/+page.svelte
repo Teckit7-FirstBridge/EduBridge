@@ -6,6 +6,10 @@
 
   let posts: components['schemas']['PageDtoPostDto'][] = $state([]);
 
+  function formatTitle(title) {
+    return title.length > 8 ? `${title.substring(0, 8)}...` : title;
+  }
+
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
@@ -49,8 +53,8 @@
   {#await load()}
     <p>loading...</p>
   {:then { data: { itemPage } }}
-    <div class="flex flex-col w-full min-h-screen px-4 md:px-6">
-      <h1 class="text-3xl font-bold mb-4">Q&amp;A</h1>
+    <div class="flex flex-col w-full max-w-screen min-h-screen px-4 md:px-6">
+      <h1 class="text-3xl font-bold mb-4">질문 게시판</h1>
 
       <form action="/board" class="bg-base rounded flex flex-col gap-6">
         <div class="flex flex-row gap-2 justify-end">
@@ -133,7 +137,7 @@
         </div>
         <div class="flex items-center gap-4 mb-6">
           <input
-            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-grow"
+            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:border-blue-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 flex-grow"
             placeholder="검색어"
             name="kw"
             type="search"
@@ -166,49 +170,16 @@
             <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
               <a href="/board/{item.id}">
                 <div class="flex justify-between">
-                  <div class="flex flex-col space-y-1.5 p-6">
+                  <div class="flex flex-col space-y-1.5 p-4">
                     <div class="flex">
                       <h3
                         class="mr-2 text-2xl font-semibold whitespace-nowrap leading-none tracking-tight"
                       >
-                        {item.title}
-                      </h3>
-                      <h3
-                        class="text-lg font-semibold whitespace-nowrap leading-none tracking-tight"
-                      >
+                        {formatTitle(item.title)}
                         ({item.commentCount})
                       </h3>
                     </div>
                   </div>
-                  <p class="text-sm space-y-1.5 p-6">
-                    {(() => {
-                      const now = new Date();
-                      const postDate = new Date(item.createDate);
-                      const seconds = Math.floor((now - postDate) / 1000);
-
-                      let interval = seconds / 31536000;
-                      if (interval > 1) {
-                        return Math.floor(interval) + '년 전';
-                      }
-                      interval = seconds / 2592000;
-                      if (interval > 1) {
-                        return Math.floor(interval) + '개월 전';
-                      }
-                      interval = seconds / 86400;
-                      if (interval > 1) {
-                        return Math.floor(interval) + '일 전';
-                      }
-                      interval = seconds / 3600;
-                      if (interval > 1) {
-                        return Math.floor(interval) + '시간 전';
-                      }
-                      interval = seconds / 60;
-                      if (interval > 1) {
-                        return Math.floor(interval) + '분 전';
-                      }
-                      return Math.floor(seconds) + '초 전';
-                    })()}
-                  </p>
                 </div>
                 <div class="flex items-center justify-between p-6">
                   <div class="flex flex-colum">
@@ -250,7 +221,36 @@
                     </div>
                   </div>
                   <div class="flex items-center">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">{item.authorName}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      {item.authorName} ·
+                      {(() => {
+                        const now = new Date();
+                        const postDate = new Date(item.createDate);
+                        const seconds = Math.floor((now - postDate) / 1000);
+
+                        let interval = seconds / 31536000;
+                        if (interval > 1) {
+                          return Math.floor(interval) + '년 전';
+                        }
+                        interval = seconds / 2592000;
+                        if (interval > 1) {
+                          return Math.floor(interval) + '개월 전';
+                        }
+                        interval = seconds / 86400;
+                        if (interval > 1) {
+                          return Math.floor(interval) + '일 전';
+                        }
+                        interval = seconds / 3600;
+                        if (interval > 1) {
+                          return Math.floor(interval) + '시간 전';
+                        }
+                        interval = seconds / 60;
+                        if (interval > 1) {
+                          return Math.floor(interval) + '분 전';
+                        }
+                        return Math.floor(seconds) + '초 전';
+                      })()}
+                    </p>
                   </div>
                 </div>
               </a>

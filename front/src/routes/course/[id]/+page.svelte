@@ -18,6 +18,12 @@
     modal.showModal(); // 모달 열기
   }
 
+  function handleOutsideClick(event) {
+    if (event.target === modal) {
+      modal.close();
+    }
+  }
+
   function openModalEnRoll() {
     modalenroll.showModal();
   }
@@ -390,11 +396,16 @@
                       </td>
                       <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                         <button
-                          class="whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50h-10 px-10 bg-white text-black w-[50px] flex items-center justify-center py-3 rounded-md shadow-md"
-                          onclick={() => openModal(video.overView)}>개요 열기</button
+                          class="whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50h-10 px-5 bg-white text-black w-[50px] flex items-center justify-center py-3 rounded-md shadow-md"
+                          onclick={() => openModal(video.overView)}>개요</button
                         >
-                        <dialog id="my_modal_3" class="modal" bind:this={modal}>
-                          <div class="modal-box">
+                        <dialog
+                          id="my_modal_3"
+                          class="modal"
+                          bind:this={modal}
+                          on:click={handleOutsideClick}
+                        >
+                          <div class="modal-box" on:click|stopPropagation>
                             <form class="flex flex-col p-6">
                               <button
                                 type="button"

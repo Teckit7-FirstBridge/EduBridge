@@ -116,27 +116,54 @@
 {#await load()}
   <h1>loading...</h1>
 {:then { comments, qna }}
-  <div class="max-w-4xl mx-auto my-8">
-    <div class="flex justify-between my-8">
+  <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between mt-8">
       <div class="flex">
-        <h1 class="text-3xl font-bold">{qna.title}</h1>
-        <div
-          class={`inline-flex mx-2 my-1 px-2 pt-1 text-sm font-semibold rounded-full ${qna.commentCount == 0 ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'}`}
-        >
-          {qna.commentCount == 0 ? '미완료' : '답변 완료'}
-        </div>
-      </div>
-      <div class="flex">
-        <div>
-          <p class="text-sm text-gray-500">
-            작성일: {`${new Date(qna.createDate).getFullYear()}년 ${new Date(qna.createDate).getMonth() + 1}월 ${new Date(qna.createDate).getDate()}일`}
-          </p>
-        </div>
+        <h1 class="text-2xl font-bold">
+          {qna.title}
+        </h1>
       </div>
     </div>
+    <div class="flex justify-between">
+      <p class="text-gray-600 mt-1">
+        {qna.authorName} ·
 
-    <div class="justify-between flex items-center mt-3 mb-20">
-      <p class="text-gray-600 mb-2">작성자: {qna.authorName}</p>
+        {(() => {
+          const now = new Date();
+          const postDate = new Date(qna.createDate);
+          const seconds = Math.floor((now - postDate) / 1000);
+
+          let interval = seconds / 31536000;
+          if (interval > 1) {
+            return Math.floor(interval) + '년 전';
+          }
+          interval = seconds / 2592000;
+          if (interval > 1) {
+            return Math.floor(interval) + '개월 전';
+          }
+          interval = seconds / 86400;
+          if (interval > 1) {
+            return Math.floor(interval) + '일 전';
+          }
+          interval = seconds / 3600;
+          if (interval > 1) {
+            return Math.floor(interval) + '시간 전';
+          }
+          interval = seconds / 60;
+          if (interval > 1) {
+            return Math.floor(interval) + '분 전';
+          }
+          return Math.floor(seconds) + '초 전';
+        })()}
+      </p>
+      <div
+        class={`inline-flex mx-2 py-1 px-2 text-base font-semibold rounded-full  ${qna.commentCount == 0 ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'}`}
+      >
+        {qna.commentCount == 0 ? '미완료' : '답변 완료'}
+      </div>
+    </div>
+    <div class="justify-between flex items-center mt-3 mb-5">
+      <div class="flex"></div>
       <div class="flex">
         {#if rq.member.id == qna.authorId || rq.isAdmin()}
           <div class="mb-5 mx-2 flex">

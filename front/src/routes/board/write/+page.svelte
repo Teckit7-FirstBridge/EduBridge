@@ -56,15 +56,15 @@
 {#await load()}
   <h2>loading...</h2>
 {:then { isLogin }}
-  <div class="px-60">
-    <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8">
+  <div class="">
+    <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8 mt-2">
       <div class="space-y-4">
         <div class="space-y-2">
           <label
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             for="post-title">제목</label
           ><input
-            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-blue-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             id="post-title"
             placeholder="Enter title"
             bind:value={title}

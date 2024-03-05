@@ -19,6 +19,8 @@ public class CommentDto {
     private String authorName;
     @NonNull
     private String body;
+    @NonNull
+    private String postTitle;
     private boolean likedByCurrentUser;
     @NonNull
     private Long postId;
@@ -34,5 +36,6 @@ public class CommentDto {
         this.likedByCurrentUser = comment.getVoter().contains(member);
         this.postId = comment.getPost().getId();
         this.voteCount = comment.getVoteCount();
+        this.postTitle = comment.getPost().getTitle();
     }
 }

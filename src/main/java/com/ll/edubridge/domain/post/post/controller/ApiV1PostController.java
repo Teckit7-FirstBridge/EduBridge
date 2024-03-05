@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -167,32 +166,63 @@ public class ApiV1PostController {
                 Msg.E200_0_CREATE_SUCCEED.getMsg(), createdQnaDto);
     }
 
+    public record GetMyPostsResponseBody(@NonNull PageDto<PostDto> itemPage) {
+    }
+
     @GetMapping("/myList")
     @Operation(summary = "내 글 목록")
-    public RsData<List<PostDto>> getMyPosts() {
-        List<Post> myPosts = postService.getMyPosts();
+    public RsData<GetMyPostsResponseBody> getMyPosts(
+            @RequestParam(defaultValue = "1") int page
+    ) {
 
-        List<PostDto> postDtoList = myPosts.stream()
-                .map(PostDto::new)
-                .collect(Collectors.toList());
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+        Page<Post> posts = postService.getMyPosts(pageable);
 
-        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), postDtoList);
+        Page<PostDto> postPage = posts.map(this::postMyToDto);
+
+        return RsData.of(
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                new GetMyPostsResponseBody(new PageDto<>(postPage))
+        );
+    }
+
+    private PostDto postMyToDto(Post post) {
+        PostDto dto = new PostDto(post, rq.getMember());
+
+        return dto;
+    }
+
+    public record GetQnaResponseBody(@NonNull PageDto<QnaDto> itemPage) {
     }
 
     @GetMapping("/qna")
     @Operation(summary = "1대1 문의 목록")
-    public RsData<List<QnaDto>> getMyQna() {
-        // PostService에서 모든 QnA 게시물을 가져오기
-        List<Post> qnaPosts = postService.getMyQna();
+    public RsData<GetQnaResponseBody> getMyQna(
+            @RequestParam(defaultValue = "1") int page
+    ) {
 
-        // Post 객체를 QnaDto로 변환
-        List<QnaDto> qnaDtoList = qnaPosts.stream()
-                .map(QnaDto::new)
-                .collect(Collectors.toList());
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+        // PostService에서 모든 QnA 게시물을 가져오기
+        Page<Post> qna = postService.getMyQna(pageable);
+
+        Page<QnaDto> qnaPage = qna.map(this::postQnaDto);
+
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), qnaDtoList);
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                new GetQnaResponseBody(new PageDto<>(qnaPage)));
+
+    }
+
+    private QnaDto postQnaDto(Post post) {
+        QnaDto dto = new QnaDto(post);
+
+        return dto;
     }
 
     @GetMapping("/qna/{id}")
