@@ -43,8 +43,6 @@ public class NotificationService {
         return sseEmitter;
     }
 
-
-    
     // 댓글 알림 - 게시글 작성자 에게
     public void notifyComment(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(
@@ -75,6 +73,23 @@ public class NotificationService {
                 sseEmitter.send(SseEmitter.event().name("addSummaryNotePoint").data("요약노트 포인트가 지급되었습니다."));
             } catch (Exception e) {
                 NotificationController.sseEmitters.remove(userId);
+            }
+        }
+    }
+
+    // 포인트 알림 - 출석 당사자 에게
+    public void notifyAttendPoint(Long memberId) {
+//        Member member = memberRepository.findById(memberId).orElseThrow(
+//                () -> new IllegalArgumentException("계정이 존재하지 않습니다.")
+//        );
+
+//        Long userId = member.getId();
+        if (NotificationController.sseEmitters.containsKey(memberId)) {
+            SseEmitter sseEmitter = NotificationController.sseEmitters.get(memberId);
+            try {
+                sseEmitter.send(SseEmitter.event().name("addAttendPoint").data("출석 포인트가 지급되었습니다."));
+            } catch (Exception e) {
+                NotificationController.sseEmitters.remove(memberId);
             }
         }
     }

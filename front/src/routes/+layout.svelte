@@ -21,6 +21,9 @@
     sse.addEventListener('addSummaryNotePoint', (e) => {
       rq.msgInfo('요약노트 포인트가 지급되었습니다.');
     });
+    sse.addEventListener('addAttendPoint', (e) => {
+      rq.msgInfo('출석 포인트가 지급되었습니다.');
+    });
   });
 </script>
 

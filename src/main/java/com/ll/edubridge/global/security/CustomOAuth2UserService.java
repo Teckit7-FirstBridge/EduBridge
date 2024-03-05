@@ -3,6 +3,7 @@ package com.ll.edubridge.global.security;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
+import com.ll.edubridge.global.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -20,6 +21,7 @@ import java.util.Map;
 @Slf4j
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberService memberService;
+    private final NotificationService notificationService;
 
     // 카카오톡 로그인이 성공할 때 마다 이 함수가 실행된다.
     @Override
@@ -57,6 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             member.setVisitedToday(true);
             int point = member.getPoint() + 500;
             member.setPoint(point);
+            notificationService.notifyAttendPoint(member.getId());
         }
 
         return new SecurityUser(member.getId(), member.getUsername(), member.getPassword(), member.getAuthorities());
