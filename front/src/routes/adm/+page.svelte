@@ -237,7 +237,7 @@
                           {post.id}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <a href="/board/{post.id}" class="text-blue-600 hover:text-blue-900">
+                          <a href="/qna/{post.id}" class="text-blue-600 hover:text-blue-900">
                             {post.title}
                           </a></td
                         >
