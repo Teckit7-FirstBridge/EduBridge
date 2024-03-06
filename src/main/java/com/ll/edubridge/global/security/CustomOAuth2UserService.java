@@ -3,6 +3,8 @@ package com.ll.edubridge.global.security;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
+import com.ll.edubridge.domain.point.point.entity.PointType;
+import com.ll.edubridge.domain.point.point.service.PointService;
 import com.ll.edubridge.global.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import java.util.Map;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberService memberService;
     private final NotificationService notificationService;
+    private final PointService pointService;
 
     // 카카오톡 로그인이 성공할 때 마다 이 함수가 실행된다.
     @Override
@@ -57,9 +60,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         if(!member.isVisitedToday()) {
             member.setVisitedToday(true);
-            int point = member.getPoint() + 500;
+            int point = member.getPoint() + PointType.Attend.getAmount();
             member.setPoint(point);
             notificationService.notifyAttendPoint(member.getId()); // 포인트 지급 알림
+            pointService.addPoint(PointType.Attend, member);
         }
 
         return new SecurityUser(member.getId(), member.getUsername(), member.getPassword(), member.getAuthorities());

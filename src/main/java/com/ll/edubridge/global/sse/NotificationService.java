@@ -62,7 +62,7 @@ public class NotificationService {
     // 포인트 알림 - 요약노트 작성자 에게
     public void notifySummaryNotePoint(Long noteId) {
         SummaryNote summaryNote = summaryNoteRepository.findById(noteId).orElseThrow(
-                () -> new IllegalArgumentException("요약노트를 찾을 수 없습니다.")
+                () -> new IllegalArgumentException("요약 노트를 찾을 수 없습니다.")
         );
 
         Long userId = summaryNote.getWriter().getId();
