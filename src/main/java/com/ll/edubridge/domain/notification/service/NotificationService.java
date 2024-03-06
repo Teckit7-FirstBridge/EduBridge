@@ -16,23 +16,41 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class NotificationService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final SummaryNoteRepository summaryNoteRepository;
     private final NotificationRepository notificationRepository;
 
+    @Transactional(readOnly = true)
+    public List<Notification> findByMemberId(Long memberId){
+        return notificationRepository.findByMemberId(memberId);
+
+    }
+
     @Transactional
-    public void create(NotificationType type, Member member, String content) {
+    public void createByComment(NotificationType type, Member member,Post post) {
 
         Notification notification = Notification.builder()
                 .type(type)
                 .recipient(member)
-                .content(content)
+                .post(post)
+                .build();
+
+        notificationRepository.save(notification);
+    }
+
+    @Transactional
+    public <T> void createByPoint(NotificationType type, Member member,int point) {
+
+        Notification notification = Notification.builder()
+                .type(type)
+                .recipient(member)
+                .point(point)
                 .build();
 
         notificationRepository.save(notification);
