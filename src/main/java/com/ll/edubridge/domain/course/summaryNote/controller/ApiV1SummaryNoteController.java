@@ -67,8 +67,8 @@ public class ApiV1SummaryNoteController {
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
 
         notificationService.notifySummaryNotePoint(summaryNote.getWriter().getId()); // 포인트 지급 알림
-        notificationService.createByPoint(NotificationType.POINTS,rq.getMember(),700); // 알림 내역 저장
-        pointService.addPoint(PointType.Attend, summaryNote.getWriter()); // 포인트 내역 추가
+        notificationService.createByPoint(NotificationType.POINTS,rq.getMember(), PointType.SNote.getAmount()); // 알림 내역 저장
+        pointService.addPoint(PointType.SNote, summaryNote.getWriter()); // 포인트 내역 추가
 
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(), Msg.E200_0_CREATE_SUCCEED.getMsg(), summaryNoteDto);
     }
