@@ -46,7 +46,7 @@ public class ApiV1CommentController {
     public RsData<CreateCommentDto> createComment(@Valid @RequestBody CreateCommentDto createCommentDto) {
         Comment comment = commentService.create(rq.getMember(), createCommentDto);
 
-
+        // 댓글 등록 알림
         notificationService.notifyComment(comment.getPost().getId());
         notificationService2.create(NotificationType.COMMENT,comment.getPost().getWriter(),"내용");
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
