@@ -64,7 +64,7 @@ public class ApiV1SummaryNoteController {
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
 
         // 포인트 지급 알림
-        notificationService.notifySummaryNotePoint(summaryNote.getId());
+        notificationService.notifySummaryNotePoint(summaryNote.getWriter().getId());
         //포인트 지급 내역 생성
         notificationService.createByPoint(NotificationType.POINTS,rq.getMember(),700);
 

@@ -1,6 +1,5 @@
 package com.ll.edubridge.domain.notification.service;
 
-import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
@@ -81,12 +80,7 @@ public class NotificationService {
     }
 
     // 댓글 알림 - 게시글 작성자 에게
-    public void notifyComment(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
-        );
-
-        Long userId = post.getWriter().getId();
+    public void notifyComment(Long userId) {
         if (NotificationController.sseEmitters.containsKey(userId)) {
             SseEmitter sseEmitter = NotificationController.sseEmitters.get(userId);
             try {
@@ -98,12 +92,7 @@ public class NotificationService {
     }
 
     // 포인트 알림 - 요약노트 작성자 에게
-    public void notifySummaryNotePoint(Long noteId) {
-        SummaryNote summaryNote = summaryNoteRepository.findById(noteId).orElseThrow(
-                () -> new IllegalArgumentException("요약 노트를 찾을 수 없습니다.")
-        );
-
-        Long userId = summaryNote.getWriter().getId();
+    public void notifySummaryNotePoint(Long userId) {
         if (NotificationController.sseEmitters.containsKey(userId)) {
             SseEmitter sseEmitter = NotificationController.sseEmitters.get(userId);
             try {
