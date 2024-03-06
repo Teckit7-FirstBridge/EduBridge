@@ -104,13 +104,13 @@ public class NotificationService {
     }
 
     // 포인트 알림 - 출석 당사자 에게
-    public void notifyAttendPoint(Long memberId) {
-        if (NotificationController.sseEmitters.containsKey(memberId)) {
-            SseEmitter sseEmitter = NotificationController.sseEmitters.get(memberId);
+    public void notifyAttendPoint(Long userId) {
+        if (NotificationController.sseEmitters.containsKey(userId)) {
+            SseEmitter sseEmitter = NotificationController.sseEmitters.get(userId);
             try {
                 sseEmitter.send(SseEmitter.event().name("addAttendPoint").data("출석 포인트가 지급되었습니다."));
             } catch (Exception e) {
-                NotificationController.sseEmitters.remove(memberId);
+                NotificationController.sseEmitters.remove(userId);
             }
         }
     }
