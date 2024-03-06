@@ -286,10 +286,22 @@ export interface components {
       /** Format: int32 */
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
+      notifications?: components["schemas"]["Notification"][];
       name?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
       authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
+    };
+    Notification: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      recipient?: components["schemas"]["Member"];
+      read?: boolean;
+      content?: string;
+      /** @enum {string} */
+      type?: "COMMENT" | "POINTS";
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
