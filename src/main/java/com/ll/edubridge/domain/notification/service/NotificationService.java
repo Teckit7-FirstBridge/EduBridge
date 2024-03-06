@@ -33,11 +33,12 @@ public class NotificationService {
     }
 
     @Transactional
-    public void createByComment(NotificationType type, Member member,Post post) {
+    public void createByComment(NotificationType type, Member recipient,Post post,Member sender) {
 
         Notification notification = Notification.builder()
                 .type(type)
-                .recipient(member)
+                .recipient(recipient)
+                .sender(sender)
                 .post(post)
                 .build();
 

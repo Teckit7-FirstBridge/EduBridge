@@ -46,7 +46,7 @@ public class ApiV1CommentController {
 
         // 댓글 등록 알림
         notificationService.notifyComment(comment.getPost().getId());
-        notificationService.createByComment(NotificationType.COMMENT,comment.getPost().getWriter(),comment.getPost());
+        notificationService.createByComment(NotificationType.COMMENT,comment.getPost().getWriter(),comment.getPost(),rq.getMember());
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
                 Msg.E200_0_CREATE_SUCCEED.getMsg(), createCommentDto);
     }
