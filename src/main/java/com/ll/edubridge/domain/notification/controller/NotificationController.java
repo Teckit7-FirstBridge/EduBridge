@@ -1,7 +1,8 @@
-package com.ll.edubridge.global.sse;
+package com.ll.edubridge.domain.notification.controller;
 
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.global.rq.Rq;
+import com.ll.edubridge.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

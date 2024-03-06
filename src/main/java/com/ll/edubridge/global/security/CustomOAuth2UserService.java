@@ -3,7 +3,7 @@ package com.ll.edubridge.global.security;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
-import com.ll.edubridge.global.sse.NotificationService;
+import com.ll.edubridge.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
