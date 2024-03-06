@@ -1,11 +1,11 @@
 package com.ll.edubridge.domain.point.point.service;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.notification.service.NotificationService;
 import com.ll.edubridge.domain.point.point.entity.Point;
 import com.ll.edubridge.domain.point.point.entity.PointType;
 import com.ll.edubridge.domain.point.point.repository.PointRepository;
 import com.ll.edubridge.global.rq.Rq;
-import com.ll.edubridge.global.sse.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

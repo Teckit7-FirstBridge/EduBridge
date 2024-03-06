@@ -5,6 +5,7 @@ import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.notification.entity.NotificationType;
 import com.ll.edubridge.domain.openai.ChatService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -12,7 +13,7 @@ import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
-import com.ll.edubridge.global.sse.NotificationService;
+import com.ll.edubridge.domain.notification.service.NotificationService;
 import com.ll.edubridge.standard.base.Empty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -64,6 +65,8 @@ public class ApiV1SummaryNoteController {
 
         // 포인트 지급 알림
         notificationService.notifySummaryNotePoint(summaryNote.getId());
+        //포인트 지급 내역 생성
+        notificationService.createByPoint(NotificationType.POINTS,rq.getMember(),700);
 
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(), Msg.E200_0_CREATE_SUCCEED.getMsg(), summaryNoteDto);
     }

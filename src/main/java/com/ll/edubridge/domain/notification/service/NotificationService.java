@@ -1,15 +1,22 @@
-package com.ll.edubridge.global.sse;
+package com.ll.edubridge.domain.notification.service;
 
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
+import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
+import com.ll.edubridge.domain.notification.controller.NotificationController;
+import com.ll.edubridge.domain.notification.entity.Notification;
+import com.ll.edubridge.domain.notification.entity.NotificationType;
+import com.ll.edubridge.domain.notification.repository.NotificationRepository;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +24,37 @@ public class NotificationService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final SummaryNoteRepository summaryNoteRepository;
+    private final NotificationRepository notificationRepository;
+
+    @Transactional(readOnly = true)
+    public List<Notification> findByMemberId(Long memberId){
+        return notificationRepository.findByMemberId(memberId);
+
+    }
+
+    @Transactional
+    public void createByComment(NotificationType type, Member member, Post post) {
+
+        Notification notification = Notification.builder()
+                .type(type)
+                .recipient(member)
+                .post(post)
+                .build();
+
+        notificationRepository.save(notification);
+    }
+
+    @Transactional
+    public <T> void createByPoint(NotificationType type, Member member,int point) {
+
+        Notification notification = Notification.builder()
+                .type(type)
+                .recipient(member)
+                .point(point)
+                .build();
+
+        notificationRepository.save(notification);
+    }
 
     // 메시지 알림
     public SseEmitter subscribe(Long userId) {

@@ -120,6 +120,9 @@ export interface paths {
     /** 내 글 목록 */
     get: operations["getMyPosts"];
   };
+  "/api/v1/notification/get": {
+    get: operations["getNotification"];
+  };
   "/api/v1/members/{id}": {
     /** 마이 페이지 데이터 요청 */
     get: operations["myPage"];
@@ -252,8 +255,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["PostDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CreateSummaryNoteDto: {
       content: string;
@@ -286,10 +289,22 @@ export interface components {
       /** Format: int32 */
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
+      notifications?: components["schemas"]["Notification"][];
       name?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
-      authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
+      authoritiesAsStringList?: string[];
+      authorities?: components["schemas"]["GrantedAuthority"][];
+    };
+    Notification: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      read?: boolean;
+      /** @enum {string} */
+      type?: "COMMENT" | "POINTS";
+      /** Format: int32 */
+      point?: number;
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -297,8 +312,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["SummaryNoteDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     SummaryNoteDto: {
       /** Format: int64 */
@@ -343,8 +358,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CommentDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     VideoDto: {
       /** Format: int64 */
@@ -363,8 +378,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["VideoDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CourseDto: {
       /** Format: int64 */
@@ -391,8 +406,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CourseDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CreatePostDto: {
       title: string;
@@ -404,8 +419,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreatePostDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataVoid: {
       resultCode: string;
@@ -413,8 +428,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: Record<string, never>;
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     Empty: Record<string, never>;
     RsDataEmpty: {
@@ -423,8 +438,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["Empty"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     LoginRequestBody: {
       username: string;
@@ -455,8 +470,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["LoginResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataCreateCommentDto: {
       resultCode: string;
@@ -464,8 +479,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateCommentDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CreateVideoDto: {
       url: string;
@@ -481,8 +496,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateVideoDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CreateCourseDto: {
       title: string;
@@ -497,8 +512,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateCourseDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetPostsResponseBody: {
       itemPage: components["schemas"]["PageDtoPostDto"];
@@ -520,8 +535,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostsResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetQnaResponseBody: {
       itemPage: components["schemas"]["PageDtoQnaDto"];
@@ -556,8 +571,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetQnaResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataQnaDto: {
       resultCode: string;
@@ -565,8 +580,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["QnaDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetMyPostsResponseBody: {
       itemPage: components["schemas"]["PageDtoPostDto"];
@@ -577,8 +592,17 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetMyPostsResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
+    };
+    RsDataListNotification: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["Notification"][];
+      success: boolean;
+      fail: boolean;
     };
     MyPageDto: {
       learningCourses?: components["schemas"]["CourseDto"][];
@@ -594,8 +618,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["MyPageResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     MeResponseBody: {
       item: components["schemas"]["MemberDto"];
@@ -606,8 +630,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["MeResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataIsLoginResponseBody: {
       resultCode: string;
@@ -615,8 +639,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["isLoginResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     isLoginResponseBody: {
       isLogin: boolean;
@@ -627,8 +651,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["isAdminResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     isAdminResponseBody: {
       isAdmin: boolean;
@@ -650,8 +674,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetCourseEnrollResponsebody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetCoursesResponsebody: {
       items: components["schemas"]["CourseDto"][];
@@ -662,8 +686,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetCoursesResponsebody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetSummaryNoteResponsebody: {
       items: components["schemas"]["SummaryNoteDto"][];
@@ -674,8 +698,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetSummaryNoteResponsebody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataListVideoDto: {
       resultCode: string;
@@ -683,8 +707,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["VideoDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CourseAuthDto: {
       enroll?: boolean;
@@ -695,8 +719,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CourseAuthDto"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataListSummaryNoteDto: {
       resultCode: string;
@@ -704,8 +728,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["SummaryNoteDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataListCommentDto: {
       resultCode: string;
@@ -713,8 +737,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CommentDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetCommentResponseBody: {
       itemPage: components["schemas"]["PageDtoCommentDto"];
@@ -736,8 +760,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetCommentResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     AdminCourseEnrollDto: {
       /** Format: int64 */
@@ -750,8 +774,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminCourseEnrollDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     AdminSummaryNoteDto: {
       /** Format: int64 */
@@ -772,8 +796,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminSummaryNoteDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetNotesResponseBody: {
       itemPage?: components["schemas"]["PageDtoAdminSummaryNoteDto"];
@@ -795,8 +819,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetNotesResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     ReportedPostDto: {
       /** Format: int64 */
@@ -814,8 +838,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["ReportedPostDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     AdminQnaDto: {
       /** Format: int64 */
@@ -833,8 +857,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminQnaDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     AdminMemberDto: {
       /** Format: int64 */
@@ -850,8 +874,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminMemberDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetMembersResponseBody: {
       itemPage?: components["schemas"]["PageDtoAdminMemberDto"];
@@ -873,8 +897,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetMembersResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     AdminCourseDto: {
       /** Format: int64 */
@@ -890,8 +914,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminCourseDto"][];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
   };
   responses: never;
@@ -1507,6 +1531,16 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetMyPostsResponseBody"];
+        };
+      };
+    };
+  };
+  getNotification: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataListNotification"];
         };
       };
     };
