@@ -27,6 +27,7 @@ import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -382,12 +383,12 @@ public class ApiV1AdminController {
                 Msg.E200_7_CANCEL_REPORT_SUCCEED.getMsg());
     }
 
-    public record GetQnaResponseBody(@NonNull PageDto<AdminQnaDto> itemPage) {
+    public record GetAdmQnaResponseBody(@NonNull PageDto<AdminQnaDto> itemPage) {
     }
 
     @GetMapping(value = "/qna/list")
     @Operation(summary = "1대1 문의 목록")
-    public RsData<GetQnaResponseBody> getAllQna(
+    public RsData<GetAdmQnaResponseBody> getAllQna(
             @RequestParam(defaultValue = "1") int page) {
 
         List<Sort.Order> sorts = new ArrayList<>();
@@ -401,7 +402,7 @@ public class ApiV1AdminController {
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
-                new GetQnaResponseBody(
+                new GetAdmQnaResponseBody(
                         new PageDto<>(qnaPage)
                 )
         );
@@ -411,5 +412,17 @@ public class ApiV1AdminController {
         AdminQnaDto dto = new AdminQnaDto(post);
 
         return dto;
+    }
+
+    public record getDeviceResponseBody(@NonNull Boolean isMobile){
+
+    }
+
+    @GetMapping("/deviceCheck")
+    public RsData<getDeviceResponseBody> getDevice(HttpServletRequest request){
+        String userAgent = request.getHeader("User-Agent").toLowerCase();
+        boolean isMobile = userAgent.contains("android") || userAgent.contains("iphone") || userAgent.contains("ipad");
+
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(), new getDeviceResponseBody(isMobile));
     }
 }

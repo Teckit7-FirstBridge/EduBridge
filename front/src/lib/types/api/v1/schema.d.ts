@@ -223,6 +223,9 @@ export interface paths {
     /** 회원 목록 */
     get: operations["getAllMembers"];
   };
+  "/api/v1/admin/deviceCheck": {
+    get: operations["getDevice"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -836,6 +839,29 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    GetAdmQnaResponseBody: {
+      itemPage?: components["schemas"]["PageDtoAdminQnaDto"];
+    };
+    PageDtoAdminQnaDto: {
+      /** Format: int64 */
+      totalElementsCount: number;
+      /** Format: int64 */
+      pageElementsCount: number;
+      /** Format: int64 */
+      totalPagesCount: number;
+      /** Format: int32 */
+      number: number;
+      content: components["schemas"]["AdminQnaDto"][];
+    };
+    RsDataGetAdmQnaResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetAdmQnaResponseBody"];
+      fail: boolean;
+      success: boolean;
+    };
     AdminMemberDto: {
       /** Format: int64 */
       id: number;
@@ -875,6 +901,18 @@ export interface components {
       data: components["schemas"]["GetMembersResponseBody"];
       fail: boolean;
       success: boolean;
+    };
+    RsDataGetDeviceResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["getDeviceResponseBody"];
+      fail: boolean;
+      success: boolean;
+    };
+    getDeviceResponseBody: {
+      isMobile?: boolean;
     };
     AdminCourseDto: {
       /** Format: int64 */
@@ -1857,7 +1895,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataGetQnaResponseBody"];
+          "application/json": components["schemas"]["RsDataGetAdmQnaResponseBody"];
         };
       };
     };
@@ -1885,6 +1923,16 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetMembersResponseBody"];
+        };
+      };
+    };
+  };
+  getDevice: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetDeviceResponseBody"];
         };
       };
     };
