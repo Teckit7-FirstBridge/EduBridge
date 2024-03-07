@@ -11,9 +11,7 @@ import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.PageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,5 +39,11 @@ public class ApiV1NotificationController {
                 .collect(Collectors.toList());
         return RsData.of( Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),new GetNotificationResponseBody(notificationDtoList));
+    }
+
+    @PutMapping("/read/{id}")
+    public RsData<GetNotificationResponseBody> readNotification(@PathVariable("id") Long id){
+        notificationService.readNoti(id);
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),Msg.E200_2_MODIFY_SUCCEED.getMsg(),null);
     }
 }

@@ -98,7 +98,7 @@ public class MemberService {
     }
 
     public Optional<Member> findById(Long id) {
-        return memberRepository.findById(id);
+        return memberRepository.findMemberWithRecentNotifications(id);
     }
 
     public Member getMember(Long id) {

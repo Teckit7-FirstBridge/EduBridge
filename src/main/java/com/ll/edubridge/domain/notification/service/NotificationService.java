@@ -8,6 +8,7 @@ import com.ll.edubridge.domain.notification.controller.NotificationController;
 import com.ll.edubridge.domain.notification.entity.Notification;
 import com.ll.edubridge.domain.notification.entity.NotificationType;
 import com.ll.edubridge.domain.notification.repository.NotificationRepository;
+import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,15 +33,23 @@ public class NotificationService {
         return notificationRepository.findByMemberId(memberId);
 
     }
+    @Transactional
+    public void readNoti(Long id) {
+        Notification notification = notificationRepository.findById(id).get();
+        notification.setRead(true);
+        notificationRepository.save(notification);
+
+    }
 
     @Transactional
-    public void createByComment(NotificationType type, Member recipient,Post post,Member sender) {
+    public void createByComment(NotificationType type, Member recipient, Post post, Member sender, Comment comment) {
 
         Notification notification = Notification.builder()
                 .type(type)
                 .recipient(recipient)
                 .sender(sender)
                 .post(post)
+                .comment(comment)
                 .build();
 
         notificationRepository.save(notification);
@@ -126,5 +136,7 @@ public class NotificationService {
             }
         }
     }
+
+
 }
 

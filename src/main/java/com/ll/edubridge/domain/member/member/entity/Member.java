@@ -52,7 +52,7 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CourseEnroll> courseEnrollList;
 
-    @OneToMany(mappedBy = "recipient",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recipient",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Notification> notifications = new ArrayList<>();
 
     public String getProfileImgUrlOrDefault() {

@@ -13,6 +13,9 @@ export interface paths {
     /** 글 삭제 */
     delete: operations["delete"];
   };
+  "/api/v1/notification/read/{id}": {
+    put: operations["readNotification"];
+  };
   "/api/v1/courses/{videoId}/note/{noteId}": {
     /** 강의 요약 노트 상세 보기 */
     get: operations["getSummaryNote"];
@@ -255,6 +258,34 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["PostDto"];
+      fail: boolean;
+      success: boolean;
+    };
+    GetNotificationResponseBody: {
+      dtoList: components["schemas"]["NotificationDto"][];
+    };
+    NotificationDto: {
+      /** Format: int64 */
+      id?: number;
+      recipient?: string;
+      read?: boolean;
+      sender?: string;
+      /** @enum {string} */
+      type?: "COMMENT" | "POINTS";
+      post_title?: string;
+      /** Format: int64 */
+      post_id?: number;
+      /** Format: int32 */
+      point?: number;
+      /** Format: int64 */
+      comment_id?: number;
+    };
+    RsDataGetNotificationResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetNotificationResponseBody"];
       fail: boolean;
       success: boolean;
     };
@@ -592,28 +623,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetMyPostsResponseBody"];
-      fail: boolean;
-      success: boolean;
-    };
-    GetNotificationResponseBody: {
-      dtoList: components["schemas"]["NotificationDto"][];
-    };
-    NotificationDto: {
-      recipient?: string;
-      read?: boolean;
-      sender?: string;
-      /** @enum {string} */
-      type?: "COMMENT" | "POINTS";
-      post_title?: string;
-      /** Format: int32 */
-      point?: number;
-    };
-    RsDataGetNotificationResponseBody: {
-      resultCode: string;
-      /** Format: int32 */
-      statusCode: number;
-      msg: string;
-      data: components["schemas"]["GetNotificationResponseBody"];
       fail: boolean;
       success: boolean;
     };
@@ -993,6 +1002,21 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  readNotification: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataGetNotificationResponseBody"];
         };
       };
     };

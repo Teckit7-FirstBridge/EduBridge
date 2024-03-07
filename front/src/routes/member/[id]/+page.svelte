@@ -6,6 +6,7 @@
   let learningCourses: components['schemas']['CourseDto'][] = $state();
   let favoriteCourses: components['schemas']['CourseDto'][] = $state();
   let summaryNotes: components['schemas']['SummaryNoteDto'][] = $state();
+  let isAlarm = false;
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
@@ -29,6 +30,11 @@
     summaryNotes = summaryResponse.data?.data!;
     console.log(summaryNotes);
     console.log(learningCourses);
+    console.log(member?.notifications);
+
+    if (member?.notifications?.filter((noti) => noti.read == false).length! > 0) {
+      isAlarm = true;
+    }
 
     return { learningCourses, favoriteCourses, summaryNotes, dailyAchievement, dailyGoal, member };
   }
@@ -57,7 +63,39 @@
             ></path><path d="M12 3v6"></path></svg
           ><span class="text-lg font-semibold">My Page</span></a
         >
-        <p>포인트 : {member?.point}</p>
+        <div
+          class="flex gap-x-4 relative items-center"
+          on:click={() => rq.goTo(`/member/${rq.member.id}/alarm`)}
+        >
+          <button>
+            {#if isAlarm}
+              <span class="relative flex h-2 w-2">
+                <span
+                  class=" absolute top-2 left-3 animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+                ></span>
+                <span
+                  class="absolute top-2 left-3 relative inline-flex rounded-full h-2 w-2 bg-sky-500"
+                ></span>
+              </span>
+            {/if}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+              />
+            </svg>
+          </button>
+
+          <p>포인트 : {member?.point}</p>
+        </div>
       </header>
       <main class="flex-1 p-4 md:p-6">
         <div class="grid gap-4">
