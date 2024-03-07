@@ -20,14 +20,22 @@ public class PointService {
     private final NotificationService notificationService;
     private final Rq rq;
 
-    @Transactional
-    public Point addPoint(PointType pointType, Member member) {
+    public void addPoint(PointType pointType, Member member) {
         Point point = Point.builder()
                 .content(pointType.getContent())
                 .ownerId(member.getId())
                 .amount(pointType.getAmount())
                 .build();
-        return pointRepository.save(point);
+        pointRepository.save(point);
+    }
+
+    public void subPoint(PointType pointType, Member member, int price) {
+        Point point = Point.builder()
+                .content(pointType.getContent())
+                .ownerId(member.getId())
+                .amount(price*(-1))
+                .build();
+        pointRepository.save(point);
     }
 
     public List<Point> findByOwnerId(Long memberId) {

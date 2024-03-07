@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum PointType {
 
     Attend("출석", 500),
-    SNote("요약 노트 작성", 700);
+    SNote("요약 노트 작성", 700),
+    Enroll("강좌 등록", 0);
 
     private final String content;
     private final int amount;
