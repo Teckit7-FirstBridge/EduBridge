@@ -33,7 +33,7 @@ public class ApiV1PointController {
         List<Point> points = pointService.findByOwnerId(memberId);
 
         List<PointDto> PointDtoList = points.stream()
-                .map((Point point) -> new PointDto(point, rq.getMember()))
+                .map(PointDto::new)
                 .toList();
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),

@@ -6,6 +6,15 @@
   let learningCourses: components['schemas']['CourseDto'][] = $state();
   let favoriteCourses: components['schemas']['CourseDto'][] = $state();
   let summaryNotes: components['schemas']['SummaryNoteDto'][] = $state();
+
+  let modalpoint;
+
+  function openModalEnRoll() {
+    modalpoint.showModal();
+  }
+
+  let point: components['schemas']['PointDto'] = $state();
+
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
@@ -30,7 +39,24 @@
     console.log(summaryNotes);
     console.log(learningCourses);
 
-    return { learningCourses, favoriteCourses, summaryNotes, dailyAchievement, dailyGoal, member };
+    const responsePoint = await rq.apiEndPoints().GET(`/api/v1/{ownerId}`, {
+      params: {
+        path: {
+          ownerId: member.id
+        }
+      }
+    });
+    point = responsePoint.data?.data!;
+
+    return {
+      learningCourses,
+      favoriteCourses,
+      summaryNotes,
+      dailyAchievement,
+      dailyGoal,
+      member,
+      point
+    };
   }
 </script>
 
@@ -57,7 +83,28 @@
             ></path><path d="M12 3v6"></path></svg
           ><span class="text-lg font-semibold">My Page</span></a
         >
-        <p>포인트 : {member?.point}</p>
+        <button onclick={openModalEnRoll} class="btn btn-sm">포인트 : {member?.point}</button>
+        <dialog id="my_modal_3" class="modal" bind:this={modalpoint}>
+          <div class="modal-box modal-box-1">
+            <form method="dialog">
+              <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <div class="flex flex-col p-1 bg-white shadow rounded-lg">
+              <h2 class="text-xl font-semibold mb-2 border-b pb-2">포인트 내역</h2>
+              <table>
+                <tbody>
+                  {#each point as point}
+                    <tr>
+                      <td class="border-b py-2 px-1">{point.createDate.substring(2, 10)}</td>
+                      <td class="border-b py-2 px-1">{'['}{point.content}{']'}</td>
+                      <td class="border-b py-2 px-1">{point.amount}</td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </dialog>
       </header>
       <main class="flex-1 p-4 md:p-6">
         <div class="grid gap-4">
