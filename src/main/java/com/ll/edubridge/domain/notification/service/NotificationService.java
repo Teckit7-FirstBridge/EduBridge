@@ -1,6 +1,5 @@
 package com.ll.edubridge.domain.notification.service;
 
-import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
@@ -42,11 +41,11 @@ public class NotificationService {
     }
 
     @Transactional
-    public void createByComment(NotificationType type, Member recipient, Post post, Member sender, Comment comment) {
+    public void createByComment(NotificationType type, Member member, Post post, Member sender, Comment comment) {
 
         Notification notification = Notification.builder()
                 .type(type)
-                .recipient(recipient)
+                .recipient(member)
                 .sender(sender)
                 .post(post)
                 .comment(comment)
@@ -92,12 +91,7 @@ public class NotificationService {
     }
 
     // 댓글 알림 - 게시글 작성자 에게
-    public void notifyComment(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
-        );
-
-        Long userId = post.getWriter().getId();
+    public void notifyComment(Long userId) {
         if (NotificationController.sseEmitters.containsKey(userId)) {
             SseEmitter sseEmitter = NotificationController.sseEmitters.get(userId);
             try {
@@ -109,12 +103,7 @@ public class NotificationService {
     }
 
     // 포인트 알림 - 요약노트 작성자 에게
-    public void notifySummaryNotePoint(Long noteId) {
-        SummaryNote summaryNote = summaryNoteRepository.findById(noteId).orElseThrow(
-                () -> new IllegalArgumentException("요약노트를 찾을 수 없습니다.")
-        );
-
-        Long userId = summaryNote.getWriter().getId();
+    public void notifySummaryNotePoint(Long userId) {
         if (NotificationController.sseEmitters.containsKey(userId)) {
             SseEmitter sseEmitter = NotificationController.sseEmitters.get(userId);
             try {
@@ -126,13 +115,13 @@ public class NotificationService {
     }
 
     // 포인트 알림 - 출석 당사자 에게
-    public void notifyAttendPoint(Long memberId) {
-        if (NotificationController.sseEmitters.containsKey(memberId)) {
-            SseEmitter sseEmitter = NotificationController.sseEmitters.get(memberId);
+    public void notifyAttendPoint(Long userId) {
+        if (NotificationController.sseEmitters.containsKey(userId)) {
+            SseEmitter sseEmitter = NotificationController.sseEmitters.get(userId);
             try {
                 sseEmitter.send(SseEmitter.event().name("addAttendPoint").data("출석 포인트가 지급되었습니다."));
             } catch (Exception e) {
-                NotificationController.sseEmitters.remove(memberId);
+                NotificationController.sseEmitters.remove(userId);
             }
         }
     }

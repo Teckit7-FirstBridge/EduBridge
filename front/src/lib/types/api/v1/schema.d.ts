@@ -679,6 +679,14 @@ export interface components {
     isAdminResponseBody: {
       isAdmin: boolean;
     };
+    PointDto: {
+      /** Format: int64 */
+      content: string;
+      /** Format: date-time */
+      createDate: string;
+      /** Format: int32 */
+      amount: number;
+    };
     CourseEnrollDto: {
       /** Format: int64 */
       courseId?: number;

@@ -7,6 +7,15 @@
   let favoriteCourses: components['schemas']['CourseDto'][] = $state();
   let summaryNotes: components['schemas']['SummaryNoteDto'][] = $state();
   let isAlarm = false;
+
+  let modalpoint;
+
+  function openModalEnRoll() {
+    modalpoint.showModal();
+  }
+
+  let point: components['schemas']['PointDto'] = $state();
+
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
@@ -36,7 +45,24 @@
       isAlarm = true;
     }
 
-    return { learningCourses, favoriteCourses, summaryNotes, dailyAchievement, dailyGoal, member };
+    const responsePoint = await rq.apiEndPoints().GET(`/api/v1/{ownerId}`, {
+      params: {
+        path: {
+          ownerId: member.id
+        }
+      }
+    });
+    point = responsePoint.data?.data!;
+
+    return {
+      learningCourses,
+      favoriteCourses,
+      summaryNotes,
+      dailyAchievement,
+      dailyGoal,
+      member,
+      point
+    };
   }
 </script>
 
@@ -63,39 +89,30 @@
             ></path><path d="M12 3v6"></path></svg
           ><span class="text-lg font-semibold">My Page</span></a
         >
-        <div
-          class="flex gap-x-4 relative items-center"
-          on:click={() => rq.goTo(`/member/${rq.member.id}/alarm`)}
-        >
-          <button>
-            {#if isAlarm}
-              <span class="relative flex h-2 w-2">
-                <span
-                  class=" absolute top-2 left-3 animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
-                ></span>
-                <span
-                  class="absolute top-2 left-3 relative inline-flex rounded-full h-2 w-2 bg-sky-500"
-                ></span>
-              </span>
-            {/if}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
-              />
-            </svg>
-          </button>
 
-          <p>포인트 : {member?.point}</p>
-        </div>
+        <button onclick={openModalEnRoll} class="btn btn-sm">포인트 : {member?.point}</button>
+        <dialog id="my_modal_3" class="modal" bind:this={modalpoint}>
+          <div class="modal-box modal-box-1">
+            <form method="dialog">
+              <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <div class="flex flex-col p-1 bg-white shadow rounded-lg">
+              <h2 class="text-xl font-semibold mb-2 border-b pb-2">포인트 내역</h2>
+              <table>
+                <tbody>
+                  {#each point as point}
+                    <tr>
+                      <td class="border-b py-2 px-1">{point.createDate.substring(2, 10)}</td>
+                      <td class="border-b py-2 px-1">{'['}{point.content}{']'}</td>
+                      <td class="border-b py-2 px-1">{point.amount}</td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </dialog>
+
       </header>
       <main class="flex-1 p-4 md:p-6">
         <div class="grid gap-4">

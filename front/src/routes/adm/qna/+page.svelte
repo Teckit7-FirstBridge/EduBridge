@@ -89,7 +89,7 @@
                   {#each qna as item}
                     <tr>
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        <a href="/member/qna/{item.id}" class="text-blue-600 hover:text-blue-900">
+                        <a href="/qna/{item.id}" class="text-blue-600 hover:text-blue-900">
                           {item.title}
                         </a>
                       </td>
