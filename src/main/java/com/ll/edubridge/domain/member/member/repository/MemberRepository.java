@@ -18,6 +18,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     List<Member> findTop5ByOrderByIdDesc();
 
-    @Query("SELECT m FROM Member m LEFT JOIN FETCH m.notifications n WHERE m.id = :memberId ORDER BY n.createDate DESC")
-    Optional<Member> findMemberWithRecentNotifications(@Param("memberId") Long memberId);
 }
