@@ -54,6 +54,36 @@
               </button>
             </div>
           </li>
+        {:else if li.type == 'QnA'}
+          <li
+            class="flex p-4 hover:bg-gray-100 cursor-pointer {li.read ? 'bg-gray-100' : ''}"
+            on:click={() => {
+              read(li.id);
+              rq.goTo(`/board/${li.post_id}#comment__${li.comment_id}`);
+            }}
+          >
+            <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full mr-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z"
+                />
+              </svg>
+            </span>
+            <div>
+              <button class="text-sm">
+                {li.sender} 님이 내 {li.post_title}에 답변을 해주셨습니다.
+              </button>
+            </div>
+          </li>
         {:else}
           <li class="flex p-4 hover:bg-gray-100 cursor-pointer {li.read ? 'bg-gray-100' : ''}">
             <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full mr-4">

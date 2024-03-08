@@ -278,7 +278,7 @@ export interface components {
       read?: boolean;
       sender?: string;
       /** @enum {string} */
-      type?: "COMMENT" | "POINTS";
+      type?: "COMMENT" | "POINTS" | "QnA";
       post_title?: string;
       /** Format: int64 */
       post_id?: number;

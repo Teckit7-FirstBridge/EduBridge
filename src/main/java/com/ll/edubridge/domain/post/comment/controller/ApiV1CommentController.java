@@ -46,7 +46,15 @@ public class ApiV1CommentController {
 
 
         notificationService.notifyComment(comment.getPost().getWriter().getId()); // 댓글 등록 알림
-        notificationService.createByComment(NotificationType.COMMENT, comment.getPost().getWriter(), comment.getPost(),rq.getMember(),comment); // 알림 내역 저장
+        if(comment.getPost().isPublished()){
+            System.out.println("====chanw======true");
+
+            notificationService.createByComment(NotificationType.COMMENT, comment.getPost().getWriter(), comment.getPost(),rq.getMember(),comment); // 알림 내역 저장
+        }else{
+            System.out.println("====chanw======x");
+
+            notificationService.createByComment(NotificationType.QnA, comment.getPost().getWriter(), comment.getPost(),rq.getMember(),comment); // QnA답변 내역 저장
+        }
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
                 Msg.E200_0_CREATE_SUCCEED.getMsg(), createCommentDto);
     }
