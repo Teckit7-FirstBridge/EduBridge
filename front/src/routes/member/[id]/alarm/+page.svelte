@@ -59,7 +59,7 @@
             class="flex p-4 hover:bg-gray-100 cursor-pointer {li.read ? 'bg-gray-100' : ''}"
             on:click={() => {
               read(li.id);
-              rq.goTo(`/board/${li.post_id}#comment__${li.comment_id}`);
+              rq.goTo(`/qna/${li.post_id}`);
             }}
           >
             <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full mr-4">
