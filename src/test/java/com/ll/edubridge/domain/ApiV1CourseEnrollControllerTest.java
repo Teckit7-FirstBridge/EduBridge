@@ -7,6 +7,7 @@ import com.ll.edubridge.domain.course.courseEnroll.controller.ApiV1CourseEnrollC
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
+import com.ll.edubridge.domain.point.point.service.PointService;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import org.junit.jupiter.api.DisplayName;
@@ -41,6 +42,9 @@ public class ApiV1CourseEnrollControllerTest {
     private CourseEnrollService courseEnrollService;
 
     @Mock
+    private PointService pointService;
+
+    @Mock
     private Rq rq;
 
     @Test
@@ -62,7 +66,7 @@ public class ApiV1CourseEnrollControllerTest {
         when(courseRepository.findById(123L)).thenReturn(Optional.of(mockCourse));
         when(memberService.findByUsername("testUser")).thenReturn(Optional.ofNullable(mockMember));
 
-        ApiV1CourseEnrollController apiController = new ApiV1CourseEnrollController(courseEnrollService, courseService, rq);
+        ApiV1CourseEnrollController apiController = new ApiV1CourseEnrollController(courseEnrollService, courseService, rq, pointService);
         when(rq.getMember()).thenReturn(mockMember);
         when(courseService.getCourse(123L)).thenReturn(mockCourse);
 
