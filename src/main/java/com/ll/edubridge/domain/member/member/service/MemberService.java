@@ -103,6 +103,7 @@ public class MemberService {
 
     public Member getMember(Long id) {
         Optional<Member> member = this.findById(id);
+
         if (member.isPresent()) {
             return member.get();
         } else {

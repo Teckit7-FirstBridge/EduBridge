@@ -19,13 +19,10 @@ import lombok.*;
 public class Notification extends BaseEntity {
 
 
-    @JsonIgnore
-    @ManyToOne
-    private Member sender;
 
-    @JsonIgnore
-    @ManyToOne
-    private Member recipient;
+    private Long sender_id;
+
+    private Long recipient_id;
 
     private boolean read;
 

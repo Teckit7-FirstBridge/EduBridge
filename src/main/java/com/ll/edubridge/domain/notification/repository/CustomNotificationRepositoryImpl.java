@@ -16,12 +16,13 @@ public class CustomNotificationRepositoryImpl implements CustomNotificationRepos
     @Override
     public List<Notification> findByMemberId(Long memberid) {
         List<Notification> fetch = queryFactory.selectFrom(notification)
-                .where(notification.recipient.id.eq(memberid))
+                .where(notification.recipient_id.eq(memberid))
                 .orderBy(notification.createDate.desc())
-                .limit(20)
+                .limit(10)
                 .fetch();
 
         return fetch;
 
     }
+
 }

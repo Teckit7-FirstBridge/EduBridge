@@ -45,8 +45,8 @@ public class NotificationService {
 
         Notification notification = Notification.builder()
                 .type(type)
-                .recipient(member)
-                .sender(sender)
+                .recipient_id(member.getId())
+                .sender_id(sender.getId())
                 .post(post)
                 .comment(comment)
                 .build();
@@ -59,7 +59,7 @@ public class NotificationService {
 
         Notification notification = Notification.builder()
                 .type(type)
-                .recipient(member)
+                .recipient_id(member.getId())
                 .point(point)
                 .build();
 
@@ -127,5 +127,13 @@ public class NotificationService {
     }
 
 
+    public boolean isAlarm(Member member) {
+        List<Notification> byMemberId = notificationRepository.findByMemberId(member.getId());
+        if( byMemberId.stream().filter(notification -> notification.isRead() == false).count()>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
 
