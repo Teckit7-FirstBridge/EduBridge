@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.member.member.entity;
 
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
+import com.ll.edubridge.domain.notification.entity.Notification;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
 import com.ll.edubridge.standard.util.Ut;
 import jakarta.persistence.*;
@@ -50,6 +51,7 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CourseEnroll> courseEnrollList;
+
 
     public String getProfileImgUrlOrDefault() {
         return Ut.str.hasLength(profileImgUrl) ? profileImgUrl : "https://placehold.co/640x640?text=O_O";

@@ -6,6 +6,8 @@ import com.ll.edubridge.domain.course.courseEnroll.dto.CourseEnrollDto;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.point.point.entity.PointType;
+import com.ll.edubridge.domain.point.point.service.PointService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
@@ -35,6 +37,7 @@ public class ApiV1CourseEnrollController {
     private final CourseEnrollService courseEnrollService;
     private final CourseService courseService;
     private final Rq rq;
+    private final PointService pointService;
 
     @Getter
     public static class GetCourseEnrollResponsebody{
@@ -57,9 +60,9 @@ public class ApiV1CourseEnrollController {
         Course course = courseService.getCourse(courseId);
         int price = course.getPrice();
         if (point >= price) {
-            CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), course,point,price);
+            CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), course, point, price);
+            pointService.subPoint(PointType.Enroll, member, price); // 포인트 내역 추가
             return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(), Msg.E200_0_CREATE_SUCCEED.getMsg());
-
         } else {
             throw new GlobalException(CodeMsg.E400_1_CREATE_FAILED.getCode(), CodeMsg.E400_1_CREATE_FAILED.getMessage());
         }

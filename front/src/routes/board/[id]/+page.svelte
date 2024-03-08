@@ -6,7 +6,7 @@
   import type { components } from '$lib/types/api/v1/schema';
   import { page } from '$app/stores';
   import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
-  import { comment } from 'postcss';
+  import { onMount } from 'svelte';
 
   let comments: components['schemas']['CommentDto'][] = $state();
   let bestComment: components['schemas']['CommentDto'][] = $state();
@@ -28,6 +28,7 @@
   let bestCommentLikedNum: number[] = $state([]);
   let bestCommentLikedByCurrentUser: Boolean[] = $state([]);
 
+  let isLoaded = false;
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
     const responseComment = await rq.apiEndPoints().GET(`/api/v1/comments/{postId}`, {
@@ -37,6 +38,7 @@
         }
       }
     });
+
     comments = responseComment.data?.data!;
     commentLikedNum = comments.map((comment) => comment.voteCount!);
     commentLikedByCurrentUser = comments.map((comment) => comment.likedByCurrentUser!);
@@ -63,9 +65,26 @@
     isReport = post.report;
     likedNum = post.voteCount;
     likedByCurrentUser = post.likedByCurrentUser;
-
     return { comments, post };
   }
+
+  onMount(() => {
+    setTimeout(() => {
+      console.log('hi');
+      const fragmentIdentifier = window.location.hash.substring(1); // #을 제외한 fragment 식별자만 가져옴
+      console.log(fragmentIdentifier); // "comment__5"
+      const commentElement = document.getElementById(fragmentIdentifier); // 댓글 요소의 ID를 사용하여 찾음
+      console.log(commentElement);
+      // 댓글 요소가 있다면 스크롤을 해당 요소로 이동
+      if (commentElement) {
+        commentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        commentElement.classList.add('bg-blue-50');
+        setTimeout(() => {
+          commentElement.classList.remove('bg-blue-50');
+        }, 700);
+      }
+    }, 100); // 1초(1000ms)의 지연 추가
+  });
 
   async function deletePost() {
     const isConfirmed = confirm('게시물을 삭제하시겠습니까?');
@@ -575,7 +594,7 @@
       {/each}
 
       {#each comments as comment}
-        <div class="">
+        <div id="comment__{comment.id}" class="">
           <div class="border-b rounded-sm flex justify-between">
             <div>
               <div class="flex items-center">
@@ -693,3 +712,10 @@
     </div>
   </div>
 {/await}
+
+<style>
+  /* 애니메이션 효과 추가 */
+  .bg-blue-200 {
+    transition: background-color 0.5s ease;
+  }
+</style>

@@ -22,6 +22,7 @@
 
     if (data) {
       rq.msgInfo(data.msg); //msg
+
       rq.goTo('/');
       location.reload();
     }

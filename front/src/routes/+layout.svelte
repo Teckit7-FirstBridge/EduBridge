@@ -12,6 +12,18 @@
     untrack(() => {
       rq.initAuth();
     });
+    let sse = new EventSource(
+      `${import.meta.env.VITE_CORE_API_BASE_URL}/api/notification/subscribe?id=${rq.member.id}`
+    );
+    sse.addEventListener('addComment', (e) => {
+      rq.msgInfo('답변이 등록되었습니다.');
+    });
+    sse.addEventListener('addSummaryNotePoint', (e) => {
+      rq.msgInfo('요약노트 포인트가 지급되었습니다.');
+    });
+    sse.addEventListener('addAttendPoint', (e) => {
+      rq.msgInfo('출석 포인트가 지급되었습니다.');
+    });
   });
 </script>
 

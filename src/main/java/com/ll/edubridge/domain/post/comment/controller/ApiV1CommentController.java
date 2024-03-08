@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.post.comment.controller;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.notification.entity.NotificationType;
 import com.ll.edubridge.domain.post.comment.dto.CommentDto;
 import com.ll.edubridge.domain.post.comment.dto.CreateCommentDto;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
@@ -11,6 +12,7 @@ import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
+import com.ll.edubridge.domain.notification.service.NotificationService;
 import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,12 +38,23 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ApiV1CommentController {
     private final CommentService commentService;
     private final Rq rq;
-
+    private final NotificationService notificationService;
     @PostMapping("")
     @Operation(summary = "댓글 등록")
     public RsData<CreateCommentDto> createComment(@Valid @RequestBody CreateCommentDto createCommentDto) {
         Comment comment = commentService.create(rq.getMember(), createCommentDto);
 
+
+        notificationService.notifyComment(comment.getPost().getWriter().getId()); // 댓글 등록 알림
+        if(comment.getPost().isPublished()){
+            System.out.println("====chanw======true");
+
+            notificationService.createByComment(NotificationType.COMMENT, comment.getPost().getWriter(), comment.getPost(),rq.getMember(),comment); // 알림 내역 저장
+        }else{
+            System.out.println("====chanw======x");
+
+            notificationService.createByComment(NotificationType.QnA, comment.getPost().getWriter(), comment.getPost(),rq.getMember(),comment); // QnA답변 내역 저장
+        }
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
                 Msg.E200_0_CREATE_SUCCEED.getMsg(), createCommentDto);
     }
