@@ -28,7 +28,7 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member owner,String grade, Pageable pageable) {
+    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member owner, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (owner != null) {
@@ -37,9 +37,6 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
 
         if (kw != null && !kw.isBlank()) {
             applyKeywordFilter(kwType, kw, builder);
-        }
-        if (grade != null && !grade.isEmpty()) {
-            builder.and(course.grade.eq(grade));
         }
 
         JPAQuery<Course> cousrsesQuery = createCourseQuery(builder);
@@ -51,7 +48,7 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
 
         return PageableExecutionUtils.getPage(cousrsesQuery.fetch(), pageable, totalQuery::fetchOne);
     }
-    public Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member owner,String grade, Pageable pageable) {
+    public Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member owner, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (owner != null) {
@@ -61,9 +58,7 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
         if (kw != null && !kw.isBlank()) {
             applyKeywordFilter(kwType, kw, builder);
         }
-        if (grade != null && !grade.isEmpty()) {
-            builder.and(course.grade.eq(grade));
-        }
+
 
         JPAQuery<Course> cousrsesQuery = createCourseQueryAdmin(builder);
         applySorting(pageable, cousrsesQuery);

@@ -39,18 +39,8 @@ public class CourseService {
     @Transactional
     public Course create(CreateCourseDto createCourseDto) {
 
-        int price = 0;
+        int price = 2000;
 
-        switch (createCourseDto.getGrade()){
-            case "초급":
-                break;
-            case "중급":
-                price = 5000;
-                break;
-            case "고급":
-                price = 10000;
-                break;
-        }
 
         Course course = Course.builder()
                 .title(createCourseDto.getTitle())
@@ -58,7 +48,6 @@ public class CourseService {
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .price(price)
-                .grade(createCourseDto.getGrade())
                 .build();
 
         return courseRepository.save(course);
@@ -102,11 +91,11 @@ public class CourseService {
 
         return false;
     }
-    public Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member author,String grade, Pageable pageable) {
-        return courseRepository.findByKwAdmin(kwType, kw, author,grade, pageable);
+    public Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {
+        return courseRepository.findByKwAdmin(kwType, kw, author, pageable);
     }
-    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author,String grade, Pageable pageable) {
-        return courseRepository.findByKw(kwType, kw, author,grade, pageable);
+    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {
+        return courseRepository.findByKw(kwType, kw, author, pageable);
     }
 
     public List<Course> findLatestCourse(int num) {

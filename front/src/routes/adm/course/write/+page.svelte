@@ -12,7 +12,6 @@
   let notieditor: any | undefined = $state();
   let title: '';
   let imgUrl: '';
-  let grade: '';
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -36,7 +35,6 @@
     const newOverview = overvieweditor.editor.getMarkdown().trim();
 
     if (title == null) {
-      console.log('dd');
       rq.msgWarning('제목을 입력 해 주세요');
       return;
     }
@@ -60,19 +58,13 @@
       return;
     }
 
-    if (grade.length < 1) {
-      rq.msgWarning('등급을 선택 해 주세요');
-      return;
-    }
-
     const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/admin/courses', {
       // url 설정
       body: {
         title: title,
         notice: newNoti,
         overView: newOverview,
-        imgUrl: imgUrl,
-        grade: grade
+        imgUrl: imgUrl
       }
     });
 
@@ -129,20 +121,6 @@
             placeholder="Enter ImgUrl"
             bind:value={imgUrl}
           />
-          <label
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            for="post-price">강좌 등급</label
-          ><select
-            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            id="post-grade"
-            bind:value={grade}
-            placeholder="등급 선택"
-          >
-            <option disabled selected value="">Select Grade</option>
-            <option value="초급">초급</option>
-            <option value="중급">중급</option>
-            <option value="고급">고급</option>
-          </select>
         </div>
 
         <button

@@ -35,15 +35,13 @@
     const kw = $page.url.searchParams.get('kw') ?? '';
     const kwType = ($page.url.searchParams.get('kwType') ?? 'ALL') as KwTypeCourse;
     const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
-    const grade = $page.url.searchParams.get('grade') ?? '';
 
     const { data } = await rq.apiEndPoints().GET('/api/v1/courses', {
       params: {
         query: {
           kw,
           kwType,
-          page: page_,
-          grade: grade
+          page: page_
         }
       }
     });
@@ -85,7 +83,6 @@
   <p>loading...</p>
 {:then { courselist }}
   <div class="">
-    <CourseNav></CourseNav>
     <div class="flex justify-end">
       <button
         class="btn btn-ghost"
@@ -177,12 +174,6 @@
               <a href="/course/{item.id}">
                 <div class="flex justify-center gap-2">
                   <h2 class="text-lg font-semibold my-1 ml-2">{formatTitle(item.title)}</h2>
-
-                  <div
-                    class={`inline-flex px-2 text-lg font-semibold rounded-full mt-1 my-1 ${item.grade === '초급' ? 'bg-yellow-100 text-yellow-800' : item.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
-                  >
-                    {item.grade}
-                  </div>
                 </div>
                 <div class="flex justify-center p-2 bg-black rounded-lg">
                   <img src={item.imgUrl} />

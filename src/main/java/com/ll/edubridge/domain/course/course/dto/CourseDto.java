@@ -26,7 +26,6 @@ public class CourseDto {
         this.notice = course.getNotice();
         this.imgUrl = course.getImgUrl();
         this.overView = course.getOverView();
-        this.grade = course.getGrade();
         this.price = course.getPrice();
         this.voteCount = course.getVoter().size();
         this.likedByCurrentUser = course.getVoter().contains(member);

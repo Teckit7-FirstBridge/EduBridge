@@ -20,15 +20,12 @@ public class CreateCourseDto {
     @NotEmpty
     @Size(max=500)
     private String overView;
-    @NotEmpty
-    private String grade;
 
     public CreateCourseDto(Course course) {
         this.title = course.getTitle();
         this.notice = course.getNotice();
         this.imgUrl = course.getImgUrl();
         this.overView = course.getOverView();
-        this.grade = course.getGrade();
     }
 
     public CreateCourseDto() {

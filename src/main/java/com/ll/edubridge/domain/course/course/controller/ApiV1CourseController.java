@@ -56,8 +56,7 @@ public class ApiV1CourseController {
     public RsData<GetCoursesResponsebody> getCourses(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "") String kw,
-            @RequestParam(defaultValue = "ALL") KwTypeCourse kwType,
-            @RequestParam(defaultValue = "") String grade
+            @RequestParam(defaultValue = "ALL") KwTypeCourse kwType
     ) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
@@ -65,9 +64,9 @@ public class ApiV1CourseController {
 
         Page<Course> coursePage;
         if (rq.isAdmin()) {
-            coursePage = courseService.findByKwAdmin(kwType, kw, null, grade, pageable);
+            coursePage = courseService.findByKwAdmin(kwType, kw, null, pageable);
         } else {
-            coursePage = courseService.findByKw(kwType, kw, null, grade, pageable);
+            coursePage = courseService.findByKw(kwType, kw, null, pageable);
         }
 
         GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage);

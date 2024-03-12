@@ -321,8 +321,6 @@ public class ApiV1AdminController {
     @Operation(summary = "강좌 등록")
     public RsData<CreateCourseDto> createCourse(@Valid @RequestBody CreateCourseDto createCourseDto) {
 
-        if (!courseService.haveAuthority())
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Course course = courseService.create(createCourseDto);
 
