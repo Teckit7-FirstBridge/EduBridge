@@ -34,7 +34,7 @@ public class CourseDto {
         this.videoCount = course.getVideoList().size();
         this.confirm = course.getConfirm();
         this.enrollCount = course.getCourseEnrollList().size();
-        this.writer_id = member.getId();
+        this.writer_id = course.getWriter_id();
     }
 
     public CourseDto() {

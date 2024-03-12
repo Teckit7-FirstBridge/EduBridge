@@ -69,6 +69,7 @@
       }
     });
     course = responseCourse.data?.data!;
+    console.log(course);
     courseConfirm = course.confirm!;
 
     const responseEnroll = await rq.apiEndPoints().GET(`/api/v1/admin/{courseId}/enroll`, {
@@ -88,6 +89,9 @@
       }
     });
     auth = responseAuth.data?.data!;
+
+    console.log(rq.member.id);
+    console.log(course.writer_id);
 
     return { videos, course, auth, enroll };
   }
@@ -337,7 +341,7 @@
           ></ToastUiEditor>
         </div>
 
-        {#if rq.isAdmin()}
+        {#if rq.member.id === course.writer_id}
           <div class="flex justify-end">
             <a class=" mx-10 btn w-24 text-center" href="/course/{$page.params.id}/videowrite"
               >강의 등록</a
@@ -345,7 +349,7 @@
           </div>
         {/if}
 
-        {#if auth.enroll || rq.isAdmin()}
+        {#if auth.enroll || rq.member.id === course.writer_id}
           <div class="border shadow-sm rounded-lg">
             <div class="relative w-full overflow-auto">
               <table class="w-full table-fixed caption-bottom text-sm">
@@ -479,7 +483,8 @@
             </div>
           </div>
         {:else}
-          <p>수강중이 아닙니다</p>
+          <table class="w-full table-fixed caption-bottom text-sm"></table>
+          <p class="">수강중이 아닙니다</p>
         {/if}
       </main>
     </div>
