@@ -929,8 +929,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetAdmQnaResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     AdminMemberDto: {
       /** Format: int64 */
@@ -978,8 +978,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["getDeviceResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     getDeviceResponseBody: {
       isMobile?: boolean;

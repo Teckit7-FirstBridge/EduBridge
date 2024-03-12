@@ -6,12 +6,15 @@
 
   let isMypage = $page.url.pathname.includes('/member/');
   let isCourse = $page.url.pathname.includes('/course');
-
+  let isAlarm = $state(true);
   const { children } = $props();
   rq.effect(async () => {
     untrack(() => {
       rq.initAuth();
     });
+    const notificationResponse = await rq.apiEndPoints().GET(`/api/v1/notification/isAlarm`);
+    isAlarm = notificationResponse.data?.data!;
+    console.log(isAlarm);
     let sse = new EventSource(
       `${import.meta.env.VITE_CORE_API_BASE_URL}/api/notification/subscribe?id=${rq.member.id}`
     );
@@ -92,7 +95,35 @@
     <a href="/" class="font-bold">EduBridge</a>
   </div>
 
-  <div class="flex-1 justify-end"></div>
+  <div class="flex-1 justify-end mr-4">
+    <div class="flex gap-x-4 relative items-center">
+      <button on:click={() => rq.goTo(`/member/${rq.member.id}/alarm`)}>
+        {#if isAlarm}
+          <span class="relative flex h-2 w-2">
+            <span
+              class=" absolute top-2 left-3 animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+            ></span>
+            <span class="absolute top-2 left-3 relative inline-flex rounded-full h-2 w-2 bg-sky-500"
+            ></span>
+          </span>
+        {/if}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
 </header>
 
 <main>{@render children()}</main>
