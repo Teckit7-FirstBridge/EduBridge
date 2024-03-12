@@ -93,6 +93,37 @@ public class ApiV1CourseController {
         );
     }
 
+    @GetMapping(value = "/mycourse")
+    @Operation(summary = "강좌 다건 조회")
+    public RsData<GetCoursesResponsebody> getMyCourse(@RequestParam(defaultValue = "1") int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+
+        Page<Course> coursePage;
+        coursePage = courseService.findMyCourse(rq.getMember(),pageable);
+
+
+        GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage);
+
+        return RsData.of(
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                responseBody
+
+        );
+    }
+
+    @PutMapping("/{courseId}/startOrStop")
+    @Operation(summary = "강좌 공개 or 비공개")
+    public RsData<CourseDto> startOrStopCourse(@PathVariable("courseId") Long courseId){
+        Course course = courseService.startOrstop(courseId);
+        CourseDto courseDto = new CourseDto(course,rq.getMember());
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),Msg.E200_2_MODIFY_SUCCEED.getMsg(),courseDto);
+    }
+
+
+
     @GetMapping("/{courseId}")
     @Operation(summary = "강좌 상세 조회")
     public RsData<CourseDto> getCourse(@PathVariable("courseId") Long courseId) {

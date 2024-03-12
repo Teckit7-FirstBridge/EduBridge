@@ -5,6 +5,7 @@
   let overview = $state('');
   let imgUrl = $state('');
   let keywords = $state('');
+  let title = $state('');
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');

@@ -25,6 +25,7 @@ import static com.ll.edubridge.domain.post.post.entity.QPost.post;
 @RequiredArgsConstructor
 public class CustomCourseRepositoryImpl implements CustomCourseRepository{
 
+
     private final JPAQueryFactory queryFactory;
 
     @Override
@@ -86,8 +87,19 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
         return queryFactory.selectFrom(course)
                 .where(course.voter.contains(member))
                 .fetch();
+
     }
 
+    @Override
+    public Page<Course> findByWriterId(Member author, Pageable pageable) {
+        List<Course> fetch = queryFactory.selectFrom(course)
+                .where(course.writer_id.eq(author.getId()))
+                .fetch();
+        long count = queryFactory.selectFrom(course)
+                .where(course.writer_id.eq(author.getId()))
+                .stream().count();
+        return new PageImpl<>(fetch,pageable,count);
+    }
 
 
     private void applyKeywordFilter(KwTypeCourse kwType, String kw, BooleanBuilder builder) {

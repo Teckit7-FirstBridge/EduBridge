@@ -2,7 +2,6 @@
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
-  import CourseNav from '../../lib/components/CourseNav.svelte';
 
   let courselist: components['schemas']['CourseDto'][] | undefined;
   let likesList: Boolean[] = $state([]);
@@ -32,15 +31,11 @@
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
-    const kw = $page.url.searchParams.get('kw') ?? '';
-    const kwType = ($page.url.searchParams.get('kwType') ?? 'ALL') as KwTypeCourse;
     const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
 
-    const { data } = await rq.apiEndPoints().GET('/api/v1/courses', {
+    const { data } = await rq.apiEndPoints().GET('/api/v1/courses/mycourse', {
       params: {
         query: {
-          kw,
-          kwType,
           page: page_
         }
       }
@@ -90,13 +85,13 @@
         <button
           class="btn btn-ghost"
           onclick={() => {
-      const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
-      const searchFormInputSearch = (document.querySelector('#searchFormModal input[type=search]') as HTMLDialogElement);
-
-      searchFormModal.showModal();
-
-      searchFormInputSearch.focus();
-    }}
+        const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
+        const searchFormInputSearch = (document.querySelector('#searchFormModal input[type=search]') as HTMLDialogElement);
+  
+        searchFormModal.showModal();
+  
+        searchFormInputSearch.focus();
+      }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -122,9 +117,9 @@
               action="/course"
               class="bg-base rounded flex flex-col gap-6"
               onsubmit={() => {
-            const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
-            searchFormModal.close();
-          }}
+              const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
+              searchFormModal.close();
+            }}
             >
               <div class="max-w-md mx-auto bg-white p-5">
                 <div class="form-control">

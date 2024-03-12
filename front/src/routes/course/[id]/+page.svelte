@@ -113,9 +113,11 @@
     const isConfirmed = confirm('강좌를 공개하시겠습니까?');
 
     if (isConfirmed) {
-      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startOrStop`, {
-        params: { path: { courseId: parseInt($page.params.id) } }
-      });
+      const { data, error } = await rq
+        .apiEndPoints()
+        .PUT(`/api/v1/courses/{courseId}/startOrStop`, {
+          params: { path: { courseId: parseInt($page.params.id) } }
+        });
 
       if (data) {
         rq.msgInfo('강좌가 공개되었습니다');
@@ -233,11 +235,6 @@
               <div class="mx-2 mt-1">
                 {course!.title}
               </div>
-              <div
-                class={`inline-flex px-2 text-lg font-semibold rounded-full mt-1 my-1 ${course.grade === '초급' ? 'bg-blue-100 text-blue-800' : course.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
-              >
-                {course.grade}
-              </div>
               <div class=" flex justify-end gap-2 mt-1 ml-2" on:click={() => clickLiked(course)}>
                 {#if course.likedByCurrentUser}
                   <svg
@@ -278,7 +275,7 @@
           </h1>
 
           <div class="flex">
-            {#if !auth.enroll && !rq.isAdmin()}
+            {#if !auth.enroll && !(rq.member.id == course.writer_id)}
               <div class="flex">
                 <div class="mt-2">
                   <p class="course-price">{course.price}원</p>
@@ -287,7 +284,7 @@
               </div>
             {/if}
           </div>
-          {#if rq.isAdmin()}
+          {#if rq.member.id === course.writer_id}
             <div class="mb-5 mx-2 items-center">
               <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
               <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
