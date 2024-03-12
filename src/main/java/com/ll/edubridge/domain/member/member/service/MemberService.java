@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.member.member.service;
 
+import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -7,6 +8,7 @@ import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
@@ -27,6 +29,10 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthTokenService authTokenService;
+
+    @Autowired
+    private CourseService courseService;
+
 
     @Transactional
     public RsData<Member> join(String username, String password) {
@@ -203,5 +209,11 @@ public class MemberService {
     public void cancelReport(Member member) {
         member.setReport(false);
         memberRepository.save(member);
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void resetCourseLimitScheduler() {
+        courseService.resetCourseLimit();
+        System.out.println("강좌 등록 가능 횟수가 초기화되었습니다.");
     }
 }
