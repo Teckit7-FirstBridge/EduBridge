@@ -24,19 +24,6 @@
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
-    const isAdminResponse = await rq.apiEndPoints().GET(`/api/v1/members/isAdmin`);
-    const { isAdmin } = isAdminResponse.data?.data!;
-    const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
-    const { isLogin } = isLoginResponse.data?.data!;
-    if (!isAdmin && isLogin) {
-      rq.msgError('관리자 권한이 없습니다');
-      rq.goTo('/');
-    }
-    if (!isAdmin && !isLogin) {
-      rq.msgWarning('관리자 로그인 후 이용 해 주세요');
-      rq.goTo('/member/login');
-    }
-
     const kw = $page.url.searchParams.get('kw') ?? '';
     const kwType = ($page.url.searchParams.get('kwType') ?? 'ALL') as KwTypeCourse;
     const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
@@ -50,6 +37,28 @@
         }
       }
     });
+
+    const isAdminResponse = await rq.apiEndPoints().GET(`/api/v1/members/isAdmin`);
+    const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
+    const isMobileResponse = await rq.apiEndPoints().GET(`/api/v1/admin/deviceCheck`);
+
+    const { isAdmin } = isAdminResponse.data?.data!;
+    const { isLogin } = isLoginResponse.data?.data!;
+    const { isMobile } = isMobileResponse.data?.data!;
+
+    if (isMobile) {
+      rq.msgError('관리자 페이지는 pc로 접속 바랍니다.');
+      rq.goTo('/');
+    }
+
+    if (!isAdmin && isLogin) {
+      rq.msgError('관리자 권한이 없습니다');
+      rq.goTo('/');
+    }
+    if (!isAdmin && !isLogin) {
+      rq.msgWarning('관리자 로그인 후 이용 해 주세요');
+      rq.goTo('/member/login');
+    }
 
     return data!;
   }

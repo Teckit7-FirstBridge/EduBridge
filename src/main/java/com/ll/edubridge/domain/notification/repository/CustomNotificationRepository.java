@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface CustomNotificationRepository {
     public List<Notification> findByMemberId(Long id);
+
 }

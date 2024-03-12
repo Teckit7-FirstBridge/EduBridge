@@ -2,12 +2,10 @@ package com.ll.edubridge.domain.notification.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 
@@ -22,9 +20,9 @@ public class Notification extends BaseEntity {
 
 
 
-    @JsonIgnore
-    @ManyToOne
-    private Member recipient;
+    private Long sender_id;
+
+    private Long recipient_id;
 
     private boolean read;
 
@@ -36,5 +34,9 @@ public class Notification extends BaseEntity {
     @ManyToOne
     private Post post;
 
-    private  int point;
+    private  int point = 0;
+
+    @JsonIgnore
+    @OneToOne
+    private Comment comment;
 }

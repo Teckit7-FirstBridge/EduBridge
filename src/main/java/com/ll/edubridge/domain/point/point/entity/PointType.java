@@ -5,9 +5,10 @@ import lombok.Getter;
 @Getter
 public enum PointType {
 
-    Attend("출석", 500),
-    SNote("요약 노트 작성", 700),
-    Enroll("강좌 등록", 0);
+    // content 글자 수 가능한 통일할 것 (프론트 때문에)
+    Attend("출석 체크", 500),
+    SNote("요약 노트", 700),
+    Enroll("수강 등록", 0);
 
     private final String content;
     private final int amount;

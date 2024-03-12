@@ -24,14 +24,12 @@ html > body {
   flex-direction: column;
 }
 
-
 html > body .ProseMirror,
 html > body .toastui-editor-contents,
 html > body .toastui-editor-defaultUI {
   font-family: var(--base-font-family);
   font-size: 20px;
 }
-
 
 .form-control .label .label-text {
   opacity: 0.8;
@@ -91,12 +89,11 @@ main {
 }
 
 .rounded-container {
-  width: 100%; 
-  height: auto; 
-  object-fit: cover; 
-  object-position: center 0px; 
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center 0px;
 }
-
 
 .equal-width-th {
   width: 25%; /* 각 th 요소가 전체 너비의 25%를 차지하도록 설정 */
@@ -125,6 +122,8 @@ footer {
 
 body {
   padding-bottom: 100px; /* 푸터 높이에 맞게 조정 */
+  background-color: white;
+  color: black;
 }
 
 .drawer {
@@ -152,4 +151,8 @@ body {
 }
 .overlay.show {
   display: block; /* 사이드바가 열렸을 때 오버레이 표시 */
+}
+
+.modal-box-1 {
+  height: 500px;
 }
