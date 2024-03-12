@@ -85,6 +85,10 @@ export interface paths {
     /** 강좌 좋아요 취소 */
     delete: operations["deleteVote_1"];
   };
+  "/api/v1/courses/write": {
+    /** 강좌 등록 */
+    post: operations["createCourse"];
+  };
   "/api/v1/comments": {
     /** 댓글 등록 */
     post: operations["createComment"];
@@ -103,7 +107,7 @@ export interface paths {
     /** 강좌 최신순 */
     get: operations["getRecentCourses"];
     /** 강좌 등록 */
-    post: operations["createCourse"];
+    post: operations["createCourse_1"];
   };
   "/api/v1/posts/{postId}/report": {
     /** 신고하기 */
@@ -331,9 +335,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      profileImgUrlOrDefault?: string;
-      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
+      authoritiesAsStringList?: string[];
+      profileImgUrlOrDefault?: string;
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -428,6 +432,8 @@ export interface components {
       confirm?: boolean;
       /** Format: int32 */
       enrollCount?: number;
+      /** Format: int64 */
+      writer_id?: number;
     };
     RsDataCourseDto: {
       resultCode: string;
@@ -502,6 +508,23 @@ export interface components {
       success: boolean;
       fail: boolean;
     };
+    CreateCourseDto: {
+      title: string;
+      notice: string;
+      imgUrl: string;
+      overView: string;
+      /** Format: int64 */
+      writer_id?: number;
+    };
+    RsDataCreateCourseDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["CreateCourseDto"];
+      success: boolean;
+      fail: boolean;
+    };
     RsDataCreateCommentDto: {
       resultCode: string;
       /** Format: int32 */
@@ -525,21 +548,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateVideoDto"];
-      success: boolean;
-      fail: boolean;
-    };
-    CreateCourseDto: {
-      title: string;
-      notice: string;
-      imgUrl: string;
-      overView: string;
-    };
-    RsDataCreateCourseDto: {
-      resultCode: string;
-      /** Format: int32 */
-      statusCode: number;
-      msg: string;
-      data: components["schemas"]["CreateCourseDto"];
       success: boolean;
       fail: boolean;
     };
@@ -1457,6 +1465,22 @@ export interface operations {
       };
     };
   };
+  /** 강좌 등록 */
+  createCourse: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateCourseDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataCreateCourseDto"];
+        };
+      };
+    };
+  };
   /** 댓글 등록 */
   createComment: {
     requestBody: {
@@ -1538,7 +1562,7 @@ export interface operations {
     };
   };
   /** 강좌 등록 */
-  createCourse: {
+  createCourse_1: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateCourseDto"];

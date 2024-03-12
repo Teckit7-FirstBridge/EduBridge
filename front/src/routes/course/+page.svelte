@@ -83,10 +83,12 @@
   <p>loading...</p>
 {:then { courselist }}
   <div class="">
-    <div class="flex justify-end">
-      <button
-        class="btn btn-ghost"
-        onclick={() => {
+    <div class="flex justify-between items-center justify-center mb-4">
+      <a href="/course/write" class="btn bg-gray-200 mt-5 ml-6 w-[200px]"> 강좌 등록</a>
+      <div class=" mr-4">
+        <button
+          class="btn btn-ghost"
+          onclick={() => {
       const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
       const searchFormInputSearch = (document.querySelector('#searchFormModal input[type=search]') as HTMLDialogElement);
 
@@ -94,75 +96,76 @@
 
       searchFormInputSearch.focus();
     }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          ><path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          /></svg
         >
-      </button>
-      <dialog id="searchFormModal" class="modal">
-        <div class="modal-box">
-          <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-          </form>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            ><path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            /></svg
+          >
+        </button>
+        <dialog id="searchFormModal" class="modal">
+          <div class="modal-box">
+            <form method="dialog">
+              <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
 
-          <form
-            action="/course"
-            class="bg-base rounded flex flex-col gap-6"
-            onsubmit={() => {
+            <form
+              action="/course"
+              class="bg-base rounded flex flex-col gap-6"
+              onsubmit={() => {
             const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
             searchFormModal.close();
           }}
-          >
-            <div class="max-w-md mx-auto bg-white p-5">
-              <div class="form-control">
-                <label for="kwType" class="label text-sm font-bold text-gray-700">검색필터</label>
-                <select
-                  id="kwType"
-                  name="kwType"
-                  class="select select-bordered w-full max-w-xs focus:outline-none focus:ring-0"
-                >
-                  <option value="ALL">전체</option>
-                  <option value="TITLE">제목</option>
-                  <option value="NAME">작성자</option>
-                </select>
-              </div>
+            >
+              <div class="max-w-md mx-auto bg-white p-5">
+                <div class="form-control">
+                  <label for="kwType" class="label text-sm font-bold text-gray-700">검색필터</label>
+                  <select
+                    id="kwType"
+                    name="kwType"
+                    class="select select-bordered w-full max-w-xs focus:outline-none focus:ring-0"
+                  >
+                    <option value="ALL">전체</option>
+                    <option value="TITLE">제목</option>
+                    <option value="NAME">작성자</option>
+                  </select>
+                </div>
 
-              <div class="form-control mt-4">
-                <label for="kw" class="label text-sm font-bold text-gray-700">검색어</label>
-                <input
-                  id="kw"
-                  name="kw"
-                  type="search"
-                  placeholder="검색어"
-                  class="input input-bordered w-full max-w-xs focus:outline-none focus:ring-0"
-                />
-              </div>
+                <div class="form-control mt-4">
+                  <label for="kw" class="label text-sm font-bold text-gray-700">검색어</label>
+                  <input
+                    id="kw"
+                    name="kw"
+                    type="search"
+                    placeholder="검색어"
+                    class="input input-bordered w-full max-w-xs focus:outline-none focus:ring-0"
+                  />
+                </div>
 
-              <div class="mt-4">
-                <button
-                  class="btn border border-gray-300 text-gray-800 bg-white hover:bg-gray-50 active:bg-gray-200 focus:ring-2 focus:ring-gray-200 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-offset-2 focus:ring-offset-gray-100 w-full"
-                >
-                  검색
-                </button>
+                <div class="mt-4">
+                  <button
+                    class="btn border border-gray-300 text-gray-800 bg-white hover:bg-gray-50 active:bg-gray-200 focus:ring-2 focus:ring-gray-200 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-offset-2 focus:ring-offset-gray-100 w-full"
+                  >
+                    검색
+                  </button>
+                </div>
               </div>
-            </div>
+            </form>
+          </div>
+
+          <form method="dialog" class="modal-backdrop">
+            <button>close</button>
           </form>
-        </div>
-
-        <form method="dialog" class="modal-backdrop">
-          <button>close</button>
-        </form>
-      </dialog>
+        </dialog>
+      </div>
     </div>
     <div class="flex flex-col flex-1">
       <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

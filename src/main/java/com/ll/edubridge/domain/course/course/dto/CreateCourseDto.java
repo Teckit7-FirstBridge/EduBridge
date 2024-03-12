@@ -20,12 +20,14 @@ public class CreateCourseDto {
     @NotEmpty
     @Size(max=500)
     private String overView;
+    private Long writer_id;
 
     public CreateCourseDto(Course course) {
         this.title = course.getTitle();
         this.notice = course.getNotice();
         this.imgUrl = course.getImgUrl();
         this.overView = course.getOverView();
+        this.writer_id = course.getWriter_id();
     }
 
     public CreateCourseDto() {

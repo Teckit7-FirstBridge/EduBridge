@@ -19,6 +19,8 @@ public class CourseDto {
     private int videoCount;
     private Boolean confirm;
     private int enrollCount;
+    private Long writer_id;;
+
 
     public CourseDto(Course course, Member member) {
         this.id = course.getId();
@@ -32,6 +34,7 @@ public class CourseDto {
         this.videoCount = course.getVideoList().size();
         this.confirm = course.getConfirm();
         this.enrollCount = course.getCourseEnrollList().size();
+        this.writer_id = member.getId();
     }
 
     public CourseDto() {

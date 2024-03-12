@@ -3,6 +3,7 @@ package com.ll.edubridge.domain.course.course.controller;
 
 import com.ll.edubridge.domain.course.course.dto.CourseAuthDto;
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
+import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
@@ -16,6 +17,7 @@ import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.KwTypeCourse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -49,6 +51,18 @@ public class ApiV1CourseController {
                     .map(course -> new CourseDto(course,rq.getMember()))
                     .toList();
         }
+    }
+
+    @PostMapping("/write")
+    @Operation(summary = "강좌 등록")
+    public RsData<CreateCourseDto> createCourse(@Valid @RequestBody CreateCourseDto createCourseDto) {
+        Course course = courseService.create(createCourseDto);
+
+        CreateCourseDto createdCourseDto = new CreateCourseDto(course);
+
+        return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
+                Msg.E200_0_CREATE_SUCCEED.getMsg(),
+                createdCourseDto);
     }
 
     @GetMapping(value = "")

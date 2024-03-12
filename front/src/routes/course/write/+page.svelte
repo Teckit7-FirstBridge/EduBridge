@@ -19,9 +19,10 @@
     const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
     const { isLogin } = isLoginResponse.data?.data!;
     if (!isLogin) {
-      rq.msgWarning('관리자 로그인 후 이용 해 주세요');
+      rq.msgWarning('로그인 후 이용 해 주세요');
       rq.goTo('/member/login');
     }
+    console.log(rq.member.id);
   }
 
   const Course__save = async () => {
@@ -51,8 +52,7 @@
       rq.msgWarning('썸네일 url을 jpg 형식으로 입력 해 주세요');
       return;
     }
-
-    const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/admin/courses', {
+    const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/courses/write', {
       // url 설정
       body: {
         title: title,
@@ -65,7 +65,7 @@
 
     if (data) {
       rq.msgInfo(data.msg); //msg
-      rq.goTo('/adm/course');
+      rq.goTo('/course');
     }
   };
 </script>

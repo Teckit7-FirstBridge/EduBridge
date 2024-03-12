@@ -48,6 +48,7 @@ public class CourseService {
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .price(price)
+                .writer_id(createCourseDto.getWriter_id())
                 .build();
 
         return courseRepository.save(course);

@@ -50,4 +50,7 @@ public class Course extends BaseEntity {
     @JsonIgnore
     @ManyToMany
     Set<Member> voter;
+
+
+    private Long writer_id;
 }
