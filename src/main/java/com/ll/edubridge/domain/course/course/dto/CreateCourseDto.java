@@ -1,7 +1,6 @@
 package com.ll.edubridge.domain.course.course.dto;
 
 import com.ll.edubridge.domain.course.course.entity.Course;
-import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -23,8 +22,6 @@ public class CreateCourseDto {
     private String overView;
     @NotEmpty
     private String grade;
-    @NotEmpty
-    private Roadmap roadmap;
 
     public CreateCourseDto(Course course) {
         this.title = course.getTitle();
@@ -32,7 +29,6 @@ public class CreateCourseDto {
         this.imgUrl = course.getImgUrl();
         this.overView = course.getOverView();
         this.grade = course.getGrade();
-        this.roadmap = course.getRoadmap();
     }
 
     public CreateCourseDto() {

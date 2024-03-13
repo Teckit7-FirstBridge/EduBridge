@@ -1,7 +1,6 @@
 package com.ll.edubridge.domain.course.course.dto;
 
 import com.ll.edubridge.domain.course.course.entity.Course;
-import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import lombok.Getter;
 
@@ -20,7 +19,6 @@ public class CourseDto {
     private int videoCount;
     private Boolean confirm;
     private int enrollCount;
-    private Roadmap roadmap;
 
     public CourseDto(Course course, Member member) {
         this.id = course.getId();
@@ -35,7 +33,6 @@ public class CourseDto {
         this.videoCount = course.getVideoList().size();
         this.confirm = course.getConfirm();
         this.enrollCount = course.getCourseEnrollList().size();
-        this.roadmap = course.getRoadmap();
     }
 
     public CourseDto() {

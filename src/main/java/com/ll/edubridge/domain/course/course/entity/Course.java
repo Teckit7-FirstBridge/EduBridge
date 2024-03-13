@@ -55,6 +55,6 @@ public class Course extends BaseEntity {
     @ManyToMany
     Set<Member> voter;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Roadmap roadmap;
 }
