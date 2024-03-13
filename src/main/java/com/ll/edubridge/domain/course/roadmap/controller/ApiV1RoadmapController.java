@@ -61,8 +61,7 @@ public class ApiV1RoadmapController {
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
 
-        Page<Roadmap> roadmapPage;
-        roadmapPage = roadmapService.findByKw(kwType, kw, pageable);
+        Page<Roadmap> roadmapPage = roadmapService.findByKw(kwType, kw, pageable);
 
         ApiV1RoadmapController.GetRoadmapsResponsebody responseBody = new ApiV1RoadmapController.GetRoadmapsResponsebody(roadmapPage);
 
