@@ -20,6 +20,7 @@ public class CourseDto {
     private Boolean confirm;
     private int enrollCount;
     private Long writer_id;;
+    private String tags;
 
 
     public CourseDto(Course course, Member member) {
@@ -35,6 +36,7 @@ public class CourseDto {
         this.confirm = course.getConfirm();
         this.enrollCount = course.getCourseEnrollList().size();
         this.writer_id = course.getWriter_id();
+        this.tags = course.getTags();
     }
 
     public CourseDto() {

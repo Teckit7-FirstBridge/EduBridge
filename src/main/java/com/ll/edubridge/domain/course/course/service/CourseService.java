@@ -49,6 +49,7 @@ public class CourseService {
                 .overView(createCourseDto.getOverView())
                 .price(price)
                 .writer_id(createCourseDto.getWriter_id())
+                .tags(createCourseDto.getTags())
                 .build();
 
         return courseRepository.save(course);
@@ -62,6 +63,7 @@ public class CourseService {
         course.setNotice(courseDto.getNotice());
         course.setImgUrl(courseDto.getImgUrl());
         course.setOverView(courseDto.getOverView());
+        course.setTags(courseDto.getTags());
 
         return courseRepository.save(course);
     }

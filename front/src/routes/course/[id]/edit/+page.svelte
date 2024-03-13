@@ -29,7 +29,9 @@
       rq.msgWarning('로그인 후 이용 해 주세요');
       rq.goTo('/member/login');
     }
-
+    if (initialData.tags && initialData.tags?.split(',').length > 0) {
+      tags = initialData.tags?.split(',');
+    }
     return { initialData };
   }
 
@@ -74,7 +76,8 @@
         notice: newNoti,
         overView: newOverview,
         imgUrl: initialData?.imgUrl,
-        writer_id: initialData?.writer_id
+        writer_id: initialData?.writer_id,
+        tags: tags.join(',')
       }
     });
 
@@ -83,6 +86,34 @@
       rq.goTo('/course/' + $page.params.id);
     }
   };
+
+  let tags: string[] = $state([]);
+  let newTag: string = $state('');
+
+  function addTag() {
+    const trimmedTag = newTag.trim();
+    if (trimmedTag === '') {
+      rq.msgWarning('태그를 입력하세요');
+      return;
+    } // 빈 태그인 경우 추가하지 않음
+
+    if (tags.includes(trimmedTag)) {
+      rq.msgWarning('이미 등록된 태그입니다');
+      return;
+    }
+
+    if (tags.length >= 5) {
+      rq.msgWarning('태그는 최대 5개까지 등록할 수 있습니다');
+      return;
+    } // 최대 태그 개수를 초과한 경우 추가하지 않음
+
+    tags = [...tags, trimmedTag];
+    newTag = '';
+  }
+
+  function removeTag(tag: string) {
+    tags = tags.filter((t) => t !== tag);
+  }
 </script>
 
 {#await load()}
@@ -102,6 +133,35 @@
               placeholder="Enter title"
               bind:value={initialData.title}
             />
+          </div>
+          <div class="my-4">
+            <input
+              type="text"
+              bind:value={newTag}
+              placeholder="태그를 입력하세요"
+              class="px-4 py-2 border rounded-lg mr-2 focus:outline-none focus:border-blue-500"
+              on:keypress={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault(); // 기본 동작인 폼 전송을 막습니다.
+                  addTag();
+                }
+              }}
+            />
+            <button
+              on:click={addTag}
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">추가</button
+            >
+          </div>
+
+          <div class="my-4">
+            {#each tags as tag}
+              <span
+                class="inline-flex items-center bg-gray-200 text-gray-800 px-2 py-1 rounded-full mr-2 mb-2"
+              >
+                <span>{tag}</span>
+                <button on:click={() => removeTag(tag)} class="ml-2">&times;</button>
+              </span>
+            {/each}
           </div>
           <div class="space-y-2">
             <label

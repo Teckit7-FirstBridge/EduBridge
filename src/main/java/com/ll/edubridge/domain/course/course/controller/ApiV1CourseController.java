@@ -80,7 +80,6 @@ public class ApiV1CourseController {
             @RequestBody CourseDto courseDto) {
 
 
-        //TODO: 강좌를 수정할 수 있는 사람인지
         if (!courseService.haveAuthority(courseDto.getWriter_id()))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
@@ -96,7 +95,6 @@ public class ApiV1CourseController {
     @Operation(summary = "강좌 삭제")
     public RsData<Empty> deleteCourse(@PathVariable("id") Long id,@PathVariable Long writer_id) {
 
-        //TODO: 삭제할 수 있는 사람인지
         if (!courseService.haveAuthority(writer_id))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
