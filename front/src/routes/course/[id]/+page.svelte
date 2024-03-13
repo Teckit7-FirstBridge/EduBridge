@@ -72,13 +72,16 @@
     console.log(course);
     courseConfirm = course.confirm!;
 
-    const responseEnroll = await rq.apiEndPoints().GET(`/api/v1/admin/{courseId}/enroll`, {
-      params: {
-        path: {
-          courseId: parseInt($page.params.id)
+    const responseEnroll = await rq
+      .apiEndPoints()
+      .GET(`/api/v1/courses/{courseId}/enroll/{writerId}`, {
+        params: {
+          path: {
+            courseId: parseInt($page.params.id),
+            writerId: course.writer_id!
+          }
         }
-      }
-    });
+      });
     enroll = responseEnroll.data?.data!;
 
     const responseAuth = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}/auth`, {
@@ -100,13 +103,13 @@
     const isConfirmed = confirm('강좌를 삭제하시겠습니까?');
 
     if (isConfirmed) {
-      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/admin/courses/{id}`, {
-        params: { path: { id: parseInt($page.params.id) } }
+      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}/{writer_id}`, {
+        params: { path: { id: parseInt($page.params.id), writer_id: course.writer_id } }
       });
 
       if (data) {
         rq.msgInfo('강좌가 삭제되었습니다');
-        rq.goTo('/adm/course');
+        rq.goTo('/course');
       } else if (error) {
         rq.msgError(error.msg);
       }
@@ -119,8 +122,8 @@
     if (isConfirmed) {
       const { data, error } = await rq
         .apiEndPoints()
-        .PUT(`/api/v1/courses/{courseId}/startOrStop`, {
-          params: { path: { courseId: parseInt($page.params.id) } }
+        .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
+          params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
         });
 
       if (data) {
@@ -137,9 +140,11 @@
     const isConfirmed = confirm('강좌를 비공개 하시겠습니까?');
 
     if (isConfirmed) {
-      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startOrStop`, {
-        params: { path: { courseId: parseInt($page.params.id) } }
-      });
+      const { data, error } = await rq
+        .apiEndPoints()
+        .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
+          params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
+        });
 
       if (data) {
         rq.msgInfo('강좌가 비공개되었습니다');
@@ -189,8 +194,14 @@
     if (isConfirmed) {
       const { data, error } = await rq
         .apiEndPoints()
-        .DELETE(`/api/v1/admin/{courseId}/videos/{id}`, {
-          params: { path: { courseId: parseInt($page.params.id), id: video.id } }
+        .DELETE(`/api/v1/courses/{courseId}/videos/{id}/{writer_id}`, {
+          params: {
+            path: {
+              courseId: parseInt($page.params.id),
+              id: video.id,
+              writer_id: course.writer_id!
+            }
+          }
         });
 
       if (data) {
@@ -279,7 +290,7 @@
           </h1>
 
           <div class="flex">
-            {#if !auth.enroll && !(rq.member.id == course.writer_id)}
+            {#if !auth.enroll && !(rq.member.id == course.writer_id) && !rq.isAdmin()}
               <div class="flex">
                 <div class="mt-2">
                   <p class="course-price">{course.price}원</p>
@@ -288,7 +299,7 @@
               </div>
             {/if}
           </div>
-          {#if rq.member.id === course.writer_id}
+          {#if rq.member.id === course.writer_id || rq.isAdmin()}
             <div class="mb-5 mx-2 items-center">
               <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
               <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
@@ -341,10 +352,11 @@
           ></ToastUiEditor>
         </div>
 
-        {#if rq.member.id === course.writer_id}
+        {#if rq.member.id === course.writer_id || rq.isAdmin()}
           <div class="flex justify-end">
-            <a class=" mx-10 btn w-24 text-center" href="/course/{$page.params.id}/videowrite"
-              >강의 등록</a
+            <a
+              class=" mx-10 btn w-24 text-center"
+              href="/course/{$page.params.id}/videowrite?writer_id={course.writer_id}">강의 등록</a
             >
           </div>
         {/if}
@@ -420,10 +432,10 @@
                       </td>
 
                       <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                        {#if rq.isAdmin()}
+                        {#if rq.isAdmin() || rq.member.id === course.writer_id}
                           <div class="mb-5 mx-2 items-center">
                             <a
-                              href="/course/{video.courseId}/videoedit/{video.id}"
+                              href="/course/{video.courseId}/videoedit/{video.id}?writer_id={course.writer_id}"
                               class="btn btn-sm">수정</a
                             >
                             <button on:click={() => deleteVideo(video)} class="btn btn-sm"

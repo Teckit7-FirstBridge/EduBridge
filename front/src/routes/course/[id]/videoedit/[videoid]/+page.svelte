@@ -14,12 +14,16 @@
     const { isAdmin } = isAdminResponse.data?.data!;
     const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
     const { isLogin } = isLoginResponse.data?.data!;
-    if (!isAdmin && isLogin) {
-      rq.msgError('관리자 권한이 없습니다');
+    if (
+      !isAdmin &&
+      rq.member.id !== parseInt($page.url.searchParams.get('writer_id')!) &&
+      isLogin
+    ) {
+      rq.msgError('권한이 없습니다');
       rq.goTo('/');
     }
-    if (!isAdmin && !isLogin) {
-      rq.msgWarning('관리자 로그인 후 이용 해 주세요');
+    if (!isLogin) {
+      rq.msgWarning('로그인 후 이용 해 주세요');
       rq.goTo('/member/login');
     }
 
@@ -35,7 +39,7 @@
     url = video?.url;
     imgUrl = video?.imgUrl;
     overview = video?.overView;
-    keywords = video?.keywords;
+    keywords = video?.keywords!;
     return video;
   }
 
@@ -65,18 +69,26 @@
       return;
     }
 
-    const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/videos/{id}`, {
-      params: { path: { courseId: parseInt($page.params.id), id: parseInt($page.params.videoid) } },
-      body: {
-        id: parseInt($page.params.videoid),
-        url: url!,
-        imgUrl: imgUrl,
-        overView: overview,
-        courseId: parseInt($page.params.id),
+    const { data, error } = await rq
+      .apiEndPoints()
+      .PUT(`/api/v1/courses/{courseId}/videos/{id}/{writer_id}`, {
+        params: {
+          path: {
+            courseId: parseInt($page.params.id),
+            id: parseInt($page.params.videoid),
+            writer_id: parseInt($page.url.searchParams.get('writer_id')!)
+          }
+        },
+        body: {
+          id: parseInt($page.params.videoid),
+          url: url!,
+          imgUrl: imgUrl,
+          overView: overview,
+          courseId: parseInt($page.params.id),
 
-        keywords: keywords
-      }
-    });
+          keywords: keywords
+        }
+      });
     if (data) {
       rq.goTo(`/course/${$page.params.id}`);
     }

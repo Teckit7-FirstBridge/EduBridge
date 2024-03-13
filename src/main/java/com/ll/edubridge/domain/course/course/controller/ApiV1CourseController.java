@@ -6,7 +6,13 @@ import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
+import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
+import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
+import com.ll.edubridge.domain.course.video.dto.VideoDto;
+import com.ll.edubridge.domain.course.video.entity.Video;
+import com.ll.edubridge.domain.course.video.service.VideoService;
+import com.ll.edubridge.domain.home.admin.dto.AdminCourseEnrollDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -14,6 +20,7 @@ import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
+import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.KwTypeCourse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,6 +47,7 @@ public class ApiV1CourseController {
     private final CourseService courseService;
     private final Rq rq;
     private final CourseEnrollService courseEnrollService;
+    private final VideoService videoService;
 
     @Getter
     public class GetCoursesResponsebody {
@@ -63,6 +71,136 @@ public class ApiV1CourseController {
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
                 Msg.E200_0_CREATE_SUCCEED.getMsg(),
                 createdCourseDto);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "강좌 수정")
+    public RsData<CourseDto> modifyCourse(
+            @PathVariable("id") Long id,
+            @RequestBody CourseDto courseDto) {
+
+
+        //TODO: 강좌를 수정할 수 있는 사람인지
+        if (!courseService.haveAuthority(courseDto.getWriter_id()))
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
+
+        Course modifyCourse = courseService.modify(id, courseDto);
+
+        CourseDto modifyCourseDto = new CourseDto(modifyCourse,rq.getMember());
+
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
+                Msg.E200_2_MODIFY_SUCCEED.getMsg(), modifyCourseDto);
+    }
+
+    @DeleteMapping("/{id}/{writer_id}")
+    @Operation(summary = "강좌 삭제")
+    public RsData<Empty> deleteCourse(@PathVariable("id") Long id,@PathVariable Long writer_id) {
+
+        //TODO: 삭제할 수 있는 사람인지
+        if (!courseService.haveAuthority(writer_id))
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
+
+        courseService.delete(id);
+
+        return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
+                Msg.E200_3_DELETE_SUCCEED.getMsg());
+    }
+
+    @PutMapping("/{courseId}/videos/{id}/{writer_id}")
+    @Operation(summary = "강의 수정")
+    public RsData<VideoDto> modifyVideo(@PathVariable("courseId") Long courseId,
+                                        @PathVariable Long writer_id,
+                                        @PathVariable("id") Long id,
+                                        @RequestBody VideoDto videoDto) {
+
+        if (!courseService.haveAuthority(writer_id))
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
+
+        Course course = courseService.getCourse(courseId);
+        if (course == null) {
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
+        }
+
+
+        Video video = videoService.findByCourseIdAndId(courseId, id);
+        if (video == null) {
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
+        }
+
+        Video modifyVideo = videoService.modify(id, videoDto);
+
+        VideoDto modifyVideoDto = new VideoDto(modifyVideo);
+
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
+                Msg.E200_2_MODIFY_SUCCEED.getMsg(),
+                modifyVideoDto);
+    }
+    @PostMapping("/{courseId}/videos/{writer_id}")
+    @Operation(summary = "강의 등록")
+    public RsData<CreateVideoDto> createVideo(@PathVariable("courseId") Long courseId,
+                                              @PathVariable Long writer_id,
+                                              @Valid @RequestBody CreateVideoDto createVideoDto) {
+
+        if (!courseService.haveAuthority(writer_id))
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
+        Course course = courseService.getCourse(courseId);
+
+
+        Video video = videoService.create(createVideoDto);
+        CreateVideoDto createdVideoDto = new CreateVideoDto(video);
+
+        return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
+                Msg.E200_0_CREATE_SUCCEED.getMsg(),
+                createdVideoDto);
+    }
+
+    @DeleteMapping("/{courseId}/videos/{id}/{writer_id}")
+    @Operation(summary = "강의 삭제")
+    public RsData<Empty> deleteVideo(@PathVariable("courseId") Long courseId,
+                                     @PathVariable("id") Long id,
+                                     @PathVariable Long writer_id) {
+
+        if (!courseService.haveAuthority(writer_id))
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
+
+        Course course = courseService.getCourse(courseId);
+
+        if (course == null) {
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
+        }
+
+        Video video = videoService.findByCourseIdAndId(courseId, id);
+        if (video == null) {
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
+        }
+
+        videoService.delete(id);
+
+        return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
+                Msg.E200_3_DELETE_SUCCEED.getMsg());
+    }
+
+    @GetMapping(value = "/{courseId}/enroll/{writerId}")
+    @Operation(summary = "강좌별 수강생 목록")
+    public RsData<List<AdminCourseEnrollDto>> getEnrollByCourseId(
+            @PathVariable("courseId") Long courseId,
+            @PathVariable Long writerId) {
+
+
+        if (!courseService.haveAuthority(writerId))
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
+
+        List<CourseEnroll> courseEnrolls = courseEnrollService.findByCourseId(courseId);
+
+        List<AdminCourseEnrollDto> enrollList = courseEnrolls.stream()
+                .map(AdminCourseEnrollDto::new)
+                .toList();
+
+        return RsData.of(
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                enrollList
+        );
     }
 
     @GetMapping(value = "")
@@ -114,9 +252,13 @@ public class ApiV1CourseController {
         );
     }
 
-    @PutMapping("/{courseId}/startOrStop")
+    @PutMapping("/{courseId}/startOrStop/{writer_id}")
     @Operation(summary = "강좌 공개 or 비공개")
-    public RsData<CourseDto> startOrStopCourse(@PathVariable("courseId") Long courseId){
+    public RsData<CourseDto> startOrStopCourse(@PathVariable("courseId") Long courseId,@PathVariable Long writer_id){
+
+        if (!courseService.haveAuthority(writer_id))
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
+
         Course course = courseService.startOrstop(courseId);
         CourseDto courseDto = new CourseDto(course,rq.getMember());
         return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),Msg.E200_2_MODIFY_SUCCEED.getMsg(),courseDto);

@@ -83,12 +83,12 @@ public class CourseService {
     }
 
     @Transactional
-    public boolean haveAuthority() {
+    public boolean haveAuthority(Long id) {
         Member member = rq.getMember();
 
         if (member == null) return false;
 
-        if (rq.isAdmin()) return true;
+        if (rq.isAdmin() || rq.getMember().getId().equals(id)) return true;
 
         return false;
     }

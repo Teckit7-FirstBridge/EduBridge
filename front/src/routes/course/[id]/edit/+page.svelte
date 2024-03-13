@@ -13,24 +13,22 @@
   let initialData: components['schemas']['CourseDto'] | undefined = $state();
 
   async function load() {
-    const isAdminResponse = await rq.apiEndPoints().GET(`/api/v1/members/isAdmin`);
-    const { isAdmin } = isAdminResponse.data?.data!;
     const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
     const { isLogin } = isLoginResponse.data?.data!;
-    if (!isAdmin && isLogin) {
-      rq.msgError('관리자 권한이 없습니다');
-      rq.goTo('/');
-    }
-    if (!isAdmin && !isLogin) {
-      rq.msgWarning('관리자 로그인 후 이용 해 주세요');
-      rq.goTo('/member/login');
-    }
 
     const { data } = await rq.apiEndPoints().GET('/api/v1/courses/{courseId}', {
       params: { path: { courseId: parseInt($page.params.id) } }
     });
 
     initialData = data!.data;
+    if (rq.member.id !== initialData.writer_id && isLogin) {
+      rq.msgError(' 권한이 없는 유저입니다');
+      rq.goTo('/');
+    }
+    if (!isLogin) {
+      rq.msgWarning('로그인 후 이용 해 주세요');
+      rq.goTo('/member/login');
+    }
 
     return { initialData };
   }
@@ -67,19 +65,18 @@
       return;
     }
 
-    const { data, error } = await rq
-      .apiEndPointsWithFetch(fetch)
-      .PUT('/api/v1/admin/courses/{id}', {
-        params: { path: { id: parseInt($page.params.id) } },
-        // url 설정
-        body: {
-          id: parseInt($page.params.id),
-          title: title,
-          notice: newNoti,
-          overView: newOverview,
-          imgUrl: initialData?.imgUrl
-        }
-      });
+    const { data, error } = await rq.apiEndPointsWithFetch(fetch).PUT('/api/v1/courses/{id}', {
+      params: { path: { id: parseInt($page.params.id) } },
+      // url 설정
+      body: {
+        id: parseInt($page.params.id),
+        title: title,
+        notice: newNoti,
+        overView: newOverview,
+        imgUrl: initialData?.imgUrl,
+        writer_id: initialData?.writer_id
+      }
+    });
 
     if (data) {
       rq.msgInfo(data.msg); //msg
@@ -91,7 +88,7 @@
 {#await load()}
   <h1>loading...</h1>
 {:then { initialData }}
-  {#if rq.isAdmin()}
+  {#if rq.isAdmin() || rq.member.id === initialData.writer_id}
     <div class="px-60">
       <div class="flex flex-col h-full px-4 py-6 md:px-6 lg:py-16 md:py-12">
         <div class="space-y-4">
