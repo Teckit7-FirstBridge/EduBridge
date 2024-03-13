@@ -27,6 +27,18 @@
     modalpoint.showModal();
   }
 
+  function handleOutsideClickCal(event) {
+    if (event.target === calModal) {
+      calModal.close();
+    }
+  }
+
+  function handleOutsideClickPoint(event) {
+    if (event.target === modalpoint) {
+      modalpoint.close();
+    }
+  }
+
   let point: components['schemas']['PointDto'] = $state();
 
   async function load() {
@@ -125,7 +137,12 @@
 
         <div class="flex gap-x-4 relative items-center">
           <button onclick={openModalPoint} class="btn btn-sm">포인트 : {member?.point}</button>
-          <dialog id="my_modal_3" class="modal" bind:this={modalpoint}>
+          <dialog
+            id="my_modal_3"
+            class="modal"
+            bind:this={modalpoint}
+            on:click={handleOutsideClickPoint}
+          >
             <div class="modal-box modal-box-1">
               <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -252,25 +269,16 @@
     <a href="/" class="btn btn-outline btn-error m-5">접근 불가 메인으로</a>
   {/if}
 {/await}
-<div class="mt-2 max-w-4xl mx-auto">
-  <div class="collapse bg-white collapse-arrow">
-    <input type="checkbox" />
-    <div class="collapse-title text-xl font-medium">
-      <i class="fa-regular fa-calendar-days mr-2"></i>출석 체크
-    </div>
-    <div class="collapse-content bg-yellow-50">
-      <div bind:this={calendarEl}></div>
-    </div>
-  </div>
-</div>
 <div class="flex gap-x-4 relative items-center">
-  <button onclick={openModalCal} class="btn btn-sm">출석 체크</button>
-  <dialog id="my_modal_3" class="modal" bind:this={calModal}>
+  <button onclick={openModalCal} class="btn btn-sm text-xl m-4 bg-white border-white"
+    >출석 체크</button
+  >
+  <dialog id="my_modal_3" class="modal" bind:this={calModal} on:click={handleOutsideClickCal}>
     <div class="modal-box modal-box-1">
       <form method="dialog">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
       </form>
-      <div class="flex flex-col p-1 bg-white shadow rounded-lg">
+      <div class="flex flex-col p-1 bg-white shadow rounded-lg mt-4">
         <div bind:this={calendarEl}></div>
       </div>
     </div>
