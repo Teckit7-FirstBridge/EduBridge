@@ -17,7 +17,13 @@
 
   let modalpoint;
 
-  function openModalEnRoll() {
+  let calModal;
+
+  function openModalCal() {
+    calModal.showModal();
+  }
+
+  function openModalPoint() {
     modalpoint.showModal();
   }
 
@@ -48,10 +54,10 @@
     const notificationResponse = await rq.apiEndPoints().GET(`/api/v1/notification/isAlarm`);
     isAlarm = notificationResponse.data?.data!;
     console.log(isAlarm);
-    const responsePoint = await rq.apiEndPoints().GET(`/api/v1/{ownerId}`, {
+    const responsePoint = await rq.apiEndPoints().GET(`/api/v1/{memberId}`, {
       params: {
         path: {
-          ownerId: member.id
+          memberId: member.id
         }
       }
     });
@@ -118,7 +124,7 @@
         >
 
         <div class="flex gap-x-4 relative items-center">
-          <button onclick={openModalEnRoll} class="btn btn-sm">포인트 : {member?.point}</button>
+          <button onclick={openModalPoint} class="btn btn-sm">포인트 : {member?.point}</button>
           <dialog id="my_modal_3" class="modal" bind:this={modalpoint}>
             <div class="modal-box modal-box-1">
               <form method="dialog">
@@ -256,4 +262,17 @@
       <div bind:this={calendarEl}></div>
     </div>
   </div>
+</div>
+<div class="flex gap-x-4 relative items-center">
+  <button onclick={openModalCal} class="btn btn-sm">출석 체크</button>
+  <dialog id="my_modal_3" class="modal" bind:this={calModal}>
+    <div class="modal-box modal-box-1">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      </form>
+      <div class="flex flex-col p-1 bg-white shadow rounded-lg">
+        <div bind:this={calendarEl}></div>
+      </div>
+    </div>
+  </dialog>
 </div>
