@@ -30,6 +30,11 @@
   }
 
   const submitForm = async () => {
+    if (title.length < 1) {
+      rq.msgWarning('제목을 입력 해 주세요');
+      return;
+    }
+
     if (url.length < 1) {
       rq.msgWarning('동영상 주소를 입력 해 주세요.');
       return;
@@ -50,6 +55,7 @@
       rq.msgWarning('개요를 입력 해 주세요.');
       return;
     }
+    console.log(title);
 
     const { data, error } = await rq
       .apiEndPoints()
@@ -65,7 +71,8 @@
           overView: overview,
           courseId: parseInt($page.params.id),
           imgUrl: imgUrl,
-          keywords: keywords
+          keywords: keywords,
+          title: title
         }
       });
     if (data) {
@@ -86,6 +93,16 @@
           class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           on:submit|preventDefault={submitForm}
         >
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> 제 목 </label>
+            <input
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="title"
+              type="text"
+              placeholder="Enter the title "
+              bind:value={title}
+            />
+          </div>
           <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="video-url">
               강의 Url

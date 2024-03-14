@@ -180,11 +180,13 @@ public class ApiV1CourseController {
     @PutMapping("/{courseId}/startOrStop/{writer_id}")
     @Operation(summary = "강좌 공개 or 비공개")
     public RsData<CourseDto> startOrStopCourse(@PathVariable("courseId") Long courseId,@PathVariable Long writer_id){
-
         if (!courseService.haveAuthority(writer_id))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
-
-        Course course = courseService.startOrstop(courseId);
+        Course course = courseService.getCourse(courseId);
+        if(course.getVideoList().size()<=AppConfig.videoMinNum){
+            throw new GlobalException(CodeMsg.E400_9_VIDEO_LESS_THAN_5_CANNOT_PUBLISH.getCode(),CodeMsg.E400_9_VIDEO_LESS_THAN_5_CANNOT_PUBLISH.getMessage());
+        }
+        course = courseService.startOrstop(course);
         CourseDto courseDto = new CourseDto(course,rq.getMember());
         return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),Msg.E200_2_MODIFY_SUCCEED.getMsg(),courseDto);
     }

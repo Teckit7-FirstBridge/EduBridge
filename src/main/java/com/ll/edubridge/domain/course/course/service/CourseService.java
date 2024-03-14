@@ -144,8 +144,7 @@ public class CourseService {
     }
 
     @Transactional
-    public Course startOrstop(Long courseId){
-        Course course = this.getCourse(courseId);
+    public Course startOrstop(Course course){
         course.setConfirm(!course.getConfirm());
         return courseRepository.save(course);
     }

@@ -339,9 +339,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      profileImgUrlOrDefault?: string;
-      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
+      authoritiesAsStringList?: string[];
+      profileImgUrlOrDefault?: string;
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -409,6 +409,7 @@ export interface components {
       courseId: number;
       summaryNotes: components["schemas"]["SummaryNoteDto"][];
       keywords: string;
+      title: string;
     };
     RsDataVideoDto: {
       resultCode: string;
@@ -520,6 +521,7 @@ export interface components {
       courseId?: number;
       imgUrl: string;
       keywords: string;
+      title: string;
     };
     RsDataCreateVideoDto: {
       resultCode: string;

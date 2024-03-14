@@ -115,22 +115,25 @@
   }
 
   async function startCourse() {
-    const isConfirmed = confirm('강좌를 공개하시겠습니까?');
+    if (course.videoCount! < 5) {
+      rq.msgWarning('영상이 5개 이하이면 공개할 수 없습니다');
+    } else {
+      const isConfirmed = confirm('강좌를 공개하시겠습니까?');
 
-    if (isConfirmed) {
-      const { data, error } = await rq
-        .apiEndPoints()
-        .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
-          params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
-        });
+      if (isConfirmed) {
+        const { data, error } = await rq
+          .apiEndPoints()
+          .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
+            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
+          });
 
-      if (data) {
-        rq.msgInfo('강좌가 공개되었습니다');
-        courseConfirm = true;
-        // window.location.reload();
-      } else if (error) {
-        rq.msgError(error.msg);
-        window.location.reload();
+        if (data) {
+          rq.msgInfo('강좌가 공개되었습니다');
+          courseConfirm = true;
+          // window.location.reload();
+        } else if (error) {
+          rq.msgError('영상이 5개 이하이면 공개할 수 없습니다');
+        }
       }
     }
   }
@@ -284,58 +287,58 @@
                   </svg>
                 {/if}
               </div>
-              {#each hashtags as hashtag}
-                <div class="ml-4">
-                  <div class="flex text-amber-600 text-sm text-center items-center">
-                    #{hashtag}
-                  </div>
-                </div>
-              {/each}
             </div>
           </h1>
-
-          <div class="flex">
-            {#if !auth.enroll && !(rq.member.id == course.writer_id) && !rq.isAdmin()}
-              <div class="flex">
-                <div class="mt-2">
-                  <p class="course-price">{course.price}원</p>
-                </div>
-                <button on:click={enrollCourse} class="enroll-button ml-2">수강 등록</button>
+        </div>
+        <div class="flex">
+          {#each hashtags as hashtag}
+            <div class="">
+              <div class="flex text-amber-600 text-sm text-center items-center ml-2">
+                #{hashtag}
               </div>
-            {/if}
-          </div>
-          {#if rq.member.id === course.writer_id || rq.isAdmin()}
-            <div class="mb-5 mx-2 items-center">
-              <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
-              <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
-              {#if !courseConfirm}
-                <button on:click={startCourse} class="btn btn-sm">강좌 공개</button>
-              {:else}
-                <button on:click={stopCourse} class="btn btn-sm">강좌 비공개</button>
-                <button onclick={openModalEnRoll} class="btn btn-sm">수강생 목록</button>
-                <dialog id="my_modal_3" class="modal" bind:this={modalenroll}>
-                  <div class="modal-box">
-                    <form method="dialog">
-                      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                        >✕</button
-                      >
-                    </form>
-                    <div class="flex flex-col p-6 bg-white shadow rounded-lg">
-                      <h2 class="text-xl font-semibold mb-4 border-b pb-2">수강생 목록</h2>
-                      {#each enroll as enroll}
-                        <div
-                          class="py-2 px-4 bg-gray-100 rounded-md mb-2 shadow-sm hover:bg-gray-200 transition-colors"
-                        >
-                          {enroll.name}
-                        </div>
-                      {/each}
-                    </div>
-                  </div>
-                </dialog>
-              {/if}
+            </div>
+          {/each}
+        </div>
+        <div class="flex">
+          {#if !auth.enroll && !(rq.member.id == course.writer_id) && !rq.isAdmin()}
+            <div class="flex">
+              <div class="mt-2">
+                <p class="course-price">{course.price}원</p>
+              </div>
+              <button on:click={enrollCourse} class="enroll-button ml-2">수강 등록</button>
             </div>
           {/if}
         </div>
+        {#if rq.member.id === course.writer_id || rq.isAdmin()}
+          <div class="mb-5 mx-2 items-center">
+            <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
+            <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
+            {#if !courseConfirm}
+              <button on:click={startCourse} class="btn btn-sm">강좌 공개</button>
+            {:else}
+              <button on:click={stopCourse} class="btn btn-sm">강좌 비공개</button>
+              <button onclick={openModalEnRoll} class="btn btn-sm">수강생 목록</button>
+              <dialog id="my_modal_3" class="modal" bind:this={modalenroll}>
+                <div class="modal-box">
+                  <form method="dialog">
+                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button
+                    >
+                  </form>
+                  <div class="flex flex-col p-6 bg-white shadow rounded-lg">
+                    <h2 class="text-xl font-semibold mb-4 border-b pb-2">수강생 목록</h2>
+                    {#each enroll as enroll}
+                      <div
+                        class="py-2 px-4 bg-gray-100 rounded-md mb-2 shadow-sm hover:bg-gray-200 transition-colors"
+                      >
+                        {enroll.name}
+                      </div>
+                    {/each}
+                  </div>
+                </div>
+              </dialog>
+            {/if}
+          </div>
+        {/if}
 
         <div class="mb-4 bg-white p-4 rounded-lg shadow-md">
           <h2 class="text-md md:text-lg font-semibold">공지사항</h2>
@@ -404,13 +407,16 @@
                       class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                     >
                       <td
-                        class="p-4 align-middle rounded-lg [&amp;:has([role=checkbox])]:pr-0 font-medium"
+                        class="flex justify-start p-4 align-middle rounded-lg [&amp;:has([role=checkbox])]:pr-0 font-medium"
                       >
-                        <img
-                          class="rounded-lg"
-                          src={video.imgUrl}
-                          on:click={() => window.open(video.url, '_blank')}
-                        />
+                        <div class="flex-col justify-center items-center">
+                          <img
+                            class="rounded-lg"
+                            src={video.imgUrl}
+                            on:click={() => window.open(video.url, '_blank')}
+                          />
+                          <div class="flex justify-center">{video.title}</div>
+                        </div>
                       </td>
                       <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                         <button
