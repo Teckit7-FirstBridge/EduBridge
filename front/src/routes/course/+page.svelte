@@ -137,6 +137,7 @@
                     <option value="ALL">전체</option>
                     <option value="TITLE">제목</option>
                     <option value="NAME">작성자</option>
+                    <option value="HASHTAGS">해시태그</option>
                   </select>
                 </div>
 

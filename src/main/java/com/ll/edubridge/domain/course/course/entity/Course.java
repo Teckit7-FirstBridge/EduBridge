@@ -54,4 +54,6 @@ public class Course extends BaseEntity {
     private String hashtags;
 
     private Long writer_id;
+
+    private String writer_nickname;
 }

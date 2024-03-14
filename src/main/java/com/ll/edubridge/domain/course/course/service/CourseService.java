@@ -6,6 +6,7 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
@@ -26,6 +27,7 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final Rq rq;
     private final CourseEnrollRepository courseEnrollRepository;
+    private final MemberService memberService;
 
     public List<Course> findAll() {
         return courseRepository.findAll();
@@ -39,6 +41,7 @@ public class CourseService {
     @Transactional
     public Course create(CreateCourseDto createCourseDto) {
 
+
         int price = 2000;
 
 
@@ -50,6 +53,7 @@ public class CourseService {
                 .price(price)
                 .writer_id(createCourseDto.getWriter_id())
                 .hashtags(createCourseDto.getHashtags())
+                .writer_nickname(memberService.getMember(createCourseDto.getWriter_id()).getNickname())
                 .build();
 
         return courseRepository.save(course);

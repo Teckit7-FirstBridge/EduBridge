@@ -105,9 +105,15 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
     private void applyKeywordFilter(KwTypeCourse kwType, String kw, BooleanBuilder builder) {
         switch (kwType) {
             case kwType.TITLE -> builder.and(course.title.containsIgnoreCase(kw));
-            default -> builder.and(
-                    course.title.containsIgnoreCase(kw)
-            );
+            case kwType.HASHTAGS -> builder.and(course.hashtags.containsIgnoreCase(kw));
+            case kwType.NAME -> builder.and(course.writer_nickname.containsIgnoreCase(kw));
+            default -> {
+                builder.andAnyOf(
+                        course.title.containsIgnoreCase(kw),
+                        course.hashtags.containsIgnoreCase(kw),
+                        course.writer_nickname.containsIgnoreCase(kw)
+                );
+            }
         }
     }
 
