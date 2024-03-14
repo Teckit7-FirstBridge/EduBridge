@@ -77,6 +77,12 @@ public class MemberService {
         return RsData.of("200-2","회원정보가 수정되었습니다.".formatted(member.getUsername()), member);
     }
 
+    @Transactional
+    public Member modifyNickname(Member member, String nickname) {
+        member.setNickname(nickname);
+
+        return memberRepository.save(member);
+    }
 
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
@@ -192,6 +198,7 @@ public class MemberService {
             member.setEnrollCount(0);
         }
         memberRepository.saveAll(allMembers);
+        // TODO :: 필요하면 출석체크로 로직을 바꿀 것
     }
 
     private List<Member> getAllMembers() {

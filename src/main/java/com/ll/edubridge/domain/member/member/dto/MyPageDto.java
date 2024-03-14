@@ -17,14 +17,12 @@ public class MyPageDto {
 
     private Member member;
 
-    public MyPageDto() {
-    }
-
     public MyPageDto(List<CourseDto> learningCourses, List<CourseDto> favoriteCourses, Member member) {
         this.learningCourses = learningCourses;
         this.favoriteCourses = favoriteCourses;
         this.member = member;
 
     }
-
+    public MyPageDto() {
+    }
 }
