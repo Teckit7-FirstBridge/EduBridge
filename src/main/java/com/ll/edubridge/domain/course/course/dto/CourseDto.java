@@ -19,6 +19,9 @@ public class CourseDto {
     private int videoCount;
     private Boolean confirm;
     private int enrollCount;
+    private Long writer_id;;
+    private String hashtags;
+
 
     public CourseDto(Course course, Member member) {
         this.id = course.getId();
@@ -26,13 +29,14 @@ public class CourseDto {
         this.notice = course.getNotice();
         this.imgUrl = course.getImgUrl();
         this.overView = course.getOverView();
-        this.grade = course.getGrade();
         this.price = course.getPrice();
         this.voteCount = course.getVoter().size();
         this.likedByCurrentUser = course.getVoter().contains(member);
         this.videoCount = course.getVideoList().size();
         this.confirm = course.getConfirm();
         this.enrollCount = course.getCourseEnrollList().size();
+        this.writer_id = course.getWriter_id();
+        this.hashtags = course.getHashtags();
     }
 
     public CourseDto() {

@@ -40,9 +40,6 @@ public class Course extends BaseEntity {
     @Builder.Default
     private Boolean confirm = false;
 
-    @Column(length = 20)
-    private String grade;
-
     @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     private List<Video> videoList;
@@ -53,4 +50,10 @@ public class Course extends BaseEntity {
     @JsonIgnore
     @ManyToMany
     Set<Member> voter;
+
+    private String hashtags;
+
+    private Long writer_id;
+
+    private String writer_nickname;
 }
