@@ -19,9 +19,10 @@
     const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
     const { isLogin } = isLoginResponse.data?.data!;
     if (!isLogin) {
-      rq.msgWarning('관리자 로그인 후 이용 해 주세요');
+      rq.msgWarning('로그인 후 이용 해 주세요');
       rq.goTo('/member/login');
     }
+    console.log(rq.member.id);
   }
 
   const Course__save = async () => {
@@ -51,23 +52,51 @@
       rq.msgWarning('썸네일 url을 jpg 형식으로 입력 해 주세요');
       return;
     }
-
-    const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/admin/courses', {
+    const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/courses/write', {
       // url 설정
       body: {
         title: title,
         notice: newNoti,
         overView: newOverview,
         imgUrl: imgUrl,
-        writer_id: rq.member.id
+        writer_id: rq.member.id,
+        hashtags: tags.join('@')
       }
     });
 
     if (data) {
       rq.msgInfo(data.msg); //msg
-      rq.goTo('/adm/course');
+      rq.goTo('/course');
     }
   };
+
+  let tags: string[] = $state([]);
+  let newTag: string = $state('');
+
+  function addTag() {
+    const trimmedTag = newTag.trim();
+    if (trimmedTag === '') {
+      rq.msgWarning('태그를 입력하세요');
+      return;
+    } // 빈 태그인 경우 추가하지 않음
+
+    if (tags.includes(trimmedTag)) {
+      rq.msgWarning('이미 등록된 태그입니다');
+      return;
+    }
+
+    if (tags.length >= 5) {
+      rq.msgWarning('태그는 최대 5개까지 등록할 수 있습니다');
+      return;
+    } // 최대 태그 개수를 초과한 경우 추가하지 않음
+
+    tags = [...tags, trimmedTag];
+    newTag = '';
+  }
+
+  function removeTag(tag: string) {
+    tags = tags.filter((t) => t !== tag);
+  }
 </script>
 
 {#await load()}
@@ -87,6 +116,36 @@
             bind:value={title}
           />
         </div>
+        <!-- hi -->
+        <div class="my-4">
+          <input
+            type="text"
+            bind:value={newTag}
+            placeholder="태그를 입력하세요"
+            class="px-4 py-2 border rounded-lg mr-2 focus:outline-none focus:border-blue-500"
+            on:keypress={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault(); // 기본 동작인 폼 전송을 막습니다.
+                addTag();
+              }
+            }}
+          />
+          <button
+            on:click={addTag}
+            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">추가</button
+          >
+        </div>
+
+        <div class="my-4">
+          {#each tags as tag}
+            <span
+              class="inline-flex items-center bg-gray-200 text-gray-800 px-2 py-1 rounded-full mr-2 mb-2"
+            >
+              <span>{tag}</span>
+              <button on:click={() => removeTag(tag)} class="ml-2">&times;</button>
+            </span>
+          {/each}
+        </div>
         <div class="space-y-2">
           <label
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -94,6 +153,7 @@
           >
           <div bind:this={divNoti} id="post-noti"></div>
           <ToastUiEditor bind:this={notieditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
+
           <label
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             for="post-overview">강좌 개요</label
