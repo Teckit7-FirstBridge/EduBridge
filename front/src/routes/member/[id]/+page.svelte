@@ -269,18 +269,20 @@
     <a href="/" class="btn btn-outline btn-error m-5">접근 불가 메인으로</a>
   {/if}
 {/await}
-<div class="flex gap-x-4 relative items-center">
-  <button onclick={openModalCal} class="btn btn-sm text-xl m-4 bg-white border-white"
-    >출석 체크</button
-  >
-  <dialog id="my_modal_3" class="modal" bind:this={calModal} on:click={handleOutsideClickCal}>
-    <div class="modal-box modal-box-1">
-      <form method="dialog">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-      </form>
-      <div class="flex flex-col p-1 bg-white shadow rounded-lg mt-4">
-        <div bind:this={calendarEl}></div>
+<div class="max-w-4xl mx-auto">
+  <div class="flex gap-x-4 relative items-center">
+    <button onclick={openModalCal} class="btn btn-sm text-xl m-4 bg-white border-white"
+      >출석 체크</button
+    >
+    <dialog id="my_modal_3" class="modal" bind:this={calModal} on:click={handleOutsideClickCal}>
+      <div class="modal-box">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <div class="flex flex-col bg-white shadow rounded-lg mt-4">
+          <div bind:this={calendarEl}></div>
+        </div>
       </div>
-    </div>
-  </dialog>
+    </dialog>
+  </div>
 </div>
