@@ -388,7 +388,7 @@ export interface components {
       enrollCount?: number;
       /** Format: int64 */
       writer_id?: number;
-      tags?: string;
+      hashtags?: string;
     };
     RsDataCourseDto: {
       resultCode: string;
@@ -537,7 +537,7 @@ export interface components {
       overView: string;
       /** Format: int64 */
       writer_id?: number;
-      tags?: string;
+      hashtags?: string;
     };
     RsDataCreateCourseDto: {
       resultCode: string;

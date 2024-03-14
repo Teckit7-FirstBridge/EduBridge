@@ -51,7 +51,7 @@ public class Course extends BaseEntity {
     @ManyToMany
     Set<Member> voter;
 
-    private String tags;
+    private String hashtags;
 
     private Long writer_id;
 }

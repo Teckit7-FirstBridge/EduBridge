@@ -5,6 +5,7 @@
   import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
   import { writable } from 'svelte/store';
 
+  let hashtags: string[] = $state([]);
   function goToVideo(videoUrl) {
     window.location.href = videoUrl;
   }
@@ -69,8 +70,8 @@
       }
     });
     course = responseCourse.data?.data!;
-    console.log(course);
     courseConfirm = course.confirm!;
+    hashtags = course.hashtags!.split('@');
 
     const responseEnroll = await rq
       .apiEndPoints()
@@ -93,10 +94,7 @@
     });
     auth = responseAuth.data?.data!;
 
-    console.log(rq.member.id);
-    console.log(course.writer_id);
-
-    return { videos, course, auth, enroll };
+    return { videos, course, auth, enroll, hashtags };
   }
 
   async function deleteCourse() {
@@ -240,13 +238,13 @@
 
 {#await load()}
   <div>loading...</div>
-{:then { videos, course, auth, enroll }}
+{:then { videos, course, auth, enroll, hashtags }}
   <div class="flex w-full justify-center items-center">
     <div class="flex flex-col">
       <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div class="flex items-center justify-between">
           <h1 class="font-semibold text-lg md:text-2xl">
-            <div class="flex">
+            <div class="flex text-center items-center">
               <div class="mx-2 mt-1">
                 {course!.title}
               </div>
@@ -286,6 +284,13 @@
                   </svg>
                 {/if}
               </div>
+              {#each hashtags as hashtag}
+                <div class="ml-4">
+                  <div class="flex text-amber-600 text-sm text-center items-center">
+                    #{hashtag}
+                  </div>
+                </div>
+              {/each}
             </div>
           </h1>
 

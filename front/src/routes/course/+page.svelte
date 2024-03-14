@@ -7,6 +7,7 @@
   let courselist: components['schemas']['CourseDto'][] | undefined;
   let likesList: Boolean[] = $state([]);
   let voteNumList: number[] = $state([]);
+  let hashtags: string[] = $state([]);
 
   function formatTitle(title) {
     return title.length > 11 ? `${title.substring(0, 11)}...` : title;
@@ -45,7 +46,6 @@
         }
       }
     });
-    console.log(data);
     courselist = data?.data.items!;
     likesList = courselist!.map((course) => course!.likedByCurrentUser!);
     voteNumList = courselist!.map((course) => course!.voteCount!);
@@ -179,7 +179,7 @@
                 <div class="flex justify-center gap-2">
                   <h2 class="text-lg font-semibold my-1 ml-2">{formatTitle(item.title)}</h2>
                 </div>
-                <div class="flex justify-center p-2 bg-black rounded-lg">
+                <div class="flex justify-center p-2 bg-black rounded-lg m-4">
                   <img src={item.imgUrl} />
                 </div>
 
@@ -187,44 +187,55 @@
                   {removeMarkdown(item.overView)}
                 </p>
               </a>
-              <div class=" flex justify-end gap-2 p-2" on:click={() => clickLiked(item)}>
-                {#if likesList[courselist.indexOf(item)]}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    height="24"
-                  >
-                    <!-- 빨간색 채워진 하트 -->
-                    <path
-                      fill="red"
-                      stroke="red"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                    />
-                  </svg>{:else}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    height="24"
-                  >
-                    <!-- 빨간색 빈 하트 -->
-                    <path
-                      fill="none"
-                      stroke="red"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                    />
-                  </svg>
+              <div class="flex items-center justify-between">
+                {#if item.hashtags}
+                  <div class="flex ml-4">
+                    {#each item.hashtags.split('@') as hashtag}
+                      <div class="flex text-amber-600 text-sm text-center items-center ml-2">
+                        #{hashtag}
+                      </div>
+                    {/each}
+                  </div>
                 {/if}
-                <span>
-                  {voteNumList[courselist!.indexOf(item)]}
-                </span>
+                <div class=" flex justify-end gap-2 p-2" on:click={() => clickLiked(item)}>
+                  {#if likesList[courselist.indexOf(item)]}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      height="24"
+                    >
+                      <!-- 빨간색 채워진 하트 -->
+                      <path
+                        fill="red"
+                        stroke="red"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                      />
+                    </svg>{:else}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      height="24"
+                    >
+                      <!-- 빨간색 빈 하트 -->
+                      <path
+                        fill="none"
+                        stroke="red"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                      />
+                    </svg>
+                  {/if}
+                  <span>
+                    {voteNumList[courselist!.indexOf(item)]}
+                  </span>
+                </div>
               </div>
             </div>
           {/each}

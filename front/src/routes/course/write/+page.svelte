@@ -60,7 +60,7 @@
         overView: newOverview,
         imgUrl: imgUrl,
         writer_id: rq.member.id,
-        tags: tags.join(',')
+        hashtags: tags.join('@')
       }
     });
 

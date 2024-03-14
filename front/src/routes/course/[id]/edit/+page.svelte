@@ -29,8 +29,8 @@
       rq.msgWarning('로그인 후 이용 해 주세요');
       rq.goTo('/member/login');
     }
-    if (initialData.tags && initialData.tags?.split(',').length > 0) {
-      tags = initialData.tags?.split(',');
+    if (initialData.tags && initialData.tags?.split('@').length > 0) {
+      tags = initialData.tags?.split('@');
     }
     return { initialData };
   }
@@ -77,7 +77,7 @@
         overView: newOverview,
         imgUrl: initialData?.imgUrl,
         writer_id: initialData?.writer_id,
-        tags: tags.join(',')
+        tags: tags.join('@')
       }
     });
 
