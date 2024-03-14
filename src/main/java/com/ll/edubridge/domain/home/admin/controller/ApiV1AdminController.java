@@ -320,11 +320,16 @@ public class ApiV1AdminController {
     @PostMapping("/courses")
     @Operation(summary = "강좌 등록")
     public RsData<CreateCourseDto> createCourse(@Valid @RequestBody CreateCourseDto createCourseDto) {
-
         if (!courseService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
-        Course course = courseService.create(createCourseDto);
+        Course course;
+
+        if (memberService.canEnroll(rq.getMember())){
+             course = courseService.create(createCourseDto);
+        }else{
+            throw new GlobalException(CodeMsg.E400_9_COUNT_ALREADY_FULL.getCode(), CodeMsg.E400_9_COUNT_ALREADY_FULL.getMessage());
+        }
 
         CreateCourseDto createdCourseDto = new CreateCourseDto(course);
 

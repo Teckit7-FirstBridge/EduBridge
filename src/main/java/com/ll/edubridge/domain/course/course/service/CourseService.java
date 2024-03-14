@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +27,8 @@ public class CourseService {
     private final Rq rq;
     private final CourseEnrollRepository courseEnrollRepository;
 
+
+
     public List<Course> findAll() {
         return courseRepository.findAll();
     }
@@ -36,8 +36,6 @@ public class CourseService {
     public Optional<Course> findById(Long id) {
         return courseRepository.findById(id);
     }
-
-    private Map<String, Integer> userCourseLimit = new ConcurrentHashMap<>();
 
     @Transactional
     public Course create(CreateCourseDto createCourseDto) {
@@ -159,11 +157,4 @@ public class CourseService {
         return courseRepository.findTop5ByOrderByIdDesc();
     }
 
-    public void registerCourse(String userId) {
-        userCourseLimit.computeIfPresent(userId, (key, val) -> val < 5 ? val + 1 : val);
-    }
-
-    public void resetCourseLimit() {
-        userCourseLimit.clear();
-    }
 }

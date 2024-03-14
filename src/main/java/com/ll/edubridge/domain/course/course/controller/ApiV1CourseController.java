@@ -129,4 +129,6 @@ public class ApiV1CourseController {
         return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getCode(),
                 Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getMsg());
     }
+
+
 }
