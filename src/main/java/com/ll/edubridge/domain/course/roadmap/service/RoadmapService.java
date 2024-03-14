@@ -62,7 +62,7 @@ public class RoadmapService {
                 .title(createroadmapDto.getTitle())
                 .overView(createroadmapDto.getOverView())
                 .curriculum(createroadmapDto.getCurriculum())
-                .hashtags(String.join("@", createroadmapDto.getHashtags()))
+                .hashtags(createroadmapDto.getHashtags())
                 .owner(rq.getMember().getUsername())
                 .build();
     }

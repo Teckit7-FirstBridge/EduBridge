@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -31,7 +30,7 @@ public class RoadmapDto {
     private List<Course> curriculum;
 
     @NonNull
-    private List<String> hashtags;
+    private String hashtags;
 
     @NonNull
     private String owner;
@@ -41,7 +40,7 @@ public class RoadmapDto {
         this.title = roadmap.getTitle();
         this.overView = roadmap.getOverView();
         this.curriculum = roadmap.getCurriculum();
-        this.hashtags = this.getHashtagsList(roadmap.getHashtags());
+        this.hashtags = roadmap.getHashtags();
         this.owner = member.getUsername();
     }
 
@@ -50,12 +49,8 @@ public class RoadmapDto {
         this.title = roadmap.getTitle();
         this.overView = roadmap.getOverView();
         this.curriculum = roadmap.getCurriculum();
-        this.hashtags = this.getHashtagsList(roadmap.getHashtags());
+        this.hashtags = roadmap.getHashtags();
     }
 
     public RoadmapDto() {}
-
-    private List<String> getHashtagsList(String hashtagsStr) {
-        return Arrays.asList(hashtagsStr.split("@"));
-    }
 }
