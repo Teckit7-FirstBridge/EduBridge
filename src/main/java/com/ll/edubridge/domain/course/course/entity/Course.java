@@ -2,6 +2,7 @@ package com.ll.edubridge.domain.course.course.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
+import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
@@ -51,9 +52,13 @@ public class Course extends BaseEntity {
     @ManyToMany
     Set<Member> voter;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Roadmap roadmap;
+
     private String hashtags;
 
     private Long writer_id;
 
     private String writer_nickname;
+
 }
