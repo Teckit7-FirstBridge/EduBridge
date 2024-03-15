@@ -158,10 +158,6 @@ body {
   height: 500px;
 }
 
-.modal-box-2 {
-  height: 150px;
-}
-
 .fc-event {
   display: flex; /* Flexbox 컨테이너 설정 */
   align-items: center; /* 세로축 가운데 정렬 */
@@ -173,15 +169,19 @@ body {
   padding: 5px; /* 필요에 따라 패딩 조정 */
 }
 
-@media (max-width: 299px) {
+.fc-daygrid-day-number {
+  font-size: 12px; /* 원하는 글씨 크기로 조정 */
+}
+
+@media (max-width: 280px) {
   .fc-header-toolbar {
-    font-size: 12px; /* 가로 길이가 300px 미만일 때 글씨 크기 */
+    font-size: 10px; /* 가로 길이가 300px 미만일 때 글씨 크기 */
   }
   .fc-daygrid-day-number {
-    font-size: 12px; /* 원하는 글씨 크기로 조정 */
+    font-size: 8px; /* 원하는 글씨 크기로 조정 */
   }
 }
 
-.collapse-content {
+.collapse-content{
   border-radius: 15px;
 }
