@@ -32,6 +32,8 @@ public class MemberDto { // 엔티티(JPA(보안이 민감한 정보가 들어�
   
     private int point;
 
+    private int enrollCount;
+
     public MemberDto(Member member) {
         this.id = member.getId();
         this.createDate = member.getCreateDate();
@@ -42,5 +44,6 @@ public class MemberDto { // 엔티티(JPA(보안이 민감한 정보가 들어�
         this.dailyGoal = member.getDailyGoal();
         this.dailyAchievement = member.getDailyAchievement();
         this.point = member.getPoint();
+        this.enrollCount = member.getEnrollCount();
     }
 }

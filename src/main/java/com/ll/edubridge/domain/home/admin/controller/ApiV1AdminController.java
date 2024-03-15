@@ -223,15 +223,6 @@ public class ApiV1AdminController {
         return dto;
     }
 
-
-
-
-
-
-
-
-
-
     @PatchMapping("/posts/{postId}/report")
     @Operation(summary = "게시물 신고 취소")
     public RsData<Empty> cancelReport(@PathVariable("postId") Long id) {
