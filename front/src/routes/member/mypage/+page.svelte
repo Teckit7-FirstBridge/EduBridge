@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
+  import { writable } from 'svelte/store';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
   import { Calendar } from '@fullcalendar/core';
@@ -10,14 +11,43 @@
   let favoriteCourses: components['schemas']['CourseDto'][] = $state();
   let summaryNotes: components['schemas']['SummaryNoteDto'][] = $state();
   let attends: components['schemas']['AttendDto'][];
+  let initialData: components['schemas']['NickNameDto'] | undefined = $state();
 
   let calendarEl;
   let calendar;
   let isAlarm = false;
+  let newNickname = $state();
 
   let modalpoint;
 
+  let modalNickname;
+
+  const updateNickname = async () => {
+    const { data, error } = await rq.apiEndPoints().PUT('/api/v1/members/modifyNickName', {
+      body: {
+        nickName: newNickname
+      }
+    });
+    if (data) {
+      rq.msgInfo('닉네임이 변경 되었습니다.'); //msg
+      rq.goTo('/member/mypage');
+      console.log(newNickname);
+    } else {
+      rq.msgError('변경 오류');
+    }
+  };
+
   let calModal;
+
+  function openModalNickname() {
+    modalNickname.showModal();
+  }
+
+  function handleOutsideClickNickname(event) {
+    if (event.target === modalNickname) {
+      modalNickname.close();
+    }
+  }
 
   function openModalCal() {
     calModal.showModal();
@@ -167,71 +197,8 @@
         </div>
       </header>
       <main class="flex-1 p-4 md:p-6">
-        <div class="grid gap-4">
-          <div class="flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="h-6 w-6"
-              ><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg
-            ><span class="text-lg font-medium">강좌별 수강 진도</span>
-          </div>
-          <div class="flex gap-4 overflow-auto">
-            {#each learningCourses as learningCourse}
-              <a
-                href="/course/{learningCourse.id}"
-                class="flex-none w-48 p-6 bg-white rounded-lg shadow"
-              >
-                <h3 class="text-sm font-medium">{learningCourse.title}</h3>
-                <p class="text-xs text-gray-500">
-                  진도 : {summaryNotes.filter(
-                    (item) => item.courseId === learningCourse.id && item.pass
-                  ).length}/{learningCourse.videoCount}
-                </p>
-              </a>
-            {/each}
-          </div>
-
-          <div class="flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="h-6 w-6"
-              ><path
-                d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
-              ></path></svg
-            ><span class="text-lg font-medium">좋아요 한 강좌</span>
-          </div>
-          <div class="flex gap-4 overflow-auto">
-            {#each favoriteCourses as favoriteCourse}
-              <a
-                href="/course/{favoriteCourse.id}"
-                class="flex-none w-48 p-6 bg-white rounded-lg shadow"
-              >
-                <h3
-                  class={`inline-flex px-2 text-xs font-semibold rounded-full py-1 mx-2 ${favoriteCourse.grade === '초급' ? 'bg-blue-100 text-blue-800' : favoriteCourse.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
-                >
-                  {favoriteCourse.grade}
-                </h3>
-                <h3 class="text-sm mt-1 font-medium">{favoriteCourse.title}</h3>
-              </a>
-            {/each}
-          </div>
-          <div class="flex justify-between gap-2">
+        <div class="flex gap-x-4 relative items-center">
+          <div class="grid gap-4">
             <div class="flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -244,26 +211,92 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 class="h-6 w-6"
-                ><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path
-                  d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                ><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
                 ></path></svg
-              ><span class="text-lg font-medium">오늘의 목표 : 요약노트 {dailyGoal}개</span>
+              ><span class="text-lg font-medium">강좌별 수강 진도</span>
             </div>
-          </div>
-          <div class="p-4 bg-white rounded-lg shadow">
-            <div class="relative pt-1">
-              <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200">
-                <div
-                  class="transition-all duration-500 ease-in-out bg-green-500 h-full"
-                  style="width: {(dailyAchievement / dailyGoal) * 100}%;"
-                ></div>
+            <div class="flex gap-4 overflow-auto">
+              {#each learningCourses as learningCourse}
+                <a
+                  href="/course/{learningCourse.id}"
+                  class="flex-none w-48 p-6 bg-white rounded-lg shadow"
+                >
+                  <h3 class="text-sm font-medium">{learningCourse.title}</h3>
+                  <p class="text-xs text-gray-500">
+                    진도 : {summaryNotes.filter(
+                      (item) => item.courseId === learningCourse.id && item.pass
+                    ).length}/{learningCourse.videoCount}
+                  </p>
+                </a>
+              {/each}
+            </div>
+
+            <div class="flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-6 w-6"
+                ><path
+                  d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                ></path></svg
+              ><span class="text-lg font-medium">좋아요 한 강좌</span>
+            </div>
+            <div class="flex gap-4 overflow-auto">
+              {#each favoriteCourses as favoriteCourse}
+                <a
+                  href="/course/{favoriteCourse.id}"
+                  class="flex-none w-48 p-6 bg-white rounded-lg shadow"
+                >
+                  <h3
+                    class={`inline-flex px-2 text-xs font-semibold rounded-full py-1 mx-2 ${favoriteCourse.grade === '초급' ? 'bg-blue-100 text-blue-800' : favoriteCourse.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
+                  >
+                    {favoriteCourse.grade}
+                  </h3>
+                  <h3 class="text-sm mt-1 font-medium">{favoriteCourse.title}</h3>
+                </a>
+              {/each}
+            </div>
+            <div class="flex justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-6 w-6"
+                  ><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path
+                    d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                  ></path></svg
+                ><span class="text-lg font-medium">오늘의 목표 : 요약노트 {dailyGoal}개</span>
               </div>
             </div>
-            <p class="text-xs text-gray-500">
-              {Math.min(100, parseInt(((dailyAchievement / dailyGoal) * 100).toFixed(2)))}% 진행
-            </p>
+            <div class="p-4 bg-white rounded-lg shadow">
+              <div class="relative pt-1">
+                <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200">
+                  <div
+                    class="transition-all duration-500 ease-in-out bg-green-500 h-full"
+                    style="width: {(dailyAchievement / dailyGoal) * 100}%;"
+                  ></div>
+                </div>
+              </div>
+              <p class="text-xs text-gray-500">
+                {Math.min(100, parseInt(((dailyAchievement / dailyGoal) * 100).toFixed(2)))}% 진행
+              </p>
+            </div>
+            <a class="btn w-32" href="/member/mycourse">내 강좌 관리</a>
           </div>
-          <a class="btn w-32" href="/member/mycourse">내 강좌 관리</a>
         </div>
       </main>
     </div>
@@ -283,6 +316,36 @@
         </form>
         <div class="flex flex-col bg-white shadow rounded-lg mt-4">
           <div bind:this={calendarEl}></div>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</div>
+
+<div class="max-w-4xl mx-auto">
+  <div class="flex gap-x-4 relative items-center">
+    <button onclick={openModalNickname} class="btn btn-sm text-xl m-4 bg-white border-white"
+      >닉네임 변경</button
+    >
+    <dialog
+      id="my_modal_3"
+      class="modal"
+      bind:this={modalNickname}
+      on:click={handleOutsideClickNickname}
+    >
+      <div class="modal-box">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <div class="flex flex-col bg-white shadow rounded-lg mt-4">
+          <input
+            type="text"
+            bind:value={newNickname}
+            id="newNickname"
+            class="input mt-1 block w-full"
+            placeholder="새 닉네임 입력"
+          />
+          <button onclick={updateNickname} class="btn mt-4">변경하기</button>
         </div>
       </div>
     </dialog>
