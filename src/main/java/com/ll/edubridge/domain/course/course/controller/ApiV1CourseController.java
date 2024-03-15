@@ -8,12 +8,10 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
-import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
-import com.ll.edubridge.domain.course.video.dto.VideoDto;
-import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.domain.home.admin.dto.AdminCourseEnrollDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
@@ -48,6 +46,7 @@ public class ApiV1CourseController {
     private final Rq rq;
     private final CourseEnrollService courseEnrollService;
     private final VideoService videoService;
+    private final MemberService memberService;
 
     @Getter
     public class GetCoursesResponsebody {
@@ -64,7 +63,13 @@ public class ApiV1CourseController {
     @PostMapping("/write")
     @Operation(summary = "강좌 등록")
     public RsData<CreateCourseDto> createCourse(@Valid @RequestBody CreateCourseDto createCourseDto) {
-        Course course = courseService.create(createCourseDto);
+        Course course;
+
+        if (memberService.canEnroll(rq.getMember())){
+            course = courseService.create(createCourseDto);
+        }else{
+            throw new GlobalException(CodeMsg.E400_9_COUNT_ALREADY_FULL.getCode(), CodeMsg.E400_9_COUNT_ALREADY_FULL.getMessage());
+        }
 
         CreateCourseDto createdCourseDto = new CreateCourseDto(course);
 
@@ -184,7 +189,7 @@ public class ApiV1CourseController {
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
         Course course = courseService.getCourse(courseId);
         if(course.getVideoList().size()<=AppConfig.videoMinNum){
-            throw new GlobalException(CodeMsg.E400_9_VIDEO_LESS_THAN_5_CANNOT_PUBLISH.getCode(),CodeMsg.E400_9_VIDEO_LESS_THAN_5_CANNOT_PUBLISH.getMessage());
+            throw new GlobalException(CodeMsg.E400_10_VIDEO_LESS_THAN_5_CANNOT_PUBLISH.getCode(),CodeMsg.E400_10_VIDEO_LESS_THAN_5_CANNOT_PUBLISH.getMessage());
         }
         course = courseService.startOrstop(course);
         CourseDto courseDto = new CourseDto(course,rq.getMember());
@@ -242,4 +247,6 @@ public class ApiV1CourseController {
         return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getCode(),
                 Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getMsg());
     }
+
+
 }

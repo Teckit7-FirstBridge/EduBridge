@@ -5,6 +5,7 @@ import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.member.member.dto.MemberDto;
 import com.ll.edubridge.domain.member.member.dto.MyPageDto;
+import com.ll.edubridge.domain.member.member.dto.NickNameDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.msg.Msg;
@@ -123,4 +124,16 @@ public class ApiV1MemberController {
                 ));
     }
 
+    @PutMapping("/modifyNickName")
+    @Operation(summary = "회원 닉네임 변경")
+    public RsData<NickNameDto> modifyNickName(@RequestBody NickNameDto nickNameDto) {
+
+        Member member = memberService.modifyNickname(rq.getMember(), nickNameDto.getNickName());
+
+        NickNameDto modifyNickNameDto = new NickNameDto(member.getNickname());
+
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
+                Msg.E200_2_MODIFY_SUCCEED.getMsg(),
+                modifyNickNameDto);
+    }
 }

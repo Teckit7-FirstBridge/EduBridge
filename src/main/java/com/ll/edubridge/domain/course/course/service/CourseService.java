@@ -29,6 +29,8 @@ public class CourseService {
     private final CourseEnrollRepository courseEnrollRepository;
     private final MemberService memberService;
 
+
+
     public List<Course> findAll() {
         return courseRepository.findAll();
     }
@@ -36,7 +38,6 @@ public class CourseService {
     public Optional<Course> findById(Long id) {
         return courseRepository.findById(id);
     }
-
 
     @Transactional
     public Course create(CreateCourseDto createCourseDto) {
@@ -153,4 +154,5 @@ public class CourseService {
     public List<Course> findRecentCourse() {
         return courseRepository.findTop5ByOrderByIdDesc();
     }
+
 }
