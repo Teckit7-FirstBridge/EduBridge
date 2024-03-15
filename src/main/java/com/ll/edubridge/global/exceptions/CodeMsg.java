@@ -12,9 +12,9 @@ public enum CodeMsg {
     E404_1_DATA_NOT_FIND("404-1", "해당 데이터를 찾을 수 없습니다."),
     E404_2_YOU_ARE_NOT_ADMIN("404-2", "관리자만 처리할 수 있는 기능입니다."),
     E400_1_CREATE_FAILED("400-1","등록 실패"),
-    E400_8_ALREADY_PASSED("400-8", "이미 통과된 노트입니다.수정이 불가능합니다.");
-
-
+    E400_8_ALREADY_PASSED("400-8", "이미 통과된 노트입니다.수정이 불가능합니다."),
+    E400_9_COUNT_ALREADY_FULL("400-9", "이미 등록 가능한 횟수가 가득 찼습니다."),
+    E400_10_VIDEO_LESS_THAN_5_CANNOT_PUBLISH("400-10","영상이 일정 개수 이하이면 강좌를 공개할 수 없습니다.");
 
     private  final String code;
     private final String message;

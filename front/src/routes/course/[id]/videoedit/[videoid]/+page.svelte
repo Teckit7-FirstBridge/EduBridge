@@ -28,6 +28,8 @@
     thumbnailAdvice.close();
   }
 
+  let title: string = $state('');
+
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
@@ -35,12 +37,16 @@
     const { isAdmin } = isAdminResponse.data?.data!;
     const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
     const { isLogin } = isLoginResponse.data?.data!;
-    if (!isAdmin && isLogin) {
-      rq.msgError('관리자 권한이 없습니다');
+    if (
+      !isAdmin &&
+      rq.member.id !== parseInt($page.url.searchParams.get('writer_id')!) &&
+      isLogin
+    ) {
+      rq.msgError('권한이 없습니다');
       rq.goTo('/');
     }
-    if (!isAdmin && !isLogin) {
-      rq.msgWarning('관리자 로그인 후 이용 해 주세요');
+    if (!isLogin) {
+      rq.msgWarning('로그인 후 이용 해 주세요');
       rq.goTo('/member/login');
     }
 
@@ -56,7 +62,8 @@
     url = video?.url;
     imgUrl = video?.imgUrl;
     overview = video?.overView;
-    keywords = video?.keywords;
+    keywords = video?.keywords!;
+    title = video?.title!;
     return video;
   }
 
@@ -86,18 +93,31 @@
       return;
     }
 
-    const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/videos/{id}`, {
-      params: { path: { courseId: parseInt($page.params.id), id: parseInt($page.params.videoid) } },
-      body: {
-        id: parseInt($page.params.videoid),
-        url: url!,
-        imgUrl: imgUrl,
-        overView: overview,
-        courseId: parseInt($page.params.id),
+    if (title?.length < 1) {
+      rq.msgWarning('제목을 입력 해 주세요');
+      return;
+    }
 
-        keywords: keywords
-      }
-    });
+    const { data, error } = await rq
+      .apiEndPoints()
+      .PUT(`/api/v1/courses/{courseId}/videos/{id}/{writer_id}`, {
+        params: {
+          path: {
+            courseId: parseInt($page.params.id),
+            id: parseInt($page.params.videoid),
+            writer_id: parseInt($page.url.searchParams.get('writer_id')!)
+          }
+        },
+        body: {
+          id: parseInt($page.params.videoid),
+          url: url!,
+          imgUrl: imgUrl,
+          overView: overview,
+          courseId: parseInt($page.params.id),
+          keywords: keywords,
+          title: title
+        }
+      });
     if (data) {
       rq.goTo(`/course/${$page.params.id}`);
     }
@@ -116,6 +136,16 @@
           class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           on:submit|preventDefault={submitForm}
         >
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> 제 목 </label>
+            <input
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="title"
+              type="text"
+              placeholder="Enter the title "
+              bind:value={title}
+            />
+          </div>
           <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="video-url">
               강의 Url

@@ -1,7 +1,6 @@
 package com.ll.edubridge.domain.member.member.entity;
 
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
-import com.ll.edubridge.domain.notification.entity.Notification;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
 import com.ll.edubridge.standard.util.Ut;
 import jakarta.persistence.*;
@@ -23,6 +22,8 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @ToString(callSuper = true)
 public class Member extends BaseEntity { // 보안이 들어있는 클래스
+
+    private int enrollCount;
 
     @Column(unique = true, length = 50)
     private String username;

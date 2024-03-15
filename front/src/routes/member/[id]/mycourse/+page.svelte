@@ -2,12 +2,10 @@
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
-  import CourseNav from '../../lib/components/CourseNav.svelte';
 
   let courselist: components['schemas']['CourseDto'][] | undefined;
   let likesList: Boolean[] = $state([]);
   let voteNumList: number[] = $state([]);
-  let hashtags: string[] = $state([]);
 
   function formatTitle(title) {
     return title.length > 11 ? `${title.substring(0, 11)}...` : title;
@@ -33,19 +31,16 @@
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
-    const kw = $page.url.searchParams.get('kw') ?? '';
-    const kwType = ($page.url.searchParams.get('kwType') ?? 'ALL') as KwTypeCourse;
     const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
 
-    const { data } = await rq.apiEndPoints().GET('/api/v1/courses', {
+    const { data } = await rq.apiEndPoints().GET('/api/v1/courses/mycourse', {
       params: {
         query: {
-          kw,
-          kwType,
           page: page_
         }
       }
     });
+    console.log(data);
     courselist = data?.data.items!;
     likesList = courselist!.map((course) => course!.likedByCurrentUser!);
     voteNumList = courselist!.map((course) => course!.voteCount!);
@@ -90,13 +85,13 @@
         <button
           class="btn btn-ghost"
           onclick={() => {
-      const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
-      const searchFormInputSearch = (document.querySelector('#searchFormModal input[type=search]') as HTMLDialogElement);
-
-      searchFormModal.showModal();
-
-      searchFormInputSearch.focus();
-    }}
+        const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
+        const searchFormInputSearch = (document.querySelector('#searchFormModal input[type=search]') as HTMLDialogElement);
+  
+        searchFormModal.showModal();
+  
+        searchFormInputSearch.focus();
+      }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -122,9 +117,9 @@
               action="/course"
               class="bg-base rounded flex flex-col gap-6"
               onsubmit={() => {
-            const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
-            searchFormModal.close();
-          }}
+              const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
+              searchFormModal.close();
+            }}
             >
               <div class="max-w-md mx-auto bg-white p-5">
                 <div class="form-control">
@@ -137,7 +132,6 @@
                     <option value="ALL">전체</option>
                     <option value="TITLE">제목</option>
                     <option value="NAME">작성자</option>
-                    <option value="HASHTAGS">해시태그</option>
                   </select>
                 </div>
 
@@ -180,7 +174,7 @@
                 <div class="flex justify-center gap-2">
                   <h2 class="text-lg font-semibold my-1 ml-2">{formatTitle(item.title)}</h2>
                 </div>
-                <div class="flex justify-center p-2 bg-black rounded-lg m-4">
+                <div class="flex justify-center p-2 bg-black rounded-lg">
                   <img src={item.imgUrl} />
                 </div>
 
@@ -188,55 +182,44 @@
                   {removeMarkdown(item.overView)}
                 </p>
               </a>
-              <div class="flex items-center justify-between">
-                {#if item.hashtags}
-                  <div class="flex ml-4">
-                    {#each item.hashtags.split('@') as hashtag}
-                      <div class="flex text-amber-600 text-sm text-center items-center ml-2">
-                        #{hashtag}
-                      </div>
-                    {/each}
-                  </div>
+              <div class=" flex justify-end gap-2 p-2" on:click={() => clickLiked(item)}>
+                {#if likesList[courselist.indexOf(item)]}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                  >
+                    <!-- 빨간색 채워진 하트 -->
+                    <path
+                      fill="red"
+                      stroke="red"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                    />
+                  </svg>{:else}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                  >
+                    <!-- 빨간색 빈 하트 -->
+                    <path
+                      fill="none"
+                      stroke="red"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                    />
+                  </svg>
                 {/if}
-                <div class=" flex justify-end gap-2 p-2" on:click={() => clickLiked(item)}>
-                  {#if likesList[courselist.indexOf(item)]}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      height="24"
-                    >
-                      <!-- 빨간색 채워진 하트 -->
-                      <path
-                        fill="red"
-                        stroke="red"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                      />
-                    </svg>{:else}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      height="24"
-                    >
-                      <!-- 빨간색 빈 하트 -->
-                      <path
-                        fill="none"
-                        stroke="red"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                      />
-                    </svg>
-                  {/if}
-                  <span>
-                    {voteNumList[courselist!.indexOf(item)]}
-                  </span>
-                </div>
+                <span>
+                  {voteNumList[courselist!.indexOf(item)]}
+                </span>
               </div>
             </div>
           {/each}

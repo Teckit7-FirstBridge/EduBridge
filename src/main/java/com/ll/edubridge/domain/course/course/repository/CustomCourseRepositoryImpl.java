@@ -25,10 +25,11 @@ import static com.ll.edubridge.domain.post.post.entity.QPost.post;
 @RequiredArgsConstructor
 public class CustomCourseRepositoryImpl implements CustomCourseRepository{
 
+
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member owner,String grade, Pageable pageable) {
+    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member owner, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (owner != null) {
@@ -37,9 +38,6 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
 
         if (kw != null && !kw.isBlank()) {
             applyKeywordFilter(kwType, kw, builder);
-        }
-        if (grade != null && !grade.isEmpty()) {
-            builder.and(course.grade.eq(grade));
         }
 
         JPAQuery<Course> cousrsesQuery = createCourseQuery(builder);
@@ -51,7 +49,7 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
 
         return PageableExecutionUtils.getPage(cousrsesQuery.fetch(), pageable, totalQuery::fetchOne);
     }
-    public Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member owner,String grade, Pageable pageable) {
+    public Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member owner, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (owner != null) {
@@ -61,9 +59,7 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
         if (kw != null && !kw.isBlank()) {
             applyKeywordFilter(kwType, kw, builder);
         }
-        if (grade != null && !grade.isEmpty()) {
-            builder.and(course.grade.eq(grade));
-        }
+
 
         JPAQuery<Course> cousrsesQuery = createCourseQueryAdmin(builder);
         applySorting(pageable, cousrsesQuery);
@@ -91,16 +87,33 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
         return queryFactory.selectFrom(course)
                 .where(course.voter.contains(member))
                 .fetch();
+
     }
 
+    @Override
+    public Page<Course> findByWriterId(Member author, Pageable pageable) {
+        List<Course> fetch = queryFactory.selectFrom(course)
+                .where(course.writer_id.eq(author.getId()))
+                .fetch();
+        long count = queryFactory.selectFrom(course)
+                .where(course.writer_id.eq(author.getId()))
+                .stream().count();
+        return new PageImpl<>(fetch,pageable,count);
+    }
 
 
     private void applyKeywordFilter(KwTypeCourse kwType, String kw, BooleanBuilder builder) {
         switch (kwType) {
             case kwType.TITLE -> builder.and(course.title.containsIgnoreCase(kw));
-            default -> builder.and(
-                    course.title.containsIgnoreCase(kw)
-            );
+            case kwType.HASHTAGS -> builder.and(course.hashtags.containsIgnoreCase(kw));
+            case kwType.NAME -> builder.and(course.writer_nickname.containsIgnoreCase(kw));
+            default -> {
+                builder.andAnyOf(
+                        course.title.containsIgnoreCase(kw),
+                        course.hashtags.containsIgnoreCase(kw),
+                        course.writer_nickname.containsIgnoreCase(kw)
+                );
+            }
         }
     }
 
