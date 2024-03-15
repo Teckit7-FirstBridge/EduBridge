@@ -45,7 +45,7 @@
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
     const { data } = await rq.apiEndPoints().GET('/api/v1/members/{id}', {
-      params: { path: { id: parseInt($page.params.id) } }
+      params: { path: { id: rq.member.id } }
     });
     learningCourses = data?.data.item.learningCourses!;
     favoriteCourses = data?.data.item.favoriteCourses!;
