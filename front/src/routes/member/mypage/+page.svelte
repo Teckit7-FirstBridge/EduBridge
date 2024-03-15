@@ -263,7 +263,7 @@
               {Math.min(100, parseInt(((dailyAchievement / dailyGoal) * 100).toFixed(2)))}% 진행
             </p>
           </div>
-          <a class="btn w-32" href="/member/{member!.id}/mycourse">내 강좌 관리</a>
+          <a class="btn w-32" href="/member/mycourse">내 강좌 관리</a>
         </div>
       </main>
     </div>
