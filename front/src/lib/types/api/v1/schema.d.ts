@@ -5,6 +5,12 @@
 
 
 export interface paths {
+  "/api/v1/roadmap/roadmaps/{id}": {
+    /** 로드맵 수정 */
+    put: operations["modifyRoadmap"];
+    /** 로드맵 삭제 */
+    delete: operations["deleteCourse"];
+  };
   "/api/v1/posts/{id}": {
     /** 글 상세 정보 */
     get: operations["getDetail"];
@@ -15,6 +21,10 @@ export interface paths {
   };
   "/api/v1/notification/read/{id}": {
     put: operations["readNotification"];
+  };
+  "/api/v1/members/modifyNickName": {
+    /** 회원 닉네임 변경 */
+    put: operations["modifyNickName"];
   };
   "/api/v1/courses/{videoId}/note/{noteId}": {
     /** 강의 요약 노트 상세 보기 */
@@ -43,6 +53,14 @@ export interface paths {
     put: operations["modifyComment"];
     /** 댓글 삭제 */
     delete: operations["deleteComment"];
+  };
+  "/api/v1/roadmap/roadmaps": {
+    /** 로드맵 생성 */
+    post: operations["createRoadmap"];
+  };
+  "/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}": {
+    /** 로드맵에 강좌 추가 */
+    post: operations["addCourse"];
   };
   "/api/v1/posts": {
     /** 글 다건 조회 */
@@ -109,9 +127,21 @@ export interface paths {
     /** 게시물 신고 취소 */
     patch: operations["cancelReport"];
   };
-  "/api/v1/{memberId}": {
-    /** 포인트 목록 */
-    get: operations["getPoints"];
+  "/api/v1/roadmap": {
+    /** 로드맵 다건 조회 */
+    get: operations["getRoadmaps"];
+  };
+  "/api/v1/roadmap/{roadmapId}": {
+    /** 로드맵 아이디로 상세 조회 */
+    get: operations["getRoadmapById"];
+  };
+  "/api/v1/roadmap/{courseId}": {
+    /** 로드맵 강좌로 상세 조회 */
+    get: operations["getRoadmapByCourse"];
+  };
+  "/api/v1/roadmap/myRoadmap": {
+    /** 내가 등록한 로드맵 다건 조회 */
+    get: operations["getMyRoadmaps"];
   };
   "/api/v1/posts/qna/{id}": {
     /** 1대1 문의 상세 정보 */
@@ -122,6 +152,14 @@ export interface paths {
   "/api/v1/posts/myList": {
     /** 내 글 목록 */
     get: operations["getMyPosts"];
+  };
+  "/api/v1/point/{memberId}": {
+    /** 포인트 목록 */
+    get: operations["getPoints"];
+  };
+  "/api/v1/point/attend": {
+    /** 출석 체크 목록 */
+    get: operations["getAttend"];
   };
   "/api/v1/notification/isAlarm": {
     get: operations["isAlarm"];
@@ -204,10 +242,6 @@ export interface paths {
     /** 내 댓글 목록 */
     get: operations["getComments_1"];
   };
-  "/api/v1/attend": {
-    /** 출석 체크 목록 */
-    get: operations["getAttend"];
-  };
   "/api/v1/admin/summaryNotes": {
     /** 최신 요약노트 */
     get: operations["getSummeryNotes"];
@@ -249,7 +283,7 @@ export interface paths {
   };
   "/api/v1/courses/{id}/{writer_id}": {
     /** 강좌 삭제 */
-    delete: operations["deleteCourse"];
+    delete: operations["deleteCourse_1"];
   };
 }
 
@@ -257,6 +291,60 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    Course: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      title?: string;
+      notice?: string;
+      imgUrl?: string;
+      overView?: string;
+      /** Format: int32 */
+      price?: number;
+      confirm?: boolean;
+      courseEnrollList?: components["schemas"]["CourseEnroll"][];
+      roadmap?: components["schemas"]["Roadmap"];
+      hashtags?: string;
+      /** Format: int64 */
+      writer_id?: number;
+      writer_nickname?: string;
+    };
+    CourseEnroll: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+    };
+    Roadmap: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      title?: string;
+      overView?: string;
+      curriculum?: components["schemas"]["Course"][];
+      hashtags?: string;
+      owner?: string;
+    };
+    RoadmapDto: {
+      /** Format: int64 */
+      id: number;
+      title?: string;
+      overView?: string;
+      curriculum: components["schemas"]["Course"][];
+      hashtags: string;
+      owner: string;
+    };
+    RsDataRoadmapDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["RoadmapDto"];
+      fail: boolean;
+      success: boolean;
+    };
     PostDto: {
       /** Format: int64 */
       id: number;
@@ -293,7 +381,7 @@ export interface components {
       read?: boolean;
       sender?: string;
       /** @enum {string} */
-      type?: "COMMENT" | "POINTS" | "QnA";
+      type?: "COMMENT" | "POINTS" | "ANSWER";
       post_title?: string;
       /** Format: int64 */
       post_id?: number;
@@ -311,14 +399,20 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    NickNameDto: {
+      nickName?: string;
+    };
+    RsDataNickNameDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["NickNameDto"];
+      fail: boolean;
+      success: boolean;
+    };
     CreateSummaryNoteDto: {
       content: string;
-    };
-    CourseEnroll: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
     };
     GrantedAuthority: {
       authority?: string;
@@ -328,6 +422,8 @@ export interface components {
       id?: number;
       /** Format: date-time */
       createDate?: string;
+      /** Format: int32 */
+      enrollCount?: number;
       username?: string;
       password?: string;
       nickname?: string;
@@ -343,9 +439,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
+      authoritiesAsStringList?: string[];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -454,6 +550,22 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    CreateRoadmapDto: {
+      /** Format: int64 */
+      id: number;
+      title?: string;
+      overView?: string;
+      hashtags: string;
+    };
+    RsDataCreateRoadmapDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["CreateRoadmapDto"];
+      fail: boolean;
+      success: boolean;
+    };
     CreatePostDto: {
       title: string;
       body: string;
@@ -508,6 +620,8 @@ export interface components {
       dailyAchievement: number;
       /** Format: int32 */
       point?: number;
+      /** Format: int32 */
+      enrollCount?: number;
     };
     RsDataLoginResponseBody: {
       resultCode: string;
@@ -563,23 +677,24 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    PointDto: {
-      /** Format: int64 */
-      id: number;
-      /** Format: date-time */
-      createDate: string;
-      content: string;
-      /** Format: int64 */
-      ownerId: number;
-      /** Format: int32 */
-      amount: number;
+    GetRoadmapsResponsebody: {
+      items: components["schemas"]["RoadmapDto"][];
     };
-    RsDataListPointDto: {
+    RsDataGetRoadmapsResponsebody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["PointDto"][];
+      data: components["schemas"]["GetRoadmapsResponsebody"];
+      fail: boolean;
+      success: boolean;
+    };
+    RsDataListRoadmapDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["RoadmapDto"][];
       fail: boolean;
       success: boolean;
     };
@@ -660,6 +775,39 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetMyPostsResponseBody"];
+      fail: boolean;
+      success: boolean;
+    };
+    PointDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      content: string;
+      /** Format: int64 */
+      ownerId: number;
+      /** Format: int32 */
+      amount: number;
+    };
+    RsDataListPointDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["PointDto"][];
+      fail: boolean;
+      success: boolean;
+    };
+    AttendDto: {
+      /** Format: date-time */
+      createDate: string;
+    };
+    RsDataListAttendDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["AttendDto"][];
       fail: boolean;
       success: boolean;
     };
@@ -842,19 +990,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetCommentResponseBody"];
-      fail: boolean;
-      success: boolean;
-    };
-    AttendDto: {
-      /** Format: date-time */
-      createDate: string;
-    };
-    RsDataListAttendDto: {
-      resultCode: string;
-      /** Format: int32 */
-      statusCode: number;
-      msg: string;
-      data: components["schemas"]["AttendDto"][];
       fail: boolean;
       success: boolean;
     };
@@ -1047,6 +1182,43 @@ export type external = Record<string, never>;
 
 export interface operations {
 
+  /** 로드맵 수정 */
+  modifyRoadmap: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RoadmapDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataRoadmapDto"];
+        };
+      };
+    };
+  };
+  /** 로드맵 삭제 */
+  deleteCourse: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
   /** 글 상세 정보 */
   getDetail: {
     parameters: {
@@ -1111,6 +1283,22 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataGetNotificationResponseBody"];
+        };
+      };
+    };
+  };
+  /** 회원 닉네임 변경 */
+  modifyNickName: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["NickNameDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataNickNameDto"];
         };
       };
     };
@@ -1280,6 +1468,44 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 로드맵 생성 */
+  createRoadmap: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateRoadmapDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataCreateRoadmapDto"];
+        };
+      };
+    };
+  };
+  /** 로드맵에 강좌 추가 */
+  addCourse: {
+    parameters: {
+      path: {
+        roadmapId: number;
+        courseId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RoadmapDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataRoadmapDto"];
         };
       };
     };
@@ -1595,18 +1821,63 @@ export interface operations {
       };
     };
   };
-  /** 포인트 목록 */
-  getPoints: {
+  /** 로드맵 다건 조회 */
+  getRoadmaps: {
     parameters: {
-      path: {
-        memberId: number;
+      query?: {
+        page?: number;
+        kw?: string;
+        kwType?: "ALL" | "TITLE" | "HASHTAGS" | "NAME";
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListPointDto"];
+          "application/json": components["schemas"]["RsDataGetRoadmapsResponsebody"];
+        };
+      };
+    };
+  };
+  /** 로드맵 아이디로 상세 조회 */
+  getRoadmapById: {
+    parameters: {
+      path: {
+        roadmapId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataRoadmapDto"];
+        };
+      };
+    };
+  };
+  /** 로드맵 강좌로 상세 조회 */
+  getRoadmapByCourse: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataRoadmapDto"];
+        };
+      };
+    };
+  };
+  /** 내가 등록한 로드맵 다건 조회 */
+  getMyRoadmaps: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListRoadmapDto"];
         };
       };
     };
@@ -1655,6 +1926,33 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetMyPostsResponseBody"];
+        };
+      };
+    };
+  };
+  /** 포인트 목록 */
+  getPoints: {
+    parameters: {
+      path: {
+        memberId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListPointDto"];
+        };
+      };
+    };
+  };
+  /** 출석 체크 목록 */
+  getAttend: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListAttendDto"];
         };
       };
     };
@@ -1970,17 +2268,6 @@ export interface operations {
       };
     };
   };
-  /** 출석 체크 목록 */
-  getAttend: {
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataListAttendDto"];
-        };
-      };
-    };
-  };
   /** 최신 요약노트 */
   getSummeryNotes: {
     responses: {
@@ -2106,7 +2393,7 @@ export interface operations {
     };
   };
   /** 강좌 삭제 */
-  deleteCourse: {
+  deleteCourse_1: {
     parameters: {
       path: {
         id: number;
