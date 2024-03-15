@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PointRepository extends JpaRepository<Point, Long> {
     List<Point> findByOwnerId(Long ownerId);
+
+    List<Point> findByOwnerIdAndContent(Long memberId, String content);
 }
