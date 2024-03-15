@@ -13,7 +13,8 @@
     keywordsAdvice.showModal();
   }
 
-  function closeModalKAdvice() {
+  function closeModalKAdvice(event) {
+    event.preventDefault();
     keywordsAdvice.close();
   }
 
@@ -23,7 +24,8 @@
     thumbnailAdvice.showModal();
   }
 
-  function closeModalThAdvice() {
+  function closeModalThAdvice(event) {
+    event.preventDefault();
     thumbnailAdvice.close();
   }
 
