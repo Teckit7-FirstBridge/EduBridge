@@ -1,17 +1,42 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import { onMount } from 'svelte';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
+  import { Calendar } from '@fullcalendar/core';
+  import dayGridPlugin from '@fullcalendar/daygrid';
 
   let learningCourses: components['schemas']['CourseDto'][] = $state();
   let favoriteCourses: components['schemas']['CourseDto'][] = $state();
   let summaryNotes: components['schemas']['SummaryNoteDto'][] = $state();
+  let attends: components['schemas']['AttendDto'][];
+
+  let calendarEl;
+  let calendar;
   let isAlarm = false;
 
   let modalpoint;
 
-  function openModalEnRoll() {
+  let calModal;
+
+  function openModalCal() {
+    calModal.showModal();
+  }
+
+  function openModalPoint() {
     modalpoint.showModal();
+  }
+
+  function handleOutsideClickCal(event) {
+    if (event.target === calModal) {
+      calModal.close();
+    }
+  }
+
+  function handleOutsideClickPoint(event) {
+    if (event.target === modalpoint) {
+      modalpoint.close();
+    }
   }
 
   let point: components['schemas']['PointDto'] = $state();
@@ -20,7 +45,7 @@
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
     const { data } = await rq.apiEndPoints().GET('/api/v1/members/{id}', {
-      params: { path: { id: parseInt($page.params.id) } }
+      params: { path: { id: rq.member.id } }
     });
     learningCourses = data?.data.item.learningCourses!;
     favoriteCourses = data?.data.item.favoriteCourses!;
@@ -41,14 +66,38 @@
     const notificationResponse = await rq.apiEndPoints().GET(`/api/v1/notification/isAlarm`);
     isAlarm = notificationResponse.data?.data!;
     console.log(isAlarm);
-    const responsePoint = await rq.apiEndPoints().GET(`/api/v1/{ownerId}`, {
+    const responsePoint = await rq.apiEndPoints().GET(`/api/v1/{memberId}`, {
       params: {
         path: {
-          ownerId: member.id
+          memberId: member.id
         }
       }
     });
     point = responsePoint.data?.data!;
+
+    const response = await rq.apiEndPoints().GET(`/api/v1/attend`);
+    attends = response.data?.data;
+
+    calendar = new Calendar(calendarEl, {
+      plugins: [dayGridPlugin],
+      initialView: 'dayGridMonth',
+      contentHeight: '300px',
+      locale: 'ko',
+      eventContent: (arg) => {
+        // 여기서 사용자 정의 HTML을 반환하여 이벤트 내용을 아이콘으로 대체
+        return { html: `<i class="fa-solid fa-splotch text-2xl mb-2 text-blue-800"></i>` };
+      }
+    });
+
+    calendar.render();
+
+    // attends 배열의 각 항목에 대해 이벤트를 달력에 추가
+    attends.forEach((attend) => {
+      calendar.addEvent({
+        title: '출석체크',
+        start: attend.createDate
+      });
+    });
 
     return {
       learningCourses,
@@ -63,10 +112,10 @@
 </script>
 
 {#await load()}
-  <h2>loading...</h2>
+  <span class="loading loading-spinner loading-xs m-2"></span>
 {:then { learningCourses, favoriteCourses, summaryNotes, dailyAchievement, dailyGoal, member }}
   {#if rq.member.id == member.id || rq.isAdmin()}
-    <div class="max-w-4xl mx-auto my-4">
+    <div class="max-w-4xl mx-auto">
       <header class="flex h-16 items-center border-b px-4 md:px-6 justify-between">
         <a class="flex items-center gap-2"
           ><svg
@@ -87,35 +136,13 @@
         >
 
         <div class="flex gap-x-4 relative items-center">
-          <button on:click={() => rq.goTo(`/member/${rq.member.id}/alarm`)}>
-            {#if isAlarm}
-              <span class="relative flex h-2 w-2">
-                <span
-                  class=" absolute top-2 left-3 animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
-                ></span>
-                <span
-                  class="absolute top-2 left-3 relative inline-flex rounded-full h-2 w-2 bg-sky-500"
-                ></span>
-              </span>
-            {/if}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
-              />
-            </svg>
-          </button>
-
-          <button onclick={openModalEnRoll} class="btn btn-sm">포인트 : {member?.point}</button>
-          <dialog id="my_modal_3" class="modal" bind:this={modalpoint}>
+          <button onclick={openModalPoint} class="btn btn-sm">포인트 : {member?.point}</button>
+          <dialog
+            id="my_modal_3"
+            class="modal"
+            bind:this={modalpoint}
+            on:click={handleOutsideClickPoint}
+          >
             <div class="modal-box modal-box-1">
               <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -243,3 +270,20 @@
     <a href="/" class="btn btn-outline btn-error m-5">접근 불가 메인으로</a>
   {/if}
 {/await}
+<div class="max-w-4xl mx-auto">
+  <div class="flex gap-x-4 relative items-center">
+    <button onclick={openModalCal} class="btn btn-sm text-xl m-4 bg-white border-white"
+      >출석 체크</button
+    >
+    <dialog id="my_modal_3" class="modal" bind:this={calModal} on:click={handleOutsideClickCal}>
+      <div class="modal-box">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <div class="flex flex-col bg-white shadow rounded-lg mt-4">
+          <div bind:this={calendarEl}></div>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</div>

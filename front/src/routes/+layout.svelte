@@ -97,7 +97,7 @@
 
   <div class="flex-1 justify-end mr-4">
     <div class="flex gap-x-4 relative items-center">
-      <button on:click={() => rq.goTo(`/member/${rq.member.id}/alarm`)}>
+      <button on:click={() => rq.goTo(`/member/mypage/alarm`)}>
         {#if isAlarm}
           <span class="relative flex h-2 w-2">
             <span
@@ -192,7 +192,7 @@
     {:else}
       <div class="flex flex-col items-center flex-1">
         {#if rq.isLogin()}
-          <a href="/member/{rq.member.id}">
+          <a href="/member/mypage">
             <div>
               <div
                 class={isMypage
