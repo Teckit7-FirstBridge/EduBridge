@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.member.member.service;
 
+import com.ll.edubridge.domain.member.member.dto.NickNameDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.domain.point.point.entity.PointType;
@@ -78,10 +79,16 @@ public class MemberService {
     }
 
     @Transactional
-    public Member modifyNickname(Member member, String nickname) {
-        member.setNickname(nickname);
+    public Member modifyNickname(NickNameDto nicknameDto) {
+        Member member = rq.getMember();
+        member.setNickname(nicknameDto.getNickName());
+        System.out.println(member.getNickname()+"바뀜?");
 
-        return memberRepository.save(member);
+        memberRepository.save(member);
+        Member member1 = rq.getMember();
+        System.out.println(member1.getNickname()+"??");
+
+        return member;
     }
 
     public Optional<Member> findByUsername(String username) {

@@ -128,7 +128,10 @@ public class ApiV1MemberController {
     @Operation(summary = "회원 닉네임 변경")
     public RsData<NickNameDto> modifyNickName(@RequestBody NickNameDto nickNameDto) {
 
-        Member member = memberService.modifyNickname(rq.getMember(), nickNameDto.getNickName());
+
+        Member member = memberService.modifyNickname(nickNameDto);
+
+        System.out.println("안녕"+nickNameDto.getNickName());
 
         NickNameDto modifyNickNameDto = new NickNameDto(member.getNickname());
 
