@@ -102,8 +102,8 @@
 {#await load()}
   <p>loading...</p>
 {:then}
-  <div class="px-60">
-    <div class="flex flex-col h-full px-4 py-6 md:px-6 lg:py-16 md:py-12">
+  <div>
+    <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8 mt-2">
       <div class="space-y-4">
         <div class="space-y-2">
           <label

@@ -27,6 +27,7 @@ class Rq {
     let point = $state(0);
     let authorities: string[] = $state([]);
     let dailyGoal: number = $state(0);
+    let enrollCount: number = $state(0);
     let dailyAchievement: number = $state(0);
 
     this.member = {
@@ -65,6 +66,12 @@ class Rq {
       },
       set point(value: number) {
         point = value;
+      },
+      get enrollCount() {
+        return enrollCount;
+      },
+      set enrollCount(value: number) {
+        enrollCount = value;
       },
       get dailyGoal() {
         return dailyGoal;
@@ -129,6 +136,7 @@ class Rq {
     this.member.dailyGoal = member.dailyGoal;
     this.member.dailyAchievement = member.dailyAchievement;
     this.member.point = member.point;
+    this.member.enrollCount = member.enrollCount;
   }
 
   public setLogout() {

@@ -67,7 +67,7 @@
     isAlarm = notificationResponse.data?.data!;
     console.log(isAlarm);
 
-    const responsePoint = await rq.apiEndPoints().GET(`/api/v1/{memberId}`, {
+    const responsePoint = await rq.apiEndPoints().GET(`/api/v1/point/{memberId}`, {
       params: {
         path: {
           memberId: member.id
@@ -76,7 +76,7 @@
     });
     point = responsePoint.data?.data!;
 
-    const response = await rq.apiEndPoints().GET(`/api/v1/attend`);
+    const response = await rq.apiEndPoints().GET(`/api/v1/point/attend`);
     attends = response.data?.data;
 
     calendar = new Calendar(calendarEl, {
