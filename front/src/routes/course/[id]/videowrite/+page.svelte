@@ -29,6 +29,17 @@
     thumbnailAdvice.close();
   }
 
+  let videoAdvice;
+
+  function openModalVidAdvice() {
+    videoAdvice.showModal();
+  }
+
+  function closeModalVidAdvice(event) {
+    event.preventDefault();
+    videoAdvice.close();
+  }
+
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
@@ -128,6 +139,22 @@
           <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="video-url">
               강의 Url
+              <a href="#" onclick={openModalVidAdvice}>
+                <i class="fa-solid fa-circle-exclamation text-red-500"></i>
+              </a>
+              <dialog id="my_modal_3" class="modal" bind:this={videoAdvice}>
+                <div class="modal-box modal-box-2">
+                  <button
+                    class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                    onclick={closeModalVidAdvice}>✕</button
+                  >
+                  <div>
+                    <div>형식에 맞추어 Youtube 영상의 url을 입력해주세요.</div>
+                    <div>https://www.youtube.com/watch?v=VIDEO-ID</div>
+                    <div>VIDEO-ID 뒤의 값(ex/ &list로 시작하는 부분 등)은 지우고 입력해주세요.</div>
+                  </div>
+                </div>
+              </dialog>
             </label>
             <input
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -152,9 +179,12 @@
                       class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
                       onclick={closeModalThAdvice}>✕</button
                     >
-                    <div>제시된 형식으로 썸네일을 입력해주세요.</div>
                     <div>
-                      VIDEO-ID 위치에 Youtube URL의 v= 혹은 vi= 다음 값을 넣어주시면 됩니다.
+                      <div>제시된 형식에 맞춰 썸네일 이미지를 입력해주세요.</div>
+                      <br />
+                      <div>VIDEO-ID 위치에 Youtube 영상 id를 넣어주세요.</div>
+                      <br />
+                      <div>Youtube 영상 id : URL의 v= 혹은 vi= 다음 값</div>
                     </div>
                   </div>
                 </dialog>
