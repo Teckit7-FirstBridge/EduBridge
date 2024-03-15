@@ -140,7 +140,7 @@
           <div class="mb-4">
             <div class="mb-2">
               <label
-                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                class="text-sm font-bold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 for="course-imgUrl mr-4"
                 >강의 썸네일 Url
                 <a href="#" onclick={openModalThAdvice}>

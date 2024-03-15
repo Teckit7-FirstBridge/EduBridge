@@ -163,7 +163,7 @@
           <div class="mb-4">
             <div class="mb-2">
               <label
-                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                class="text-sm font-bold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 for="course-imgUrl mr-4"
                 >강의 썸네일 Url
                 <a href="#" onclick={openModalThAdvice}>
@@ -175,10 +175,11 @@
                       class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
                       onclick={closeModalThAdvice}>✕</button
                     >
-                    <div>제시된 형식으로 썸네일을 입력해주세요.</div>
-                    <div>
-                      VIDEO-ID 위치에 Youtube URL의 v= 혹은 vi= 다음 값을 넣어주시면 됩니다.
-                    </div>
+                    <div>제시된 형식으로 썸네일을 입력해주세요.<br /></div>
+                    <br />
+                    <div>VIDEO-ID 위치에 Youtube 영상 id를 넣어주시면 됩니다.<br /></div>
+                    <br />
+                    <div>Youtube 영상 id : URL의 v= 혹은 vi= 다음 값</div>
                   </div>
                 </dialog>
               </label><label
@@ -208,8 +209,9 @@
                     class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
                     onclick={closeModalKAdvice}>✕</button
                   >
-                  <div>등록하는 강의 영상의 내용을 숙지하고 키워드를 작성해주세요.</div>
-                  <div>키워드 개수는 3~5개를 권장합니다.</div>
+                  <div>등록하는 강의 영상의 내용을 충분히 숙지하고 키워드를 작성해주세요.</div>
+                  <div>해당 키워드는 강의 요약 노트를 채점하는 기준이 됩니다.</div>
+                  <div>한 강의당 키워드 개수는 3~5개를 권장합니다.</div>
                 </div>
               </dialog>
             </label>
