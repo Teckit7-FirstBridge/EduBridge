@@ -66,6 +66,7 @@
     const notificationResponse = await rq.apiEndPoints().GET(`/api/v1/notification/isAlarm`);
     isAlarm = notificationResponse.data?.data!;
     console.log(isAlarm);
+
     const responsePoint = await rq.apiEndPoints().GET(`/api/v1/{memberId}`, {
       params: {
         path: {

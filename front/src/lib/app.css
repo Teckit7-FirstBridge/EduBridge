@@ -158,6 +158,10 @@ body {
   height: 500px;
 }
 
+.modal-box-2 {
+  height: 150px;
+}
+
 .fc-event {
   display: flex; /* Flexbox 컨테이너 설정 */
   align-items: center; /* 세로축 가운데 정렬 */
@@ -178,6 +182,6 @@ body {
   }
 }
 
-.collapse-content{
+.collapse-content {
   border-radius: 15px;
 }

@@ -8,7 +8,6 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
-import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.domain.home.admin.dto.AdminCourseEnrollDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
@@ -45,7 +44,6 @@ public class ApiV1CourseController {
     private final CourseService courseService;
     private final Rq rq;
     private final CourseEnrollService courseEnrollService;
-    private final VideoService videoService;
     private final MemberService memberService;
 
     @Getter
@@ -67,7 +65,7 @@ public class ApiV1CourseController {
 
         if (memberService.canEnroll(rq.getMember())){
             course = courseService.create(createCourseDto);
-        }else{
+        } else {
             throw new GlobalException(CodeMsg.E400_9_COUNT_ALREADY_FULL.getCode(), CodeMsg.E400_9_COUNT_ALREADY_FULL.getMessage());
         }
 
@@ -115,7 +113,6 @@ public class ApiV1CourseController {
     public RsData<List<AdminCourseEnrollDto>> getEnrollByCourseId(
             @PathVariable("courseId") Long courseId,
             @PathVariable Long writerId) {
-
 
         if (!courseService.haveAuthority(writerId))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
@@ -243,10 +240,7 @@ public class ApiV1CourseController {
 
         courseService.deleteVote(id, member);
 
-
         return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getCode(),
                 Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getMsg());
     }
-
-
 }

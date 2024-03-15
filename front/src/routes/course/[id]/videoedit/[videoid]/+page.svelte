@@ -7,7 +7,31 @@
   let overview: string | undefined = $state('');
   let video: components['schemas']['VideoDto'] | undefined = $state();
   let keywords = $state('');
+
+  let keywordsAdvice;
+
+  function openModalKAdvice() {
+    keywordsAdvice.showModal();
+  }
+
+  function closeModalKAdvice(event) {
+    event.preventDefault();
+    keywordsAdvice.close();
+  }
+
+  let thumbnailAdvice;
+
+  function openModalThAdvice() {
+    thumbnailAdvice.showModal();
+  }
+
+  function closeModalThAdvice(event) {
+    event.preventDefault();
+    thumbnailAdvice.close();
+  }
+
   let title: string = $state('');
+
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
@@ -139,9 +163,26 @@
           <div class="mb-4">
             <div class="mb-2">
               <label
-                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                for="course-imgUrl mr-4">강의 썸네일 Url</label
-              ><label
+                class="text-sm font-bold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                for="course-imgUrl mr-4"
+                >강의 썸네일 Url
+                <a href="#" onclick={openModalThAdvice}>
+                  <i class="fa-solid fa-circle-exclamation text-red-500"></i>
+                </a>
+                <dialog id="my_modal_3" class="modal" bind:this={thumbnailAdvice}>
+                  <div class="modal-box modal-box-2">
+                    <button
+                      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                      onclick={closeModalThAdvice}>✕</button
+                    >
+                    <div>제시된 형식으로 썸네일을 입력해주세요.<br /></div>
+                    <br />
+                    <div>VIDEO-ID 위치에 Youtube 영상 id를 넣어주시면 됩니다.<br /></div>
+                    <br />
+                    <div>Youtube 영상 id : URL의 v= 혹은 vi= 다음 값</div>
+                  </div>
+                </dialog>
+              </label><label
                 class="ml-4 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
                 for="course-imgUrl"
               >
@@ -159,6 +200,20 @@
           <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="video-imgUrl">
               Keywords
+              <a href="#" onclick={openModalKAdvice}>
+                <i class="fa-solid fa-circle-exclamation text-red-500"></i>
+              </a>
+              <dialog id="my_modal_3" class="modal" bind:this={keywordsAdvice}>
+                <div class="modal-box modal-box-2">
+                  <button
+                    class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                    onclick={closeModalKAdvice}>✕</button
+                  >
+                  <div>등록하는 강의 영상의 내용을 충분히 숙지하고 키워드를 작성해주세요.</div>
+                  <div>해당 키워드는 강의 요약 노트를 채점하는 기준이 됩니다.</div>
+                  <div>한 강의당 키워드 개수는 3~5개를 권장합니다.</div>
+                </div>
+              </dialog>
             </label>
             <input
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
