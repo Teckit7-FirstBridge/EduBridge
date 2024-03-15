@@ -61,10 +61,21 @@ public class RoadmapService {
         return Roadmap.builder()
                 .title(createroadmapDto.getTitle())
                 .overView(createroadmapDto.getOverView())
-                .curriculum(createroadmapDto.getCurriculum())
                 .hashtags(createroadmapDto.getHashtags())
                 .owner(rq.getMember().getUsername())
                 .build();
+    }
+
+    public Roadmap addCourse(Long id, RoadmapDto roadmapDto, Course course) {
+        Roadmap roadmap = this.getRoadmap(id);
+        List<Course> curriculum = roadmap.getCurriculum();
+        curriculum.add(course);
+        roadmap.setTitle(roadmapDto.getTitle());
+        roadmap.setOverView(roadmap.getOverView());
+        roadmap.setCurriculum(curriculum);
+        roadmap.setHashtags(roadmap.getHashtags());
+
+        return roadmapRepository.save(roadmap);
     }
 
     public Roadmap modify(Long id, RoadmapDto roadmapDto) {

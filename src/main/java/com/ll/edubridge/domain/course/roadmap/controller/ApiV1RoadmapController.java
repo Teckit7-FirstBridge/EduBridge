@@ -109,7 +109,7 @@ public class ApiV1RoadmapController {
     }
 
     @PostMapping("/roadmaps")
-    @Operation(summary = "로드맵 등록")
+    @Operation(summary = "로드맵 생성")
     public RsData<CreateRoadmapDto> createRoadmap(@Valid @RequestBody CreateRoadmapDto createRoadmapDto) {
 
         Roadmap roadmap = roadmapService.create(createRoadmapDto);
@@ -119,6 +119,22 @@ public class ApiV1RoadmapController {
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
                 Msg.E200_0_CREATE_SUCCEED.getMsg(),
                 createdRoadmapDto);
+    }
+
+    @PostMapping("/roadmaps/{roadmapId}/{courseId}")
+    @Operation(summary = "로드맵에 강좌 추가")
+    public RsData<RoadmapDto> addCourse(
+            @PathVariable("roadmapId") Long roadmapId,
+            @PathVariable("courseId") Long courseId,
+            @RequestBody RoadmapDto roadmapDto) {
+
+        Course course = courseService.getCourse(courseId);
+        Roadmap modifyRoadmap = roadmapService.addCourse(roadmapId, roadmapDto, course);
+
+        RoadmapDto modifyCourseDto = new RoadmapDto(modifyRoadmap, rq.getMember());
+
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
+                Msg.E200_2_MODIFY_SUCCEED.getMsg(), modifyCourseDto);
     }
 
     @PutMapping("/roadmaps/{id}")
@@ -144,6 +160,4 @@ public class ApiV1RoadmapController {
         return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
                 Msg.E200_3_DELETE_SUCCEED.getMsg());
     }
-
-    // TODO : 각 메서드 권한 체크 / 강좌 해시태그 가져오기 구현 필요
 }
