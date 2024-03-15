@@ -12,6 +12,17 @@
   let notieditor: any | undefined = $state();
   let initialData: components['schemas']['CourseDto'] | undefined = $state();
 
+  let thumbnailAdvice;
+
+  function openModalThAdvice() {
+    thumbnailAdvice.showModal();
+  }
+
+  function closeModalThAdvice(event) {
+    event.preventDefault();
+    thumbnailAdvice.close();
+  }
+
   async function load() {
     const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
     const { isLogin } = isLoginResponse.data?.data!;
@@ -187,8 +198,27 @@
             <div>
               <label
                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                for="course-imgUrl mr-4">강좌 이미지 Url</label
-              ><label
+                for="course-imgUrl mr-4"
+                >강좌 이미지 Url
+                <a href="#" onclick={openModalThAdvice}>
+                  <i class="fa-solid fa-circle-exclamation text-red-500"></i>
+                </a>
+                <dialog id="my_modal_3" class="modal" bind:this={thumbnailAdvice}>
+                  <div class="modal-box modal-box-2">
+                    <button
+                      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                      onclick={closeModalThAdvice}>✕</button
+                    >
+                    <div>
+                      <div>제시된 형식에 맞춰 썸네일 이미지를 입력해주세요.</div>
+                      <br />
+                      <div>VIDEO-ID 위치에 첫번째 강의의 Youtube 영상 id를 넣어주세요.</div>
+                      <br />
+                      <div>Youtube 영상 id : URL의 v= 혹은 vi= 다음 값</div>
+                    </div>
+                  </div>
+                </dialog>
+              </label><label
                 class="ml-4 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
                 for="course-imgUrl"
               >
