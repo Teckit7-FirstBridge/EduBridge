@@ -37,4 +37,6 @@ public class Video extends BaseEntity {
     @Column(length = 100)
     private String keywords;
 
+    private String title;
+
 }
