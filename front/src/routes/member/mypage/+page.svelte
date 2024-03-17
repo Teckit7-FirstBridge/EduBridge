@@ -30,7 +30,7 @@
     });
     if (data) {
       rq.msgInfo('닉네임이 변경 되었습니다.'); //msg
-      rq.goTo('/member/mypage');
+      modalNickname.close();
       console.log(newNickname);
     } else {
       rq.msgError('변경 오류');
