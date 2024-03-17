@@ -115,7 +115,7 @@
   }
 
   async function startCourse() {
-    if (course.videoCount! < 5) {
+    if (course.videoCount! <= 5) {
       rq.msgWarning('영상이 5개 이하이면 공개할 수 없습니다');
     } else {
       const isConfirmed = confirm('강좌를 공개하시겠습니까?');

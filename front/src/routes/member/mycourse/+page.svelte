@@ -80,10 +80,10 @@
 {:then { courselist }}
   <div class="">
     <div class="flex justify-between items-center justify-center mb-4">
-      <a href="/course/write" class="btn bg-gray-200 mt-5 ml-6 w-[200px]"> 강좌 등록</a>
+      <a href="/course/write" class="btn bg-gray-200 mt-5 ml-2"> 강좌 등록</a>
       <div class=" mr-4">
         <button
-          class="btn btn-ghost"
+          class="btn btn-ghost mt-4"
           onclick={() => {
         const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
         const searchFormInputSearch = (document.querySelector('#searchFormModal input[type=search]') as HTMLDialogElement);

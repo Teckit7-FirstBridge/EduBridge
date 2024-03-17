@@ -439,9 +439,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
-      authoritiesAsStringList?: string[];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -551,8 +551,6 @@ export interface components {
       success: boolean;
     };
     CreateRoadmapDto: {
-      /** Format: int64 */
-      id: number;
       title?: string;
       overView?: string;
       hashtags: string;
@@ -611,6 +609,7 @@ export interface components {
       /** Format: date-time */
       createDate: string;
       name: string;
+      username: string;
       profileImgUrl: string;
       authorities: string[];
       visitedToday: boolean;

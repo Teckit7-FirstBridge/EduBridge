@@ -58,12 +58,14 @@ public class RoadmapService {
     @Transactional
     public Roadmap create(CreateRoadmapDto createroadmapDto) {
 
-        return Roadmap.builder()
+        Roadmap roadmap = Roadmap.builder()
                 .title(createroadmapDto.getTitle())
                 .overView(createroadmapDto.getOverView())
                 .hashtags(createroadmapDto.getHashtags())
                 .owner(rq.getMember().getUsername())
                 .build();
+
+        return roadmapRepository.save(roadmap);
     }
 
     public Roadmap addCourse(Long id, RoadmapDto roadmapDto, Course course) {

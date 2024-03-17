@@ -22,6 +22,7 @@ class Rq {
   constructor() {
     let id = $state(0);
     let name = $state('');
+    let username = $state('');
     let profileImgUrl = $state('');
     let createDate = $state('');
     let point = $state(0);
@@ -48,6 +49,12 @@ class Rq {
       },
       set name(value: string) {
         name = value;
+      },
+      get username() {
+        return username;
+      },
+      set username(value: string) {
+        username = value;
       },
       get profileImgUrl() {
         return profileImgUrl;
@@ -132,6 +139,7 @@ class Rq {
     this.member.createDate = member.createDate;
     this.member.profileImgUrl = member.profileImgUrl;
     this.member.name = member.name;
+    this.member.username = member.username;
     this.member.authorities = member.authorities;
     this.member.dailyGoal = member.dailyGoal;
     this.member.dailyAchievement = member.dailyAchievement;
