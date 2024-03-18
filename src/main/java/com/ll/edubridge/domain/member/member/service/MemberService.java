@@ -5,11 +5,13 @@ import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.domain.point.point.entity.PointType;
 import com.ll.edubridge.domain.point.point.service.PointService;
+import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.global.security.SecurityUser;
+import com.querydsl.core.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+
+import static com.ll.edubridge.global.app.AppConfig.ALPHANUMERIC;
+import static com.ll.edubridge.global.app.AppConfig.ALPHANUMERIC_LENGTH;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +52,7 @@ public class MemberService {
             return RsData.of("400-2", "이미 존재하는 회원입니다.");
         }
 
+
         Member member = Member.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
@@ -53,6 +60,7 @@ public class MemberService {
                 .nickname(nickname)
                 .profileImgUrl(profileImgUrl)
                 .point(PointType.Welcome.getAmount())
+                .uuid(generateRandomString())
                 .build();
 
         pointService.addPoint(PointType.Welcome, member); // 포인트 내역 추가
@@ -60,6 +68,18 @@ public class MemberService {
         memberRepository.save(member);
 
         return RsData.of("200", "%s님 환영합니다. 회원가입이 완료되었습니다. 로그인 후 이용해주세요.".formatted(member.getUsername()), member);
+    }
+    public static String generateRandomString() {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(ALPHANUMERIC_LENGTH);
+
+        for (int i = 0; i < ALPHANUMERIC_LENGTH; i++) {
+            int randomIndex = random.nextInt(ALPHANUMERIC.length());
+            char randomChar = ALPHANUMERIC.charAt(randomIndex);
+            sb.append(randomChar);
+        }
+
+        return sb.toString();
     }
 
     @Transactional

@@ -117,4 +117,7 @@ public class AppConfig {
 
     @Getter
     public static int videoMinNum = 5;
+
+    public static final String ALPHANUMERIC = "0123456789abcdefghjklmnopqrstuvwxyz";
+    public static final int ALPHANUMERIC_LENGTH = 6;
 }
