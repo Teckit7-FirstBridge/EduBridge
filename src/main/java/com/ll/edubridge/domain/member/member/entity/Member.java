@@ -50,6 +50,8 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
 
     private int dailyAchievement;
 
+    private String uuid;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CourseEnroll> courseEnrollList;
 
