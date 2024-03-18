@@ -120,7 +120,7 @@
   <h1>loading...</h1>
 {:then { initialData }}
   {#if rq.isAdmin() || rq.member.id === initialData.writer_id}
-    <div class="px-60">
+    <div class="">
       <div class="flex flex-col h-full px-4 py-6 md:px-6 lg:py-16 md:py-12">
         <div class="space-y-4">
           <div class="space-y-2">

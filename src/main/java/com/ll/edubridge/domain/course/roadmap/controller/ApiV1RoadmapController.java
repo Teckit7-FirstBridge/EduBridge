@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.course.roadmap.controller;
 
+import com.ll.edubridge.domain.course.course.dto.NumDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.roadmap.dto.CreateRoadmapDto;
@@ -147,6 +148,19 @@ public class ApiV1RoadmapController {
         return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
                 Msg.E200_2_MODIFY_SUCCEED.getMsg(), modifyCourseDto);
     }
+
+    @PutMapping("/changeNum/{courseId}")
+    @Operation(summary = "로드맵 순서 변경")
+    public RsData<Empty> changeRoadmapNum(@PathVariable Long courseId,
+                                          @RequestBody NumDto numDto){
+
+        courseService.changeRoadmapNum(courseId, numDto);
+
+
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
+                Msg.E200_2_MODIFY_SUCCEED.getMsg());
+    }
+
 
     @DeleteMapping("/roadmaps/{id}")
     @Operation(summary = "로드맵 삭제")

@@ -128,7 +128,7 @@
 {:then { data }}
   {#if selectedTab === 'course'}
     <div class="">
-      <div class="flex justify-between items-center justify-center mb-4">
+      <div class="flex justify-between items-center justify-center mb-4 ml-2">
         <div>
           <a
             href="/course/write"
@@ -305,7 +305,7 @@
     </div>
   {:else}
     <div class="">
-      <div class="flex justify-between items-center justify-center mb-4">
+      <div class="flex justify-between items-center justify-center mb-4 ml-2">
         <div>
           <a
             href="/roadmap/write"
@@ -314,7 +314,7 @@
             등록
           </a>
           <a
-            href="/member/myroadmap"
+            href="/member/mycourse"
             class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
           >
             관리
@@ -436,7 +436,7 @@
                   </p>
                   {#if item.curriculum}
                     <div class="flex flex-col">
-                      {#each item.curriculum as curriculum, index}
+                      {#each item.curriculum.sort((a, b) => a.roadmapNum - b.roadmapNum || a.id - b.id) as curriculum, index}
                         <a href="/course/{curriculum.id}">
                           <div
                             class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"

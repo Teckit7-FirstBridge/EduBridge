@@ -14,8 +14,8 @@
   let modalenroll;
   let modal;
   let modalRoadmap;
-
-  let selectedRoadmap;
+  let changeNum;
+  let selectedRoadmap = '';
 
   function openModal(overView) {
     selectedOverView.set(overView);
@@ -51,8 +51,23 @@
       });
 
     if (data) {
-      rq.msgInfo('로드맵 등록'); //msg
-      modalRoadmap.close();
+      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/roadmap/changeNum/{courseId}`, {
+        params: {
+          path: {
+            courseId: parseInt($page.params.id)
+          }
+        },
+        body: {
+          num: changeNum
+        }
+      });
+
+      if (data) {
+        rq.msgInfo('로드맵 설정 성공');
+        modalRoadmap.close();
+      } else {
+        rq.msgError('로드맵 설정 실패');
+      }
     }
   }
 
@@ -68,7 +83,7 @@
   let auth: components['schemas']['CourseAuthDto'] = $state();
   let enroll: components['schemas']['AdminCourseEnrollDto'] = $state();
   let courseConfirm: Boolean = $state();
-  let myRoadmap: components['schemas']['CourseDto'][] | undefined;
+  let myRoadmap: components['schemas']['RoadmapDto'][] | undefined;
 
   let overviewviewr: any | undefined = $state();
   let notiviewer: any | undefined = $state();
@@ -126,6 +141,8 @@
       params: {}
     });
     myRoadmap = responseRoadmap.data?.data!;
+
+    changeNum = course.roadmapNum;
 
     return { videos, course, auth, enroll, hashtags, myRoadmap };
   }
@@ -390,10 +407,17 @@
                         bind:value={selectedRoadmap}
                         class="select select-bordered w-full mb-4 focus:outline-none focus:border-gray-700"
                       >
+                        <option value="">로드맵을 선택하세요</option>
                         {#each myRoadmap as roadmap}
                           <option value={roadmap.id}>{roadmap.title}</option>
                         {/each}
                       </select>
+                      <input
+                        type="number"
+                        bind:value={changeNum}
+                        placeholder="로드맵 순서"
+                        class="input input-bordered focus:outline-none focus:border-gray-700 w-full mb-4"
+                      />
                       <button
                         on:click={registerCourseToRoadmap}
                         class="btn border border-gray-500 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
