@@ -140,6 +140,24 @@
       point
     };
   }
+
+  function copyInputValue() {
+    // 입력 창의 값을 가져옵니다.
+    var inputField = document.getElementById('inputField');
+    var inputValue = inputField.value;
+
+    // 클립보드에 복사합니다.
+    navigator.clipboard
+      .writeText(inputValue)
+      .then(function () {
+        console.log('Value copied to clipboard: ' + inputValue);
+        alert('Value copied to clipboard: ' + inputValue);
+      })
+      .catch(function (error) {
+        console.error('Failed to copy: ', error);
+        alert('Failed to copy the value.');
+      });
+  }
 </script>
 
 {#await load()}
@@ -302,11 +320,12 @@
         <input
           value="{import.meta.env.VITE_CORE_FRONT_BASE_URL}/export?v={member?.uuid}"
           type="text"
+          id="inputField"
           placeholder="You can't touch this"
           class="input input-bordered w-full max-w-xs"
           disabled
         />
-        <button class="btn btn-outline">Copy</button>
+        <button on:click={copyInputValue} class="btn btn-outline">Copy</button>
       </div>
     </div>
   {:else}
