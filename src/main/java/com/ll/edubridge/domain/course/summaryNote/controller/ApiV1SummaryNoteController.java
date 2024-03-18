@@ -138,17 +138,29 @@ public class ApiV1SummaryNoteController {
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(),byWriterId);
     }
 
+
+    @Getter
+    public static class GetSummaryandMemberNoteResponsebody{
+        @NonNull
+        private final List<SummaryNoteDto> items;
+
+        @NonNull
+        private final Member member;
+
+        public GetSummaryandMemberNoteResponsebody(List<SummaryNoteDto> items, Member member) {
+            this.items = items;
+            this.member = member;
+        }
+    }
+
+
     @GetMapping("/summary")
     @Operation(summary = "작성자별(uuid) 강의 요약노트 조회 ")
-    public RsData<List<SummaryNoteDto>> getSummaryNoteByUUID(@RequestParam("uuid") String uuid){
-        Optional<Member> member = memberService.findByUUID(uuid);
-        System.out.println("chan===============");
-        System.out.println(uuid);
-        List<SummaryNoteDto> byUuid = summaryNoteService.findByWriterId(member.get().getId()).stream().map(SummaryNoteDto::new).collect(Collectors.toList());
-        System.out.println(byUuid);
-        System.out.println("chan===============");
+    public RsData<GetSummaryandMemberNoteResponsebody> getSummaryNoteByUUID(@RequestParam("uuid") String uuid){
+        Member member = memberService.findByUUID(uuid).get();
+        List<SummaryNoteDto> byUuid = summaryNoteService.findByWriterId(member.getId()).stream().map(SummaryNoteDto::new).collect(Collectors.toList());
 
-        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(),byUuid);
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(),new GetSummaryandMemberNoteResponsebody(byUuid,member));
     }
 
 

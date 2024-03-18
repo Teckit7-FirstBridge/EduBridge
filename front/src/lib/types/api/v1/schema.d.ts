@@ -175,6 +175,9 @@ export interface paths {
     /** 마이 페이지 데이터 요청 */
     get: operations["myPage"];
   };
+  "/api/v1/members/uuid/{uuid}": {
+    get: operations["getMember"];
+  };
   "/api/v1/members/me": {
     get: operations["getMe"];
   };
@@ -463,9 +466,9 @@ export interface components {
       uuid?: string;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
       authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -852,6 +855,15 @@ export interface components {
       success: boolean;
       fail: boolean;
     };
+    RsDataMemberDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["MemberDto"];
+      success: boolean;
+      fail: boolean;
+    };
     MeResponseBody: {
       item: components["schemas"]["MemberDto"];
     };
@@ -964,6 +976,19 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CourseAuthDto"];
+      success: boolean;
+      fail: boolean;
+    };
+    GetSummaryandMemberNoteResponsebody: {
+      items: components["schemas"]["SummaryNoteDto"][];
+      member: components["schemas"]["Member"];
+    };
+    RsDataGetSummaryandMemberNoteResponsebody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetSummaryandMemberNoteResponsebody"];
       success: boolean;
       fail: boolean;
     };
@@ -2024,6 +2049,21 @@ export interface operations {
       };
     };
   };
+  getMember: {
+    parameters: {
+      path: {
+        uuid: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataMemberDto"];
+        };
+      };
+    };
+  };
   getMe: {
     responses: {
       /** @description OK */
@@ -2213,7 +2253,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListSummaryNoteDto"];
+          "application/json": components["schemas"]["RsDataGetSummaryandMemberNoteResponsebody"];
         };
       };
     };

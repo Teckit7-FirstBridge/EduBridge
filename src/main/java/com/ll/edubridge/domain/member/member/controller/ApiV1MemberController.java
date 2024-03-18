@@ -89,6 +89,13 @@ public class ApiV1MemberController {
                 )
         );
     }
+    @GetMapping("/uuid/{uuid}")
+    public RsData<MemberDto> getMember(@PathVariable String uuid){
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                new MemberDto(
+                        memberService.findByUUID(uuid).get()
+                ));
+    }
 
     @PostMapping("/logout")
     public RsData<Empty> logout() {
