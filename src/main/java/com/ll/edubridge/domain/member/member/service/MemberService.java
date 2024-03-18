@@ -144,6 +144,8 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
+    public Optional<Member> findByUUID(String uuid){return memberRepository.findByUuid(uuid);}
+
     public Member getMember(Long id) {
         Optional<Member> member = this.findById(id);
 

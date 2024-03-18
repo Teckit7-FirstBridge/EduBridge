@@ -4,20 +4,21 @@
   import type { components } from '$lib/types/api/v1/schema';
 
   let notes: components['schemas']['SummaryNoteDto'][] | undefined;
-
+  let memberName: string = $state('');
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
-    const { data } = await rq.apiEndPoints().GET(`/api/v1/courses/summary/{writerId}`, {
+    const { data } = await rq.apiEndPoints().GET(`/api/v1/courses/summary`, {
       params: {
-        path: {
-          writerId: rq.member.id
+        query: {
+          uuid: $page.url.searchParams.get('uuid')!
         }
       }
     });
+    memberName = data?.data.member.nickname!;
 
-    if (data?.data) {
-      notes = data.data.sort((a, b) => a.courseId - b.courseId || a.id - b.id);
+    if (data?.data.items) {
+      notes = data.data.items.sort((a, b) => a.courseId - b.courseId || a.id - b.id);
     }
 
     return { notes };
@@ -29,7 +30,7 @@
 {:then { notes }}
   {#if notes && notes.length > 0}
     <div class="flex flex-col w-full max-w-screen min-h-screen px-4 mt-10 md:px-6 lg:px-40">
-      <p class="text-3xl font-semibold mb-4">{rq.member.name}님의 통과된 요약노트</p>
+      <p class="text-3xl font-semibold mb-4">{memberName}님의 통과된 요약노트</p>
       <div class="mb-5">
         {#each notes as item, index}
           {#if index === 0 || item.courseId !== notes[index - 1].courseId}
@@ -47,7 +48,7 @@
                 </div>
                 <div class="ml-2 flex-shrink-0 flex">
                   <p class="text-sm text-gray-500">
-                    작성일: {`${new Date(item.createDate).getFullYear()}년 ${new Date(item.createDate).getMonth() + 1}월 ${new Date(item.createDate).getDate()}일`}
+                    작성일: {`${new Date(memberName).getFullYear()}년 ${new Date(item.createDate).getMonth() + 1}월 ${new Date(item.createDate).getDate()}일`}
                   </p>
                 </div>
               </div>
