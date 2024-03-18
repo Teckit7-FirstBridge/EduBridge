@@ -485,6 +485,7 @@ export interface components {
       /** Format: int64 */
       videoId?: number;
       courseName?: string;
+      title?: string;
       pass?: boolean;
     };
     CourseDto: {
@@ -509,8 +510,6 @@ export interface components {
       /** Format: int64 */
       writer_id?: number;
       hashtags?: string;
-      /** Format: int64 */
-      roadMapId?: number;
     };
     RsDataCourseDto: {
       resultCode: string;
