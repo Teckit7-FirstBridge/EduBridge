@@ -14,6 +14,12 @@
     return title.length > 11 ? `${title.substring(0, 11)}...` : title;
   }
 
+  function changeTab(tabName: string) {
+    selectedTab = tabName;
+    rq.goTo(`/course`, { replaceState: true }); // URL을 변경하되, 쿼리 파라미터를 제거합니다.
+    load();
+  }
+
   function removeMarkdown(markdownText) {
     // 정규 표현식을 사용하여 마크다운 문법 제거
     const text = markdownText
@@ -100,7 +106,7 @@
     role="tab"
     class={`tab ${selectedTab === 'course' ? 'tab-active' : ''}`}
     on:click={() => {
-      selectedTab = 'course';
+      changeTab('course');
       load();
     }}
   >
@@ -110,7 +116,7 @@
     role="tab"
     class={`tab ${selectedTab === 'roadmap' ? 'tab-active' : ''}`}
     on:click={() => {
-      selectedTab = 'roadmap';
+      changeTab('roadmap');
       load();
     }}
   >
@@ -424,8 +430,8 @@
                   </div>
                 </div>
                 <div class="collapse-content bg-white peer-checked:bg-white mt-1">
-                  <p class="text-sm text-gray-500 dark:text-gray-400 mx-2">개요</p>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 mx-2">
+                  <p class="text-lg text-gray-800 dark:text-gray-400 mx-2 font-semibold">개요</p>
+                  <p class="text-sm text-gray-800 dark:text-gray-400 mx-2">
                     {removeMarkdown(item.overView)}
                   </p>
                   {#if item.curriculum}
@@ -433,7 +439,7 @@
                       {#each item.curriculum as curriculum, index}
                         <a href="/course/{curriculum.id}">
                           <div
-                            class="mt-2 flex text-blue-700 text-lg text-center items-center ml-2"
+                            class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
                           >
                             {index + 1}. {curriculum.title}
                           </div>
