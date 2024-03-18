@@ -10,6 +10,8 @@
   let isQna = $state(false);
   let isBoard = $state(false);
   let isRoom = $state(false);
+  let exportNote = $page.url.pathname.includes('export');
+
   const { children } = $props();
   rq.effect(async () => {
     untrack(() => {
@@ -44,7 +46,7 @@
   });
 </script>
 
-{#if $page.url.pathname !== '/export'}
+{#if !exportNote}
   <header class="navbar bg-gray-50 shadow">
     <div class="flex-1">
       <div class="flex-none">
