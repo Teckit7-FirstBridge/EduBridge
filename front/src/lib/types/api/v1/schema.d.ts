@@ -5,6 +5,10 @@
 
 
 export interface paths {
+  "/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}": {
+    /** 로드맵에 강좌 추가 */
+    put: operations["addCourse"];
+  };
   "/api/v1/roadmap/roadmaps/{id}": {
     /** 로드맵 수정 */
     put: operations["modifyRoadmap"];
@@ -57,10 +61,6 @@ export interface paths {
   "/api/v1/roadmap/roadmaps": {
     /** 로드맵 생성 */
     post: operations["createRoadmap"];
-  };
-  "/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}": {
-    /** 로드맵에 강좌 추가 */
-    post: operations["addCourse"];
   };
   "/api/v1/posts": {
     /** 글 다건 조회 */
@@ -1181,6 +1181,23 @@ export type external = Record<string, never>;
 
 export interface operations {
 
+  /** 로드맵에 강좌 추가 */
+  addCourse: {
+    parameters: {
+      path: {
+        roadmapId: number;
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataRoadmapDto"];
+        };
+      };
+    };
+  };
   /** 로드맵 수정 */
   modifyRoadmap: {
     parameters: {
@@ -1483,28 +1500,6 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataCreateRoadmapDto"];
-        };
-      };
-    };
-  };
-  /** 로드맵에 강좌 추가 */
-  addCourse: {
-    parameters: {
-      path: {
-        roadmapId: number;
-        courseId: number;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["RoadmapDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataRoadmapDto"];
         };
       };
     };

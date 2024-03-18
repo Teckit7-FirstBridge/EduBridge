@@ -121,20 +121,17 @@ public class ApiV1RoadmapController {
                 createdRoadmapDto);
     }
 
-    @PostMapping("/roadmaps/{roadmapId}/{courseId}")
+    @PutMapping("/roadmaps/{roadmapId}/{courseId}")
     @Operation(summary = "로드맵에 강좌 추가")
-    public RsData<RoadmapDto> addCourse(
+    public RsData<Empty> addCourse(
             @PathVariable("roadmapId") Long roadmapId,
-            @PathVariable("courseId") Long courseId,
-            @RequestBody RoadmapDto roadmapDto) {
+            @PathVariable("courseId") Long courseId) {
 
         Course course = courseService.getCourse(courseId);
-        Roadmap modifyRoadmap = roadmapService.addCourse(roadmapId, roadmapDto, course);
-
-        RoadmapDto modifyCourseDto = new RoadmapDto(modifyRoadmap, rq.getMember());
+        roadmapService.addCourse(roadmapId, course);
 
         return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
-                Msg.E200_2_MODIFY_SUCCEED.getMsg(), modifyCourseDto);
+                Msg.E200_2_MODIFY_SUCCEED.getMsg());
     }
 
     @PutMapping("/roadmaps/{id}")

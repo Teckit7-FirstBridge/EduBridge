@@ -126,15 +126,15 @@
         <div>
           <a
             href="/course/write"
-            class="ml-4 inline-block px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-black hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
           >
-            강좌 등록
+            등록
           </a>
           <a
             href="/member/mycourse"
-            class="ml-4 inline-block px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-black hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
           >
-            강좌 관리
+            관리
           </a>
         </div>
         <div class=" mr-4">
@@ -303,15 +303,15 @@
         <div>
           <a
             href="/roadmap/write"
-            class="ml-4 inline-block px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-black hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
           >
-            로드맵 등록
+            등록
           </a>
           <a
             href="/member/myroadmap"
-            class="ml-4 inline-block px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-black hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
           >
-            로드맵 관리
+            관리
           </a>
         </div>
         <div class=" mr-4">
@@ -429,11 +429,15 @@
                     {removeMarkdown(item.overView)}
                   </p>
                   {#if item.curriculum}
-                    <div class="flex">
-                      {#each item.curriculum as curriculum}
-                        <div class="flex text-amber-600 text-sm text-center items-center ml-2">
-                          {curriculum}
-                        </div>
+                    <div class="flex flex-col">
+                      {#each item.curriculum as curriculum, index}
+                        <a href="/course/{curriculum.id}">
+                          <div
+                            class="mt-2 flex text-blue-700 text-lg text-center items-center ml-2"
+                          >
+                            {index + 1}. {curriculum.title}
+                          </div>
+                        </a>
                       {/each}
                     </div>
                   {/if}
