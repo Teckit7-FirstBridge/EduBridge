@@ -246,6 +246,7 @@
                             class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
                           >
                             {index + 1}. {curriculum.title}
+                            [{curriculum.roadmapNum}번 강좌]
                           </div>
                         </a>
                       {/each}
