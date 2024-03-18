@@ -210,7 +210,6 @@ public class MemberService {
             member.setEnrollCount(0);
         }
         memberRepository.saveAll(allMembers);
-        // TODO :: 필요하면 출석체크로 로직을 바꿀 것
     }
 
     private List<Member> getAllMembers() {
