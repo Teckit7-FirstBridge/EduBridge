@@ -142,7 +142,7 @@
     </div>
   </header>
 
-  <slot />
+  <main>{@render children()}</main>
 
   <footer class=" bottom-0 w-full bg-white text-gray-300">
     <div class="container mx-auto flex justify-around items-center">
@@ -244,5 +244,5 @@
     </div>
   </footer>
 {:else}
-  <slot />
+  <main>{@render children()}</main>
 {/if}
