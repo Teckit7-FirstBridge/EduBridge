@@ -140,6 +140,22 @@
       point
     };
   }
+
+  function copyInputValue() {
+    // 입력 창의 값을 가져옵니다.
+    var inputField = document.getElementById('inputUrl');
+    var inputValue = inputField!.value;
+
+    // 클립보드에 복사합니다.
+    navigator.clipboard
+      .writeText(inputValue)
+      .then(function () {
+        rq.msgInfo('링크가 복사되었습니다');
+      })
+      .catch(function (error) {
+        rq.msgError('복사가 실패했습니다');
+      });
+  }
 </script>
 
 {#await load()}
@@ -298,6 +314,17 @@
           </div>
         </div>
       </main>
+      <div class="ml-6">
+        <input
+          value="{import.meta.env.VITE_CORE_FRONT_BASE_URL}/export?v={member?.uuid}"
+          type="text"
+          id="inputUrl"
+          placeholder="You can't touch this"
+          class="input input-bordered w-full max-w-xs"
+          disabled
+        />
+        <button on:click={copyInputValue} class="btn btn-outline">Copy</button>
+      </div>
     </div>
   {:else}
     <a href="/" class="btn btn-outline btn-error m-5">접근 불가 메인으로</a>
