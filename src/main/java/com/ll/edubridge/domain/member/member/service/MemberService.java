@@ -4,6 +4,7 @@ import com.ll.edubridge.domain.member.member.dto.NickNameDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.domain.point.point.entity.PointType;
+import com.ll.edubridge.domain.point.point.service.PointService;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
@@ -30,6 +31,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthTokenService authTokenService;
+    private final PointService pointService;
 
     private final Rq rq;
 
@@ -50,8 +52,11 @@ public class MemberService {
                 .refreshToken(authTokenService.genRefreshToken())
                 .nickname(nickname)
                 .profileImgUrl(profileImgUrl)
-                .point(PointType.Welecome.getAmount())
+                .point(PointType.Welcome.getAmount())
                 .build();
+
+        pointService.addPoint(PointType.Welcome, member); // 포인트 내역 추가
+
         memberRepository.save(member);
 
         return RsData.of("200", "%s님 환영합니다. 회원가입이 완료되었습니다. 로그인 후 이용해주세요.".formatted(member.getUsername()), member);
