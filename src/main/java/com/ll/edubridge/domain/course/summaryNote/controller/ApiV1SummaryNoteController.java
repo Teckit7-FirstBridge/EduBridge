@@ -5,6 +5,7 @@ import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.domain.notification.entity.NotificationType;
 import com.ll.edubridge.domain.openai.ChatService;
 import com.ll.edubridge.domain.point.point.entity.PointType;
@@ -30,6 +31,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -45,6 +47,7 @@ public class ApiV1SummaryNoteController {
     private final ChatService chatService;
     private final NotificationService notificationService;
     private final PointService pointService;
+    private final MemberService memberService;
 
     @Getter
     public static class GetSummaryNoteResponsebody{
@@ -134,6 +137,21 @@ public class ApiV1SummaryNoteController {
         List<SummaryNoteDto> byWriterId = summaryNoteService.findByWriterId(id).stream().map(SummaryNoteDto::new).collect(Collectors.toList());
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(),byWriterId);
     }
+
+    @GetMapping("/summary")
+    @Operation(summary = "작성자별(uuid) 강의 요약노트 조회 ")
+    public RsData<List<SummaryNoteDto>> getSummaryNoteByUUID(@RequestParam("uuid") String uuid){
+        Optional<Member> member = memberService.findByUUID(uuid);
+        System.out.println("chan===============");
+        System.out.println(uuid);
+        List<SummaryNoteDto> byUuid = summaryNoteService.findByWriterId(member.get().getId()).stream().map(SummaryNoteDto::new).collect(Collectors.toList());
+        System.out.println(byUuid);
+        System.out.println("chan===============");
+
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(),byUuid);
+    }
+
+
 
     @GetMapping("/summary/{writerId}/{courseId}")
     @Operation(summary = "작성자별 강좌의 모든 요약노트 목록 조회 ")

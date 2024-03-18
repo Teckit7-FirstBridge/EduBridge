@@ -8,10 +8,10 @@
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
-    const { data } = await rq.apiEndPoints().GET(`/api/v1/courses/summary/{writerId}`, {
+    const { data } = await rq.apiEndPoints().GET(`/api/v1/courses/summary`, {
       params: {
-        path: {
-          writerId: rq.member.id
+        query: {
+          uuid: $page.url.searchParams.get('uuid')!
         }
       }
     });

@@ -316,7 +316,7 @@
       </main>
       <div class="ml-6">
         <input
-          value="{import.meta.env.VITE_CORE_FRONT_BASE_URL}/export?v={member?.uuid}"
+          value="{import.meta.env.VITE_CORE_FRONT_BASE_URL}/export?uuid={member?.uuid}"
           type="text"
           id="inputUrl"
           placeholder="You can't touch this"

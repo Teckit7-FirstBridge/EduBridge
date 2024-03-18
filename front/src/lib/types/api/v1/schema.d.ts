@@ -222,6 +222,10 @@ export interface paths {
     /** 해당 멤버가 해당 강좌를 수강 중인지 */
     get: operations["getCourseAuth"];
   };
+  "/api/v1/courses/summary": {
+    /** 작성자별(uuid) 강의 요약노트 조회 */
+    get: operations["getSummaryNoteByUUID"];
+  };
   "/api/v1/courses/summary/{writerId}": {
     /** 작성자별 강의 요약노트 조회 */
     get: operations["getSummaryNoteByWriter"];
@@ -459,9 +463,9 @@ export interface components {
       uuid?: string;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
       authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -2194,6 +2198,22 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataCourseAuthDto"];
+        };
+      };
+    };
+  };
+  /** 작성자별(uuid) 강의 요약노트 조회 */
+  getSummaryNoteByUUID: {
+    parameters: {
+      query: {
+        uuid: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListSummaryNoteDto"];
         };
       };
     };
