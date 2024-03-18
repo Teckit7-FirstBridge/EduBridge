@@ -2,6 +2,7 @@ package com.ll.edubridge.domain.course.course.service;
 
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
+import com.ll.edubridge.domain.course.course.dto.NumDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
@@ -52,12 +53,23 @@ public class CourseService {
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .price(price)
+                .roadmapNum(0)
                 .writer_id(createCourseDto.getWriter_id())
                 .hashtags(createCourseDto.getHashtags())
                 .writer_nickname(memberService.getMember(createCourseDto.getWriter_id()).getNickname())
                 .build();
 
         return courseRepository.save(course);
+    }
+
+    @Transactional
+    public void changeRoadmapNum(Long id, NumDto numDto){
+
+        Course course = this.getCourse(id);
+
+        course.setRoadmapNum(numDto.getNum());
+
+        courseRepository.save(course);
     }
 
     @Transactional

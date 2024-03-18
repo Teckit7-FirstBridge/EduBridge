@@ -7,8 +7,6 @@ import org.springframework.lang.NonNull;
 
 @Getter
 public class CreateRoadmapDto {
-    @NonNull
-    private Long id;
 
     @Size(max = 50)
     private String title;
@@ -20,9 +18,12 @@ public class CreateRoadmapDto {
     private String hashtags;
 
     public CreateRoadmapDto(Roadmap roadmap) {
-        this.id = roadmap.getId();
         this.title = roadmap.getTitle();
         this.overView = roadmap.getOverView();
         this.hashtags = roadmap.getHashtags();
+    }
+
+    public CreateRoadmapDto(){
+
     }
 }

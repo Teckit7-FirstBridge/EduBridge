@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.course.roadmap.controller;
 
+import com.ll.edubridge.domain.course.course.dto.NumDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.roadmap.dto.CreateRoadmapDto;
@@ -121,20 +122,17 @@ public class ApiV1RoadmapController {
                 createdRoadmapDto);
     }
 
-    @PostMapping("/roadmaps/{roadmapId}/{courseId}")
+    @PutMapping("/roadmaps/{roadmapId}/{courseId}")
     @Operation(summary = "로드맵에 강좌 추가")
-    public RsData<RoadmapDto> addCourse(
+    public RsData<Empty> addCourse(
             @PathVariable("roadmapId") Long roadmapId,
-            @PathVariable("courseId") Long courseId,
-            @RequestBody RoadmapDto roadmapDto) {
+            @PathVariable("courseId") Long courseId) {
 
         Course course = courseService.getCourse(courseId);
-        Roadmap modifyRoadmap = roadmapService.addCourse(roadmapId, roadmapDto, course);
-
-        RoadmapDto modifyCourseDto = new RoadmapDto(modifyRoadmap, rq.getMember());
+        roadmapService.addCourse(roadmapId, course);
 
         return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
-                Msg.E200_2_MODIFY_SUCCEED.getMsg(), modifyCourseDto);
+                Msg.E200_2_MODIFY_SUCCEED.getMsg());
     }
 
     @PutMapping("/roadmaps/{id}")
@@ -150,6 +148,19 @@ public class ApiV1RoadmapController {
         return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
                 Msg.E200_2_MODIFY_SUCCEED.getMsg(), modifyCourseDto);
     }
+
+    @PutMapping("/changeNum/{courseId}")
+    @Operation(summary = "로드맵 순서 변경")
+    public RsData<Empty> changeRoadmapNum(@PathVariable Long courseId,
+                                          @RequestBody NumDto numDto){
+
+        courseService.changeRoadmapNum(courseId, numDto);
+
+
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
+                Msg.E200_2_MODIFY_SUCCEED.getMsg());
+    }
+
 
     @DeleteMapping("/roadmaps/{id}")
     @Operation(summary = "로드맵 삭제")

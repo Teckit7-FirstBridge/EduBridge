@@ -37,6 +37,8 @@ public class Course extends BaseEntity {
 
     private int price;
 
+    private int roadmapNum;
+
     @Column
     @Builder.Default
     private Boolean confirm = false;

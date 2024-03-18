@@ -13,10 +13,13 @@
   let selectedOverView = writable('');
   let modalenroll;
   let modal;
+  let modalRoadmap;
+  let changeNum;
+  let selectedRoadmap = '';
 
   function openModal(overView) {
-    selectedOverView.set(overView); // 선택된 개요 업데이트
-    modal.showModal(); // 모달 열기
+    selectedOverView.set(overView);
+    modal.showModal();
   }
 
   function handleOutsideClick(event) {
@@ -27,6 +30,45 @@
 
   function openModalEnRoll() {
     modalenroll.showModal();
+  }
+
+  function openModalRoadmap() {
+    modalRoadmap.showModal();
+  }
+
+  async function registerCourseToRoadmap() {
+    const roadmapId = selectedRoadmap;
+
+    const { data, error } = await rq
+      .apiEndPoints()
+      .PUT(`/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}`, {
+        params: {
+          path: {
+            courseId: parseInt($page.params.id),
+            roadmapId: roadmapId
+          }
+        }
+      });
+
+    if (data) {
+      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/roadmap/changeNum/{courseId}`, {
+        params: {
+          path: {
+            courseId: parseInt($page.params.id)
+          }
+        },
+        body: {
+          num: changeNum
+        }
+      });
+
+      if (data) {
+        rq.msgInfo('로드맵 설정 성공');
+        modalRoadmap.close();
+      } else {
+        rq.msgError('로드맵 설정 실패');
+      }
+    }
   }
 
   let isDrawerOpen = false;
@@ -41,6 +83,7 @@
   let auth: components['schemas']['CourseAuthDto'] = $state();
   let enroll: components['schemas']['AdminCourseEnrollDto'] = $state();
   let courseConfirm: Boolean = $state();
+  let myRoadmap: components['schemas']['RoadmapDto'][] | undefined;
 
   let overviewviewr: any | undefined = $state();
   let notiviewer: any | undefined = $state();
@@ -94,7 +137,14 @@
     });
     auth = responseAuth.data?.data!;
 
-    return { videos, course, auth, enroll, hashtags };
+    const responseRoadmap = await rq.apiEndPoints().GET(`/api/v1/roadmap/myRoadmap`, {
+      params: {}
+    });
+    myRoadmap = responseRoadmap.data?.data!;
+
+    changeNum = course.roadmapNum;
+
+    return { videos, course, auth, enroll, hashtags, myRoadmap };
   }
 
   async function deleteCourse() {
@@ -115,7 +165,7 @@
   }
 
   async function startCourse() {
-    if (course.videoCount! < 5) {
+    if (course.videoCount! <= 5) {
       rq.msgWarning('영상이 5개 이하이면 공개할 수 없습니다');
     } else {
       const isConfirmed = confirm('강좌를 공개하시겠습니까?');
@@ -241,7 +291,7 @@
 
 {#await load()}
   <div>loading...</div>
-{:then { videos, course, auth, enroll, hashtags }}
+{:then { videos, course, auth, enroll, hashtags, myRoadmap }}
   <div class="flex w-full justify-center items-center">
     <div class="flex flex-col">
       <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
@@ -299,44 +349,85 @@
             </div>
           {/each}
         </div>
-        <div class="flex">
+        <div class="flex justify-end">
           {#if !auth.enroll && !(rq.member.id == course.writer_id) && !rq.isAdmin()}
             <div class="flex">
               <div class="mt-2">
-                <p class="course-price">{course.price}원</p>
+                <p class="course-price mt-4">{course.price}원</p>
               </div>
-              <button on:click={enrollCourse} class="enroll-button ml-2">수강 등록</button>
+              <button
+                on:click={enrollCourse}
+                class="ml-2 btn border border-blue-700 text-gray-800 bg-white hover:bg-blue-700 hover:border-blue-700 hover:text-white active:bg-blue-700 active:text-white active:border-blue-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                >수강 등록</button
+              >
             </div>
           {/if}
         </div>
         {#if rq.member.id === course.writer_id || rq.isAdmin()}
-          <div class="mb-5 mx-2 items-center">
-            <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
-            <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
-            {#if !courseConfirm}
-              <button on:click={startCourse} class="btn btn-sm">강좌 공개</button>
-            {:else}
-              <button on:click={stopCourse} class="btn btn-sm">강좌 비공개</button>
-              <button onclick={openModalEnRoll} class="btn btn-sm">수강생 목록</button>
-              <dialog id="my_modal_3" class="modal" bind:this={modalenroll}>
-                <div class="modal-box">
-                  <form method="dialog">
-                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button
-                    >
-                  </form>
-                  <div class="flex flex-col p-6 bg-white shadow rounded-lg">
-                    <h2 class="text-xl font-semibold mb-4 border-b pb-2">수강생 목록</h2>
-                    {#each enroll as enroll}
-                      <div
-                        class="py-2 px-4 bg-gray-100 rounded-md mb-2 shadow-sm hover:bg-gray-200 transition-colors"
+          <div class="mx-2 items-center">
+            <div class="mb-2">
+              <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
+              <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
+            </div>
+            <div>
+              {#if !courseConfirm}
+                <button on:click={startCourse} class="btn btn-sm">강좌 공개</button>
+              {:else}
+                <button on:click={stopCourse} class="btn btn-sm">강좌 비공개</button>
+                <button onclick={openModalEnRoll} class="btn btn-sm">수강생 목록</button>
+                <dialog id="my_modal_3" class="modal" bind:this={modalenroll}>
+                  <div class="modal-box">
+                    <form method="dialog">
+                      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                        >✕</button
                       >
-                        {enroll.name}
-                      </div>
-                    {/each}
+                    </form>
+                    <div class="flex flex-col p-6 bg-white shadow rounded-lg">
+                      <h2 class="text-xl font-semibold mb-4 border-b pb-2">수강생 목록</h2>
+                      {#each enroll as enroll}
+                        <div
+                          class="py-2 px-4 bg-gray-100 rounded-md mb-2 shadow-sm hover:bg-gray-200 transition-colors"
+                        >
+                          {enroll.name}
+                        </div>
+                      {/each}
+                    </div>
                   </div>
-                </div>
-              </dialog>
-            {/if}
+                </dialog>
+                <button onclick={openModalRoadmap} class="btn btn-sm">로드맵</button>
+                <dialog id="my_modal_3" class="modal" bind:this={modalRoadmap}>
+                  <div class="modal-box">
+                    <button
+                      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                      on:click={() => modalRoadmap.close()}>✕</button
+                    >
+                    <div class="flex flex-col p-6 bg-white shadow rounded-lg">
+                      <h2 class="text-xl font-semibold mb-4 pb-2">로드맵 등록</h2>
+                      <select
+                        bind:value={selectedRoadmap}
+                        class="select select-bordered w-full mb-4 focus:outline-none focus:border-gray-700"
+                      >
+                        <option value="">로드맵을 선택하세요</option>
+                        {#each myRoadmap as roadmap}
+                          <option value={roadmap.id}>{roadmap.title}</option>
+                        {/each}
+                      </select>
+                      <input
+                        type="number"
+                        bind:value={changeNum}
+                        placeholder="로드맵 순서"
+                        class="input input-bordered focus:outline-none focus:border-gray-700 w-full mb-4"
+                      />
+                      <button
+                        on:click={registerCourseToRoadmap}
+                        class="btn border border-gray-500 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                        >등록</button
+                      >
+                    </div>
+                  </div>
+                </dialog>
+              {/if}
+            </div>
           </div>
         {/if}
 

@@ -1,28 +1,12 @@
 <script lang="ts">
-  //@ts-ignore
-  import Editor from '@toast-ui/editor';
   import '@toast-ui/editor/dist/toastui-editor.css';
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
   import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
 
-  let divNoti: HTMLDivElement | undefined = $state();
   let overvieweditor: any | undefined = $state();
-  let notieditor: any | undefined = $state();
   let title: '';
-  let imgUrl: '';
-
-  let thumbnailAdvice;
-
-  function openModalThAdvice() {
-    thumbnailAdvice.showModal();
-  }
-
-  function closeModalThAdvice(event) {
-    event.preventDefault();
-    thumbnailAdvice.close();
-  }
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -33,20 +17,13 @@
       rq.msgWarning('로그인 후 이용 해 주세요');
       rq.goTo('/member/login');
     }
-    console.log(rq.member.id);
   }
 
-  const Course__save = async () => {
-    const newNoti = notieditor.editor.getMarkdown().trim();
+  const RoadMap__save = async () => {
     const newOverview = overvieweditor.editor.getMarkdown().trim();
 
     if (title == null) {
       rq.msgWarning('제목을 입력 해 주세요');
-      return;
-    }
-
-    if (newNoti.length < 1) {
-      rq.msgWarning('공지를 입력 해 주세요');
       return;
     }
 
@@ -55,22 +32,11 @@
       return;
     }
 
-    if (imgUrl == null) {
-      rq.msgWarning('썸네일 주소를 입력 해 주세요');
-      return;
-    }
-    if (!imgUrl.includes('jpg')) {
-      rq.msgWarning('썸네일 url을 jpg 형식으로 입력 해 주세요');
-      return;
-    }
-    const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/courses/write', {
+    const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/roadmap/roadmaps', {
       // url 설정
       body: {
         title: title,
-        notice: newNoti,
         overView: newOverview,
-        imgUrl: imgUrl,
-        writer_id: rq.member.id,
         hashtags: tags.join('@')
       }
     });
@@ -119,7 +85,7 @@
         <div class="space-y-2">
           <label
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            for="post-title">강좌 제목</label
+            for="post-title">로드맵 제목</label
           ><input
             class="flex h-10 w-full rounded-md border px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
             id="post-title"
@@ -161,57 +127,13 @@
         <div class="space-y-2">
           <label
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            for="post-noti">공지사항</label
-          >
-          <div bind:this={divNoti} id="post-noti"></div>
-          <ToastUiEditor bind:this={notieditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
-
-          <label
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            for="post-overview">강좌 개요</label
+            for="post-overview">로드맵 개요</label
           >
           <ToastUiEditor bind:this={overvieweditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
-          <div>
-            <label
-              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              for="course-imgUrl mr-4"
-              >강좌 이미지 Url
-              <a href="#" onclick={openModalThAdvice}>
-                <i class="fa-solid fa-circle-exclamation text-red-500"></i>
-              </a>
-              <dialog id="my_modal_3" class="modal" bind:this={thumbnailAdvice}>
-                <div class="modal-box modal-box-2">
-                  <button
-                    class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                    onclick={closeModalThAdvice}>✕</button
-                  >
-                  <div>
-                    <div>제시된 형식에 맞춰 썸네일 이미지를 입력해주세요.</div>
-                    <br />
-                    <div>VIDEO-ID 위치에 첫번째 강의의 Youtube 영상 id를 넣어주세요.</div>
-                    <br />
-                    <div>Youtube 영상 id : URL의 v= 혹은 vi= 다음 값</div>
-                  </div>
-                </div>
-              </dialog>
-            </label><label
-              class="ml-4 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
-              for="course-imgUrl"
-            >
-              https://img.youtube.com/vi/VIDEO-ID/0.jpg
-            </label>
-          </div>
-          <input
-            class="flex h-10 w-full rounded-md border px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-            id="post-imgUrl"
-            placeholder="Enter ImgUrl"
-            bind:value={imgUrl}
-          />
         </div>
-
         <button
-          on:click={Course__save}
-          class="inline-block px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-black hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          on:click={RoadMap__save}
+          class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
           >저장</button
         >
       </div>

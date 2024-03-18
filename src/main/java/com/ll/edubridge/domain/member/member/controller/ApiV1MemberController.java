@@ -17,7 +17,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/members")
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class ApiV1MemberController {
     private final MemberService memberService;
     private final Rq rq;
@@ -128,10 +126,7 @@ public class ApiV1MemberController {
     @Operation(summary = "회원 닉네임 변경")
     public RsData<NickNameDto> modifyNickName(@RequestBody NickNameDto nickNameDto) {
 
-
         Member member = memberService.modifyNickname(nickNameDto);
-
-        System.out.println("안녕"+nickNameDto.getNickName());
 
         NickNameDto modifyNickNameDto = new NickNameDto(member.getNickname());
 

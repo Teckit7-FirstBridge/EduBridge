@@ -5,11 +5,19 @@
 
 
 export interface paths {
+  "/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}": {
+    /** 로드맵에 강좌 추가 */
+    put: operations["addCourse"];
+  };
   "/api/v1/roadmap/roadmaps/{id}": {
     /** 로드맵 수정 */
     put: operations["modifyRoadmap"];
     /** 로드맵 삭제 */
     delete: operations["deleteCourse"];
+  };
+  "/api/v1/roadmap/changeNum/{courseId}": {
+    /** 로드맵 순서 변경 */
+    put: operations["changeRoadmapNum"];
   };
   "/api/v1/posts/{id}": {
     /** 글 상세 정보 */
@@ -57,10 +65,6 @@ export interface paths {
   "/api/v1/roadmap/roadmaps": {
     /** 로드맵 생성 */
     post: operations["createRoadmap"];
-  };
-  "/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}": {
-    /** 로드맵에 강좌 추가 */
-    post: operations["addCourse"];
   };
   "/api/v1/posts": {
     /** 글 다건 조회 */
@@ -291,6 +295,16 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    Empty: Record<string, never>;
+    RsDataEmpty: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["Empty"];
+      fail: boolean;
+      success: boolean;
+    };
     Course: {
       /** Format: int64 */
       id?: number;
@@ -302,6 +316,8 @@ export interface components {
       overView?: string;
       /** Format: int32 */
       price?: number;
+      /** Format: int32 */
+      roadmapNum?: number;
       confirm?: boolean;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       roadmap?: components["schemas"]["Roadmap"];
@@ -323,7 +339,6 @@ export interface components {
       createDate?: string;
       title?: string;
       overView?: string;
-      curriculum?: components["schemas"]["Course"][];
       hashtags?: string;
       owner?: string;
     };
@@ -344,6 +359,10 @@ export interface components {
       data: components["schemas"]["RoadmapDto"];
       fail: boolean;
       success: boolean;
+    };
+    NumDto: {
+      /** Format: int32 */
+      num?: number;
     };
     PostDto: {
       /** Format: int64 */
@@ -439,9 +458,9 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
-      authoritiesAsStringList?: string[];
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -475,7 +494,8 @@ export interface components {
       notice?: string;
       imgUrl?: string;
       overView?: string;
-      grade?: string;
+      /** Format: int32 */
+      roadmapNum?: number;
       /** Format: int32 */
       price?: number;
       /** Format: int32 */
@@ -489,6 +509,8 @@ export interface components {
       /** Format: int64 */
       writer_id?: number;
       hashtags?: string;
+      /** Format: int64 */
+      roadMapId?: number;
     };
     RsDataCourseDto: {
       resultCode: string;
@@ -551,8 +573,6 @@ export interface components {
       success: boolean;
     };
     CreateRoadmapDto: {
-      /** Format: int64 */
-      id: number;
       title?: string;
       overView?: string;
       hashtags: string;
@@ -588,16 +608,6 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    Empty: Record<string, never>;
-    RsDataEmpty: {
-      resultCode: string;
-      /** Format: int32 */
-      statusCode: number;
-      msg: string;
-      data: components["schemas"]["Empty"];
-      fail: boolean;
-      success: boolean;
-    };
     LoginRequestBody: {
       username: string;
       password: string;
@@ -611,6 +621,7 @@ export interface components {
       /** Format: date-time */
       createDate: string;
       name: string;
+      username: string;
       profileImgUrl: string;
       authorities: string[];
       visitedToday: boolean;
@@ -1182,6 +1193,23 @@ export type external = Record<string, never>;
 
 export interface operations {
 
+  /** 로드맵에 강좌 추가 */
+  addCourse: {
+    parameters: {
+      path: {
+        roadmapId: number;
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
   /** 로드맵 수정 */
   modifyRoadmap: {
     parameters: {
@@ -1208,6 +1236,27 @@ export interface operations {
     parameters: {
       path: {
         id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 로드맵 순서 변경 */
+  changeRoadmapNum: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["NumDto"];
       };
     };
     responses: {
@@ -1484,28 +1533,6 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataCreateRoadmapDto"];
-        };
-      };
-    };
-  };
-  /** 로드맵에 강좌 추가 */
-  addCourse: {
-    parameters: {
-      path: {
-        roadmapId: number;
-        courseId: number;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["RoadmapDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataRoadmapDto"];
         };
       };
     };
