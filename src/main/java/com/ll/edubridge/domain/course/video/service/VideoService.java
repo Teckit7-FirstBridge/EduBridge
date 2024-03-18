@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.course.video.service;
 
+import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
 import com.ll.edubridge.domain.course.video.dto.VideoDto;
@@ -32,6 +33,7 @@ public class VideoService {
                 .course(courseService.getCourse(createVideoDto.getCourseId()))
                 .imgUrl(createVideoDto.getImgUrl())
                 .keywords(createVideoDto.getKeywords())
+                .title(createVideoDto.getTitle())
                 .build();
         return videoRepository.save(video);
     }
@@ -44,6 +46,7 @@ public class VideoService {
         video.setOverView(videoDto.getOverView());
         video.setImgUrl(videoDto.getImgUrl());
         video.setKeywords(videoDto.getKeywords());
+        video.setTitle(videoDto.getTitle());
 
         return videoRepository.save(video);
     }
@@ -86,13 +89,8 @@ public class VideoService {
     }
 
     @Transactional
-    public boolean haveAuthority() {
+    public boolean haveAuthority(Course course) {
         Member member = rq.getMember();
-
-        if (member == null) return false;
-
-        if (rq.isAdmin()) return true;
-
-        return false;
+        return member.getId().equals(course.getWriter_id());
     }
 }

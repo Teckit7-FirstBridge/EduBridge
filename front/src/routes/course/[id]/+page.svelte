@@ -5,6 +5,7 @@
   import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
   import { writable } from 'svelte/store';
 
+  let hashtags: string[] = $state([]);
   function goToVideo(videoUrl) {
     window.location.href = videoUrl;
   }
@@ -12,10 +13,13 @@
   let selectedOverView = writable('');
   let modalenroll;
   let modal;
+  let modalRoadmap;
+  let changeNum;
+  let selectedRoadmap = '';
 
   function openModal(overView) {
-    selectedOverView.set(overView); // 선택된 개요 업데이트
-    modal.showModal(); // 모달 열기
+    selectedOverView.set(overView);
+    modal.showModal();
   }
 
   function handleOutsideClick(event) {
@@ -26,6 +30,45 @@
 
   function openModalEnRoll() {
     modalenroll.showModal();
+  }
+
+  function openModalRoadmap() {
+    modalRoadmap.showModal();
+  }
+
+  async function registerCourseToRoadmap() {
+    const roadmapId = selectedRoadmap;
+
+    const { data, error } = await rq
+      .apiEndPoints()
+      .PUT(`/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}`, {
+        params: {
+          path: {
+            courseId: parseInt($page.params.id),
+            roadmapId: roadmapId
+          }
+        }
+      });
+
+    if (data) {
+      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/roadmap/changeNum/{courseId}`, {
+        params: {
+          path: {
+            courseId: parseInt($page.params.id)
+          }
+        },
+        body: {
+          num: changeNum
+        }
+      });
+
+      if (data) {
+        rq.msgInfo('로드맵 설정 성공');
+        modalRoadmap.close();
+      } else {
+        rq.msgError('로드맵 설정 실패');
+      }
+    }
   }
 
   let isDrawerOpen = false;
@@ -40,6 +83,7 @@
   let auth: components['schemas']['CourseAuthDto'] = $state();
   let enroll: components['schemas']['AdminCourseEnrollDto'] = $state();
   let courseConfirm: Boolean = $state();
+  let myRoadmap: components['schemas']['RoadmapDto'][] | undefined;
 
   let overviewviewr: any | undefined = $state();
   let notiviewer: any | undefined = $state();
@@ -70,14 +114,18 @@
     });
     course = responseCourse.data?.data!;
     courseConfirm = course.confirm!;
+    hashtags = course.hashtags!.split('@');
 
-    const responseEnroll = await rq.apiEndPoints().GET(`/api/v1/admin/{courseId}/enroll`, {
-      params: {
-        path: {
-          courseId: parseInt($page.params.id)
+    const responseEnroll = await rq
+      .apiEndPoints()
+      .GET(`/api/v1/courses/{courseId}/enroll/{writerId}`, {
+        params: {
+          path: {
+            courseId: parseInt($page.params.id),
+            writerId: course.writer_id!
+          }
         }
-      }
-    });
+      });
     enroll = responseEnroll.data?.data!;
 
     const responseAuth = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}/auth`, {
@@ -89,20 +137,27 @@
     });
     auth = responseAuth.data?.data!;
 
-    return { videos, course, auth, enroll };
+    const responseRoadmap = await rq.apiEndPoints().GET(`/api/v1/roadmap/myRoadmap`, {
+      params: {}
+    });
+    myRoadmap = responseRoadmap.data?.data!;
+
+    changeNum = course.roadmapNum;
+
+    return { videos, course, auth, enroll, hashtags, myRoadmap };
   }
 
   async function deleteCourse() {
     const isConfirmed = confirm('강좌를 삭제하시겠습니까?');
 
     if (isConfirmed) {
-      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/admin/courses/{id}`, {
-        params: { path: { id: parseInt($page.params.id) } }
+      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}/{writer_id}`, {
+        params: { path: { id: parseInt($page.params.id), writer_id: course.writer_id } }
       });
 
       if (data) {
         rq.msgInfo('강좌가 삭제되었습니다');
-        rq.goTo('/adm/course');
+        rq.goTo('/course');
       } else if (error) {
         rq.msgError(error.msg);
       }
@@ -110,20 +165,25 @@
   }
 
   async function startCourse() {
-    const isConfirmed = confirm('강좌를 공개하시겠습니까?');
+    if (course.videoCount! <= 5) {
+      rq.msgWarning('영상이 5개 이하이면 공개할 수 없습니다');
+    } else {
+      const isConfirmed = confirm('강좌를 공개하시겠습니까?');
 
-    if (isConfirmed) {
-      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startOrStop`, {
-        params: { path: { courseId: parseInt($page.params.id) } }
-      });
+      if (isConfirmed) {
+        const { data, error } = await rq
+          .apiEndPoints()
+          .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
+            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
+          });
 
-      if (data) {
-        rq.msgInfo('강좌가 공개되었습니다');
-        courseConfirm = true;
-        // window.location.reload();
-      } else if (error) {
-        rq.msgError(error.msg);
-        window.location.reload();
+        if (data) {
+          rq.msgInfo('강좌가 공개되었습니다');
+          courseConfirm = true;
+          // window.location.reload();
+        } else if (error) {
+          rq.msgError('영상이 5개 이하이면 공개할 수 없습니다');
+        }
       }
     }
   }
@@ -131,9 +191,11 @@
     const isConfirmed = confirm('강좌를 비공개 하시겠습니까?');
 
     if (isConfirmed) {
-      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/admin/{courseId}/startOrStop`, {
-        params: { path: { courseId: parseInt($page.params.id) } }
-      });
+      const { data, error } = await rq
+        .apiEndPoints()
+        .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
+          params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
+        });
 
       if (data) {
         rq.msgInfo('강좌가 비공개되었습니다');
@@ -183,8 +245,14 @@
     if (isConfirmed) {
       const { data, error } = await rq
         .apiEndPoints()
-        .DELETE(`/api/v1/admin/{courseId}/videos/{id}`, {
-          params: { path: { courseId: parseInt($page.params.id), id: video.id } }
+        .DELETE(`/api/v1/courses/{courseId}/videos/{id}/{writer_id}`, {
+          params: {
+            path: {
+              courseId: parseInt($page.params.id),
+              id: video.id,
+              writer_id: course.writer_id!
+            }
+          }
         });
 
       if (data) {
@@ -223,20 +291,15 @@
 
 {#await load()}
   <div>loading...</div>
-{:then { videos, course, auth, enroll }}
+{:then { videos, course, auth, enroll, hashtags, myRoadmap }}
   <div class="flex w-full justify-center items-center">
     <div class="flex flex-col">
       <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div class="flex items-center justify-between">
           <h1 class="font-semibold text-lg md:text-2xl">
-            <div class="flex">
+            <div class="flex text-center items-center">
               <div class="mx-2 mt-1">
                 {course!.title}
-              </div>
-              <div
-                class={`inline-flex px-2 text-lg font-semibold rounded-full mt-1 my-1 ${course.grade === '초급' ? 'bg-blue-100 text-blue-800' : course.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
-              >
-                {course.grade}
               </div>
               <div class=" flex justify-end gap-2 mt-1 ml-2" on:click={() => clickLiked(course)}>
                 {#if course.likedByCurrentUser}
@@ -276,21 +339,37 @@
               </div>
             </div>
           </h1>
-
-          <div class="flex">
-            {#if !auth.enroll && !rq.isAdmin()}
-              <div class="flex">
-                <div class="mt-2">
-                  <p class="course-price">{course.price}원</p>
-                </div>
-                <button on:click={enrollCourse} class="enroll-button ml-2">수강 등록</button>
+        </div>
+        <div class="flex">
+          {#each hashtags as hashtag}
+            <div class="">
+              <div class="flex text-amber-600 text-sm text-center items-center ml-2">
+                #{hashtag}
               </div>
-            {/if}
-          </div>
-          {#if rq.isAdmin()}
-            <div class="mb-5 mx-2 items-center">
+            </div>
+          {/each}
+        </div>
+        <div class="flex justify-end">
+          {#if !auth.enroll && !(rq.member.id == course.writer_id) && !rq.isAdmin()}
+            <div class="flex">
+              <div class="mt-2">
+                <p class="course-price mt-4">{course.price}원</p>
+              </div>
+              <button
+                on:click={enrollCourse}
+                class="ml-2 btn border border-blue-700 text-gray-800 bg-white hover:bg-blue-700 hover:border-blue-700 hover:text-white active:bg-blue-700 active:text-white active:border-blue-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                >수강 등록</button
+              >
+            </div>
+          {/if}
+        </div>
+        {#if rq.member.id === course.writer_id || rq.isAdmin()}
+          <div class="mx-2 items-center">
+            <div class="mb-2">
               <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
               <button on:click={deleteCourse} class="btn btn-sm">삭제</button>
+            </div>
+            <div>
               {#if !courseConfirm}
                 <button on:click={startCourse} class="btn btn-sm">강좌 공개</button>
               {:else}
@@ -315,10 +394,42 @@
                     </div>
                   </div>
                 </dialog>
+                <button onclick={openModalRoadmap} class="btn btn-sm">로드맵</button>
+                <dialog id="my_modal_3" class="modal" bind:this={modalRoadmap}>
+                  <div class="modal-box">
+                    <button
+                      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                      on:click={() => modalRoadmap.close()}>✕</button
+                    >
+                    <div class="flex flex-col p-6 bg-white shadow rounded-lg">
+                      <h2 class="text-xl font-semibold mb-4 pb-2">로드맵 등록</h2>
+                      <select
+                        bind:value={selectedRoadmap}
+                        class="select select-bordered w-full mb-4 focus:outline-none focus:border-gray-700"
+                      >
+                        <option value="">로드맵을 선택하세요</option>
+                        {#each myRoadmap as roadmap}
+                          <option value={roadmap.id}>{roadmap.title}</option>
+                        {/each}
+                      </select>
+                      <input
+                        type="number"
+                        bind:value={changeNum}
+                        placeholder="로드맵 순서"
+                        class="input input-bordered focus:outline-none focus:border-gray-700 w-full mb-4"
+                      />
+                      <button
+                        on:click={registerCourseToRoadmap}
+                        class="btn border border-gray-500 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                        >등록</button
+                      >
+                    </div>
+                  </div>
+                </dialog>
               {/if}
             </div>
-          {/if}
-        </div>
+          </div>
+        {/if}
 
         <div class="mb-4 bg-white p-4 rounded-lg shadow-md">
           <h2 class="text-md md:text-lg font-semibold">공지사항</h2>
@@ -340,15 +451,16 @@
           ></ToastUiEditor>
         </div>
 
-        {#if rq.isAdmin()}
+        {#if rq.member.id === course.writer_id || rq.isAdmin()}
           <div class="flex justify-end">
-            <a class=" mx-10 btn w-24 text-center" href="/course/{$page.params.id}/videowrite"
-              >강의 등록</a
+            <a
+              class=" mx-10 btn w-24 text-center"
+              href="/course/{$page.params.id}/videowrite?writer_id={course.writer_id}">강의 등록</a
             >
           </div>
         {/if}
 
-        {#if auth.enroll || rq.isAdmin()}
+        {#if auth.enroll || rq.member.id === course.writer_id}
           <div class="border shadow-sm rounded-lg">
             <div class="relative w-full overflow-auto">
               <table class="w-full table-fixed caption-bottom text-sm">
@@ -386,13 +498,16 @@
                       class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                     >
                       <td
-                        class="p-4 align-middle rounded-lg [&amp;:has([role=checkbox])]:pr-0 font-medium"
+                        class="flex justify-start p-4 align-middle rounded-lg [&amp;:has([role=checkbox])]:pr-0 font-medium"
                       >
-                        <img
-                          class="rounded-lg"
-                          src={video.imgUrl}
-                          on:click={() => window.open(video.url, '_blank')}
-                        />
+                        <div class="flex-col justify-center items-center">
+                          <img
+                            class="rounded-lg"
+                            src={video.imgUrl}
+                            on:click={() => window.open(video.url, '_blank')}
+                          />
+                          <div class="flex justify-center">{video.title}</div>
+                        </div>
                       </td>
                       <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                         <button
@@ -419,10 +534,10 @@
                       </td>
 
                       <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                        {#if rq.isAdmin()}
+                        {#if rq.isAdmin() || rq.member.id === course.writer_id}
                           <div class="mb-5 mx-2 items-center">
                             <a
-                              href="/course/{video.courseId}/videoedit/{video.id}"
+                              href="/course/{video.courseId}/videoedit/{video.id}?writer_id={course.writer_id}"
                               class="btn btn-sm">수정</a
                             >
                             <button on:click={() => deleteVideo(video)} class="btn btn-sm"
@@ -482,7 +597,8 @@
             </div>
           </div>
         {:else}
-          <p>수강중이 아닙니다</p>
+          <table class="w-full table-fixed caption-bottom text-sm"></table>
+          <p class="">수강중이 아닙니다</p>
         {/if}
       </main>
     </div>

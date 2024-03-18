@@ -5,6 +5,20 @@
 
 
 export interface paths {
+  "/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}": {
+    /** 로드맵에 강좌 추가 */
+    put: operations["addCourse"];
+  };
+  "/api/v1/roadmap/roadmaps/{id}": {
+    /** 로드맵 수정 */
+    put: operations["modifyRoadmap"];
+    /** 로드맵 삭제 */
+    delete: operations["deleteCourse"];
+  };
+  "/api/v1/roadmap/changeNum/{courseId}": {
+    /** 로드맵 순서 변경 */
+    put: operations["changeRoadmapNum"];
+  };
   "/api/v1/posts/{id}": {
     /** 글 상세 정보 */
     get: operations["getDetail"];
@@ -16,6 +30,10 @@ export interface paths {
   "/api/v1/notification/read/{id}": {
     put: operations["readNotification"];
   };
+  "/api/v1/members/modifyNickName": {
+    /** 회원 닉네임 변경 */
+    put: operations["modifyNickName"];
+  };
   "/api/v1/courses/{videoId}/note/{noteId}": {
     /** 강의 요약 노트 상세 보기 */
     get: operations["getSummaryNote"];
@@ -24,27 +42,29 @@ export interface paths {
     /** 강의 요약 노트 삭제 */
     delete: operations["delete_1"];
   };
+  "/api/v1/courses/{id}": {
+    /** 강좌 수정 */
+    put: operations["modifyCourse"];
+  };
+  "/api/v1/courses/{courseId}/videos/{id}/{writer_id}": {
+    /** 강의 수정 */
+    put: operations["modifyVideo"];
+    /** 강의 삭제 */
+    delete: operations["deleteVideo"];
+  };
+  "/api/v1/courses/{courseId}/startOrStop/{writer_id}": {
+    /** 강좌 공개 or 비공개 */
+    put: operations["startOrStopCourse"];
+  };
   "/api/v1/comments/{postId}/{commentId}": {
     /** 댓글 수정 */
     put: operations["modifyComment"];
     /** 댓글 삭제 */
     delete: operations["deleteComment"];
   };
-  "/api/v1/admin/{courseId}/videos/{id}": {
-    /** 강의 수정 */
-    put: operations["modifyVideo"];
-    /** 강의 삭제 */
-    delete: operations["deleteVideo"];
-  };
-  "/api/v1/admin/{courseId}/startOrStop": {
-    /** 강좌 공개 or 비공개 */
-    put: operations["startOrStopCourse"];
-  };
-  "/api/v1/admin/courses/{id}": {
-    /** 강좌 수정 */
-    put: operations["modifyCourse"];
-    /** 강좌 삭제 */
-    delete: operations["deleteCourse"];
+  "/api/v1/roadmap/roadmaps": {
+    /** 로드맵 생성 */
+    post: operations["createRoadmap"];
   };
   "/api/v1/posts": {
     /** 글 다건 조회 */
@@ -85,6 +105,14 @@ export interface paths {
     /** 강좌 좋아요 취소 */
     delete: operations["deleteVote_1"];
   };
+  "/api/v1/courses/{courseId}/videos/{writer_id}": {
+    /** 강의 등록 */
+    post: operations["createVideo"];
+  };
+  "/api/v1/courses/write": {
+    /** 강좌 등록 */
+    post: operations["createCourse"];
+  };
   "/api/v1/comments": {
     /** 댓글 등록 */
     post: operations["createComment"];
@@ -95,16 +123,6 @@ export interface paths {
     /** 댓글 추천 취소 */
     delete: operations["deleteVoteComment"];
   };
-  "/api/v1/admin/{courseId}/videos": {
-    /** 강의 등록 */
-    post: operations["createVideo"];
-  };
-  "/api/v1/admin/courses": {
-    /** 강좌 최신순 */
-    get: operations["getRecentCourses"];
-    /** 강좌 등록 */
-    post: operations["createCourse"];
-  };
   "/api/v1/posts/{postId}/report": {
     /** 신고하기 */
     patch: operations["report"];
@@ -113,9 +131,21 @@ export interface paths {
     /** 게시물 신고 취소 */
     patch: operations["cancelReport"];
   };
-  "/api/v1/{memberId}": {
-    /** 포인트 목록 */
-    get: operations["getPoints"];
+  "/api/v1/roadmap": {
+    /** 로드맵 다건 조회 */
+    get: operations["getRoadmaps"];
+  };
+  "/api/v1/roadmap/{roadmapId}": {
+    /** 로드맵 아이디로 상세 조회 */
+    get: operations["getRoadmapById"];
+  };
+  "/api/v1/roadmap/{courseId}": {
+    /** 로드맵 강좌로 상세 조회 */
+    get: operations["getRoadmapByCourse"];
+  };
+  "/api/v1/roadmap/myRoadmap": {
+    /** 내가 등록한 로드맵 다건 조회 */
+    get: operations["getMyRoadmaps"];
   };
   "/api/v1/posts/qna/{id}": {
     /** 1대1 문의 상세 정보 */
@@ -126,6 +156,14 @@ export interface paths {
   "/api/v1/posts/myList": {
     /** 내 글 목록 */
     get: operations["getMyPosts"];
+  };
+  "/api/v1/point/{memberId}": {
+    /** 포인트 목록 */
+    get: operations["getPoints"];
+  };
+  "/api/v1/point/attend": {
+    /** 출석 체크 목록 */
+    get: operations["getAttend"];
   };
   "/api/v1/notification/isAlarm": {
     get: operations["isAlarm"];
@@ -176,6 +214,10 @@ export interface paths {
     /** 특정 강의 */
     get: operations["getVideos_1"];
   };
+  "/api/v1/courses/{courseId}/enroll/{writerId}": {
+    /** 강좌별 수강생 목록 */
+    get: operations["getEnrollByCourseId"];
+  };
   "/api/v1/courses/{courseId}/auth": {
     /** 해당 멤버가 해당 강좌를 수강 중인지 */
     get: operations["getCourseAuth"];
@@ -188,6 +230,10 @@ export interface paths {
     /** 작성자별 강좌의 모든 요약노트 목록 조회 */
     get: operations["getSummaryNoteByWriterandCourse"];
   };
+  "/api/v1/courses/mycourse": {
+    /** 강좌 다건 조회 */
+    get: operations["getMyCourse"];
+  };
   "/api/v1/comments/{postId}": {
     /** 댓글 목록 */
     get: operations["getComments"];
@@ -199,10 +245,6 @@ export interface paths {
   "/api/v1/comments/myList": {
     /** 내 댓글 목록 */
     get: operations["getComments_1"];
-  };
-  "/api/v1/admin/{courseId}/enroll": {
-    /** 강좌별 수강생 목록 */
-    get: operations["getEnrollByCourseId"];
   };
   "/api/v1/admin/summaryNotes": {
     /** 최신 요약노트 */
@@ -239,12 +281,89 @@ export interface paths {
   "/api/v1/admin/deviceCheck": {
     get: operations["getDevice"];
   };
+  "/api/v1/admin/courses": {
+    /** 강좌 최신순 */
+    get: operations["getRecentCourses"];
+  };
+  "/api/v1/courses/{id}/{writer_id}": {
+    /** 강좌 삭제 */
+    delete: operations["deleteCourse_1"];
+  };
 }
 
 export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    Empty: Record<string, never>;
+    RsDataEmpty: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["Empty"];
+      fail: boolean;
+      success: boolean;
+    };
+    Course: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      title?: string;
+      notice?: string;
+      imgUrl?: string;
+      overView?: string;
+      /** Format: int32 */
+      price?: number;
+      /** Format: int32 */
+      roadmapNum?: number;
+      confirm?: boolean;
+      courseEnrollList?: components["schemas"]["CourseEnroll"][];
+      roadmap?: components["schemas"]["Roadmap"];
+      hashtags?: string;
+      /** Format: int64 */
+      writer_id?: number;
+      writer_nickname?: string;
+    };
+    CourseEnroll: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+    };
+    Roadmap: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      title?: string;
+      overView?: string;
+      hashtags?: string;
+      owner?: string;
+    };
+    RoadmapDto: {
+      /** Format: int64 */
+      id: number;
+      title?: string;
+      overView?: string;
+      curriculum: components["schemas"]["Course"][];
+      hashtags: string;
+      owner: string;
+    };
+    RsDataRoadmapDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["RoadmapDto"];
+      fail: boolean;
+      success: boolean;
+    };
+    NumDto: {
+      /** Format: int32 */
+      num?: number;
+    };
     PostDto: {
       /** Format: int64 */
       id: number;
@@ -268,8 +387,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["PostDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetNotificationResponseBody: {
       dtoList: components["schemas"]["NotificationDto"][];
@@ -281,7 +400,7 @@ export interface components {
       read?: boolean;
       sender?: string;
       /** @enum {string} */
-      type?: "COMMENT" | "POINTS" | "QnA";
+      type?: "COMMENT" | "POINTS" | "ANSWER";
       post_title?: string;
       /** Format: int64 */
       post_id?: number;
@@ -296,17 +415,23 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetNotificationResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
+    };
+    NickNameDto: {
+      nickName?: string;
+    };
+    RsDataNickNameDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["NickNameDto"];
+      fail: boolean;
+      success: boolean;
     };
     CreateSummaryNoteDto: {
       content: string;
-    };
-    CourseEnroll: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
     };
     GrantedAuthority: {
       authority?: string;
@@ -316,6 +441,8 @@ export interface components {
       id?: number;
       /** Format: date-time */
       createDate?: string;
+      /** Format: int32 */
+      enrollCount?: number;
       username?: string;
       password?: string;
       nickname?: string;
@@ -331,8 +458,8 @@ export interface components {
       dailyAchievement?: number;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
       authoritiesAsStringList?: string[];
+      authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
     };
     RsDataSummaryNoteDto: {
@@ -341,8 +468,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["SummaryNoteDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     SummaryNoteDto: {
       /** Format: int64 */
@@ -359,6 +486,61 @@ export interface components {
       videoId?: number;
       courseName?: string;
       pass?: boolean;
+    };
+    CourseDto: {
+      /** Format: int64 */
+      id?: number;
+      title?: string;
+      notice?: string;
+      imgUrl?: string;
+      overView?: string;
+      /** Format: int32 */
+      roadmapNum?: number;
+      /** Format: int32 */
+      price?: number;
+      /** Format: int32 */
+      voteCount?: number;
+      likedByCurrentUser?: boolean;
+      /** Format: int32 */
+      videoCount?: number;
+      confirm?: boolean;
+      /** Format: int32 */
+      enrollCount?: number;
+      /** Format: int64 */
+      writer_id?: number;
+      hashtags?: string;
+      /** Format: int64 */
+      roadMapId?: number;
+    };
+    RsDataCourseDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["CourseDto"];
+      fail: boolean;
+      success: boolean;
+    };
+    VideoDto: {
+      /** Format: int64 */
+      id: number;
+      url: string;
+      overView?: string;
+      imgUrl: string;
+      /** Format: int64 */
+      courseId: number;
+      summaryNotes: components["schemas"]["SummaryNoteDto"][];
+      keywords: string;
+      title: string;
+    };
+    RsDataVideoDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["VideoDto"];
+      fail: boolean;
+      success: boolean;
     };
     CreateCommentDto: {
       body: string;
@@ -387,56 +569,22 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CommentDto"];
-      success: boolean;
       fail: boolean;
-    };
-    VideoDto: {
-      /** Format: int64 */
-      id: number;
-      url: string;
-      overView?: string;
-      imgUrl: string;
-      /** Format: int64 */
-      courseId: number;
-      summaryNotes: components["schemas"]["SummaryNoteDto"][];
-      keywords: string;
-    };
-    RsDataVideoDto: {
-      resultCode: string;
-      /** Format: int32 */
-      statusCode: number;
-      msg: string;
-      data: components["schemas"]["VideoDto"];
       success: boolean;
-      fail: boolean;
     };
-    CourseDto: {
-      /** Format: int64 */
-      id?: number;
+    CreateRoadmapDto: {
       title?: string;
-      notice?: string;
-      imgUrl?: string;
       overView?: string;
-      grade?: string;
-      /** Format: int32 */
-      price?: number;
-      /** Format: int32 */
-      voteCount?: number;
-      likedByCurrentUser?: boolean;
-      /** Format: int32 */
-      videoCount?: number;
-      confirm?: boolean;
-      /** Format: int32 */
-      enrollCount?: number;
+      hashtags: string;
     };
-    RsDataCourseDto: {
+    RsDataCreateRoadmapDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["CourseDto"];
-      success: boolean;
+      data: components["schemas"]["CreateRoadmapDto"];
       fail: boolean;
+      success: boolean;
     };
     CreatePostDto: {
       title: string;
@@ -448,8 +596,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreatePostDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataVoid: {
       resultCode: string;
@@ -457,18 +605,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: Record<string, never>;
-      success: boolean;
       fail: boolean;
-    };
-    Empty: Record<string, never>;
-    RsDataEmpty: {
-      resultCode: string;
-      /** Format: int32 */
-      statusCode: number;
-      msg: string;
-      data: components["schemas"]["Empty"];
       success: boolean;
-      fail: boolean;
     };
     LoginRequestBody: {
       username: string;
@@ -483,6 +621,7 @@ export interface components {
       /** Format: date-time */
       createDate: string;
       name: string;
+      username: string;
       profileImgUrl: string;
       authorities: string[];
       visitedToday: boolean;
@@ -492,6 +631,8 @@ export interface components {
       dailyAchievement: number;
       /** Format: int32 */
       point?: number;
+      /** Format: int32 */
+      enrollCount?: number;
     };
     RsDataLoginResponseBody: {
       resultCode: string;
@@ -499,17 +640,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["LoginResponseBody"];
-      success: boolean;
       fail: boolean;
-    };
-    RsDataCreateCommentDto: {
-      resultCode: string;
-      /** Format: int32 */
-      statusCode: number;
-      msg: string;
-      data: components["schemas"]["CreateCommentDto"];
       success: boolean;
-      fail: boolean;
     };
     CreateVideoDto: {
       url: string;
@@ -518,6 +650,7 @@ export interface components {
       courseId?: number;
       imgUrl: string;
       keywords: string;
+      title: string;
     };
     RsDataCreateVideoDto: {
       resultCode: string;
@@ -525,15 +658,17 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateVideoDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     CreateCourseDto: {
       title: string;
       notice: string;
       imgUrl: string;
       overView: string;
-      grade: string;
+      /** Format: int64 */
+      writer_id?: number;
+      hashtags?: string;
     };
     RsDataCreateCourseDto: {
       resultCode: string;
@@ -541,28 +676,38 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateCourseDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
-    PointDto: {
-      /** Format: int64 */
-      id: number;
-      /** Format: date-time */
-      createDate: string;
-      content: string;
-      /** Format: int64 */
-      ownerId: number;
-      /** Format: int32 */
-      amount: number;
-    };
-    RsDataListPointDto: {
+    RsDataCreateCommentDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["PointDto"][];
-      success: boolean;
+      data: components["schemas"]["CreateCommentDto"];
       fail: boolean;
+      success: boolean;
+    };
+    GetRoadmapsResponsebody: {
+      items: components["schemas"]["RoadmapDto"][];
+    };
+    RsDataGetRoadmapsResponsebody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetRoadmapsResponsebody"];
+      fail: boolean;
+      success: boolean;
+    };
+    RsDataListRoadmapDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["RoadmapDto"][];
+      fail: boolean;
+      success: boolean;
     };
     GetPostsResponseBody: {
       itemPage: components["schemas"]["PageDtoPostDto"];
@@ -584,8 +729,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostsResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetQnaResponseBody: {
       itemPage: components["schemas"]["PageDtoQnaDto"];
@@ -620,8 +765,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetQnaResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataQnaDto: {
       resultCode: string;
@@ -629,8 +774,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["QnaDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetMyPostsResponseBody: {
       itemPage: components["schemas"]["PageDtoPostDto"];
@@ -641,8 +786,41 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetMyPostsResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
+    };
+    PointDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      content: string;
+      /** Format: int64 */
+      ownerId: number;
+      /** Format: int32 */
+      amount: number;
+    };
+    RsDataListPointDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["PointDto"][];
+      fail: boolean;
+      success: boolean;
+    };
+    AttendDto: {
+      /** Format: date-time */
+      createDate: string;
+    };
+    RsDataListAttendDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["AttendDto"][];
+      fail: boolean;
+      success: boolean;
     };
     RsDataBoolean: {
       resultCode: string;
@@ -650,8 +828,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: boolean;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     MyPageDto: {
       learningCourses?: components["schemas"]["CourseDto"][];
@@ -667,8 +845,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["MyPageResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     MeResponseBody: {
       item: components["schemas"]["MemberDto"];
@@ -679,8 +857,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["MeResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataIsLoginResponseBody: {
       resultCode: string;
@@ -688,8 +866,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["isLoginResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     isLoginResponseBody: {
       isLogin: boolean;
@@ -700,8 +878,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["isAdminResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     isAdminResponseBody: {
       isAdmin: boolean;
@@ -723,8 +901,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetCourseEnrollResponsebody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetCoursesResponsebody: {
       items: components["schemas"]["CourseDto"][];
@@ -735,8 +913,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetCoursesResponsebody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetSummaryNoteResponsebody: {
       items: components["schemas"]["SummaryNoteDto"][];
@@ -747,8 +925,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetSummaryNoteResponsebody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataListVideoDto: {
       resultCode: string;
@@ -756,8 +934,22 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["VideoDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
+    };
+    AdminCourseEnrollDto: {
+      /** Format: int64 */
+      id?: number;
+      name?: string;
+    };
+    RsDataListAdminCourseEnrollDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["AdminCourseEnrollDto"][];
+      fail: boolean;
+      success: boolean;
     };
     CourseAuthDto: {
       enroll?: boolean;
@@ -768,8 +960,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CourseAuthDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataListSummaryNoteDto: {
       resultCode: string;
@@ -777,8 +969,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["SummaryNoteDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataListCommentDto: {
       resultCode: string;
@@ -786,8 +978,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CommentDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetCommentResponseBody: {
       itemPage: components["schemas"]["PageDtoCommentDto"];
@@ -809,22 +1001,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetCommentResponseBody"];
-      success: boolean;
       fail: boolean;
-    };
-    AdminCourseEnrollDto: {
-      /** Format: int64 */
-      id?: number;
-      name?: string;
-    };
-    RsDataListAdminCourseEnrollDto: {
-      resultCode: string;
-      /** Format: int32 */
-      statusCode: number;
-      msg: string;
-      data: components["schemas"]["AdminCourseEnrollDto"][];
       success: boolean;
-      fail: boolean;
     };
     AdminSummaryNoteDto: {
       /** Format: int64 */
@@ -845,8 +1023,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminSummaryNoteDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetNotesResponseBody: {
       itemPage?: components["schemas"]["PageDtoAdminSummaryNoteDto"];
@@ -868,8 +1046,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetNotesResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     ReportedPostDto: {
       /** Format: int64 */
@@ -887,8 +1065,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["ReportedPostDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     AdminQnaDto: {
       /** Format: int64 */
@@ -906,8 +1084,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminQnaDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetAdmQnaResponseBody: {
       itemPage?: components["schemas"]["PageDtoAdminQnaDto"];
@@ -929,8 +1107,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetAdmQnaResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     AdminMemberDto: {
       /** Format: int64 */
@@ -946,8 +1124,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminMemberDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetMembersResponseBody: {
       itemPage?: components["schemas"]["PageDtoAdminMemberDto"];
@@ -969,8 +1147,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetMembersResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataGetDeviceResponseBody: {
       resultCode: string;
@@ -978,8 +1156,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["getDeviceResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     getDeviceResponseBody: {
       isMobile?: boolean;
@@ -998,8 +1176,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminCourseDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
   };
   responses: never;
@@ -1015,6 +1193,81 @@ export type external = Record<string, never>;
 
 export interface operations {
 
+  /** 로드맵에 강좌 추가 */
+  addCourse: {
+    parameters: {
+      path: {
+        roadmapId: number;
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 로드맵 수정 */
+  modifyRoadmap: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RoadmapDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataRoadmapDto"];
+        };
+      };
+    };
+  };
+  /** 로드맵 삭제 */
+  deleteCourse: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 로드맵 순서 변경 */
+  changeRoadmapNum: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["NumDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
   /** 글 상세 정보 */
   getDetail: {
     parameters: {
@@ -1083,6 +1336,22 @@ export interface operations {
       };
     };
   };
+  /** 회원 닉네임 변경 */
+  modifyNickName: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["NickNameDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataNickNameDto"];
+        };
+      };
+    };
+  };
   /** 강의 요약 노트 상세 보기 */
   getSummaryNote: {
     parameters: {
@@ -1136,6 +1405,85 @@ export interface operations {
       };
     };
   };
+  /** 강좌 수정 */
+  modifyCourse: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CourseDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataCourseDto"];
+        };
+      };
+    };
+  };
+  /** 강의 수정 */
+  modifyVideo: {
+    parameters: {
+      path: {
+        courseId: number;
+        writer_id: number;
+        id: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["VideoDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataVideoDto"];
+        };
+      };
+    };
+  };
+  /** 강의 삭제 */
+  deleteVideo: {
+    parameters: {
+      path: {
+        courseId: number;
+        id: number;
+        writer_id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 강좌 공개 or 비공개 */
+  startOrStopCourse: {
+    parameters: {
+      path: {
+        courseId: number;
+        writer_id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataCourseDto"];
+        };
+      };
+    };
+  };
   /** 댓글 수정 */
   modifyComment: {
     parameters: {
@@ -1173,94 +1521,18 @@ export interface operations {
       };
     };
   };
-  /** 강의 수정 */
-  modifyVideo: {
-    parameters: {
-      path: {
-        courseId: number;
-        id: number;
-      };
-    };
+  /** 로드맵 생성 */
+  createRoadmap: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["VideoDto"];
+        "application/json": components["schemas"]["CreateRoadmapDto"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataVideoDto"];
-        };
-      };
-    };
-  };
-  /** 강의 삭제 */
-  deleteVideo: {
-    parameters: {
-      path: {
-        courseId: number;
-        id: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
-        };
-      };
-    };
-  };
-  /** 강좌 공개 or 비공개 */
-  startOrStopCourse: {
-    parameters: {
-      path: {
-        courseId: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataCourseDto"];
-        };
-      };
-    };
-  };
-  /** 강좌 수정 */
-  modifyCourse: {
-    parameters: {
-      path: {
-        id: number;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CourseDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataCourseDto"];
-        };
-      };
-    };
-  };
-  /** 강좌 삭제 */
-  deleteCourse: {
-    parameters: {
-      path: {
-        id: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          "application/json": components["schemas"]["RsDataCreateRoadmapDto"];
         };
       };
     };
@@ -1458,6 +1730,44 @@ export interface operations {
       };
     };
   };
+  /** 강의 등록 */
+  createVideo: {
+    parameters: {
+      path: {
+        courseId: number;
+        writer_id: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateVideoDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataCreateVideoDto"];
+        };
+      };
+    };
+  };
+  /** 강좌 등록 */
+  createCourse: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateCourseDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataCreateCourseDto"];
+        };
+      };
+    };
+  };
   /** 댓글 등록 */
   createComment: {
     requestBody: {
@@ -1506,54 +1816,6 @@ export interface operations {
       };
     };
   };
-  /** 강의 등록 */
-  createVideo: {
-    parameters: {
-      path: {
-        courseId: number;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateVideoDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataCreateVideoDto"];
-        };
-      };
-    };
-  };
-  /** 강좌 최신순 */
-  getRecentCourses: {
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataListAdminCourseDto"];
-        };
-      };
-    };
-  };
-  /** 강좌 등록 */
-  createCourse: {
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateCourseDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataCreateCourseDto"];
-        };
-      };
-    };
-  };
   /** 신고하기 */
   report: {
     parameters: {
@@ -1586,18 +1848,63 @@ export interface operations {
       };
     };
   };
-  /** 포인트 목록 */
-  getPoints: {
+  /** 로드맵 다건 조회 */
+  getRoadmaps: {
     parameters: {
-      path: {
-        memberId: number;
+      query?: {
+        page?: number;
+        kw?: string;
+        kwType?: "ALL" | "TITLE" | "HASHTAGS" | "NAME";
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListPointDto"];
+          "application/json": components["schemas"]["RsDataGetRoadmapsResponsebody"];
+        };
+      };
+    };
+  };
+  /** 로드맵 아이디로 상세 조회 */
+  getRoadmapById: {
+    parameters: {
+      path: {
+        roadmapId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataRoadmapDto"];
+        };
+      };
+    };
+  };
+  /** 로드맵 강좌로 상세 조회 */
+  getRoadmapByCourse: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataRoadmapDto"];
+        };
+      };
+    };
+  };
+  /** 내가 등록한 로드맵 다건 조회 */
+  getMyRoadmaps: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListRoadmapDto"];
         };
       };
     };
@@ -1646,6 +1953,33 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetMyPostsResponseBody"];
+        };
+      };
+    };
+  };
+  /** 포인트 목록 */
+  getPoints: {
+    parameters: {
+      path: {
+        memberId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListPointDto"];
+        };
+      };
+    };
+  };
+  /** 출석 체크 목록 */
+  getAttend: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListAttendDto"];
         };
       };
     };
@@ -1751,8 +2085,7 @@ export interface operations {
       query?: {
         page?: number;
         kw?: string;
-        kwType?: "ALL" | "TITLE" | "NAME";
-        grade?: string;
+        kwType?: "ALL" | "TITLE" | "HASHTAGS" | "NAME";
       };
     };
     responses: {
@@ -1832,6 +2165,23 @@ export interface operations {
       };
     };
   };
+  /** 강좌별 수강생 목록 */
+  getEnrollByCourseId: {
+    parameters: {
+      path: {
+        courseId: number;
+        writerId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListAdminCourseEnrollDto"];
+        };
+      };
+    };
+  };
   /** 해당 멤버가 해당 강좌를 수강 중인지 */
   getCourseAuth: {
     parameters: {
@@ -1881,6 +2231,22 @@ export interface operations {
       };
     };
   };
+  /** 강좌 다건 조회 */
+  getMyCourse: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetCoursesResponsebody"];
+        };
+      };
+    };
+  };
   /** 댓글 목록 */
   getComments: {
     parameters: {
@@ -1925,22 +2291,6 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetCommentResponseBody"];
-        };
-      };
-    };
-  };
-  /** 강좌별 수강생 목록 */
-  getEnrollByCourseId: {
-    parameters: {
-      path: {
-        courseId: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataListAdminCourseEnrollDto"];
         };
       };
     };
@@ -2054,6 +2404,34 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetDeviceResponseBody"];
+        };
+      };
+    };
+  };
+  /** 강좌 최신순 */
+  getRecentCourses: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListAdminCourseDto"];
+        };
+      };
+    };
+  };
+  /** 강좌 삭제 */
+  deleteCourse_1: {
+    parameters: {
+      path: {
+        id: number;
+        writer_id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };

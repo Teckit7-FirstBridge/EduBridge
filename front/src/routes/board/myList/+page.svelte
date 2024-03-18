@@ -51,26 +51,27 @@
 </script>
 
 <!-- 탭 추가 -->
-<div class="tabs flex px-4 max-w-4xl mx-auto mt-8">
-  <div class="mt-2">
-    <button
-      class={`text-2xl font-semibold mr-2 ${selectedTab === 'posts' ? 'text-blue-600' : 'text-black'}`}
-      on:click={() => {
-        selectedTab = 'posts';
-        load();
-      }}>내 질문</button
-    >
-  </div>
-  <h1 class="text-2xl">|</h1>
-  <div>
-    <button
-      class={`text-2xl font-semibold ml-2 ${selectedTab === 'comments' ? 'text-blue-600' : 'text-black'}`}
-      on:click={() => {
-        selectedTab = 'comments';
-        load();
-      }}>내 답변</button
-    >
-  </div>
+<div role="tablist" class="tabs tabs-bordered flex px-4 max-w-4xl mx-auto mt-4">
+  <a
+    role="tab"
+    class={`tab ${selectedTab === 'posts' ? 'tab-active' : ''}`}
+    on:click={() => {
+      selectedTab = 'posts';
+      load();
+    }}
+  >
+    내 질문
+  </a>
+  <a
+    role="tab"
+    class={`tab ${selectedTab === 'comments' ? 'tab-active' : ''}`}
+    on:click={() => {
+      selectedTab = 'comments';
+      load();
+    }}
+  >
+    내 답변
+  </a>
 </div>
 <div class="max-w-4xl mx-auto mb-4">
   {#await load()}

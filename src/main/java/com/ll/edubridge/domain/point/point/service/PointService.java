@@ -42,4 +42,8 @@ public class PointService {
         return pointRepository.findByOwnerId(memberId);
     }
 
+    public List<Point> findByOwnerIdAndContent(Long memberId){
+        return pointRepository.findByOwnerIdAndContent(memberId, PointType.Attend.getContent());
+    }
+
 }

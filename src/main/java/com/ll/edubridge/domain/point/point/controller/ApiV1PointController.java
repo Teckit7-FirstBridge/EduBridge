@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.point.point.controller;
 
+import com.ll.edubridge.domain.point.point.dto.AttendDto;
 import com.ll.edubridge.domain.point.point.dto.PointDto;
 import com.ll.edubridge.domain.point.point.entity.Point;
 import com.ll.edubridge.domain.point.point.service.PointService;
@@ -19,7 +20,7 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(value = "/api/v1", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/point", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "ApiV1PointController", description = "포인트 조회용 컨트롤러")
 public class ApiV1PointController {
@@ -32,11 +33,24 @@ public class ApiV1PointController {
     public RsData<List<PointDto>> getPoints(@PathVariable("memberId") Long memberId) {
         List<Point> points = pointService.findByOwnerId(memberId);
 
-        List<PointDto> PointDtoList = points.stream()
+        List<PointDto> pointDtoList = points.stream()
                 .map(PointDto::new)
                 .toList();
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), PointDtoList);
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), pointDtoList);
+    }
+
+    @GetMapping("/attend")
+    @Operation(summary = "출석 체크 목록")
+    public RsData<List<AttendDto>> getAttend(){
+        List<Point> points = pointService.findByOwnerIdAndContent(rq.getMember().getId());
+
+        List<AttendDto> attendDtoList = points.stream()
+                .map(AttendDto::new)
+                .toList();
+
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), attendDtoList);
     }
 }

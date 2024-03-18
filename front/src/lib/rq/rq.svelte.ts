@@ -22,11 +22,13 @@ class Rq {
   constructor() {
     let id = $state(0);
     let name = $state('');
+    let username = $state('');
     let profileImgUrl = $state('');
     let createDate = $state('');
     let point = $state(0);
     let authorities: string[] = $state([]);
     let dailyGoal: number = $state(0);
+    let enrollCount: number = $state(0);
     let dailyAchievement: number = $state(0);
 
     this.member = {
@@ -48,6 +50,12 @@ class Rq {
       set name(value: string) {
         name = value;
       },
+      get username() {
+        return username;
+      },
+      set username(value: string) {
+        username = value;
+      },
       get profileImgUrl() {
         return profileImgUrl;
       },
@@ -65,6 +73,12 @@ class Rq {
       },
       set point(value: number) {
         point = value;
+      },
+      get enrollCount() {
+        return enrollCount;
+      },
+      set enrollCount(value: number) {
+        enrollCount = value;
       },
       get dailyGoal() {
         return dailyGoal;
@@ -125,10 +139,12 @@ class Rq {
     this.member.createDate = member.createDate;
     this.member.profileImgUrl = member.profileImgUrl;
     this.member.name = member.name;
+    this.member.username = member.username;
     this.member.authorities = member.authorities;
     this.member.dailyGoal = member.dailyGoal;
     this.member.dailyAchievement = member.dailyAchievement;
     this.member.point = member.point;
+    this.member.enrollCount = member.enrollCount;
   }
 
   public setLogout() {

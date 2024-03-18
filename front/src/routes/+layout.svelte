@@ -4,14 +4,28 @@
   import { untrack } from 'svelte';
   import rq from '$lib/rq/rq.svelte';
 
-  let isMypage = $page.url.pathname.includes('/member/');
-  let isCourse = $page.url.pathname.includes('/course');
+  let isMypage = $state(false);
+  let isCourse = $state(false);
   let isAlarm = $state(true);
+  let isQna = $state(false);
+  let isBoard = $state(false);
+  let isRoom = $state(false);
   const { children } = $props();
   rq.effect(async () => {
     untrack(() => {
       rq.initAuth();
     });
+    isMypage = $page.url.pathname.includes('/member') ? true : false;
+    isCourse = $page.url.pathname.includes('/course') ? true : false;
+    isQna = $page.url.pathname.includes('/qna') ? true : false;
+    isQna = $page.url.pathname.includes('/qna') ? true : false;
+    isBoard = $page.url.pathname.includes('/board') ? true : false;
+    isRoom = $page.url.pathname.includes('/member/course') ? true : false;
+    if (isRoom) {
+      isMypage = false;
+      isCourse = false;
+    }
+
     const notificationResponse = await rq.apiEndPoints().GET(`/api/v1/notification/isAlarm`);
     isAlarm = notificationResponse.data?.data!;
     console.log(isAlarm);
@@ -97,7 +111,7 @@
 
   <div class="flex-1 justify-end mr-4">
     <div class="flex gap-x-4 relative items-center">
-      <button on:click={() => rq.goTo(`/member/${rq.member.id}/alarm`)}>
+      <button on:click={() => rq.goTo(`/member/mypage/alarm`)}>
         {#if isAlarm}
           <span class="relative flex h-2 w-2">
             <span
@@ -136,22 +150,30 @@
     <div class="flex flex-col items-center flex-1">
       <a href="/qna">
         <div>
-          <div class="w-9 h-9 text-xl flex items-center justify-center">
+          <div
+            class={isQna
+              ? 'w-9 h-9 text-xl flex items-center justify-center text-blue-600'
+              : 'w-9 h-9 text-xl flex items-center justify-center text-gray-300'}
+          >
             <i class="text-2xl fa-solid fa-circle-question"></i>
           </div>
         </div>
-        <p>문의</p>
+        <p class={isQna ? 'text-blue-600' : 'text-gray-300'}>문의</p>
       </a>
     </div>
 
     <div class="flex flex-col items-center flex-1">
       <a href="/board">
         <div>
-          <div class="w-9 h-9 text-xl flex items-center justify-center">
+          <div
+            class={isBoard
+              ? 'w-9 h-9 text-xl flex items-center justify-center text-blue-600'
+              : 'w-9 h-9 text-xl flex items-center justify-center text-gray-300'}
+          >
             <i class="text-2xl fa-solid fa-comments"></i>
           </div>
         </div>
-        <p>질문</p>
+        <p class={isBoard ? 'text-blue-600' : 'text-gray-300'}>질문</p>
       </a>
     </div>
     <div class="flex flex-col items-center flex-1">
@@ -171,11 +193,15 @@
     <div class="flex flex-col items-center flex-1">
       <a href="/member/course">
         <div>
-          <div class="w-9 h-9 text-xl flex items-center justify-center">
+          <div
+            class={isRoom
+              ? 'w-9 h-9 text-xl flex items-center justify-center text-blue-600'
+              : 'w-9 h-9 text-xl flex items-center justify-center text-gray-300'}
+          >
             <i class="text-2xl ml-1 fa-solid fa-book-open"></i>
           </div>
         </div>
-        <p>강의실</p>
+        <p class={isRoom ? 'text-blue-600' : 'text-gray-300'}>강의실</p>
       </a>
     </div>
     {#if rq.isAdmin()}
@@ -192,7 +218,7 @@
     {:else}
       <div class="flex flex-col items-center flex-1">
         {#if rq.isLogin()}
-          <a href="/member/{rq.member.id}">
+          <a href="/member/mypage">
             <div>
               <div
                 class={isMypage

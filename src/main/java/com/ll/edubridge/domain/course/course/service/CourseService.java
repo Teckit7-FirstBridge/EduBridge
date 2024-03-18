@@ -2,10 +2,12 @@ package com.ll.edubridge.domain.course.course.service;
 
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
+import com.ll.edubridge.domain.course.course.dto.NumDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
@@ -26,6 +28,9 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final Rq rq;
     private final CourseEnrollRepository courseEnrollRepository;
+    private final MemberService memberService;
+
+
 
     public List<Course> findAll() {
         return courseRepository.findAll();
@@ -35,22 +40,12 @@ public class CourseService {
         return courseRepository.findById(id);
     }
 
-
     @Transactional
     public Course create(CreateCourseDto createCourseDto) {
 
-        int price = 0;
 
-        switch (createCourseDto.getGrade()){
-            case "초급":
-                break;
-            case "중급":
-                price = 5000;
-                break;
-            case "고급":
-                price = 10000;
-                break;
-        }
+        int price = 2000;
+
 
         Course course = Course.builder()
                 .title(createCourseDto.getTitle())
@@ -58,10 +53,23 @@ public class CourseService {
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .price(price)
-                .grade(createCourseDto.getGrade())
+                .roadmapNum(0)
+                .writer_id(createCourseDto.getWriter_id())
+                .hashtags(createCourseDto.getHashtags())
+                .writer_nickname(memberService.getMember(createCourseDto.getWriter_id()).getNickname())
                 .build();
 
         return courseRepository.save(course);
+    }
+
+    @Transactional
+    public void changeRoadmapNum(Long id, NumDto numDto){
+
+        Course course = this.getCourse(id);
+
+        course.setRoadmapNum(numDto.getNum());
+
+        courseRepository.save(course);
     }
 
     @Transactional
@@ -72,6 +80,7 @@ public class CourseService {
         course.setNotice(courseDto.getNotice());
         course.setImgUrl(courseDto.getImgUrl());
         course.setOverView(courseDto.getOverView());
+        course.setHashtags(courseDto.getHashtags());
 
         return courseRepository.save(course);
     }
@@ -93,20 +102,23 @@ public class CourseService {
     }
 
     @Transactional
-    public boolean haveAuthority() {
+    public boolean haveAuthority(Long id) {
         Member member = rq.getMember();
 
         if (member == null) return false;
 
-        if (rq.isAdmin()) return true;
+        if (rq.isAdmin() || rq.getMember().getId().equals(id)) return true;
 
         return false;
     }
-    public Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member author,String grade, Pageable pageable) {
-        return courseRepository.findByKwAdmin(kwType, kw, author,grade, pageable);
+    public Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {
+        return courseRepository.findByKwAdmin(kwType, kw, author, pageable);
     }
-    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author,String grade, Pageable pageable) {
-        return courseRepository.findByKw(kwType, kw, author,grade, pageable);
+    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {
+        return courseRepository.findByKw(kwType, kw, author, pageable);
+    }
+    public Page<Course> findMyCourse(Member author, Pageable pageable){
+        return courseRepository.findByWriterId(author,pageable);
     }
 
     public List<Course> findLatestCourse(int num) {
@@ -145,8 +157,7 @@ public class CourseService {
     }
 
     @Transactional
-    public Course startOrstop(Long courseId){
-        Course course = this.getCourse(courseId);
+    public Course startOrstop(Course course){
         course.setConfirm(!course.getConfirm());
         return courseRepository.save(course);
     }
@@ -155,4 +166,5 @@ public class CourseService {
     public List<Course> findRecentCourse() {
         return courseRepository.findTop5ByOrderByIdDesc();
     }
+
 }

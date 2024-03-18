@@ -114,4 +114,7 @@ public class AppConfig {
 
     @Getter
     public static int SummaryPassScore = 70;
+
+    @Getter
+    public static int videoMinNum = 5;
 }

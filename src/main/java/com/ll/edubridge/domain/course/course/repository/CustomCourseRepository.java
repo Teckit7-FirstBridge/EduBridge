@@ -11,9 +11,11 @@ import java.util.List;
 
 public interface CustomCourseRepository {
 
-    Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member author,String grade, Pageable pageable);
+    Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member author, Pageable pageable);
 
-    Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author,String grade, Pageable pageable);
+    Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author, Pageable pageable);
     List<Course> findLatestCourse(int num);
     List<Course> findByVoter(Member member);
+
+    Page<Course> findByWriterId(Member author, Pageable pageable);
 }

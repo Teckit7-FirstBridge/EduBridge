@@ -2,14 +2,22 @@
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
-  import CourseNav from '../../lib/components/CourseNav.svelte';
 
   let courselist: components['schemas']['CourseDto'][] | undefined;
+  let roadmaplist: components['schemas']['RoadmapDto'][] | undefined;
   let likesList: Boolean[] = $state([]);
   let voteNumList: number[] = $state([]);
+  let hashtags: string[] = $state([]);
+  let selectedTab = $state('course');
 
   function formatTitle(title) {
     return title.length > 11 ? `${title.substring(0, 11)}...` : title;
+  }
+
+  function changeTab(tabName: string) {
+    selectedTab = tabName;
+    rq.goTo(`/course`, { replaceState: true }); // URL을 변경하되, 쿼리 파라미터를 제거합니다.
+    load();
   }
 
   function removeMarkdown(markdownText) {
@@ -35,23 +43,35 @@
     const kw = $page.url.searchParams.get('kw') ?? '';
     const kwType = ($page.url.searchParams.get('kwType') ?? 'ALL') as KwTypeCourse;
     const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
-    const grade = $page.url.searchParams.get('grade') ?? '';
 
-    const { data } = await rq.apiEndPoints().GET('/api/v1/courses', {
-      params: {
-        query: {
-          kw,
-          kwType,
-          page: page_,
-          grade: grade
+    if (selectedTab === 'course') {
+      const { data } = await rq.apiEndPoints().GET('/api/v1/courses', {
+        params: {
+          query: {
+            kw,
+            kwType,
+            page: page_
+          }
         }
-      }
-    });
-    courselist = data?.data.items!;
-    likesList = courselist!.map((course) => course!.likedByCurrentUser!);
-    voteNumList = courselist!.map((course) => course!.voteCount!);
+      });
+      courselist = data?.data.items!;
+      likesList = courselist!.map((course) => course!.likedByCurrentUser!);
+      voteNumList = courselist!.map((course) => course!.voteCount!);
 
-    return { courselist }!;
+      return { data }!;
+    } else {
+      const { data } = await rq.apiEndPoints().GET('/api/v1/roadmap', {
+        params: {
+          query: {
+            kw,
+            kwType,
+            page: page_
+          }
+        }
+      });
+      roadmaplist = data?.data.items;
+      return data!;
+    }
   }
 
   async function clickLiked(item: components['schemas']['CourseDto']) {
@@ -81,15 +101,52 @@
   }
 </script>
 
+<div role="tablist" class="tabs tabs-bordered flex px-4 max-w-4xl mx-auto mt-4">
+  <a
+    role="tab"
+    class={`tab ${selectedTab === 'course' ? 'tab-active' : ''}`}
+    on:click={() => {
+      changeTab('course');
+      load();
+    }}
+  >
+    강좌
+  </a>
+  <a
+    role="tab"
+    class={`tab ${selectedTab === 'roadmap' ? 'tab-active' : ''}`}
+    on:click={() => {
+      changeTab('roadmap');
+      load();
+    }}
+  >
+    로드맵
+  </a>
+</div>
 {#await load()}
   <p>loading...</p>
-{:then { courselist }}
-  <div class="">
-    <CourseNav></CourseNav>
-    <div class="flex justify-end">
-      <button
-        class="btn btn-ghost"
-        onclick={() => {
+{:then { data }}
+  {#if selectedTab === 'course'}
+    <div class="">
+      <div class="flex justify-between items-center justify-center mb-4 ml-2">
+        <div>
+          <a
+            href="/course/write"
+            class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+          >
+            등록
+          </a>
+          <a
+            href="/member/mycourse"
+            class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+          >
+            관리
+          </a>
+        </div>
+        <div class=" mr-4">
+          <button
+            class="btn btn-ghost mt-4"
+            onclick={() => {
       const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
       const searchFormInputSearch = (document.querySelector('#searchFormModal input[type=search]') as HTMLDialogElement);
 
@@ -97,144 +154,305 @@
 
       searchFormInputSearch.focus();
     }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          ><path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          /></svg
-        >
-      </button>
-      <dialog id="searchFormModal" class="modal">
-        <div class="modal-box">
-          <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-          </form>
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              /></svg
+            >
+          </button>
+          <dialog id="searchFormModal" class="modal">
+            <div class="modal-box">
+              <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+              </form>
 
-          <form
-            action="/course"
-            class="bg-base rounded flex flex-col gap-6"
-            onsubmit={() => {
+              <form
+                action="/course"
+                class="bg-base rounded flex flex-col gap-6"
+                onsubmit={() => {
             const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
             searchFormModal.close();
           }}
-          >
-            <div class="max-w-md mx-auto bg-white p-5">
-              <div class="form-control">
-                <label for="kwType" class="label text-sm font-bold text-gray-700">검색필터</label>
-                <select
-                  id="kwType"
-                  name="kwType"
-                  class="select select-bordered w-full max-w-xs focus:outline-none focus:ring-0"
-                >
-                  <option value="ALL">전체</option>
-                  <option value="TITLE">제목</option>
-                  <option value="NAME">작성자</option>
-                </select>
-              </div>
+              >
+                <div class="max-w-md mx-auto bg-white p-5">
+                  <div class="form-control">
+                    <label for="kwType" class="label text-sm font-bold text-gray-700"
+                      >검색필터</label
+                    >
+                    <select
+                      id="kwType"
+                      name="kwType"
+                      class="select select-bordered w-full max-w-xs focus:outline-none focus:ring-0"
+                    >
+                      <option value="ALL">전체</option>
+                      <option value="TITLE">제목</option>
+                      <option value="NAME">작성자</option>
+                      <option value="HASHTAGS">해시태그</option>
+                    </select>
+                  </div>
 
-              <div class="form-control mt-4">
-                <label for="kw" class="label text-sm font-bold text-gray-700">검색어</label>
-                <input
-                  id="kw"
-                  name="kw"
-                  type="search"
-                  placeholder="검색어"
-                  class="input input-bordered w-full max-w-xs focus:outline-none focus:ring-0"
-                />
-              </div>
+                  <div class="form-control mt-4">
+                    <label for="kw" class="label text-sm font-bold text-gray-700">검색어</label>
+                    <input
+                      id="kw"
+                      name="kw"
+                      type="search"
+                      placeholder="검색어"
+                      class="input input-bordered w-full max-w-xs focus:outline-none focus:ring-0"
+                    />
+                  </div>
 
-              <div class="mt-4">
-                <button
-                  class="btn border border-gray-300 text-gray-800 bg-white hover:bg-gray-50 active:bg-gray-200 focus:ring-2 focus:ring-gray-200 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-offset-2 focus:ring-offset-gray-100 w-full"
-                >
-                  검색
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-
-        <form method="dialog" class="modal-backdrop">
-          <button>close</button>
-        </form>
-      </dialog>
-    </div>
-    <div class="flex flex-col flex-1">
-      <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {#if courselist}
-          {#each courselist as item}
-            <div
-              class="border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center pt-2"
-            >
-              <a href="/course/{item.id}">
-                <div class="flex justify-center gap-2">
-                  <h2 class="text-lg font-semibold my-1 ml-2">{formatTitle(item.title)}</h2>
-
-                  <div
-                    class={`inline-flex px-2 text-lg font-semibold rounded-full mt-1 my-1 ${item.grade === '초급' ? 'bg-yellow-100 text-yellow-800' : item.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
-                  >
-                    {item.grade}
+                  <div class="mt-4">
+                    <button
+                      class="btn border border-gray-300 text-gray-800 bg-white hover:bg-gray-50 active:bg-gray-200 focus:ring-2 focus:ring-gray-200 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-offset-2 focus:ring-offset-gray-100 w-full"
+                    >
+                      검색
+                    </button>
                   </div>
                 </div>
-                <div class="flex justify-center p-2 bg-black rounded-lg">
-                  <img src={item.imgUrl} />
-                </div>
-
-                <p class="text-sm text-gray-500 dark:text-gray-400 my-4 mx-2">
-                  {removeMarkdown(item.overView)}
-                </p>
-              </a>
-              <div class=" flex justify-end gap-2 p-2" on:click={() => clickLiked(item)}>
-                {#if likesList[courselist.indexOf(item)]}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    height="24"
-                  >
-                    <!-- 빨간색 채워진 하트 -->
-                    <path
-                      fill="red"
-                      stroke="red"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                    />
-                  </svg>{:else}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    height="24"
-                  >
-                    <!-- 빨간색 빈 하트 -->
-                    <path
-                      fill="none"
-                      stroke="red"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                    />
-                  </svg>
-                {/if}
-                <span>
-                  {voteNumList[courselist!.indexOf(item)]}
-                </span>
-              </div>
+              </form>
             </div>
-          {/each}
-        {/if}
+
+            <form method="dialog" class="modal-backdrop">
+              <button>close</button>
+            </form>
+          </dialog>
+        </div>
+      </div>
+      <div class="flex flex-col flex-1">
+        <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {#if courselist}
+            {#each courselist as item}
+              <div
+                class="border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center pt-2"
+              >
+                <a href="/course/{item.id}">
+                  <div class="flex justify-center gap-2">
+                    <h2 class="text-lg font-semibold my-1 ml-2">{formatTitle(item.title)}</h2>
+                  </div>
+                  <div class="flex justify-center p-2 bg-black rounded-lg m-4">
+                    <img src={item.imgUrl} />
+                  </div>
+
+                  <p class="text-sm text-gray-500 dark:text-gray-400 my-4 mx-2">
+                    {removeMarkdown(item.overView)}
+                  </p>
+                </a>
+                <div class="flex items-center justify-between">
+                  {#if item.hashtags}
+                    <div class="flex ml-4">
+                      {#each item.hashtags.split('@') as hashtag}
+                        <div class="flex text-amber-600 text-sm text-center items-center ml-2">
+                          #{hashtag}
+                        </div>
+                      {/each}
+                    </div>
+                  {/if}
+                  <div class=" flex justify-end gap-2 p-2" on:click={() => clickLiked(item)}>
+                    {#if likesList[courselist.indexOf(item)]}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                      >
+                        <!-- 빨간색 채워진 하트 -->
+                        <path
+                          fill="red"
+                          stroke="red"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                        />
+                      </svg>{:else}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                      >
+                        <!-- 빨간색 빈 하트 -->
+                        <path
+                          fill="none"
+                          stroke="red"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                        />
+                      </svg>
+                    {/if}
+                    <span>
+                      {voteNumList[courselist!.indexOf(item)]}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            {/each}
+          {/if}
+        </div>
       </div>
     </div>
-  </div>
+  {:else}
+    <div class="">
+      <div class="flex justify-between items-center justify-center mb-4 ml-2">
+        <div>
+          <a
+            href="/roadmap/write"
+            class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+          >
+            등록
+          </a>
+          <a
+            href="/member/mycourse"
+            class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+          >
+            관리
+          </a>
+        </div>
+        <div class=" mr-4">
+          <button
+            class="btn btn-ghost mt-4"
+            onclick={() => {
+      const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
+      const searchFormInputSearch = (document.querySelector('#searchFormModal input[type=search]') as HTMLDialogElement);
+
+      searchFormModal.showModal();
+
+      searchFormInputSearch.focus();
+    }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              /></svg
+            >
+          </button>
+          <dialog id="searchFormModal" class="modal">
+            <div class="modal-box">
+              <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+              </form>
+
+              <form
+                action="/course"
+                class="bg-base rounded flex flex-col gap-6"
+                onsubmit={() => {
+            const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
+            searchFormModal.close();
+          }}
+              >
+                <div class="max-w-md mx-auto bg-white p-5">
+                  <div class="form-control">
+                    <label for="kwType" class="label text-sm font-bold text-gray-700"
+                      >검색필터</label
+                    >
+                    <select
+                      id="kwType"
+                      name="kwType"
+                      class="select select-bordered w-full max-w-xs focus:outline-none focus:ring-0"
+                    >
+                      <option value="ALL">전체</option>
+                      <option value="TITLE">제목</option>
+                      <option value="NAME">작성자</option>
+                      <option value="HASHTAGS">해시태그</option>
+                    </select>
+                  </div>
+
+                  <div class="form-control mt-4">
+                    <label for="kw" class="label text-sm font-bold text-gray-700">검색어</label>
+                    <input
+                      id="kw"
+                      name="kw"
+                      type="search"
+                      placeholder="검색어"
+                      class="input input-bordered w-full max-w-xs focus:outline-none focus:ring-0"
+                    />
+                  </div>
+
+                  <div class="mt-4">
+                    <button
+                      class="btn border border-gray-300 text-gray-800 bg-white hover:bg-gray-50 active:bg-gray-200 focus:ring-2 focus:ring-gray-200 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-offset-2 focus:ring-offset-gray-100 w-full"
+                    >
+                      검색
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <form method="dialog" class="modal-backdrop">
+              <button>close</button>
+            </form>
+          </dialog>
+        </div>
+      </div>
+      <div class="flex flex-col flex-1">
+        <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {#if roadmaplist}
+            {#each roadmaplist as item}
+              <div class="border collapse bg-white">
+                <input type="checkbox" class="peer" />
+                <div class="collapse-title bg-white peer-checked:bg-yellow-50">
+                  <div class="rounded-lg dark:border-gray-800 flex-col text-center">
+                    <div class="flex justify-between gap-2">
+                      <h2 class="text-lg font-semibold ml-2">{formatTitle(item.title)}</h2>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      {#if item.hashtags}
+                        <div class="flex">
+                          {#each item.hashtags.split('@') as hashtag}
+                            <div class="flex text-amber-600 text-sm text-center items-center ml-2">
+                              #{hashtag}
+                            </div>
+                          {/each}
+                        </div>
+                      {/if}
+                    </div>
+                  </div>
+                </div>
+                <div class="collapse-content bg-white peer-checked:bg-white mt-1">
+                  <p class="text-lg text-gray-800 dark:text-gray-400 mx-2 font-semibold">개요</p>
+                  <p class="text-sm text-gray-800 dark:text-gray-400 mx-2">
+                    {removeMarkdown(item.overView)}
+                  </p>
+                  {#if item.curriculum}
+                    <div class="flex flex-col">
+                      {#each item.curriculum.sort((a, b) => a.roadmapNum - b.roadmapNum || a.id - b.id) as curriculum, index}
+                        <a href="/course/{curriculum.id}">
+                          <div
+                            class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
+                          >
+                            {index + 1}. {curriculum.title}
+                          </div>
+                        </a>
+                      {/each}
+                    </div>
+                  {/if}
+                </div>
+              </div>
+            {/each}
+          {/if}
+        </div>
+      </div>
+    </div>
+  {/if}
 {/await}
