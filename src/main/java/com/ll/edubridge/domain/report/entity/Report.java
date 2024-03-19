@@ -1,11 +1,11 @@
-package com.ll.edubridge.domain.report.CourseReport.entity;
+package com.ll.edubridge.domain.report.entity;
 
 
-import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -17,15 +17,14 @@ import static lombok.AccessLevel.PROTECTED;
 @Setter
 @Getter
 @ToString(callSuper = true)
-public class CourseReport extends BaseEntity {
+public class Report extends BaseEntity {
 
     @Column(length = 500)
-    private String content;
+    private String reportReason;
 
-    @ManyToOne(optional = false)
-    private Member writer;
+    @Enumerated(EnumType.STRING)
+    private ReportType reportType;
 
-    @Column()
-    private Long courseId;
-
+    @Column
+    private Long materialId;
 }
