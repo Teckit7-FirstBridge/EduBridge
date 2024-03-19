@@ -38,7 +38,7 @@
 {#await load()}
   <h1>loading...</h1>
 {:then { videos }}
-  <div class="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
+  <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8 mt-2">
     <div class="flex flex-col w-full h-80 mt-10">
       {#each videos as video}
         {#if video.id == parseInt($page.params.videoid)}

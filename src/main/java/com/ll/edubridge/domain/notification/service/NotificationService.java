@@ -17,7 +17,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +54,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public <T> void createByPoint(NotificationType type, Member member,int point) {
+    public void createByPoint(NotificationType type, Member member,int point) {
 
         Notification notification = Notification.builder()
                 .type(type)
