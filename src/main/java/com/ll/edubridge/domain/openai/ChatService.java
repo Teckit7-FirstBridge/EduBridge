@@ -1,6 +1,5 @@
 package com.ll.edubridge.domain.openai;
 
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
@@ -66,8 +65,6 @@ public class ChatService {
             summaryNote.setScore(score);
             if(score>= AppConfig.SummaryPassScore){
                 member.setDailyAchievement(member.getDailyAchievement()+1);
-                // 포인트 지급 -> 로컬 테스트 실패
-                Course course = summaryNote.getVideo().getCourse();
                 int point = member.getPoint() + 700;
                 member.setPoint(point);
                 memberService.save(member);
