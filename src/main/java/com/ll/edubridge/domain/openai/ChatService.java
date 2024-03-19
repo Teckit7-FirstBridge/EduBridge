@@ -43,10 +43,10 @@ public class ChatService {
     NotificationService notificationService;
 
     @Autowired
-    PointService pointService;
+    Rq rq;
 
     @Autowired
-    Rq rq;
+    PointService pointService;
 
 
     @Async
@@ -59,7 +59,6 @@ public class ChatService {
         ChatResponse response = restTemplate.postForObject(apiUrl, request, ChatResponse.class);
         
         if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
-            System.out.println("테스트아ㅏ아아아");
 
         }else{
             String numberOnly = response.getChoices().get(0).getMessage().getContent().replaceAll("[^\\d]", "");
@@ -72,8 +71,9 @@ public class ChatService {
                 int point = member.getPoint() + 700;
                 member.setPoint(point);
                 memberService.save(member);
+
                 notificationService.notifySummaryNotePoint(summaryNote.getWriter().getId()); // 포인트 지급 알림
-                notificationService.createByPoint(NotificationType.POINTS,rq.getMember(), PointType.SNote.getAmount()); // 알림 내역 저장
+                notificationService.createByPoint(NotificationType.POINTS, summaryNote.getWriter(), PointType.SNote.getAmount()); // 알림 내역 저장
                 pointService.addPoint(PointType.SNote, summaryNote.getWriter()); // 포인트 내역 추가
             }
 
