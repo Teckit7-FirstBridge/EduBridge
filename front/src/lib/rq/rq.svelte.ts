@@ -30,6 +30,7 @@ class Rq {
     let dailyGoal: number = $state(0);
     let enrollCount: number = $state(0);
     let dailyAchievement: number = $state(0);
+    let uuid = $state('');
 
     this.member = {
       get id() {
@@ -91,6 +92,12 @@ class Rq {
       },
       set dailyAchievement(value: number) {
         dailyAchievement = value;
+      },
+      get uuid() {
+        return uuid;
+      },
+      set uuid(value: string) {
+        uuid = value;
       }
     };
   }
@@ -145,6 +152,7 @@ class Rq {
     this.member.dailyAchievement = member.dailyAchievement;
     this.member.point = member.point;
     this.member.enrollCount = member.enrollCount;
+    this.member.uuid = member.uuid;
   }
 
   public setLogout() {

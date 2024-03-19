@@ -110,10 +110,12 @@ public class ApiV1MemberController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/{uuid}")
     @Operation(summary = "마이 페이지 데이터 요청")
-    public RsData<MyPageResponseBody> myPage(@PathVariable("id") Long id){
-        Member member = memberService.getMember(id);
+    public RsData<MyPageResponseBody> myPage(@PathVariable("uuid") String uuid){
+        Member member = memberService.GetMemberByUUID(uuid);
+
+        MemberDto memberDto = new MemberDto(member);
 
         List<CourseDto> learningCourses = member
                 .getCourseEnrollList()
@@ -122,7 +124,7 @@ public class ApiV1MemberController {
                 .collect(Collectors.toList());
         List<CourseDto> likeCourses = courseService.findByVoter(member).stream().map(course -> new CourseDto(course,member)).collect(Collectors.toList());
 
-        MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,member);
+        MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,memberDto);
         return RsData.of("200","성공",
                 new MyPageResponseBody(
                         myPageDto

@@ -74,8 +74,8 @@
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
-    const { data } = await rq.apiEndPoints().GET('/api/v1/members/{id}', {
-      params: { path: { id: rq.member.id } }
+    const { data } = await rq.apiEndPoints().GET('/api/v1/members/{uuid}', {
+      params: { path: { uuid: $page.params.uuid } }
     });
     learningCourses = data?.data.item.learningCourses!;
     favoriteCourses = data?.data.item.favoriteCourses!;
