@@ -219,7 +219,7 @@
       {:else}
         <div class="flex flex-col items-center flex-1">
           {#if rq.isLogin()}
-            <a href="/member/mypage">
+            <a href="/member/{rq.member.uuid}">
               <div>
                 <div
                   class={isMypage

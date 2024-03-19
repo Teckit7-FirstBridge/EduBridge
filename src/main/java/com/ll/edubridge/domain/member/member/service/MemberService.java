@@ -5,13 +5,11 @@ import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.domain.point.point.entity.PointType;
 import com.ll.edubridge.domain.point.point.service.PointService;
-import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.global.security.SecurityUser;
-import com.querydsl.core.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -145,6 +143,16 @@ public class MemberService {
     }
 
     public Optional<Member> findByUUID(String uuid){return memberRepository.findByUuid(uuid);}
+
+    public Member GetMemberByUUID(String uuid){
+        Optional<Member> member = this.findByUUID(uuid);
+
+        if(member.isPresent()){
+            return member.get();
+        }else {
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
+        }
+    }
 
     public Member getMember(Long id) {
         Optional<Member> member = this.findById(id);
