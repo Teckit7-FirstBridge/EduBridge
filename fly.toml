@@ -15,11 +15,10 @@ primary_region = 'nrt'
   auto_start_machines = false
   min_machines_running = 0
   processes = ['app']
-
-[services.concurrency]
-  hard_limit = 100
-  soft_limit = 75
-  type = "connections"
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 200
+    hard_limit = 250
 
 [[vm]]
   cpu_kind = 'shared'

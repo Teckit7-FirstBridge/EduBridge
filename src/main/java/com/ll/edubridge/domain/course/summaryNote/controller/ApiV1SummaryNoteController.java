@@ -6,9 +6,8 @@ import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
-import com.ll.edubridge.domain.notification.entity.NotificationType;
+import com.ll.edubridge.domain.notification.service.NotificationService;
 import com.ll.edubridge.domain.openai.ChatService;
-import com.ll.edubridge.domain.point.point.entity.PointType;
 import com.ll.edubridge.domain.point.point.service.PointService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -16,7 +15,6 @@ import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
-import com.ll.edubridge.domain.notification.service.NotificationService;
 import com.ll.edubridge.standard.base.Empty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +29,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -68,10 +65,6 @@ public class ApiV1SummaryNoteController {
         String keywords = summaryNote.getVideo().getKeywords();
         chatService.chat(summaryNote.getId(),createSummaryNoteDto.getContent() + "\n이 문단을 채점해줘. 총점 100점이 만점이야. 각 채점 기준과 기준 점수는 다음과 같아. 1) 다음의 키워드가 잘 들어갔는가. 키워드:" + keywords + " - 만점 30점.  2) 각 문장이 문맥이 매끄러운가. - 만점 20점. 3) 해당 키워드가 가진 프로그래밍 개념이 제대로 반영되었는가. - 만점 50점. 조건을 제대로 충족하지 못했다면 점수를 아주 낮게 줘. 종합 만점은 100점이야. 다른 부가적인 설명은 하지마. 세부 기준에 대한 평가도 하지마. 총점만 말해줘. '20점'처럼 오직 점수만 알려줘. 내 요약 실력을 높이기 위한 공부야. 아주 엄격하게 채점해줘.",rq.getMember());
         SummaryNoteDto summaryNoteDto = new SummaryNoteDto(summaryNote);
-
-        notificationService.notifySummaryNotePoint(summaryNote.getWriter().getId()); // 포인트 지급 알림
-        notificationService.createByPoint(NotificationType.POINTS,rq.getMember(), PointType.SNote.getAmount()); // 알림 내역 저장
-        pointService.addPoint(PointType.SNote, summaryNote.getWriter()); // 포인트 내역 추가
 
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(), Msg.E200_0_CREATE_SUCCEED.getMsg(), summaryNoteDto);
     }
