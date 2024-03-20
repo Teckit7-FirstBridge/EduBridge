@@ -15,4 +15,6 @@ public interface RoadmapRepository extends JpaRepository<Roadmap, Long>, CustomR
     List<Roadmap> findByOwner(String owner);
 
     Roadmap findByCurriculumContains(Course course);
+//
+//    Roadmap findByCurriculumContains(CourseRoadmap courseRoadmap);
 }

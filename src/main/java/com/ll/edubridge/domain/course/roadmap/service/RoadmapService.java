@@ -4,7 +4,9 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.roadmap.dto.CreateRoadmapDto;
 import com.ll.edubridge.domain.course.roadmap.dto.RoadmapDto;
+import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
+import com.ll.edubridge.domain.course.roadmap.repository.CourseRoadmapRepository;
 import com.ll.edubridge.domain.course.roadmap.repository.RoadmapRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -27,6 +29,7 @@ public class RoadmapService {
     private final RoadmapRepository roadmapRepository;
     private final Rq rq;
     private final CourseRepository courseRepository;
+    private final CourseRoadmapRepository courseRoadmapRepository;
 
     public List<Roadmap> findAll() {
         return roadmapRepository.findAll();
@@ -49,8 +52,17 @@ public class RoadmapService {
         }
     }
 
-    public Roadmap getCourseRoadmap(Course course) {
-        return roadmapRepository.findByCurriculumContains(course);
+    // 강좌가 속한 로드맵 목록 찾기
+    public List<Roadmap> getCourseRoadmapList(Course course) {
+        return courseRoadmapRepository.findByCourse(course)
+                .stream()
+                .map(CourseRoadmap::getRoadmap)
+                .toList();
+    }
+
+    // CourseRoadmap 개체 찾기
+    public CourseRoadmap getCourseRoadmap(Course course, Roadmap roadmap) {
+        return courseRoadmapRepository.findByCourseAndRoadmap(course, roadmap);
     }
 
     public List<Roadmap> getMyRoadmaps(Member member) {
@@ -71,11 +83,15 @@ public class RoadmapService {
     }
 
     @Transactional
-    public void addCourse(Long id, Course course) {
+    public void addCourse(Long id, Course course, int courseOrder) {
         Roadmap roadmap = this.getRoadmap(id);
+        CourseRoadmap courseRoadmap = new CourseRoadmap(course, roadmap, courseOrder);
+        courseRoadmapRepository.save(courseRoadmap);
 
-        course.setRoadmap(roadmap);
-
+        // 잘 작동하지 않으면 위 작업 메서드 분리해서 호출할 것
+        List<CourseRoadmap> roadmapList = course.getRoadmapList();
+        roadmapList.add(courseRoadmap);
+        course.setRoadmapList(roadmapList);
         courseRepository.save(course);
     }
 
