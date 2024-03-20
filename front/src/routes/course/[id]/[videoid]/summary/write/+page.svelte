@@ -55,7 +55,12 @@
           class="textarea textarea-bordered w-full flex-grow p-4 text-gray-700 dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring focus:ring-opacity-50"
           placeholder="작성해주세요..."
         ></textarea>
-        <button on:click={submitForm} class="btn btn-primary mt-4 self-end"> 저장 </button>
+        <button
+          on:click={submitForm}
+          class="inline-block px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-black hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          저장
+        </button>
       </form>
     </div>
   </div>

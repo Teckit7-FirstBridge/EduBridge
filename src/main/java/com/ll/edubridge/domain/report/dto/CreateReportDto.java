@@ -15,4 +15,8 @@ public class CreateReportDto {
         this.reportReason = report.getReportReason();
         this.materialId = report.getMaterialId();
     }
+
+    public CreateReportDto(){
+
+    }
 }
