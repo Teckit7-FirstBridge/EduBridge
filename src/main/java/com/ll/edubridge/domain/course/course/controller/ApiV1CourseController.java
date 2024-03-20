@@ -188,7 +188,7 @@ public class ApiV1CourseController {
         if(course.getVideoList().size()<=AppConfig.videoMinNum){
             throw new GlobalException(CodeMsg.E400_10_VIDEO_LESS_THAN_5_CANNOT_PUBLISH.getCode(),CodeMsg.E400_10_VIDEO_LESS_THAN_5_CANNOT_PUBLISH.getMessage());
         }
-        course = courseService.startOrstop(course);
+        course = courseService.startOrStop(course);
         CourseDto courseDto = new CourseDto(course,rq.getMember());
         return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),Msg.E200_2_MODIFY_SUCCEED.getMsg(),courseDto);
     }

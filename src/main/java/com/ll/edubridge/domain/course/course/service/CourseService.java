@@ -159,7 +159,7 @@ public class CourseService {
     }
 
     @Transactional
-    public Course startOrstop(Course course){
+    public Course startOrStop(Course course){
         course.setConfirm(!course.getConfirm());
         return courseRepository.save(course);
     }
