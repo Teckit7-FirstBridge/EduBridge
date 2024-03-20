@@ -54,9 +54,8 @@ public class CourseService {
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .price(price)
-                .writer_id(createCourseDto.getWriter_id())
+                .writer(createCourseDto.getWriter())
                 .hashtags(createCourseDto.getHashtags())
-                .writer_nickname(memberService.getMember(createCourseDto.getWriter_id()).getNickname())
                 .build();
 
         return courseRepository.save(course);
@@ -119,8 +118,8 @@ public class CourseService {
     public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {
         return courseRepository.findByKw(kwType, kw, author, pageable);
     }
-    public Page<Course> findMyCourse(Member author, Pageable pageable){
-        return courseRepository.findByWriterId(author,pageable);
+    public Page<Course> findMyCourse(Member writer, Pageable pageable){
+        return courseRepository.findByWriter(writer, pageable);
     }
 
     public List<Course> findLatestCourse(int num) {

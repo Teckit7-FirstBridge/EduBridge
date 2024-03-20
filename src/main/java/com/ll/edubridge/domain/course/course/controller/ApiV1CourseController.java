@@ -83,7 +83,7 @@ public class ApiV1CourseController {
             @RequestBody CourseDto courseDto) {
 
 
-        if (!courseService.haveAuthority(courseDto.getWriter_id()))
+        if (!courseService.haveAuthority(courseDto.getWriter().getId()))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Course modifyCourse = courseService.modify(id, courseDto);

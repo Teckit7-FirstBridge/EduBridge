@@ -106,7 +106,7 @@ public class ApiV1RoadmapController {
     public RsData<RoadmapDto> getRoadmapByCourse(@PathVariable("courseId") Long courseId) {
         Course course = courseService.getCourse(courseId);
         List<Roadmap> roadmapList = roadmapService.getCourseRoadmapList(course);
-        Member member = memberService.getMember(course.getWriter_id());
+        Member member = memberService.getMember(course.getWriter().getId());
         RoadmapDto roadmapDto = new RoadmapDto(roadmapList, member.getUsername());
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
