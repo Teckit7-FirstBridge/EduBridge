@@ -18,7 +18,6 @@ public class CreateCourseRoadmapDto {
     @NonNull
     private int courseOrder;
 
-    // course or roadmap 다른 부분 더 보내야 하는가?
     @NonNull
     private String RoadmapOwner; // username
 

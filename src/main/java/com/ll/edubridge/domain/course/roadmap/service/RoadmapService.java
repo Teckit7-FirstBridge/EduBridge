@@ -88,12 +88,11 @@ public class RoadmapService {
 
     @Transactional
     public void addCourse(Long id, Course course, int courseOrder) {
-        // CourseRoadmap 테이블에 데이터 생성
+        // CourseRoadmap 테이블에 데이터 생성 (따라서, CreateDto 사용 X)
         Roadmap roadmap = this.getRoadmap(id);
         CourseRoadmap courseRoadmap = new CourseRoadmap(course, roadmap, courseOrder);
         courseRoadmapRepository.save(courseRoadmap);
 
-        // 잘 작동하지 않으면 위 작업 메서드 분리해서 호출할 것
         // roadmap의 CourseRoadmap 목록에 새로운 요소 추가
         List<CourseRoadmap> roadmapList = course.getRoadmapList();
         roadmapList.add(courseRoadmap);
@@ -105,9 +104,8 @@ public class RoadmapService {
         Roadmap roadmap = this.getRoadmap(id);
 
         roadmap.setTitle(roadmapDto.getTitle());
-        roadmap.setOverView(roadmap.getOverView());
-        roadmap.setCurriculum(roadmap.getCurriculum());
-        roadmap.setHashtags(roadmap.getHashtags());
+        roadmap.setOverView(roadmapDto.getOverView());
+        roadmap.setHashtags(roadmapDto.getHashtags());
 
         return roadmapRepository.save(roadmap);
     }
