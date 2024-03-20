@@ -332,6 +332,18 @@ export interface components {
       success: boolean;
       fail: boolean;
     };
+    Comment: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      content?: string;
+      post?: components["schemas"]["Post"];
+      voter?: components["schemas"]["Member"][];
+      writer?: components["schemas"]["Member"];
+      /** Format: int32 */
+      voteCount?: number;
+    };
     Course: {
       /** Format: int64 */
       id?: number;
@@ -391,11 +403,33 @@ export interface components {
       dailyAchievement?: number;
       uuid?: string;
       courseVoters?: components["schemas"]["CourseVoter"][];
+      postVoters?: components["schemas"]["PostVoter"][];
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
       authorities?: components["schemas"]["GrantedAuthority"][];
-      authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
+      authoritiesAsStringList?: string[];
+    };
+    Post: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      title?: string;
+      content?: string;
+      published?: boolean;
+      report?: boolean;
+      writer?: components["schemas"]["Member"];
+      commentList?: components["schemas"]["Comment"][];
+      postVoters?: components["schemas"]["PostVoter"][];
+      /** Format: int32 */
+      voteCount?: number;
+    };
+    PostVoter: {
+      /** Format: int64 */
+      id?: number;
+      post?: components["schemas"]["Post"];
+      member?: components["schemas"]["Member"];
     };
     Roadmap: {
       /** Format: int64 */

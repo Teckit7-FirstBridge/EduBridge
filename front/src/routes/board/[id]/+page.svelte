@@ -65,6 +65,7 @@
     isReport = post.report;
     likedNum = post.voteCount;
     likedByCurrentUser = post.likedByCurrentUser;
+    console.log(responsePost);
     return { comments, post };
   }
 
