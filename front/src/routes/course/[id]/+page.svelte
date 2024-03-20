@@ -112,6 +112,7 @@
         }
       }
     });
+    console.log(responseCourse);
     course = responseCourse.data?.data!;
     courseConfirm = course.confirm!;
     hashtags = course.hashtags!.split('@');

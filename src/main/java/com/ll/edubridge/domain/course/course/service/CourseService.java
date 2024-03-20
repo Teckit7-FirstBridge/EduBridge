@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.course.course.service;
 
+import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.dto.NumDto;
@@ -123,37 +124,6 @@ public class CourseService {
 
     public List<Course> findLatestCourse(int num) {
         return courseRepository.findLatestCourse(num);
-    }
-
-    @Transactional
-    public void vote(Long id, Member member) {
-        Course course = this.getCourse(id);
-        course.getVoter().add(member);
-        courseRepository.save(course);
-    }
-
-    @Transactional
-    public void deleteVote(Long id, Member member){
-        Course course = this.getCourse(id);
-        course.getVoter().remove(member);
-        courseRepository.save(course);
-    }
-
-    public boolean canLike(Member member, Course course) {
-        if (member == null) return false;
-        if (course == null) return false;
-
-        return !course.getVoter().contains(member);
-    }
-    public boolean canCancelLike(Member member, Course course) {
-        if (member == null) return false;
-        if (course == null) return false;
-
-        return course.getVoter().contains(member);
-    }
-
-    public List<Course> findByVoter(Member member){
-        return courseRepository.findByVoter(member);
     }
 
     @Transactional

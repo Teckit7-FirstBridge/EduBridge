@@ -1,5 +1,7 @@
 package com.ll.edubridge.domain.member.member.entity;
 
+import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
+import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
 import com.ll.edubridge.standard.util.Ut;
@@ -11,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -51,6 +54,9 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
     private int dailyAchievement;
 
     private String uuid;
+
+    @OneToMany(mappedBy = "member")
+    private Set<CourseVoter> courseVoters;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CourseEnroll> courseEnrollList;
