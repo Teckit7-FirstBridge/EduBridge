@@ -66,6 +66,14 @@ export interface paths {
     /** 로드맵 생성 */
     post: operations["createRoadmap"];
   };
+  "/api/v1/report/post/{postId}": {
+    /** 글 신고 생성 */
+    post: operations["createPostReport"];
+  };
+  "/api/v1/report/course/{courseId}": {
+    /** 강좌 신고 생성 */
+    post: operations["createCourseReport"];
+  };
   "/api/v1/posts": {
     /** 글 다건 조회 */
     get: operations["getPosts"];
@@ -146,6 +154,18 @@ export interface paths {
   "/api/v1/roadmap/myRoadmap": {
     /** 내가 등록한 로드맵 다건 조회 */
     get: operations["getMyRoadmaps"];
+  };
+  "/api/v1/report/post": {
+    /** 글 신고 목록 조회 */
+    get: operations["reportedPostList"];
+  };
+  "/api/v1/report/course": {
+    /** 강좌 신고 목록 조회 */
+    get: operations["reportedCourseList"];
+  };
+  "/api/v1/report/all": {
+    /** 전체 신고 목록 조회 */
+    get: operations["reportedAllList"];
   };
   "/api/v1/posts/qna/{id}": {
     /** 1대1 문의 상세 정보 */
@@ -465,10 +485,10 @@ export interface components {
       dailyAchievement?: number;
       uuid?: string;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
-      authoritiesAsStringList?: string[];
-      authorities?: components["schemas"]["GrantedAuthority"][];
-      profileImgUrlOrDefault?: string;
       name?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
+      authoritiesAsStringList?: string[];
+      profileImgUrlOrDefault?: string;
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -593,6 +613,20 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    CreateReportDto: {
+      reportReason: string;
+      /** Format: int64 */
+      materialId: number;
+    };
+    RsDataCreateReportDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["CreateReportDto"];
+      fail: boolean;
+      success: boolean;
+    };
     CreatePostDto: {
       title: string;
       body: string;
@@ -714,6 +748,38 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["RoadmapDto"][];
+      fail: boolean;
+      success: boolean;
+    };
+    GetReportList: {
+      itemPage?: components["schemas"]["PageDtoReportDto"];
+    };
+    PageDtoReportDto: {
+      /** Format: int64 */
+      totalElementsCount: number;
+      /** Format: int64 */
+      pageElementsCount: number;
+      /** Format: int64 */
+      totalPagesCount: number;
+      /** Format: int32 */
+      number: number;
+      content: components["schemas"]["ReportDto"][];
+    };
+    ReportDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      reportReason: string;
+      /** Format: int64 */
+      materialId: number;
+    };
+    RsDataGetReportList: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetReportList"];
       fail: boolean;
       success: boolean;
     };
@@ -1567,6 +1633,48 @@ export interface operations {
       };
     };
   };
+  /** 글 신고 생성 */
+  createPostReport: {
+    parameters: {
+      path: {
+        postId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateReportDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataCreateReportDto"];
+        };
+      };
+    };
+  };
+  /** 강좌 신고 생성 */
+  createCourseReport: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateReportDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataCreateReportDto"];
+        };
+      };
+    };
+  };
   /** 글 다건 조회 */
   getPosts: {
     parameters: {
@@ -1935,6 +2043,54 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataListRoadmapDto"];
+        };
+      };
+    };
+  };
+  /** 글 신고 목록 조회 */
+  reportedPostList: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetReportList"];
+        };
+      };
+    };
+  };
+  /** 강좌 신고 목록 조회 */
+  reportedCourseList: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetReportList"];
+        };
+      };
+    };
+  };
+  /** 전체 신고 목록 조회 */
+  reportedAllList: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetReportList"];
         };
       };
     };

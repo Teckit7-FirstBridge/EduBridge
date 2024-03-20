@@ -13,7 +13,7 @@
   let post: components['schemas']['PostDto'] = $state();
   let editor: Editor;
   let commentEditOpen: number | null = $state();
-  let isReport: Boolean = $state(false);
+  let selectedReason;
 
   let postId = parseInt($page.params.id);
 
@@ -62,7 +62,6 @@
       }
     });
     post = responsePost.data?.data!;
-    isReport = post.report;
     likedNum = post.voteCount;
     likedByCurrentUser = post.likedByCurrentUser;
     return { comments, post };
@@ -122,49 +121,33 @@
     }
   }
 
+  let modalreport;
+
+  function openModalReport() {
+    modalreport.showModal();
+  }
+
   async function reportPost() {
-    if (isReport) {
-      if (!rq.isAdmin()) {
-        alert('이미 신고된 글 입니다.');
-        return;
-      } else {
-        const confirmCancelReport = confirm('글 신고를 취소하겠습니까?');
-        if (!confirmCancelReport) {
-          return;
-        }
-
-        const { data, error } = await rq
-          .apiEndPoints()
-          .PATCH(`/api/v1/admin/posts/{postId}/report`, {
-            params: { path: { postId: parseInt($page.params.id) } }
-          });
-
-        if (data) {
-          rq.msgInfo('신고가 취소되었습니다.');
-          isReport = !isReport;
-        } else if (error) {
-          rq.msgError(error.msg);
-        }
-
-        return;
-      }
-    }
-
-    const confirmReport = confirm('글을 신고하시겠습니까?');
-    if (!confirmReport) {
-      return;
-    }
-
-    const { data, error } = await rq.apiEndPoints().PATCH(`/api/v1/posts/{postId}/report`, {
-      params: { path: { postId: parseInt($page.params.id) } }
-    });
-
-    if (data) {
-      rq.msgInfo('신고 되었습니다.');
-      isReport = !isReport;
-    } else if (error) {
+    if (rq.isLogout()) {
       rq.msgError('로그인 후 이용 해 주세요');
       rq.goTo('/member/login');
+    }
+
+    if (selectedReason) {
+      const { data, error } = await rq.apiEndPoints().POST(`/api/v1/report/post/{postId}`, {
+        params: { path: { postId: parseInt($page.params.id) } },
+        body: {
+          reportReason: selectedReason,
+          materialId: parseInt($page.params.id)
+        }
+      });
+
+      if (data) {
+        rq.msgInfo('신고 되었습니다.');
+        modalreport.close();
+      }
+    } else {
+      rq.msgWarning('신고 사유를 선택 해 주세요');
     }
   }
 
@@ -359,40 +342,68 @@
             })()}
           </p>
         </div>
-        <div>
-          <button class="mr-5 pb-4" on:click={reportPost}>
-            {#if isReport}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="red"
-                class="w-8 h-8"
+        <div class="mb-2">
+          <a onclick={openModalReport} class=""
+            ><svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="black"
+              class="w-8 h-8"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+              />
+            </svg>
+          </a>
+          <dialog id="my_modal_3" class="modal" bind:this={modalreport}>
+            <div class="modal-box">
+              <button
+                class="mb-2 btn btn-sm btn-circle btn-ghost absolute right-2 top-2 focus:outline-none"
+                on:click={() => modalreport.close()}>✕</button
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
-                />
-              </svg>
-            {:else}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="black"
-                class="w-8 h-8"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
-                />
-              </svg>
-            {/if}
-          </button>
+              <div class="flex flex-col p-6 bg-white shadow rounded-lg">
+                <h2 class="text-xl font-semibold mb-4 pb-2">신고 사유 선택</h2>
+                <form>
+                  <div class="flex flex-col">
+                    <label class="mb-2">
+                      <input type="radio" name="reason" value="spam" bind:group={selectedReason} />
+                      관련성 없는 홍보 및 도배
+                    </label>
+                    <label class="mb-2">
+                      <input
+                        type="radio"
+                        name="reason"
+                        value="violence"
+                        bind:group={selectedReason}
+                      />
+                      성인물 · 폭력성
+                    </label>
+                    <label class="mb-2">
+                      <input
+                        type="radio"
+                        name="reason"
+                        value="demeaning"
+                        bind:group={selectedReason}
+                      />
+                      타인 비하
+                    </label>
+                  </div>
+                  <div class="flex justify-end mt-4">
+                    <button
+                      on:click={reportPost}
+                      class="inline-block px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-black hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      제출
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </div>
       </div>
 
