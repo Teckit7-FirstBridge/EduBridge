@@ -332,7 +332,7 @@
 {/await}
 <div class="max-w-4xl mx-auto">
   <div class="flex gap-x-4 relative items-center">
-    <button onclick={openModalCal} class="btn btn-sm text-xl m-4 bg-white border-white"
+    <button onclick={openModalCal} class="btn btn-sm text-xl m-4 bg-gray-100 border-white"
       >출석 체크</button
     >
     <dialog id="my_modal_3" class="modal" bind:this={calModal} on:click={handleOutsideClickCal}>
@@ -350,7 +350,7 @@
 
 <div class="max-w-4xl mx-auto">
   <div class="flex gap-x-4 relative items-center">
-    <button onclick={openModalNickname} class="btn btn-sm text-xl m-4 bg-white border-white"
+    <button onclick={openModalNickname} class="btn btn-sm text-xl m-4 bg-gray-100 border-white"
       >닉네임 변경</button
     >
     <dialog
