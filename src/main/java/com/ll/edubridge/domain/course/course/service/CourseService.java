@@ -6,6 +6,9 @@ import com.ll.edubridge.domain.course.course.dto.NumDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
+import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
+import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
+import com.ll.edubridge.domain.course.roadmap.service.RoadmapService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -29,7 +32,7 @@ public class CourseService {
     private final Rq rq;
     private final CourseEnrollRepository courseEnrollRepository;
     private final MemberService memberService;
-
+    private final RoadmapService roadmapService;
 
 
     public List<Course> findAll() {
@@ -43,9 +46,7 @@ public class CourseService {
     @Transactional
     public Course create(CreateCourseDto createCourseDto) {
 
-
         int price = 2000;
-
 
         Course course = Course.builder()
                 .title(createCourseDto.getTitle())
@@ -53,7 +54,6 @@ public class CourseService {
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .price(price)
-                .roadmapNum(0)
                 .writer_id(createCourseDto.getWriter_id())
                 .hashtags(createCourseDto.getHashtags())
                 .writer_nickname(memberService.getMember(createCourseDto.getWriter_id()).getNickname())
@@ -63,11 +63,13 @@ public class CourseService {
     }
 
     @Transactional
-    public void changeRoadmapNum(Long id, NumDto numDto){
+    public void changeRoadmapNum(Long roadmapId, Long courseId, NumDto numDto){
 
-        Course course = this.getCourse(id);
+        Roadmap roadmap = roadmapService.getRoadmap(roadmapId);
+        Course course = this.getCourse(courseId);
 
-        course.setRoadmapNum(numDto.getNum());
+        CourseRoadmap courseRoadmap = roadmapService.getCourseRoadmap(course, roadmap);
+        courseRoadmap.setCourseOrder(numDto.getNum());
 
         courseRepository.save(course);
     }
@@ -157,7 +159,7 @@ public class CourseService {
     }
 
     @Transactional
-    public Course startOrstop(Course course){
+    public Course startOrStop(Course course){
         course.setConfirm(!course.getConfirm());
         return courseRepository.save(course);
     }

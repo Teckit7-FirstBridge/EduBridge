@@ -4,7 +4,9 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.roadmap.dto.CreateRoadmapDto;
 import com.ll.edubridge.domain.course.roadmap.dto.RoadmapDto;
+import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
+import com.ll.edubridge.domain.course.roadmap.repository.CourseRoadmapRepository;
 import com.ll.edubridge.domain.course.roadmap.repository.RoadmapRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -27,6 +29,7 @@ public class RoadmapService {
     private final RoadmapRepository roadmapRepository;
     private final Rq rq;
     private final CourseRepository courseRepository;
+    private final CourseRoadmapRepository courseRoadmapRepository;
 
     public List<Roadmap> findAll() {
         return roadmapRepository.findAll();
@@ -49,8 +52,21 @@ public class RoadmapService {
         }
     }
 
-    public Roadmap getCourseRoadmap(Course course) {
-        return roadmapRepository.findByCurriculumContains(course);
+    // 강좌가 속한 로드맵 목록 찾기
+    public List<Roadmap> getCourseRoadmapList(Course course) {
+        return courseRoadmapRepository.findByCourse(course)
+                .stream()
+                .map(CourseRoadmap::getRoadmap)
+                .toList();
+    }
+
+    // CourseRoadmap 개체 찾기
+    public CourseRoadmap getCourseRoadmap(Course course, Roadmap roadmap) {
+        return courseRoadmapRepository.findByCourseAndRoadmap(course, roadmap);
+    }
+
+    public CourseRoadmap getCourseRoadmapById(Long id) {
+        return courseRoadmapRepository.findCourseRoadmapById(id);
     }
 
     public List<Roadmap> getMyRoadmaps(Member member) {
@@ -71,11 +87,16 @@ public class RoadmapService {
     }
 
     @Transactional
-    public void addCourse(Long id, Course course) {
+    public void addCourse(Long id, Course course, int courseOrder) {
+        // CourseRoadmap 테이블에 데이터 생성 (따라서, CreateDto 사용 X)
         Roadmap roadmap = this.getRoadmap(id);
+        CourseRoadmap courseRoadmap = new CourseRoadmap(course, roadmap, courseOrder);
+        courseRoadmapRepository.save(courseRoadmap);
 
-        course.setRoadmap(roadmap);
-
+        // roadmap의 CourseRoadmap 목록에 새로운 요소 추가
+        List<CourseRoadmap> roadmapList = course.getRoadmapList();
+        roadmapList.add(courseRoadmap);
+        course.setRoadmapList(roadmapList);
         courseRepository.save(course);
     }
 
@@ -83,9 +104,8 @@ public class RoadmapService {
         Roadmap roadmap = this.getRoadmap(id);
 
         roadmap.setTitle(roadmapDto.getTitle());
-        roadmap.setOverView(roadmap.getOverView());
-        roadmap.setCurriculum(roadmap.getCurriculum());
-        roadmap.setHashtags(roadmap.getHashtags());
+        roadmap.setOverView(roadmapDto.getOverView());
+        roadmap.setHashtags(roadmapDto.getHashtags());
 
         return roadmapRepository.save(roadmap);
     }
@@ -93,5 +113,15 @@ public class RoadmapService {
     public void delete(Long id) {
         Roadmap roadmap = this.getRoadmap(id);
         roadmapRepository.delete(roadmap);
+    }
+
+    public void courseRoadmapDelete(Long id) {
+        CourseRoadmap courseRoadmap = this.getCourseRoadmapById(id);
+        courseRoadmapRepository.delete(courseRoadmap);
+    }
+
+    public void courseRoadmapDelete(Roadmap roadmap, Course course) {
+        CourseRoadmap courseRoadmap = this.getCourseRoadmap(course, roadmap);
+        courseRoadmapRepository.delete(courseRoadmap);
     }
 }
