@@ -279,6 +279,10 @@ public class MemberService {
     public void dropMember(MemberDto memberDto) {
         Member member = this.getMember(memberDto.getId());
 
+        if(!rq.getMember().equals(member)) {
+            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
+        }
+
         member.setNickname("탈퇴한 회원");
         member.setUsername(member.getUsername() + "_deleted_" + LocalDate.now()); // unique
         member.setPassword("");
