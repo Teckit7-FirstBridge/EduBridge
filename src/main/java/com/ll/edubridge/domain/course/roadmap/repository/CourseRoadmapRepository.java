@@ -13,4 +13,6 @@ public interface CourseRoadmapRepository extends JpaRepository<CourseRoadmap, Lo
     List<CourseRoadmap> findByCourse(Course course);
 
     CourseRoadmap findByCourseAndRoadmap(Course course, Roadmap roadmap);
+
+    CourseRoadmap findCourseRoadmapById(Long id);
 }

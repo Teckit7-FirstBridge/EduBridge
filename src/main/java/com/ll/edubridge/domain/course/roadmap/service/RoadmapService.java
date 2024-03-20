@@ -65,6 +65,10 @@ public class RoadmapService {
         return courseRoadmapRepository.findByCourseAndRoadmap(course, roadmap);
     }
 
+    public CourseRoadmap getCourseRoadmapById(Long id) {
+        return courseRoadmapRepository.findCourseRoadmapById(id);
+    }
+
     public List<Roadmap> getMyRoadmaps(Member member) {
         return roadmapRepository.findByOwner(member.getUsername());
     }
@@ -84,11 +88,13 @@ public class RoadmapService {
 
     @Transactional
     public void addCourse(Long id, Course course, int courseOrder) {
+        // CourseRoadmap 테이블에 데이터 생성
         Roadmap roadmap = this.getRoadmap(id);
         CourseRoadmap courseRoadmap = new CourseRoadmap(course, roadmap, courseOrder);
         courseRoadmapRepository.save(courseRoadmap);
 
         // 잘 작동하지 않으면 위 작업 메서드 분리해서 호출할 것
+        // roadmap의 CourseRoadmap 목록에 새로운 요소 추가
         List<CourseRoadmap> roadmapList = course.getRoadmapList();
         roadmapList.add(courseRoadmap);
         course.setRoadmapList(roadmapList);
@@ -109,5 +115,15 @@ public class RoadmapService {
     public void delete(Long id) {
         Roadmap roadmap = this.getRoadmap(id);
         roadmapRepository.delete(roadmap);
+    }
+
+    public void courseRoadmapDelete(Long id) {
+        CourseRoadmap courseRoadmap = this.getCourseRoadmapById(id);
+        courseRoadmapRepository.delete(courseRoadmap);
+    }
+
+    public void courseRoadmapDelete(Roadmap roadmap, Course course) {
+        CourseRoadmap courseRoadmap = this.getCourseRoadmap(course, roadmap);
+        courseRoadmapRepository.delete(courseRoadmap);
     }
 }

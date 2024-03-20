@@ -1,6 +1,5 @@
 package com.ll.edubridge.domain.course.roadmap.repository;
 
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,7 +13,6 @@ public interface RoadmapRepository extends JpaRepository<Roadmap, Long>, CustomR
 
     List<Roadmap> findByOwner(String owner);
 
-    Roadmap findByCurriculumContains(Course course);
-//
-//    Roadmap findByCurriculumContains(CourseRoadmap courseRoadmap);
+    // Roadmap findByCurriculumContains(Course course);
+
 }
