@@ -3,6 +3,7 @@ package com.ll.edubridge.domain.course.roadmap.dto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
+import com.ll.edubridge.domain.member.member.entity.Member;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
@@ -19,7 +20,7 @@ public class CreateCourseRoadmapDto {
     private int courseOrder;
 
     @NonNull
-    private String RoadmapOwner; // username
+    private Member RoadmapOwner;
 
     public CreateCourseRoadmapDto(CourseRoadmap courseRoadmap) {
         this.course = courseRoadmap.getCourse();

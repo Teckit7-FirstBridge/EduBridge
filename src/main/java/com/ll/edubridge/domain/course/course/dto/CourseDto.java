@@ -18,7 +18,7 @@ public class CourseDto {
     private int videoCount;
     private Boolean confirm;
     private int enrollCount;
-    private Long writer_id;;
+    private Member writer;;
     private String hashtags;
 
 
@@ -34,7 +34,7 @@ public class CourseDto {
         this.videoCount = course.getVideoList().size();
         this.confirm = course.getConfirm();
         this.enrollCount = course.getCourseEnrollList().size();
-        this.writer_id = course.getWriter_id();
+        this.writer = course.getWriter();
         this.hashtags = course.getHashtags();
     }
 

@@ -52,18 +52,13 @@ public class Course extends BaseEntity {
     @ManyToMany
     Set<Member> voter;
 
-//    private int roadmapNum;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Roadmap roadmap;
-
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     private List<CourseRoadmap> roadmapList;
 
     private String hashtags;
 
-    private Long writer_id;
-
-    private String writer_nickname;
+    @JsonIgnore
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Member writer;
 
 }

@@ -80,7 +80,7 @@ public class RoadmapService {
                 .title(createroadmapDto.getTitle())
                 .overView(createroadmapDto.getOverView())
                 .hashtags(createroadmapDto.getHashtags())
-                .owner(rq.getMember().getUsername())
+                .owner(rq.getMember())
                 .build();
 
         return roadmapRepository.save(roadmap);

@@ -91,6 +91,6 @@ public class VideoService {
     @Transactional
     public boolean haveAuthority(Course course) {
         Member member = rq.getMember();
-        return member.getId().equals(course.getWriter_id());
+        return member.getId().equals(course.getWriter().getId());
     }
 }
