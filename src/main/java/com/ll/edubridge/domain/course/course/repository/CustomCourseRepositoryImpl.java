@@ -90,7 +90,7 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
     }
 
     @Override
-    public Page<Course> findByWriterId(Member author, Pageable pageable) {
+    public Page<Course> findByWriter(Member author, Pageable pageable) {
         List<Course> fetch = queryFactory.selectFrom(course)
                 .where(course.writer.id.eq(author.getId()))
                 .fetch();

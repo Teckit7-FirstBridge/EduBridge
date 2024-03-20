@@ -70,7 +70,7 @@ public class RoadmapService {
     }
 
     public List<Roadmap> getMyRoadmaps(Member member) {
-        return roadmapRepository.findByOwner(member.getUsername());
+        return roadmapRepository.findByOwner(member);
     }
 
     @Transactional
