@@ -83,6 +83,7 @@ public class CourseEnrollService {
     }
 
     public void delete(Member member) {
-        courseEnrollRepository.deleteAll(member.getCourseEnrollList());
+        courseEnrollRepository.deleteAll(courseEnrollRepository.findByMember(member));
+        // courseEnrollRepository.deleteAll(member.getCourseEnrollList());
     }
 }

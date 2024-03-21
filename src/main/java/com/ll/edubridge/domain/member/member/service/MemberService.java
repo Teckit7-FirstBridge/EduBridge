@@ -1,7 +1,6 @@
 package com.ll.edubridge.domain.member.member.service;
 
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
-import com.ll.edubridge.domain.member.member.dto.MemberDto;
 import com.ll.edubridge.domain.member.member.dto.NickNameDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
@@ -276,12 +275,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void dropMember(MemberDto memberDto) {
-        Member member = this.getMember(memberDto.getId());
-
-        if(!rq.getMember().equals(member)) {
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
-        }
+    public void dropMember() {
+        Member member = rq.getMember();
 
         member.setNickname("탈퇴한 회원");
         member.setUsername(member.getUsername() + "_deleted_" + LocalDate.now()); // unique
@@ -291,10 +286,10 @@ public class MemberService {
         member.setProfileImgUrl("");
         member.setPoint(0);
         member.setEnrollCount(0);
-        member.setCourseEnrollList(null);
 
         courseEnrollService.delete(member);
 
         memberRepository.save(member);
+        rq.setLogout();
     }
 }

@@ -147,8 +147,8 @@ public class ApiV1MemberController {
     // 회원 탈퇴지만 DB에서 삭제하지 않기 때문에 drop으로 명시
     @PutMapping("/drop")
     @Operation(summary = "회원 탈퇴")
-    public RsData<Empty> drop(@RequestBody MemberDto memberDto) {
-        memberService.dropMember(memberDto);
+    public RsData<Empty> drop() {
+        memberService.dropMember();
 
         return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
                 Msg.E200_3_DELETE_SUCCEED.getMsg());
