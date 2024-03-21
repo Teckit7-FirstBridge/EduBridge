@@ -41,7 +41,7 @@ public class PostDto {
         this.authorName = post.getWriter().getNickname();
         this.title = post.getTitle();
         this.body = post.getContent();
-        this.voteCount = post.getVoteCount();
+        this.voteCount = post.getPostVoters().size();
         this.likedByCurrentUser = post.getPostVoters().contains(new PostVoter(post,member));
         this.isReport = post.isReport();
         this.commentCount = post.getCommentList().size();

@@ -33,7 +33,6 @@ public class Comment extends BaseEntity {
     @ManyToOne(optional = false)
     private Member writer;
 
-    @Formula("(select count(*) from comment_voter cv where cv.comment_id = id)")
+    @Formula("(select count(*) from comment_member cm where cm.comment_id = id)")
     private int voteCount;
-
 }
