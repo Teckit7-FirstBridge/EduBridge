@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.course.course.controller;
 
 
+import com.ll.edubridge.domain.CourseVoter.service.CourseVoterService;
 import com.ll.edubridge.domain.course.course.dto.CourseAuthDto;
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
@@ -45,6 +46,7 @@ public class ApiV1CourseController {
     private final Rq rq;
     private final CourseEnrollService courseEnrollService;
     private final MemberService memberService;
+    private final CourseVoterService courseVoterService;
 
     @Getter
     public class GetCoursesResponsebody {
@@ -80,10 +82,11 @@ public class ApiV1CourseController {
     @Operation(summary = "강좌 수정")
     public RsData<CourseDto> modifyCourse(
             @PathVariable("id") Long id,
-            @RequestBody CourseDto courseDto) {
+            @RequestBody CreateCourseDto courseDto) {
 
+        Course course = courseService.getCourse(id);
 
-        if (!courseService.haveAuthority(courseDto.getWriter().getId()))
+        if (!courseService.haveAuthority(course.getWriter().getId()))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Course modifyCourse = courseService.modify(id, courseDto);
@@ -218,12 +221,11 @@ public class ApiV1CourseController {
     @Operation(summary = "강좌 좋아요")
     public RsData<Void> vote(@PathVariable("id") Long id) {
         Member member = rq.getMember();
-
-        if (!courseService.canLike(member, courseService.getCourse(id))) {
+        Course course = courseService.getCourse(id);
+        if (!courseVoterService.canLike(member,course)) {
             throw new GlobalException(CodeMsg.E400_1_ALREADY_RECOMMENDED.getCode(),CodeMsg.E400_1_ALREADY_RECOMMENDED.getMessage());
         }
-
-        courseService.vote(id, member);
+        courseVoterService.vote( member,course);
 
         return RsData.of(Msg.E200_4_RECOMMEND_SUCCEED.getCode(),
                 Msg.E200_4_RECOMMEND_SUCCEED.getMsg());
@@ -233,12 +235,13 @@ public class ApiV1CourseController {
     @Operation(summary = "강좌 좋아요 취소")
     public RsData<Void> deleteVote(@PathVariable("id") Long id) {
         Member member = rq.getMember();
+        Course course = courseService.getCourse(id);
 
-        if (!courseService.canCancelLike(member, courseService.getCourse(id))) {
+        if (!courseVoterService.canCancelLike(member, course)) {
             throw new GlobalException(CodeMsg.E400_2_NOT_RECOMMENDED_YET.getCode(),CodeMsg.E400_2_NOT_RECOMMENDED_YET.getMessage());
         }
 
-        courseService.deleteVote(id, member);
+        courseVoterService.deleteVote(course, member);
 
         return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getCode(),
                 Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getMsg());

@@ -3,7 +3,6 @@ package com.ll.edubridge.domain.course.roadmap.service;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.roadmap.dto.CreateRoadmapDto;
-import com.ll.edubridge.domain.course.roadmap.dto.RoadmapDto;
 import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
 import com.ll.edubridge.domain.course.roadmap.repository.CourseRoadmapRepository;
@@ -34,7 +33,6 @@ public class RoadmapService {
     public List<Roadmap> findAll() {
         return roadmapRepository.findAll();
     }
-
     public Optional<Roadmap> findById(Long id) {
         return roadmapRepository.findById(id);
     }
@@ -88,19 +86,29 @@ public class RoadmapService {
 
     @Transactional
     public void addCourse(Long id, Course course, int courseOrder) {
-        // CourseRoadmap 테이블에 데이터 생성 (따라서, CreateDto 사용 X)
-        Roadmap roadmap = this.getRoadmap(id);
-        CourseRoadmap courseRoadmap = new CourseRoadmap(course, roadmap, courseOrder);
-        courseRoadmapRepository.save(courseRoadmap);
 
-        // roadmap의 CourseRoadmap 목록에 새로운 요소 추가
-        List<CourseRoadmap> roadmapList = course.getRoadmapList();
-        roadmapList.add(courseRoadmap);
-        course.setRoadmapList(roadmapList);
-        courseRepository.save(course);
+        Roadmap roadmap = this.getRoadmap(id);
+
+        if(courseRoadmapRepository.existsByCourseAndRoadmap(course, roadmap)){
+            this.changeCourseOrder(course, roadmap, courseOrder);
+        }else {
+            CourseRoadmap courseRoadmap = new CourseRoadmap(course, roadmap, courseOrder);
+            courseRoadmapRepository.save(courseRoadmap);
+        }
     }
 
-    public Roadmap modify(Long id, RoadmapDto roadmapDto) {
+    @Transactional
+    public void changeCourseOrder(Course course, Roadmap roadmap, int courseOrder) {
+
+        CourseRoadmap courseRoadmap = courseRoadmapRepository.findByCourseAndRoadmap(course, roadmap);
+
+        courseRoadmap.setCourseOrder(courseOrder);
+
+        courseRoadmapRepository.save(courseRoadmap);
+    }
+
+    @Transactional
+    public Roadmap modify(Long id, CreateRoadmapDto roadmapDto) {
         Roadmap roadmap = this.getRoadmap(id);
 
         roadmap.setTitle(roadmapDto.getTitle());
@@ -110,6 +118,7 @@ public class RoadmapService {
         return roadmapRepository.save(roadmap);
     }
 
+    @Transactional
     public void delete(Long id) {
         Roadmap roadmap = this.getRoadmap(id);
         roadmapRepository.delete(roadmap);

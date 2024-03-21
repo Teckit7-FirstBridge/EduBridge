@@ -14,7 +14,7 @@ public interface CustomCourseRepository {
 
     Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author, Pageable pageable);
     List<Course> findLatestCourse(int num);
-    List<Course> findByVoter(Member member);
+//    List<Course> findByVoter(Member member);
 
     Page<Course> findByWriter(Member writer, Pageable pageable);
 }

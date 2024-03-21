@@ -33,23 +33,13 @@ public class RoadmapDto {
     private String hashtags;
 
     @NonNull
-    private String owner;
+    private Member owner;
 
     @NonNull
     private List<Roadmap> roadmapList;
 
-    public RoadmapDto(List<Roadmap> roadmapList, String username) {
+    public RoadmapDto(List<Roadmap> roadmapList) {
         this.roadmapList = roadmapList;
-        this.owner = username;
-    }
-
-    public RoadmapDto(Roadmap roadmap, Member member) {
-        this.id = roadmap.getId();
-        this.title = roadmap.getTitle();
-        this.overView = roadmap.getOverView();
-        this.curriculum = roadmap.getCurriculum();
-        this.hashtags = roadmap.getHashtags();
-        this.owner = member.getUsername();
     }
 
     public RoadmapDto(Roadmap roadmap) {
@@ -58,7 +48,9 @@ public class RoadmapDto {
         this.overView = roadmap.getOverView();
         this.curriculum = roadmap.getCurriculum();
         this.hashtags = roadmap.getHashtags();
+        this.owner = roadmap.getOwner();
     }
+
 
     public RoadmapDto() {}
 }

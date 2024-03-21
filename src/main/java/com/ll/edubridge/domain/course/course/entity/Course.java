@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.course.course.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.video.entity.Video;
@@ -49,15 +50,15 @@ public class Course extends BaseEntity {
     private List<CourseEnroll> courseEnrollList;
 
     @JsonIgnore
-    @ManyToMany
-    Set<Member> voter;
+    @OneToMany(mappedBy = "course",cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private Set<CourseVoter> courseVoters;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     private List<CourseRoadmap> roadmapList;
 
     private String hashtags;
 
-    @JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Member writer;
 

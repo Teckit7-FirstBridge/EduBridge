@@ -39,7 +39,7 @@
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
-
+    selectedTab = $page.url.searchParams.get('tab') ?? 'course';
     if (selectedTab === 'course') {
       const { data } = await rq.apiEndPoints().GET('/api/v1/courses/mycourse', {
         params: {}
@@ -55,6 +55,23 @@
       });
       roadmaplist = data?.data;
       return data!;
+    }
+  }
+
+  async function deleteRoadmap(id) {
+    const isConfirmed = confirm('로드맵을 삭제하시겠습니까?');
+
+    if (isConfirmed) {
+      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/roadmap/roadmaps/{id}`, {
+        params: { path: { id: parseInt($page.params.id), id: id } }
+      });
+
+      if (data) {
+        rq.msgInfo('로드맵이 삭제되었습니다');
+        window.location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
     }
   }
 
@@ -213,9 +230,9 @@
         <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {#if roadmaplist}
             {#each roadmaplist as item}
-              <div class="border collapse bg-white">
+              <div class="border collapse bg-white peer-checked:border-blue-600">
                 <input type="checkbox" class="peer" />
-                <div class="collapse-title bg-white peer-checked:bg-yellow-50">
+                <div class="collapse-title bg-white">
                   <div class="rounded-lg dark:border-gray-800 flex-col text-center">
                     <div class="flex justify-between gap-2">
                       <h2 class="text-lg font-semibold ml-2">{formatTitle(item.title)}</h2>
@@ -240,16 +257,31 @@
                   </p>
                   {#if item.curriculum}
                     <div class="flex flex-col">
-                      {#each item.curriculum.sort((a, b) => a.roadmapNum - b.roadmapNum || a.id - b.id) as curriculum, index}
+                      {#each item.curriculum.sort((a, b) => a.courseOrder - b.courseOrder || a.id - b.id) as curriculum, index}
                         <a href="/course/{curriculum.id}">
                           <div
                             class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
                           >
-                            {index + 1}. {curriculum.title}
-                            [{curriculum.roadmapNum}번 강좌]
+                            {index + 1}. {curriculum.course?.title}
+                            [{curriculum.courseOrder}번 강좌]
                           </div>
                         </a>
                       {/each}
+                    </div>
+                  {/if}
+                  {#if item.owner.id == rq.member.id}
+                    <div class="flex justify-end">
+                      <a
+                        href="/roadmap/edit/{item.id}"
+                        class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                        >수정</a
+                      >
+                      <button
+                        on:click={() => deleteRoadmap(item.id)}
+                        class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                      >
+                        삭제
+                      </button>
                     </div>
                   {/if}
                 </div>

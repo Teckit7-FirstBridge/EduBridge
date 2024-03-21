@@ -42,6 +42,8 @@
     comments = responseComment.data?.data!;
     commentLikedNum = comments.map((comment) => comment.voteCount!);
     commentLikedByCurrentUser = comments.map((comment) => comment.likedByCurrentUser!);
+    console.log('comments:');
+    console.log(comments);
 
     const responseBestComment = await rq.apiEndPoints().GET(`/api/v1/comments/{postId}/top`, {
       params: {
@@ -64,6 +66,7 @@
     post = responsePost.data?.data!;
     likedNum = post.voteCount;
     likedByCurrentUser = post.likedByCurrentUser;
+    console.log(responsePost);
     return { comments, post };
   }
 

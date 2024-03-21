@@ -1,6 +1,5 @@
 package com.ll.edubridge.domain.course.course.service;
 
-import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.dto.NumDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
@@ -50,7 +49,7 @@ public class CourseService {
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .price(price)
-                .writer(createCourseDto.getWriter())
+                .writer(rq.getMember())
                 .hashtags(createCourseDto.getHashtags())
                 .build();
 
@@ -70,7 +69,7 @@ public class CourseService {
     }
 
     @Transactional
-    public Course modify(Long id, CourseDto courseDto) {
+    public Course modify(Long id, CreateCourseDto courseDto) {
         Course course = this.getCourse(id);
 
         course.setTitle(courseDto.getTitle());
@@ -120,37 +119,6 @@ public class CourseService {
 
     public List<Course> findLatestCourse(int num) {
         return courseRepository.findLatestCourse(num);
-    }
-
-    @Transactional
-    public void vote(Long id, Member member) {
-        Course course = this.getCourse(id);
-        course.getVoter().add(member);
-        courseRepository.save(course);
-    }
-
-    @Transactional
-    public void deleteVote(Long id, Member member){
-        Course course = this.getCourse(id);
-        course.getVoter().remove(member);
-        courseRepository.save(course);
-    }
-
-    public boolean canLike(Member member, Course course) {
-        if (member == null) return false;
-        if (course == null) return false;
-
-        return !course.getVoter().contains(member);
-    }
-    public boolean canCancelLike(Member member, Course course) {
-        if (member == null) return false;
-        if (course == null) return false;
-
-        return course.getVoter().contains(member);
-    }
-
-    public List<Course> findByVoter(Member member){
-        return courseRepository.findByVoter(member);
     }
 
     @Transactional

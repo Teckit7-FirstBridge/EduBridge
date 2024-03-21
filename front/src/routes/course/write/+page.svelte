@@ -70,14 +70,13 @@
         notice: newNoti,
         overView: newOverview,
         imgUrl: imgUrl,
-        writer_id: rq.member.id,
         hashtags: tags.join('@')
       }
     });
 
     if (data) {
       rq.msgInfo(data.msg); //msg
-      rq.goTo('/course');
+      rq.goTo('/member/mycourse');
     }
   };
 

@@ -49,14 +49,14 @@ public class ApiV1RoadmapController {
 
         public GetRoadmapsResponsebody(Page<Roadmap> page) {
             this.items = page.getContent().stream()
-                    .map(roadmap -> new RoadmapDto(roadmap, rq.getMember()))
+                    .map(RoadmapDto::new)
                     .toList();
         }
     }
 
     @GetMapping(value = "")
     @Operation(summary = "로드맵 다건 조회")
-    public RsData<ApiV1RoadmapController.GetRoadmapsResponsebody> getRoadmaps(
+    public RsData<GetRoadmapsResponsebody> getRoadmaps(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "") String kw,
             @RequestParam(defaultValue = "ALL") KwTypeCourse kwType
@@ -67,7 +67,7 @@ public class ApiV1RoadmapController {
 
         Page<Roadmap> roadmapPage = roadmapService.findByKw(kwType, kw, pageable);
 
-        ApiV1RoadmapController.GetRoadmapsResponsebody responseBody = new ApiV1RoadmapController.GetRoadmapsResponsebody(roadmapPage);
+        GetRoadmapsResponsebody responseBody = new GetRoadmapsResponsebody(roadmapPage);
 
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
@@ -95,19 +95,19 @@ public class ApiV1RoadmapController {
     @Operation(summary = "로드맵 아이디로 로드맵 단건 조회")
     public RsData<RoadmapDto> getRoadmapById(@PathVariable("roadmapId") Long roadmapId) {
         Roadmap roadmap = roadmapService.getRoadmap(roadmapId);
-        RoadmapDto roadmapDto = new RoadmapDto(roadmap, rq.getMember());
+        Member member = roadmap.getOwner();
+        RoadmapDto roadmapDto = new RoadmapDto(roadmap);
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(), roadmapDto);
     }
 
-    @GetMapping("/{courseId}")
+    @GetMapping("/byCourse/{courseId}")
     @Operation(summary = "강좌로 로드맵 목록 조회")
     public RsData<RoadmapDto> getRoadmapByCourse(@PathVariable("courseId") Long courseId) {
         Course course = courseService.getCourse(courseId);
         List<Roadmap> roadmapList = roadmapService.getCourseRoadmapList(course);
-        Member member = memberService.getMember(course.getWriter().getId());
-        RoadmapDto roadmapDto = new RoadmapDto(roadmapList, member.getUsername());
+        RoadmapDto roadmapDto = new RoadmapDto(roadmapList);
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(), roadmapDto);
@@ -144,11 +144,11 @@ public class ApiV1RoadmapController {
     @Operation(summary = "로드맵 수정")
     public RsData<RoadmapDto> modifyRoadmap(
             @PathVariable("id") Long id,
-            @RequestBody RoadmapDto roadmapDto) {
+            @RequestBody CreateRoadmapDto roadmapDto) {
 
         Roadmap modifyRoadmap = roadmapService.modify(id, roadmapDto);
 
-        RoadmapDto modifyCourseDto = new RoadmapDto(modifyRoadmap, rq.getMember());
+        RoadmapDto modifyCourseDto = new RoadmapDto(modifyRoadmap);
 
         return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
                 Msg.E200_2_MODIFY_SUCCEED.getMsg(), modifyCourseDto);
@@ -177,7 +177,7 @@ public class ApiV1RoadmapController {
                 Msg.E200_3_DELETE_SUCCEED.getMsg());
     }
 
-    @DeleteMapping("/roadmaps/{courseRoadmapId}")
+    @DeleteMapping("/roadmaps/course/{courseRoadmapId}")
     @Operation(summary = "특정 강좌를 어떤 로드맵에서 삭제 by courseRoadmap id")
     public RsData<Empty> courseRoadmapDelete(@PathVariable("courseRoadmapId") Long courseRoadmapId) {
 

@@ -64,9 +64,9 @@ public class MemberService {
                 .uuid(generateRandomString())
                 .build();
 
-        pointService.addPoint(PointType.Welcome, member); // 포인트 내역 추가
-
         memberRepository.save(member);
+
+        pointService.addPoint(PointType.Welcome, member); // 포인트 내역 추가
 
         return RsData.of("200", "%s님 환영합니다. 회원가입이 완료되었습니다. 로그인 후 이용해주세요.".formatted(member.getUsername()), member);
     }

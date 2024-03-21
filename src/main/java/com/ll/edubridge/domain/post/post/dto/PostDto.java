@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.post.post.dto;
 
+import com.ll.edubridge.domain.PostVoter.entity.PostVoter;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import lombok.Getter;
@@ -40,8 +41,8 @@ public class PostDto {
         this.authorName = post.getWriter().getNickname();
         this.title = post.getTitle();
         this.body = post.getContent();
-        this.voteCount = post.getVoteCount();
-        this.likedByCurrentUser = post.getVoter().contains(member);
+        this.voteCount = post.getPostVoters().size();
+        this.likedByCurrentUser = post.getPostVoters().contains(new PostVoter(post,member));
         this.isReport = post.isReport();
         this.commentCount = post.getCommentList().size();
     }

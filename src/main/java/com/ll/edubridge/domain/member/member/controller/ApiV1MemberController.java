@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.member.member.controller;
 
 
+import com.ll.edubridge.domain.CourseVoter.service.CourseVoterService;
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.member.member.dto.MemberDto;
@@ -29,6 +30,7 @@ public class ApiV1MemberController {
     private final MemberService memberService;
     private final Rq rq;
     private final CourseService courseService;
+    private final CourseVoterService courseVoterService;
 
     public record LoginRequestBody(@NotBlank String username, @NotBlank String password) {
     }
@@ -122,7 +124,11 @@ public class ApiV1MemberController {
                 .stream()
                 .map(courseEnroll -> new CourseDto(courseEnroll.getCourse(), member))
                 .collect(Collectors.toList());
-        List<CourseDto> likeCourses = courseService.findByVoter(member).stream().map(course -> new CourseDto(course,member)).collect(Collectors.toList());
+
+        member.getCourseVoters().stream().forEach(courseVoter1 -> System.out.println(courseVoter1.getMember() + " voted for " + courseVoter1.getCourse()));
+
+
+        List<CourseDto> likeCourses = member.getCourseVoters().stream().map(courseVoter -> new CourseDto(courseVoter.getCourse(), member)).toList();
 
         MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,memberDto);
         return RsData.of("200","성공",
