@@ -68,7 +68,7 @@
 
       if (data) {
         rq.msgInfo('로드맵이 삭제되었습니다');
-        rq.goTo('/member/mycourse');
+        window.location.reload();
       } else if (error) {
         rq.msgError(error.msg);
       }

@@ -1,9 +1,9 @@
 package com.ll.edubridge.domain.member.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
 import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.PostVoter.entity.PostVoter;
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
 import com.ll.edubridge.standard.util.Ut;
@@ -57,12 +57,15 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
 
     private String uuid;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private Set<CourseVoter> courseVoters;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member" , cascade = CascadeType.REMOVE)
     private Set<PostVoter> postVoters;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member" , cascade = CascadeType.REMOVE)
     private Set<CommentVoter> commentVoters;
 
