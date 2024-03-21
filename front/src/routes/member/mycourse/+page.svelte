@@ -39,7 +39,7 @@
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
-
+    selectedTab = $page.url.searchParams.get('tab') ?? 'course';
     if (selectedTab === 'course') {
       const { data } = await rq.apiEndPoints().GET('/api/v1/courses/mycourse', {
         params: {}
