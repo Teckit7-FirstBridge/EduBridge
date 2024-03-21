@@ -240,13 +240,13 @@
                   </p>
                   {#if item.curriculum}
                     <div class="flex flex-col">
-                      {#each item.curriculum.sort((a, b) => a.roadmapNum - b.roadmapNum || a.id - b.id) as curriculum, index}
+                      {#each item.curriculum.sort((a, b) => a.courseOrder - b.courseOrder || a.id - b.id) as curriculum, index}
                         <a href="/course/{curriculum.id}">
                           <div
                             class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
                           >
-                            {index + 1}. {curriculum.title}
-                            [{curriculum.roadmapNum}번 강좌]
+                            {index + 1}. {curriculum.course?.title}
+                            [{curriculum.courseOrder}번 강좌]
                           </div>
                         </a>
                       {/each}

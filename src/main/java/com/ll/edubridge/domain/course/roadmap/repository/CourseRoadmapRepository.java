@@ -12,6 +12,8 @@ import java.util.List;
 public interface CourseRoadmapRepository extends JpaRepository<CourseRoadmap, Long> {
     List<CourseRoadmap> findByCourse(Course course);
 
+    boolean existsByCourseAndRoadmap(Course course, Roadmap roadmap);
+
     CourseRoadmap findByCourseAndRoadmap(Course course, Roadmap roadmap);
 
     CourseRoadmap findCourseRoadmapById(Long id);
