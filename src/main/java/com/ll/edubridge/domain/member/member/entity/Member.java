@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.member.member.entity;
 
+import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
 import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.PostVoter.entity.PostVoter;
 import com.ll.edubridge.domain.course.course.entity.Course;
@@ -61,6 +62,9 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
 
     @OneToMany(mappedBy = "member" , cascade = CascadeType.REMOVE)
     private Set<PostVoter> postVoters;
+
+    @OneToMany(mappedBy = "member" , cascade = CascadeType.REMOVE)
+    private Set<CommentVoter> commentVoters;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CourseEnroll> courseEnrollList;
