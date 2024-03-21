@@ -22,6 +22,8 @@
 
   let modalNickname;
 
+  let modalDropMessage;
+
   const updateNickname = async () => {
     const { data, error } = await rq.apiEndPoints().PUT('/api/v1/members/modifyNickName', {
       body: {
@@ -34,6 +36,17 @@
       console.log(newNickname);
     } else {
       rq.msgError('변경 오류');
+    }
+  };
+
+  const goodBye = async () => {
+    const { data, error } = await rq.apiEndPoints().PUT('/api/v1/members/drop');
+    if (data) {
+      rq.msgInfo('안녕히 가십시오! 더 밝은 내일을 기원합니다 :)');
+      rq.logout();
+      rq.goTo('/');
+    } else {
+      rq.msgError('권한 확인이 필요합니다.');
     }
   };
 
@@ -67,6 +80,20 @@
     if (event.target === modalpoint) {
       modalpoint.close();
     }
+  }
+
+  function openModalDropMessage() {
+    modalDropMessage.showModal();
+  }
+
+  function handleOutsideDropMessage(event) {
+    if (event.target === modalDropMessage) {
+      modalDropMessage.close();
+    }
+  }
+
+  function closeDropMessage() {
+    modalDropMessage.close();
   }
 
   let point: components['schemas']['PointDto'] = $state();
@@ -332,7 +359,7 @@
 {/await}
 <div class="max-w-4xl mx-auto">
   <div class="flex gap-x-4 relative items-center">
-    <button onclick={openModalCal} class="btn btn-sm text-xl m-4 bg-white border-white"
+    <button onclick={openModalCal} class="btn btn-sm text-xl m-4 bg-gray-100 border-white"
       >출석 체크</button
     >
     <dialog id="my_modal_3" class="modal" bind:this={calModal} on:click={handleOutsideClickCal}>
@@ -350,7 +377,7 @@
 
 <div class="max-w-4xl mx-auto">
   <div class="flex gap-x-4 relative items-center">
-    <button onclick={openModalNickname} class="btn btn-sm text-xl m-4 bg-white border-white"
+    <button onclick={openModalNickname} class="btn btn-sm text-xl m-4 bg-gray-100 border-white"
       >닉네임 변경</button
     >
     <dialog
@@ -372,6 +399,44 @@
             placeholder="새 닉네임 입력"
           />
           <button onclick={updateNickname} class="btn mt-4">변경하기</button>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</div>
+
+<div class="max-w-4xl mx-auto">
+  <div class="flex gap-x-4 relative items-center">
+    <button onclick={openModalDropMessage} class="btn btn-sm text-xl m-4 bg-gray-100 border-white"
+      >회원 탈퇴</button
+    >
+    <dialog
+      id="my_modal_3"
+      class="modal"
+      bind:this={modalDropMessage}
+      on:click={handleOutsideDropMessage}
+    >
+      <div class="modal-box">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <div class="flex flex-col bg-white shadow rounded-lg mt-4">
+          <div>탈퇴 전 안내사항을 숙지해주시기 바랍니다.</div>
+          <p>
+            1. 왜 떠나시는 건지 말해주고 가세요. 화면에 대고 육성으로 뱉으시면 알아서
+            수집하겠습니다.<br />
+            2. 걱정하지 마세요. 내용만 수집할 뿐 목소리 정보는 수집하지 않습니다. 찾아가지도 않아요.<br
+            />
+            농담입니다.<br />
+            3. 해당 계정으로 작성된 글, 댓글, 강좌, 로드맵에는 모두 '탈퇴한 회원'으로 표시됩니다.<br
+            />
+            4. 같은 소셜 계정으로 다시 회원가입을 하는 경우 만 하루가 지난 시점이어야 합니다.
+          </p>
+          <div class="flex justify-between">
+            <button onclick={closeDropMessage} class="btn mt-4">마이 페이지로<br /> 돌아가기</button
+            >
+            <button onclick={goodBye} class="btn mt-4">눈물을 머금고<br /> 이별하기</button>
+          </div>
         </div>
       </div>
     </dialog>

@@ -406,9 +406,9 @@ export interface components {
       uuid?: string;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
-      authoritiesAsStringList?: string[];
     };
     Roadmap: {
       /** Format: int64 */
@@ -507,26 +507,6 @@ export interface components {
       data: components["schemas"]["NickNameDto"];
       fail: boolean;
       success: boolean;
-    };
-    MemberDto: {
-      /** Format: int64 */
-      id: number;
-      /** Format: date-time */
-      createDate: string;
-      name: string;
-      username: string;
-      profileImgUrl: string;
-      authorities: string[];
-      visitedToday: boolean;
-      /** Format: int32 */
-      dailyGoal: number;
-      /** Format: int32 */
-      dailyAchievement: number;
-      /** Format: int32 */
-      point?: number;
-      /** Format: int32 */
-      enrollCount?: number;
-      uuid?: string;
     };
     CreateSummaryNoteDto: {
       content: string;
@@ -695,6 +675,26 @@ export interface components {
     };
     LoginResponseBody: {
       item: components["schemas"]["MemberDto"];
+    };
+    MemberDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      name: string;
+      username: string;
+      profileImgUrl: string;
+      authorities: string[];
+      visitedToday: boolean;
+      /** Format: int32 */
+      dailyGoal: number;
+      /** Format: int32 */
+      dailyAchievement: number;
+      /** Format: int32 */
+      point?: number;
+      /** Format: int32 */
+      enrollCount?: number;
+      uuid?: string;
     };
     RsDataLoginResponseBody: {
       resultCode: string;
@@ -1463,11 +1463,6 @@ export interface operations {
   };
   /** 회원 탈퇴 */
   drop: {
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["MemberDto"];
-      };
-    };
     responses: {
       /** @description OK */
       200: {

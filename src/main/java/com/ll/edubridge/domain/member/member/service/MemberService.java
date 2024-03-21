@@ -1,7 +1,6 @@
 package com.ll.edubridge.domain.member.member.service;
 
 import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
-import com.ll.edubridge.domain.member.member.dto.MemberDto;
 import com.ll.edubridge.domain.member.member.dto.NickNameDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
@@ -22,7 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -65,9 +64,9 @@ public class MemberService {
                 .uuid(generateRandomString())
                 .build();
 
-        pointService.addPoint(PointType.Welcome, member); // 포인트 내역 추가
-
         memberRepository.save(member);
+
+        pointService.addPoint(PointType.Welcome, member); // 포인트 내역 추가
 
         return RsData.of("200", "%s님 환영합니다. 회원가입이 완료되었습니다. 로그인 후 이용해주세요.".formatted(member.getUsername()), member);
     }
@@ -276,25 +275,21 @@ public class MemberService {
     }
 
     @Transactional
-    public void dropMember(MemberDto memberDto) {
-        Member member = this.getMember(memberDto.getId());
-
-        if(!rq.getMember().equals(member)) {
-            throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
-        }
+    public void dropMember() {
+        Member member = rq.getMember();
 
         member.setNickname("탈퇴한 회원");
-        member.setUsername(member.getUsername() + "_deleted_" + LocalDate.now()); // unique
+        member.setRefreshToken(member.getUsername() + "_deleted_" + LocalDateTime.now()); // unique
+        member.setUsername(member.getUsername() + "_deleted_" + LocalDateTime.now()); // unique
         member.setPassword("");
-        member.setRefreshToken(member.getUsername() + "_deleted_" + LocalDate.now()); // unique
         member.setUuid("");
         member.setProfileImgUrl("");
         member.setPoint(0);
         member.setEnrollCount(0);
-        member.setCourseEnrollList(null);
 
         courseEnrollService.delete(member);
 
         memberRepository.save(member);
+        rq.setLogout();
     }
 }
