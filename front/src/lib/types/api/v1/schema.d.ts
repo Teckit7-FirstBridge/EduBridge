@@ -349,24 +349,6 @@ export interface components {
       overView?: string;
       hashtags: string;
     };
-    Comment: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      content?: string;
-      post?: components["schemas"]["Post"];
-      commentVoters?: components["schemas"]["CommentVoter"][];
-      writer?: components["schemas"]["Member"];
-      /** Format: int32 */
-      voteCount?: number;
-    };
-    CommentVoter: {
-      /** Format: int64 */
-      id?: number;
-      comment?: components["schemas"]["Comment"];
-      member?: components["schemas"]["Member"];
-    };
     Course: {
       /** Format: int64 */
       id?: number;
@@ -380,7 +362,6 @@ export interface components {
       price?: number;
       confirm?: boolean;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
-      courseVoters?: components["schemas"]["CourseVoter"][];
       hashtags?: string;
       writer?: components["schemas"]["Member"];
     };
@@ -398,12 +379,6 @@ export interface components {
       course?: components["schemas"]["Course"];
       /** Format: int32 */
       courseOrder?: number;
-    };
-    CourseVoter: {
-      /** Format: int64 */
-      id?: number;
-      course?: components["schemas"]["Course"];
-      member?: components["schemas"]["Member"];
     };
     GrantedAuthority: {
       authority?: string;
@@ -429,35 +404,11 @@ export interface components {
       /** Format: int32 */
       dailyAchievement?: number;
       uuid?: string;
-      courseVoters?: components["schemas"]["CourseVoter"][];
-      postVoters?: components["schemas"]["PostVoter"][];
-      commentVoters?: components["schemas"]["CommentVoter"][];
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
-    };
-    Post: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      title?: string;
-      content?: string;
-      published?: boolean;
-      report?: boolean;
-      writer?: components["schemas"]["Member"];
-      commentList?: components["schemas"]["Comment"][];
-      postVoters?: components["schemas"]["PostVoter"][];
-      /** Format: int32 */
-      voteCount?: number;
-    };
-    PostVoter: {
-      /** Format: int64 */
-      id?: number;
-      post?: components["schemas"]["Post"];
-      member?: components["schemas"]["Member"];
+      authoritiesAsStringList?: string[];
     };
     Roadmap: {
       /** Format: int64 */

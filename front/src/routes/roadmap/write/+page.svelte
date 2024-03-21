@@ -43,7 +43,7 @@
 
     if (data) {
       rq.msgInfo(data.msg); //msg
-      rq.goTo('/member/mycourse');
+      rq.goTo('/member/mycourse?tab=roadmap');
     }
   };
 
