@@ -2,6 +2,7 @@ package com.ll.edubridge.domain.course.roadmap.dto;
 
 import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
+import com.ll.edubridge.domain.member.member.entity.Member;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,14 +33,13 @@ public class RoadmapDto {
     private String hashtags;
 
     @NonNull
-    private String owner;
+    private Member owner;
 
     @NonNull
     private List<Roadmap> roadmapList;
 
-    public RoadmapDto(List<Roadmap> roadmapList, String username) {
+    public RoadmapDto(List<Roadmap> roadmapList) {
         this.roadmapList = roadmapList;
-        this.owner = username;
     }
 
     public RoadmapDto(Roadmap roadmap) {
@@ -48,7 +48,7 @@ public class RoadmapDto {
         this.overView = roadmap.getOverView();
         this.curriculum = roadmap.getCurriculum();
         this.hashtags = roadmap.getHashtags();
-        this.owner = roadmap.getOwner().getUsername();
+        this.owner = roadmap.getOwner();
     }
 
 

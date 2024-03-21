@@ -213,9 +213,9 @@
         <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {#if roadmaplist}
             {#each roadmaplist as item}
-              <div class="border collapse bg-white">
+              <div class="border collapse bg-white peer-checked:border-blue-600">
                 <input type="checkbox" class="peer" />
-                <div class="collapse-title bg-white peer-checked:bg-yellow-50">
+                <div class="collapse-title bg-white">
                   <div class="rounded-lg dark:border-gray-800 flex-col text-center">
                     <div class="flex justify-between gap-2">
                       <h2 class="text-lg font-semibold ml-2">{formatTitle(item.title)}</h2>
@@ -251,6 +251,13 @@
                         </a>
                       {/each}
                     </div>
+                  {/if}
+                  {#if item.owner.id == rq.member.id}
+                    <a
+                      href="/roadmap/edit/{item.id}"
+                      class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                      >수정</a
+                    >
                   {/if}
                 </div>
               </div>

@@ -58,7 +58,6 @@ public class Course extends BaseEntity {
 
     private String hashtags;
 
-    @JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Member writer;
 

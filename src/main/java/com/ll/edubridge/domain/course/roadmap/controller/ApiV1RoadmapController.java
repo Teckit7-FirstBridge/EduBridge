@@ -102,13 +102,12 @@ public class ApiV1RoadmapController {
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(), roadmapDto);
     }
 
-    @GetMapping("/{courseId}")
+    @GetMapping("/byCourse/{courseId}")
     @Operation(summary = "강좌로 로드맵 목록 조회")
     public RsData<RoadmapDto> getRoadmapByCourse(@PathVariable("courseId") Long courseId) {
         Course course = courseService.getCourse(courseId);
         List<Roadmap> roadmapList = roadmapService.getCourseRoadmapList(course);
-        Member member = memberService.getMember(course.getWriter().getId());
-        RoadmapDto roadmapDto = new RoadmapDto(roadmapList, member.getUsername());
+        RoadmapDto roadmapDto = new RoadmapDto(roadmapList);
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(), roadmapDto);

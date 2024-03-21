@@ -147,13 +147,13 @@ export interface paths {
     /** 로드맵 아이디로 로드맵 단건 조회 */
     get: operations["getRoadmapById"];
   };
-  "/api/v1/roadmap/{courseId}": {
-    /** 강좌로 로드맵 목록 조회 */
-    get: operations["getRoadmapByCourse"];
-  };
   "/api/v1/roadmap/myRoadmap": {
     /** 내가 등록한 로드맵 다건 조회 */
     get: operations["getMyRoadmaps"];
+  };
+  "/api/v1/roadmap/byCourse/{courseId}": {
+    /** 강좌로 로드맵 목록 조회 */
+    get: operations["getRoadmapByCourse"];
   };
   "/api/v1/report/post": {
     /** 글 신고 목록 조회 */
@@ -354,6 +354,7 @@ export interface components {
       confirm?: boolean;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       hashtags?: string;
+      writer?: components["schemas"]["Member"];
     };
     CourseEnroll: {
       /** Format: int64 */
@@ -369,6 +370,36 @@ export interface components {
       course?: components["schemas"]["Course"];
       /** Format: int32 */
       courseOrder?: number;
+    };
+    GrantedAuthority: {
+      authority?: string;
+    };
+    Member: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      /** Format: int32 */
+      enrollCount?: number;
+      username?: string;
+      password?: string;
+      nickname?: string;
+      /** Format: int32 */
+      point?: number;
+      report?: boolean;
+      refreshToken?: string;
+      profileImgUrl?: string;
+      visitedToday?: boolean;
+      /** Format: int32 */
+      dailyGoal?: number;
+      /** Format: int32 */
+      dailyAchievement?: number;
+      uuid?: string;
+      courseEnrollList?: components["schemas"]["CourseEnroll"][];
+      name?: string;
+      authoritiesAsStringList?: string[];
+      authorities?: components["schemas"]["GrantedAuthority"][];
+      profileImgUrlOrDefault?: string;
     };
     Roadmap: {
       /** Format: int64 */
@@ -386,7 +417,7 @@ export interface components {
       overView?: string;
       curriculum: components["schemas"]["CourseRoadmap"][];
       hashtags: string;
-      owner: string;
+      owner: components["schemas"]["Member"];
       roadmapList: components["schemas"]["Roadmap"][];
     };
     RsDataRoadmapDto: {
@@ -470,36 +501,6 @@ export interface components {
     };
     CreateSummaryNoteDto: {
       content: string;
-    };
-    GrantedAuthority: {
-      authority?: string;
-    };
-    Member: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      /** Format: int32 */
-      enrollCount?: number;
-      username?: string;
-      password?: string;
-      nickname?: string;
-      /** Format: int32 */
-      point?: number;
-      report?: boolean;
-      refreshToken?: string;
-      profileImgUrl?: string;
-      visitedToday?: boolean;
-      /** Format: int32 */
-      dailyGoal?: number;
-      /** Format: int32 */
-      dailyAchievement?: number;
-      uuid?: string;
-      courseEnrollList?: components["schemas"]["CourseEnroll"][];
-      name?: string;
-      authoritiesAsStringList?: string[];
-      authorities?: components["schemas"]["GrantedAuthority"][];
-      profileImgUrlOrDefault?: string;
     };
     RsDataSummaryNoteDto: {
       resultCode: string;
@@ -2028,6 +2029,17 @@ export interface operations {
       };
     };
   };
+  /** 내가 등록한 로드맵 다건 조회 */
+  getMyRoadmaps: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListRoadmapDto"];
+        };
+      };
+    };
+  };
   /** 강좌로 로드맵 목록 조회 */
   getRoadmapByCourse: {
     parameters: {
@@ -2040,17 +2052,6 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataRoadmapDto"];
-        };
-      };
-    };
-  };
-  /** 내가 등록한 로드맵 다건 조회 */
-  getMyRoadmaps: {
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataListRoadmapDto"];
         };
       };
     };
