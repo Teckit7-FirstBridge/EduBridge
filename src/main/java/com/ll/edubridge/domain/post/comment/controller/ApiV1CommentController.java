@@ -1,5 +1,7 @@
 package com.ll.edubridge.domain.post.comment.controller;
 
+import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
+import com.ll.edubridge.domain.CommentVoter.service.CommentVoterService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.notification.entity.NotificationType;
 import com.ll.edubridge.domain.post.comment.dto.CommentDto;
@@ -39,6 +41,7 @@ public class ApiV1CommentController {
     private final CommentService commentService;
     private final Rq rq;
     private final NotificationService notificationService;
+    private final CommentVoterService commentVoterService;
     @PostMapping("")
     @Operation(summary = "댓글 등록")
     public RsData<CreateCommentDto> createComment(@Valid @RequestBody CreateCommentDto createCommentDto) {
@@ -47,12 +50,8 @@ public class ApiV1CommentController {
 
         notificationService.notifyComment(comment.getPost().getWriter().getId()); // 댓글 등록 알림
         if(comment.getPost().isPublished()){
-            System.out.println("====chanw======true");
-
             notificationService.createByComment(NotificationType.COMMENT, comment.getPost().getWriter(), comment.getPost(), rq.getMember(), comment); // 알림 내역 저장
         }else{
-            System.out.println("====chanw======x");
-
             notificationService.createByComment(NotificationType.ANSWER, comment.getPost().getWriter(), comment.getPost(), rq.getMember(), comment); // 문의 답변 내역 저장
         }
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
@@ -146,12 +145,12 @@ public class ApiV1CommentController {
     @Operation(summary = "댓글 추천")
     public RsData<Void> voteComment(@PathVariable("commentId") Long commentId) {
         Member member = rq.getMember();
-
-        if (!commentService.canLike(member, commentService.getComment(commentId))) {
+        Comment comment = commentService.getComment(commentId);
+        if (!commentVoterService.canLike(member, comment)) {
             throw new GlobalException(CodeMsg.E400_1_ALREADY_RECOMMENDED.getCode(),CodeMsg.E400_1_ALREADY_RECOMMENDED.getMessage());
         }
 
-        commentService.vote(commentId, member);
+        commentVoterService.vote(member, comment);
 
         return RsData.of(Msg.E200_4_RECOMMEND_SUCCEED.getCode(),
                 Msg.E200_4_RECOMMEND_SUCCEED.getMsg());
@@ -161,12 +160,12 @@ public class ApiV1CommentController {
     @Operation(summary = "댓글 추천 취소")
     public RsData<Void> deleteVoteComment(@PathVariable("commentId") Long commentId) {
         Member member = rq.getMember();
-
-        if (!commentService.canCancelLike(member, commentService.getComment(commentId))) {
+        Comment comment = commentService.getComment(commentId);
+        if (!commentVoterService.canCancelLike(member,comment)) {
             throw new GlobalException(CodeMsg.E400_2_NOT_RECOMMENDED_YET.getCode(),CodeMsg.E400_2_NOT_RECOMMENDED_YET.getMessage());
         }
 
-        commentService.deleteVote(commentId, member);
+        commentVoterService.deleteVote(comment, member);
 
         return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getCode(),
                 Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getMsg());

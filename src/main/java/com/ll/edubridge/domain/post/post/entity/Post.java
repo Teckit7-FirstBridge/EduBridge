@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.post.post.entity;
 
 
+import com.ll.edubridge.domain.PostVoter.entity.PostVoter;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
@@ -39,9 +40,9 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> commentList;
 
-    @ManyToMany
-    Set<Member> voter;
+    @OneToMany(mappedBy = "post",cascade = CascadeType.REMOVE)
+    Set<PostVoter> postVoters;
 
-    @Formula("(select count(*) from post_voter pv where pv.post_id = id)")
+    @Formula("(select count(*) from post_member pm where pm.post_id = id)")
     private int voteCount;
 }
