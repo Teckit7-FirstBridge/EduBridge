@@ -340,6 +340,11 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    CreateRoadmapDto: {
+      title?: string;
+      overView?: string;
+      hashtags: string;
+    };
     Course: {
       /** Format: int64 */
       id?: number;
@@ -528,6 +533,13 @@ export interface components {
       title?: string;
       pass?: boolean;
     };
+    CreateCourseDto: {
+      title: string;
+      notice: string;
+      imgUrl: string;
+      overView: string;
+      hashtags?: string;
+    };
     CourseDto: {
       /** Format: int64 */
       id?: number;
@@ -607,11 +619,6 @@ export interface components {
       data: components["schemas"]["CommentDto"];
       fail: boolean;
       success: boolean;
-    };
-    CreateRoadmapDto: {
-      title?: string;
-      overView?: string;
-      hashtags: string;
     };
     RsDataCreateRoadmapDto: {
       resultCode: string;
@@ -711,13 +718,6 @@ export interface components {
       data: components["schemas"]["CreateVideoDto"];
       fail: boolean;
       success: boolean;
-    };
-    CreateCourseDto: {
-      title: string;
-      notice: string;
-      imgUrl: string;
-      overView: string;
-      hashtags?: string;
     };
     RsDataCreateCourseDto: {
       resultCode: string;
@@ -1323,7 +1323,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["RoadmapDto"];
+        "application/json": components["schemas"]["CreateRoadmapDto"];
       };
     };
     responses: {
@@ -1519,7 +1519,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CourseDto"];
+        "application/json": components["schemas"]["CreateCourseDto"];
       };
     };
     responses: {

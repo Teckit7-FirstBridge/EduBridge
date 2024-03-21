@@ -3,7 +3,6 @@ package com.ll.edubridge.domain.course.roadmap.service;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.roadmap.dto.CreateRoadmapDto;
-import com.ll.edubridge.domain.course.roadmap.dto.RoadmapDto;
 import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
 import com.ll.edubridge.domain.course.roadmap.repository.CourseRoadmapRepository;
@@ -108,7 +107,8 @@ public class RoadmapService {
         courseRoadmapRepository.save(courseRoadmap);
     }
 
-    public Roadmap modify(Long id, RoadmapDto roadmapDto) {
+    @Transactional
+    public Roadmap modify(Long id, CreateRoadmapDto roadmapDto) {
         Roadmap roadmap = this.getRoadmap(id);
 
         roadmap.setTitle(roadmapDto.getTitle());

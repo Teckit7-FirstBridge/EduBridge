@@ -144,7 +144,7 @@ public class ApiV1RoadmapController {
     @Operation(summary = "로드맵 수정")
     public RsData<RoadmapDto> modifyRoadmap(
             @PathVariable("id") Long id,
-            @RequestBody RoadmapDto roadmapDto) {
+            @RequestBody CreateRoadmapDto roadmapDto) {
 
         Roadmap modifyRoadmap = roadmapService.modify(id, roadmapDto);
 

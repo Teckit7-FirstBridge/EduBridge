@@ -80,10 +80,11 @@ public class ApiV1CourseController {
     @Operation(summary = "강좌 수정")
     public RsData<CourseDto> modifyCourse(
             @PathVariable("id") Long id,
-            @RequestBody CourseDto courseDto) {
+            @RequestBody CreateCourseDto courseDto) {
 
+        Course course = courseService.getCourse(id);
 
-        if (!courseService.haveAuthority(courseDto.getWriter().getId()))
+        if (!courseService.haveAuthority(course.getWriter().getId()))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         Course modifyCourse = courseService.modify(id, courseDto);

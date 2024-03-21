@@ -1,6 +1,5 @@
 package com.ll.edubridge.domain.course.course.service;
 
-import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.dto.NumDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
@@ -70,7 +69,7 @@ public class CourseService {
     }
 
     @Transactional
-    public Course modify(Long id, CourseDto courseDto) {
+    public Course modify(Long id, CreateCourseDto courseDto) {
         Course course = this.getCourse(id);
 
         course.setTitle(courseDto.getTitle());
