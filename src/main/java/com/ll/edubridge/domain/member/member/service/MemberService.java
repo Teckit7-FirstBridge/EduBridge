@@ -21,7 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -279,9 +279,9 @@ public class MemberService {
         Member member = rq.getMember();
 
         member.setNickname("탈퇴한 회원");
-        member.setUsername(member.getUsername() + "_deleted_" + LocalDate.now()); // unique
+        member.setRefreshToken(member.getUsername() + "_deleted_" + LocalDateTime.now()); // unique
+        member.setUsername(member.getUsername() + "_deleted_" + LocalDateTime.now()); // unique
         member.setPassword("");
-        member.setRefreshToken(member.getUsername() + "_deleted_" + LocalDate.now()); // unique
         member.setUuid("");
         member.setProfileImgUrl("");
         member.setPoint(0);

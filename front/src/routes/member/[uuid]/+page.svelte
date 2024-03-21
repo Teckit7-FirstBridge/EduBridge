@@ -40,9 +40,7 @@
   };
 
   const goodBye = async () => {
-    const { data, error } = await rq.apiEndPoints().PUT('/api/v1/members/drop', {
-      body: {}
-    });
+    const { data, error } = await rq.apiEndPoints().PUT('/api/v1/members/drop');
     if (data) {
       rq.msgInfo('안녕히 가십시오! 더 밝은 내일을 기원합니다 :)');
       rq.logout();
