@@ -81,4 +81,8 @@ public class CourseEnrollService {
     public List<CourseEnroll> findByCourseId(Long courseId) {
         return courseEnrollRepository.findByCourseId(courseId);
     }
+
+    public void delete(Member member) {
+        courseEnrollRepository.deleteAll(member.getCourseEnrollList());
+    }
 }
