@@ -52,6 +52,7 @@ public class Course extends BaseEntity {
     @ManyToMany
     Set<Member> voter;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     private List<CourseRoadmap> roadmapList;
 

@@ -54,7 +54,7 @@ public class CourseService {
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .price(price)
-                .writer(createCourseDto.getWriter())
+                .writer(rq.getMember())
                 .hashtags(createCourseDto.getHashtags())
                 .build();
 

@@ -92,12 +92,6 @@ public class RoadmapService {
         Roadmap roadmap = this.getRoadmap(id);
         CourseRoadmap courseRoadmap = new CourseRoadmap(course, roadmap, courseOrder);
         courseRoadmapRepository.save(courseRoadmap);
-
-        // roadmap의 CourseRoadmap 목록에 새로운 요소 추가
-        List<CourseRoadmap> roadmapList = course.getRoadmapList();
-        roadmapList.add(courseRoadmap);
-        course.setRoadmapList(roadmapList);
-        courseRepository.save(course);
     }
 
     public Roadmap modify(Long id, RoadmapDto roadmapDto) {

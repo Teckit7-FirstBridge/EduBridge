@@ -49,14 +49,14 @@ public class ApiV1RoadmapController {
 
         public GetRoadmapsResponsebody(Page<Roadmap> page) {
             this.items = page.getContent().stream()
-                    .map(roadmap -> new RoadmapDto(roadmap, rq.getMember()))
+                    .map(RoadmapDto::new)
                     .toList();
         }
     }
 
     @GetMapping(value = "")
     @Operation(summary = "로드맵 다건 조회")
-    public RsData<ApiV1RoadmapController.GetRoadmapsResponsebody> getRoadmaps(
+    public RsData<GetRoadmapsResponsebody> getRoadmaps(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "") String kw,
             @RequestParam(defaultValue = "ALL") KwTypeCourse kwType
@@ -67,7 +67,7 @@ public class ApiV1RoadmapController {
 
         Page<Roadmap> roadmapPage = roadmapService.findByKw(kwType, kw, pageable);
 
-        ApiV1RoadmapController.GetRoadmapsResponsebody responseBody = new ApiV1RoadmapController.GetRoadmapsResponsebody(roadmapPage);
+        GetRoadmapsResponsebody responseBody = new GetRoadmapsResponsebody(roadmapPage);
 
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
@@ -95,7 +95,8 @@ public class ApiV1RoadmapController {
     @Operation(summary = "로드맵 아이디로 로드맵 단건 조회")
     public RsData<RoadmapDto> getRoadmapById(@PathVariable("roadmapId") Long roadmapId) {
         Roadmap roadmap = roadmapService.getRoadmap(roadmapId);
-        RoadmapDto roadmapDto = new RoadmapDto(roadmap, rq.getMember());
+        Member member = roadmap.getOwner();
+        RoadmapDto roadmapDto = new RoadmapDto(roadmap);
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(), roadmapDto);
@@ -148,7 +149,7 @@ public class ApiV1RoadmapController {
 
         Roadmap modifyRoadmap = roadmapService.modify(id, roadmapDto);
 
-        RoadmapDto modifyCourseDto = new RoadmapDto(modifyRoadmap, rq.getMember());
+        RoadmapDto modifyCourseDto = new RoadmapDto(modifyRoadmap);
 
         return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
                 Msg.E200_2_MODIFY_SUCCEED.getMsg(), modifyCourseDto);

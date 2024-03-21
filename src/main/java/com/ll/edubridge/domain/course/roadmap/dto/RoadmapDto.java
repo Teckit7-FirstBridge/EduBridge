@@ -2,7 +2,6 @@ package com.ll.edubridge.domain.course.roadmap.dto;
 
 import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
-import com.ll.edubridge.domain.member.member.entity.Member;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,22 +42,15 @@ public class RoadmapDto {
         this.owner = username;
     }
 
-    public RoadmapDto(Roadmap roadmap, Member member) {
-        this.id = roadmap.getId();
-        this.title = roadmap.getTitle();
-        this.overView = roadmap.getOverView();
-        this.curriculum = roadmap.getCurriculum();
-        this.hashtags = roadmap.getHashtags();
-        this.owner = member.getUsername();
-    }
-
     public RoadmapDto(Roadmap roadmap) {
         this.id = roadmap.getId();
         this.title = roadmap.getTitle();
         this.overView = roadmap.getOverView();
         this.curriculum = roadmap.getCurriculum();
         this.hashtags = roadmap.getHashtags();
+        this.owner = roadmap.getOwner().getUsername();
     }
+
 
     public RoadmapDto() {}
 }

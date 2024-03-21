@@ -1,9 +1,9 @@
 package com.ll.edubridge.domain.course.roadmap.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
@@ -17,10 +17,12 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @ToString(callSuper = true)
 public class CourseRoadmap extends BaseEntity {
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @ManyToOne(optional = false)
     private Course course;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JsonIgnore
+    @ManyToOne(optional = false)
     private Roadmap roadmap;
 
     private int courseOrder; // 이 course가 해당 roadmap에서 몇 번째 강좌인가
