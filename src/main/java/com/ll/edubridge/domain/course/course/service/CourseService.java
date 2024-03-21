@@ -1,8 +1,5 @@
 package com.ll.edubridge.domain.course.course.service;
 
-import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
-import com.ll.edubridge.domain.course.course.dto.CourseDto;
-
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.dto.NumDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
@@ -125,7 +122,7 @@ public class CourseService {
     }
 
     @Transactional
-    public Course startOrstop(Course course){
+    public Course startOrStop(Course course){
         course.setConfirm(!course.getConfirm());
         return courseRepository.save(course);
     }
