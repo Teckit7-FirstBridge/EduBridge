@@ -4,7 +4,6 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.standard.base.KwTypeCourse;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.PathBuilder;
@@ -91,12 +90,12 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
 //    }
 
     @Override
-    public Page<Course> findByWriterId(Member author, Pageable pageable) {
+    public Page<Course> findByWriter(Member author, Pageable pageable) {
         List<Course> fetch = queryFactory.selectFrom(course)
-                .where(course.writer_id.eq(author.getId()))
+                .where(course.writer.id.eq(author.getId()))
                 .fetch();
         long count = queryFactory.selectFrom(course)
-                .where(course.writer_id.eq(author.getId()))
+                .where(course.writer.id.eq(author.getId()))
                 .stream().count();
         return new PageImpl<>(fetch,pageable,count);
     }
@@ -106,12 +105,12 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
         switch (kwType) {
             case kwType.TITLE -> builder.and(course.title.containsIgnoreCase(kw));
             case kwType.HASHTAGS -> builder.and(course.hashtags.containsIgnoreCase(kw));
-            case kwType.NAME -> builder.and(course.writer_nickname.containsIgnoreCase(kw));
+            case kwType.NAME -> builder.and(course.writer.nickname.containsIgnoreCase(kw));
             default -> {
                 builder.andAnyOf(
                         course.title.containsIgnoreCase(kw),
                         course.hashtags.containsIgnoreCase(kw),
-                        course.writer_nickname.containsIgnoreCase(kw)
+                        course.writer.nickname.containsIgnoreCase(kw)
                 );
             }
         }

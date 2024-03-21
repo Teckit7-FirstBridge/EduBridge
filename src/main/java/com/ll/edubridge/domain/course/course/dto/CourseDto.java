@@ -13,14 +13,13 @@ public class CourseDto {
     private String notice;
     private String imgUrl;
     private String overView;
-    private int roadmapNum;
     private int price;
     private int voteCount;
     private boolean likedByCurrentUser;
     private int videoCount;
     private Boolean confirm;
     private int enrollCount;
-    private Long writer_id;;
+    private Member writer;
     private String hashtags;
 
 
@@ -36,9 +35,13 @@ public class CourseDto {
         this.videoCount = course.getVideoList().size();
         this.confirm = course.getConfirm();
         this.enrollCount = course.getCourseEnrollList().size();
-        this.writer_id = course.getWriter_id();
+        this.writer = course.getWriter();
         this.hashtags = course.getHashtags();
-        this.roadmapNum = course.getRoadmapNum();
+    }
+
+    public CourseDto(Course course) {
+        this.id = course.getId();
+        this.title = course.getTitle();
     }
 
     public CourseDto() {

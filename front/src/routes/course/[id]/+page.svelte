@@ -41,33 +41,21 @@
 
     const { data, error } = await rq
       .apiEndPoints()
-      .PUT(`/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}`, {
+      .PUT(`/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}/{courseOrder}`, {
         params: {
           path: {
             courseId: parseInt($page.params.id),
-            roadmapId: roadmapId
+            roadmapId: parseInt(roadmapId),
+            courseOrder: changeNum
           }
         }
       });
 
     if (data) {
-      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/roadmap/changeNum/{courseId}`, {
-        params: {
-          path: {
-            courseId: parseInt($page.params.id)
-          }
-        },
-        body: {
-          num: changeNum
-        }
-      });
-
-      if (data) {
-        rq.msgInfo('로드맵 설정 성공');
-        modalRoadmap.close();
-      } else {
-        rq.msgError('로드맵 설정 실패');
-      }
+      rq.msgInfo('로드맵 설정 성공');
+      modalRoadmap.close();
+    } else {
+      rq.msgError('로드맵 설정 실패');
     }
   }
 
@@ -84,6 +72,7 @@
   let enroll: components['schemas']['AdminCourseEnrollDto'] = $state();
   let courseConfirm: Boolean = $state();
   let myRoadmap: components['schemas']['RoadmapDto'][] | undefined;
+  let reportReason;
 
   let overviewviewr: any | undefined = $state();
   let notiviewer: any | undefined = $state();
@@ -123,7 +112,7 @@
         params: {
           path: {
             courseId: parseInt($page.params.id),
-            writerId: course.writer_id!
+            writerId: course.writer?.id
           }
         }
       });
@@ -148,12 +137,42 @@
     return { videos, course, auth, enroll, hashtags, myRoadmap };
   }
 
+  let modalreport;
+
+  function openModalReport() {
+    modalreport.showModal();
+  }
+
+  async function reportPost() {
+    if (rq.isLogout()) {
+      rq.msgError('로그인 후 이용 해 주세요');
+      rq.goTo('/member/login');
+    }
+
+    if (reportReason) {
+      const { data, error } = await rq.apiEndPoints().POST(`/api/v1/report/course/{courseId}`, {
+        params: { path: { courseId: parseInt($page.params.id) } },
+        body: {
+          reportReason: reportReason,
+          materialId: parseInt($page.params.id)
+        }
+      });
+
+      if (data) {
+        rq.msgInfo('신고 되었습니다.');
+        modalreport.close();
+      }
+    } else {
+      rq.msgWarning('신고 사유를 선택 해 주세요');
+    }
+  }
+
   async function deleteCourse() {
     const isConfirmed = confirm('강좌를 삭제하시겠습니까?');
 
     if (isConfirmed) {
       const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}/{writer_id}`, {
-        params: { path: { id: parseInt($page.params.id), writer_id: course.writer_id } }
+        params: { path: { id: parseInt($page.params.id), writer_id: course.writer.id } }
       });
 
       if (data) {
@@ -175,7 +194,7 @@
         const { data, error } = await rq
           .apiEndPoints()
           .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
-            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
+            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer.id! } }
           });
 
         if (data) {
@@ -195,7 +214,7 @@
       const { data, error } = await rq
         .apiEndPoints()
         .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
-          params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
+          params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer.id! } }
         });
 
       if (data) {
@@ -251,7 +270,7 @@
             path: {
               courseId: parseInt($page.params.id),
               id: video.id,
-              writer_id: course.writer_id!
+              writer_id: course.writer.id!
             }
           }
         });
@@ -338,6 +357,47 @@
                   </svg>
                 {/if}
               </div>
+              <div class="mb-2">
+                <a onclick={openModalReport} class=""
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="black"
+                    class="w-7 h-7 mt-3 ml-2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+                    />
+                  </svg>
+                </a>
+                <dialog id="my_modal_3" class="modal" bind:this={modalreport}>
+                  <div class="modal-box">
+                    <button
+                      class="mb-2 btn btn-sm btn-circle btn-ghost absolute right-2 top-2 focus:outline-none"
+                      on:click={() => modalreport.close()}>✕</button
+                    >
+                    <div class="flex flex-col p-6 bg-white shadow rounded-lg">
+                      <h2 class="text-xl font-semibold mb-4 pb-2">신고 사유 입력</h2>
+                      <form>
+                        <input bind:value={reportReason} class="border rounded-md shadow-sm mb-2" />
+
+                        <div class="flex justify-end mt-4">
+                          <button
+                            on:click={reportPost}
+                            class="inline-block px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-black hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          >
+                            제출
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </dialog>
+              </div>
             </div>
           </h1>
         </div>
@@ -351,7 +411,7 @@
           {/each}
         </div>
         <div class="flex justify-end">
-          {#if !auth.enroll && !(rq.member.id == course.writer_id) && !rq.isAdmin()}
+          {#if !auth.enroll && !(rq.member.id == course.writer.id) && !rq.isAdmin()}
             <div class="flex">
               <div class="mt-2">
                 <p class="course-price mt-4">{course.price}원</p>
@@ -364,7 +424,7 @@
             </div>
           {/if}
         </div>
-        {#if rq.member.id === course.writer_id || rq.isAdmin()}
+        {#if rq.member.id === course.writer.id || rq.isAdmin()}
           <div class="mx-2 items-center">
             <div class="mb-2">
               <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
@@ -395,39 +455,39 @@
                     </div>
                   </div>
                 </dialog>
-                <button onclick={openModalRoadmap} class="btn btn-sm">로드맵</button>
-                <dialog id="my_modal_3" class="modal" bind:this={modalRoadmap}>
-                  <div class="modal-box">
-                    <button
-                      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                      on:click={() => modalRoadmap.close()}>✕</button
-                    >
-                    <div class="flex flex-col p-6 bg-white shadow rounded-lg">
-                      <h2 class="text-xl font-semibold mb-4 pb-2">로드맵 등록</h2>
-                      <select
-                        bind:value={selectedRoadmap}
-                        class="select select-bordered w-full mb-4 focus:outline-none focus:border-gray-700"
-                      >
-                        <option value="">로드맵을 선택하세요</option>
-                        {#each myRoadmap as roadmap}
-                          <option value={roadmap.id}>{roadmap.title}</option>
-                        {/each}
-                      </select>
-                      <input
-                        type="number"
-                        bind:value={changeNum}
-                        placeholder="로드맵 순서"
-                        class="input input-bordered focus:outline-none focus:border-gray-700 w-full mb-4"
-                      />
-                      <button
-                        on:click={registerCourseToRoadmap}
-                        class="btn border border-gray-500 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
-                        >등록</button
-                      >
-                    </div>
-                  </div>
-                </dialog>
               {/if}
+              <button onclick={openModalRoadmap} class="btn btn-sm">로드맵</button>
+              <dialog id="my_modal_3" class="modal" bind:this={modalRoadmap}>
+                <div class="modal-box">
+                  <button
+                    class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                    on:click={() => modalRoadmap.close()}>✕</button
+                  >
+                  <div class="flex flex-col p-6 bg-white shadow rounded-lg">
+                    <h2 class="text-xl font-semibold mb-4 pb-2">로드맵 등록</h2>
+                    <select
+                      bind:value={selectedRoadmap}
+                      class="select select-bordered w-full mb-4 focus:outline-none focus:border-gray-700"
+                    >
+                      <option value="">로드맵을 선택하세요</option>
+                      {#each myRoadmap as roadmap}
+                        <option value={roadmap.id}>{roadmap.title}</option>
+                      {/each}
+                    </select>
+                    <input
+                      type="number"
+                      bind:value={changeNum}
+                      placeholder="로드맵 순서"
+                      class="input input-bordered focus:outline-none focus:border-gray-700 w-full mb-4"
+                    />
+                    <button
+                      on:click={registerCourseToRoadmap}
+                      class="btn border border-gray-500 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                      >등록</button
+                    >
+                  </div>
+                </div>
+              </dialog>
             </div>
           </div>
         {/if}
@@ -452,16 +512,16 @@
           ></ToastUiEditor>
         </div>
 
-        {#if rq.member.id === course.writer_id || rq.isAdmin()}
+        {#if rq.member.id === course.writer.id || rq.isAdmin()}
           <div class="flex justify-end">
             <a
               class=" mx-10 btn w-24 text-center"
-              href="/course/{$page.params.id}/videowrite?writer_id={course.writer_id}">강의 등록</a
+              href="/course/{$page.params.id}/videowrite?writer_id={course.writer.id}">강의 등록</a
             >
           </div>
         {/if}
 
-        {#if auth.enroll || rq.member.id === course.writer_id}
+        {#if auth.enroll || rq.member.id === course.writer.id}
           <div class="border shadow-sm rounded-lg">
             <div class="relative w-full overflow-auto">
               <table class="w-full table-fixed caption-bottom text-sm">
@@ -535,10 +595,11 @@
                       </td>
 
                       <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                        {#if rq.isAdmin() || rq.member.id === course.writer_id}
+                        {#if rq.isAdmin() || rq.member.id === course.writer.id}
                           <div class="mb-5 mx-2 items-center">
                             <a
-                              href="/course/{video.courseId}/videoedit/{video.id}?writer_id={course.writer_id}"
+                              href="/course/{video.courseId}/videoedit/{video.id}?writer_id={course
+                                .writer.id}"
                               class="btn btn-sm">수정</a
                             >
                             <button on:click={() => deleteVideo(video)} class="btn btn-sm"

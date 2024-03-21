@@ -3,8 +3,9 @@ package com.ll.edubridge.domain.course.roadmap.service;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.roadmap.dto.CreateRoadmapDto;
-import com.ll.edubridge.domain.course.roadmap.dto.RoadmapDto;
+import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
+import com.ll.edubridge.domain.course.roadmap.repository.CourseRoadmapRepository;
 import com.ll.edubridge.domain.course.roadmap.repository.RoadmapRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -27,11 +28,11 @@ public class RoadmapService {
     private final RoadmapRepository roadmapRepository;
     private final Rq rq;
     private final CourseRepository courseRepository;
+    private final CourseRoadmapRepository courseRoadmapRepository;
 
     public List<Roadmap> findAll() {
         return roadmapRepository.findAll();
     }
-
     public Optional<Roadmap> findById(Long id) {
         return roadmapRepository.findById(id);
     }
@@ -49,12 +50,25 @@ public class RoadmapService {
         }
     }
 
-    public Roadmap getCourseRoadmap(Course course) {
-        return roadmapRepository.findByCurriculumContains(course);
+    // 강좌가 속한 로드맵 목록 찾기
+    public List<Roadmap> getCourseRoadmapList(Course course) {
+        return courseRoadmapRepository.findByCourse(course)
+                .stream()
+                .map(CourseRoadmap::getRoadmap)
+                .toList();
+    }
+
+    // CourseRoadmap 개체 찾기
+    public CourseRoadmap getCourseRoadmap(Course course, Roadmap roadmap) {
+        return courseRoadmapRepository.findByCourseAndRoadmap(course, roadmap);
+    }
+
+    public CourseRoadmap getCourseRoadmapById(Long id) {
+        return courseRoadmapRepository.findCourseRoadmapById(id);
     }
 
     public List<Roadmap> getMyRoadmaps(Member member) {
-        return roadmapRepository.findByOwner(member.getUsername());
+        return roadmapRepository.findByOwner(member);
     }
 
     @Transactional
@@ -64,34 +78,59 @@ public class RoadmapService {
                 .title(createroadmapDto.getTitle())
                 .overView(createroadmapDto.getOverView())
                 .hashtags(createroadmapDto.getHashtags())
-                .owner(rq.getMember().getUsername())
+                .owner(rq.getMember())
                 .build();
 
         return roadmapRepository.save(roadmap);
     }
 
     @Transactional
-    public void addCourse(Long id, Course course) {
+    public void addCourse(Long id, Course course, int courseOrder) {
+
         Roadmap roadmap = this.getRoadmap(id);
 
-        course.setRoadmap(roadmap);
-
-        courseRepository.save(course);
+        if(courseRoadmapRepository.existsByCourseAndRoadmap(course, roadmap)){
+            this.changeCourseOrder(course, roadmap, courseOrder);
+        }else {
+            CourseRoadmap courseRoadmap = new CourseRoadmap(course, roadmap, courseOrder);
+            courseRoadmapRepository.save(courseRoadmap);
+        }
     }
 
-    public Roadmap modify(Long id, RoadmapDto roadmapDto) {
+    @Transactional
+    public void changeCourseOrder(Course course, Roadmap roadmap, int courseOrder) {
+
+        CourseRoadmap courseRoadmap = courseRoadmapRepository.findByCourseAndRoadmap(course, roadmap);
+
+        courseRoadmap.setCourseOrder(courseOrder);
+
+        courseRoadmapRepository.save(courseRoadmap);
+    }
+
+    @Transactional
+    public Roadmap modify(Long id, CreateRoadmapDto roadmapDto) {
         Roadmap roadmap = this.getRoadmap(id);
 
         roadmap.setTitle(roadmapDto.getTitle());
-        roadmap.setOverView(roadmap.getOverView());
-        roadmap.setCurriculum(roadmap.getCurriculum());
-        roadmap.setHashtags(roadmap.getHashtags());
+        roadmap.setOverView(roadmapDto.getOverView());
+        roadmap.setHashtags(roadmapDto.getHashtags());
 
         return roadmapRepository.save(roadmap);
     }
 
+    @Transactional
     public void delete(Long id) {
         Roadmap roadmap = this.getRoadmap(id);
         roadmapRepository.delete(roadmap);
+    }
+
+    public void courseRoadmapDelete(Long id) {
+        CourseRoadmap courseRoadmap = this.getCourseRoadmapById(id);
+        courseRoadmapRepository.delete(courseRoadmap);
+    }
+
+    public void courseRoadmapDelete(Roadmap roadmap, Course course) {
+        CourseRoadmap courseRoadmap = this.getCourseRoadmap(course, roadmap);
+        courseRoadmapRepository.delete(courseRoadmap);
     }
 }

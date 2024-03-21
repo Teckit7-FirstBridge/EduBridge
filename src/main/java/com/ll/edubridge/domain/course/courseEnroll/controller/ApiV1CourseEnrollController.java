@@ -60,7 +60,7 @@ public class ApiV1CourseEnrollController {
         Course course = courseService.getCourse(courseId);
         int price = course.getPrice();
         if (point >= price) {
-            CourseEnroll courseEnroll = courseEnrollService.create(rq.getMember(), course, point, price);
+            courseEnrollService.create(rq.getMember(), course, point, price);
             pointService.subPoint(PointType.Enroll, member, price); // 포인트 내역 추가
             return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(), Msg.E200_0_CREATE_SUCCEED.getMsg());
         } else {

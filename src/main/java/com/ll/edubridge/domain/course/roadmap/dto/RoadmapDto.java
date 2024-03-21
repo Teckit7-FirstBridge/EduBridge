@@ -1,6 +1,6 @@
 package com.ll.edubridge.domain.course.roadmap.dto;
 
-import com.ll.edubridge.domain.course.course.entity.Course;
+import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import jakarta.validation.constraints.Size;
@@ -27,21 +27,19 @@ public class RoadmapDto {
     private String overView;
 
     @NonNull
-    private List<Course> curriculum;
+    private List<CourseRoadmap> curriculum;
 
     @NonNull
     private String hashtags;
 
     @NonNull
-    private String owner;
+    private Member owner;
 
-    public RoadmapDto(Roadmap roadmap, Member member) {
-        this.id = roadmap.getId();
-        this.title = roadmap.getTitle();
-        this.overView = roadmap.getOverView();
-        this.curriculum = roadmap.getCurriculum();
-        this.hashtags = roadmap.getHashtags();
-        this.owner = member.getUsername();
+    @NonNull
+    private List<Roadmap> roadmapList;
+
+    public RoadmapDto(List<Roadmap> roadmapList) {
+        this.roadmapList = roadmapList;
     }
 
     public RoadmapDto(Roadmap roadmap) {
@@ -50,7 +48,9 @@ public class RoadmapDto {
         this.overView = roadmap.getOverView();
         this.curriculum = roadmap.getCurriculum();
         this.hashtags = roadmap.getHashtags();
+        this.owner = roadmap.getOwner();
     }
+
 
     public RoadmapDto() {}
 }

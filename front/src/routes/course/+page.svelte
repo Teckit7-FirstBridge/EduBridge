@@ -70,6 +70,7 @@
         }
       });
       roadmaplist = data?.data.items;
+
       return data!;
     }
   }
@@ -436,12 +437,12 @@
                   </p>
                   {#if item.curriculum}
                     <div class="flex flex-col">
-                      {#each item.curriculum.sort((a, b) => a.roadmapNum - b.roadmapNum || a.id - b.id) as curriculum, index}
-                        <a href="/course/{curriculum.id}">
+                      {#each item.curriculum as curriculum, index}
+                        <a href="/course/{curriculum.course.id}">
                           <div
                             class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
                           >
-                            {index + 1}. {curriculum.title}
+                            {index + 1}. {curriculum.course?.title}
                           </div>
                         </a>
                       {/each}

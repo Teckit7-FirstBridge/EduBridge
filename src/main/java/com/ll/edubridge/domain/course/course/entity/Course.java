@@ -3,7 +3,7 @@ package com.ll.edubridge.domain.course.course.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
-import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
+import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
@@ -38,8 +38,6 @@ public class Course extends BaseEntity {
 
     private int price;
 
-    private int roadmapNum;
-
     @Column
     @Builder.Default
     private Boolean confirm = false;
@@ -54,13 +52,13 @@ public class Course extends BaseEntity {
     @OneToMany(mappedBy = "course")
     private Set<CourseVoter> courseVoters;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Roadmap roadmap;
+    @JsonIgnore
+    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
+    private List<CourseRoadmap> roadmapList;
 
     private String hashtags;
 
-    private Long writer_id;
-
-    private String writer_nickname;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Member writer;
 
 }

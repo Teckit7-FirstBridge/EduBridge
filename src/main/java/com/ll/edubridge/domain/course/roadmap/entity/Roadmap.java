@@ -1,11 +1,10 @@
 package com.ll.edubridge.domain.course.roadmap.entity;
 
-import com.ll.edubridge.domain.course.course.entity.Course;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 
 import java.util.List;
 
@@ -27,12 +26,13 @@ public class Roadmap extends BaseEntity {
     private String overView;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "roadmap", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<Course> curriculum;
+    @OneToMany(mappedBy = "roadmap", cascade = CascadeType.REMOVE)
+    private List<CourseRoadmap> curriculum;
 
     @Column
     private String hashtags;
 
-    @Column
-    private String owner;
+    @JsonIgnore
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Member owner;
 }

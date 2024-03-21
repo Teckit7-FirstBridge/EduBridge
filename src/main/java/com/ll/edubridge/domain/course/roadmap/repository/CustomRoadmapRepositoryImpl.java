@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
-import static com.ll.edubridge.domain.course.course.entity.QCourse.course;
 import static com.ll.edubridge.domain.course.roadmap.entity.QRoadmap.roadmap;
 
 @RequiredArgsConstructor
@@ -44,12 +43,12 @@ public class CustomRoadmapRepositoryImpl implements CustomRoadmapRepository {
         switch (kwType) {
             case kwType.TITLE -> builder.and(roadmap.title.containsIgnoreCase(kw));
             case kwType.HASHTAGS -> builder.and(roadmap.hashtags.containsIgnoreCase(kw));
-            case kwType.NAME -> builder.and(roadmap.owner.containsIgnoreCase(kw));
+            case kwType.NAME -> builder.and(roadmap.owner.username.containsIgnoreCase(kw));
             default -> {
                 builder.andAnyOf(
                         roadmap.title.containsIgnoreCase(kw),
                         roadmap.hashtags.containsIgnoreCase(kw),
-                        roadmap.owner.containsIgnoreCase(kw)
+                        roadmap.owner.username.containsIgnoreCase(kw)
                 );
             }
         }
