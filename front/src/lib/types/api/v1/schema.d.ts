@@ -5,7 +5,7 @@
 
 
 export interface paths {
-  "/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}": {
+  "/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}/{courseOrder}": {
     /** 로드맵에 강좌 추가 */
     put: operations["addCourse"];
   };
@@ -15,7 +15,7 @@ export interface paths {
     /** 로드맵 삭제 */
     delete: operations["deleteCourse"];
   };
-  "/api/v1/roadmap/changeNum/{courseId}": {
+  "/api/v1/roadmap/changeNum/{roadmapId}/{courseId}": {
     /** 로드맵 순서 변경 */
     put: operations["changeRoadmapNum"];
   };
@@ -144,16 +144,16 @@ export interface paths {
     get: operations["getRoadmaps"];
   };
   "/api/v1/roadmap/{roadmapId}": {
-    /** 로드맵 아이디로 상세 조회 */
+    /** 로드맵 아이디로 로드맵 단건 조회 */
     get: operations["getRoadmapById"];
-  };
-  "/api/v1/roadmap/{courseId}": {
-    /** 로드맵 강좌로 상세 조회 */
-    get: operations["getRoadmapByCourse"];
   };
   "/api/v1/roadmap/myRoadmap": {
     /** 내가 등록한 로드맵 다건 조회 */
     get: operations["getMyRoadmaps"];
+  };
+  "/api/v1/roadmap/byCourse/{courseId}": {
+    /** 강좌로 로드맵 목록 조회 */
+    get: operations["getRoadmapByCourse"];
   };
   "/api/v1/report/post": {
     /** 글 신고 목록 조회 */
@@ -312,6 +312,14 @@ export interface paths {
     /** 강좌 최신순 */
     get: operations["getRecentCourses"];
   };
+  "/api/v1/roadmap/{roadmapId}/{courseId}": {
+    /** 특정 강좌를 어떤 로드맵에서 삭제 by 각 id */
+    delete: operations["CourseRoadmapDelete"];
+  };
+  "/api/v1/roadmap/roadmaps/{courseRoadmapId}": {
+    /** 특정 강좌를 어떤 로드맵에서 삭제 by courseRoadmap id */
+    delete: operations["courseRoadmapDelete"];
+  };
   "/api/v1/courses/{id}/{writer_id}": {
     /** 강좌 삭제 */
     delete: operations["deleteCourse_1"];
@@ -343,21 +351,55 @@ export interface components {
       overView?: string;
       /** Format: int32 */
       price?: number;
-      /** Format: int32 */
-      roadmapNum?: number;
       confirm?: boolean;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
-      roadmap?: components["schemas"]["Roadmap"];
       hashtags?: string;
-      /** Format: int64 */
-      writer_id?: number;
-      writer_nickname?: string;
+      writer?: components["schemas"]["Member"];
     };
     CourseEnroll: {
       /** Format: int64 */
       id?: number;
       /** Format: date-time */
       createDate?: string;
+    };
+    CourseRoadmap: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      course?: components["schemas"]["Course"];
+      /** Format: int32 */
+      courseOrder?: number;
+    };
+    GrantedAuthority: {
+      authority?: string;
+    };
+    Member: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: date-time */
+      createDate?: string;
+      /** Format: int32 */
+      enrollCount?: number;
+      username?: string;
+      password?: string;
+      nickname?: string;
+      /** Format: int32 */
+      point?: number;
+      report?: boolean;
+      refreshToken?: string;
+      profileImgUrl?: string;
+      visitedToday?: boolean;
+      /** Format: int32 */
+      dailyGoal?: number;
+      /** Format: int32 */
+      dailyAchievement?: number;
+      uuid?: string;
+      courseEnrollList?: components["schemas"]["CourseEnroll"][];
+      name?: string;
+      authoritiesAsStringList?: string[];
+      authorities?: components["schemas"]["GrantedAuthority"][];
+      profileImgUrlOrDefault?: string;
     };
     Roadmap: {
       /** Format: int64 */
@@ -367,16 +409,16 @@ export interface components {
       title?: string;
       overView?: string;
       hashtags?: string;
-      owner?: string;
     };
     RoadmapDto: {
       /** Format: int64 */
       id: number;
       title?: string;
       overView?: string;
-      curriculum: components["schemas"]["Course"][];
+      curriculum: components["schemas"]["CourseRoadmap"][];
       hashtags: string;
-      owner: string;
+      owner: components["schemas"]["Member"];
+      roadmapList: components["schemas"]["Roadmap"][];
     };
     RsDataRoadmapDto: {
       resultCode: string;
@@ -460,36 +502,6 @@ export interface components {
     CreateSummaryNoteDto: {
       content: string;
     };
-    GrantedAuthority: {
-      authority?: string;
-    };
-    Member: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      /** Format: int32 */
-      enrollCount?: number;
-      username?: string;
-      password?: string;
-      nickname?: string;
-      /** Format: int32 */
-      point?: number;
-      report?: boolean;
-      refreshToken?: string;
-      profileImgUrl?: string;
-      visitedToday?: boolean;
-      /** Format: int32 */
-      dailyGoal?: number;
-      /** Format: int32 */
-      dailyAchievement?: number;
-      uuid?: string;
-      courseEnrollList?: components["schemas"]["CourseEnroll"][];
-      name?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
-      authoritiesAsStringList?: string[];
-      profileImgUrlOrDefault?: string;
-    };
     RsDataSummaryNoteDto: {
       resultCode: string;
       /** Format: int32 */
@@ -524,8 +536,6 @@ export interface components {
       imgUrl?: string;
       overView?: string;
       /** Format: int32 */
-      roadmapNum?: number;
-      /** Format: int32 */
       price?: number;
       /** Format: int32 */
       voteCount?: number;
@@ -535,8 +545,7 @@ export interface components {
       confirm?: boolean;
       /** Format: int32 */
       enrollCount?: number;
-      /** Format: int64 */
-      writer_id?: number;
+      writer?: components["schemas"]["Member"];
       hashtags?: string;
     };
     RsDataCourseDto: {
@@ -708,8 +717,6 @@ export interface components {
       notice: string;
       imgUrl: string;
       overView: string;
-      /** Format: int64 */
-      writer_id?: number;
       hashtags?: string;
     };
     RsDataCreateCourseDto: {
@@ -1295,6 +1302,7 @@ export interface operations {
       path: {
         roadmapId: number;
         courseId: number;
+        courseOrder: number;
       };
     };
     responses: {
@@ -1347,6 +1355,7 @@ export interface operations {
   changeRoadmapNum: {
     parameters: {
       path: {
+        roadmapId: number;
         courseId: number;
       };
     };
@@ -2004,27 +2013,11 @@ export interface operations {
       };
     };
   };
-  /** 로드맵 아이디로 상세 조회 */
+  /** 로드맵 아이디로 로드맵 단건 조회 */
   getRoadmapById: {
     parameters: {
       path: {
         roadmapId: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataRoadmapDto"];
-        };
-      };
-    };
-  };
-  /** 로드맵 강좌로 상세 조회 */
-  getRoadmapByCourse: {
-    parameters: {
-      path: {
-        courseId: number;
       };
     };
     responses: {
@@ -2043,6 +2036,22 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataListRoadmapDto"];
+        };
+      };
+    };
+  };
+  /** 강좌로 로드맵 목록 조회 */
+  getRoadmapByCourse: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataRoadmapDto"];
         };
       };
     };
@@ -2632,6 +2641,39 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataListAdminCourseDto"];
+        };
+      };
+    };
+  };
+  /** 특정 강좌를 어떤 로드맵에서 삭제 by 각 id */
+  CourseRoadmapDelete: {
+    parameters: {
+      path: {
+        roadmapId: number;
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 특정 강좌를 어떤 로드맵에서 삭제 by courseRoadmap id */
+  courseRoadmapDelete: {
+    parameters: {
+      path: {
+        courseRoadmapId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };

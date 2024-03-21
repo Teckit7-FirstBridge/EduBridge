@@ -5,12 +5,10 @@ import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.dto.NumDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
-import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
 import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
 import com.ll.edubridge.domain.course.roadmap.service.RoadmapService;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
@@ -30,8 +28,6 @@ import java.util.Optional;
 public class CourseService {
     private final CourseRepository courseRepository;
     private final Rq rq;
-    private final CourseEnrollRepository courseEnrollRepository;
-    private final MemberService memberService;
     private final RoadmapService roadmapService;
 
 
@@ -54,7 +50,7 @@ public class CourseService {
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .price(price)
-                .writer(createCourseDto.getWriter())
+                .writer(rq.getMember())
                 .hashtags(createCourseDto.getHashtags())
                 .build();
 

@@ -34,7 +34,6 @@ public class RoadmapService {
     public List<Roadmap> findAll() {
         return roadmapRepository.findAll();
     }
-
     public Optional<Roadmap> findById(Long id) {
         return roadmapRepository.findById(id);
     }
@@ -88,16 +87,25 @@ public class RoadmapService {
 
     @Transactional
     public void addCourse(Long id, Course course, int courseOrder) {
-        // CourseRoadmap 테이블에 데이터 생성 (따라서, CreateDto 사용 X)
-        Roadmap roadmap = this.getRoadmap(id);
-        CourseRoadmap courseRoadmap = new CourseRoadmap(course, roadmap, courseOrder);
-        courseRoadmapRepository.save(courseRoadmap);
 
-        // roadmap의 CourseRoadmap 목록에 새로운 요소 추가
-        List<CourseRoadmap> roadmapList = course.getRoadmapList();
-        roadmapList.add(courseRoadmap);
-        course.setRoadmapList(roadmapList);
-        courseRepository.save(course);
+        Roadmap roadmap = this.getRoadmap(id);
+
+        if(courseRoadmapRepository.existsByCourseAndRoadmap(course, roadmap)){
+            this.changeCourseOrder(course, roadmap, courseOrder);
+        }else {
+            CourseRoadmap courseRoadmap = new CourseRoadmap(course, roadmap, courseOrder);
+            courseRoadmapRepository.save(courseRoadmap);
+        }
+    }
+
+    @Transactional
+    public void changeCourseOrder(Course course, Roadmap roadmap, int courseOrder) {
+
+        CourseRoadmap courseRoadmap = courseRoadmapRepository.findByCourseAndRoadmap(course, roadmap);
+
+        courseRoadmap.setCourseOrder(courseOrder);
+
+        courseRoadmapRepository.save(courseRoadmap);
     }
 
     public Roadmap modify(Long id, RoadmapDto roadmapDto) {

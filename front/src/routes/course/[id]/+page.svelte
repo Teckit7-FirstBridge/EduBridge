@@ -41,33 +41,21 @@
 
     const { data, error } = await rq
       .apiEndPoints()
-      .PUT(`/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}`, {
+      .PUT(`/api/v1/roadmap/roadmaps/{roadmapId}/{courseId}/{courseOrder}`, {
         params: {
           path: {
             courseId: parseInt($page.params.id),
-            roadmapId: roadmapId
+            roadmapId: parseInt(roadmapId),
+            courseOrder: changeNum
           }
         }
       });
 
     if (data) {
-      const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/roadmap/changeNum/{courseId}`, {
-        params: {
-          path: {
-            courseId: parseInt($page.params.id)
-          }
-        },
-        body: {
-          num: changeNum
-        }
-      });
-
-      if (data) {
-        rq.msgInfo('로드맵 설정 성공');
-        modalRoadmap.close();
-      } else {
-        rq.msgError('로드맵 설정 실패');
-      }
+      rq.msgInfo('로드맵 설정 성공');
+      modalRoadmap.close();
+    } else {
+      rq.msgError('로드맵 설정 실패');
     }
   }
 
@@ -123,7 +111,7 @@
         params: {
           path: {
             courseId: parseInt($page.params.id),
-            writerId: course.writer_id!
+            writerId: course.writer?.id
           }
         }
       });
@@ -183,7 +171,7 @@
 
     if (isConfirmed) {
       const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}/{writer_id}`, {
-        params: { path: { id: parseInt($page.params.id), writer_id: course.writer_id } }
+        params: { path: { id: parseInt($page.params.id), writer_id: course.writer.id } }
       });
 
       if (data) {
@@ -205,7 +193,7 @@
         const { data, error } = await rq
           .apiEndPoints()
           .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
-            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
+            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer.id! } }
           });
 
         if (data) {
@@ -225,7 +213,7 @@
       const { data, error } = await rq
         .apiEndPoints()
         .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
-          params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
+          params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer.id! } }
         });
 
       if (data) {
@@ -281,7 +269,7 @@
             path: {
               courseId: parseInt($page.params.id),
               id: video.id,
-              writer_id: course.writer_id!
+              writer_id: course.writer.id!
             }
           }
         });
@@ -422,7 +410,7 @@
           {/each}
         </div>
         <div class="flex justify-end">
-          {#if !auth.enroll && !(rq.member.id == course.writer_id) && !rq.isAdmin()}
+          {#if !auth.enroll && !(rq.member.id == course.writer.id) && !rq.isAdmin()}
             <div class="flex">
               <div class="mt-2">
                 <p class="course-price mt-4">{course.price}원</p>
@@ -435,7 +423,7 @@
             </div>
           {/if}
         </div>
-        {#if rq.member.id === course.writer_id || rq.isAdmin()}
+        {#if rq.member.id === course.writer.id || rq.isAdmin()}
           <div class="mx-2 items-center">
             <div class="mb-2">
               <a href="/course/{$page.params.id}/edit" class="btn btn-sm">수정</a>
@@ -466,39 +454,39 @@
                     </div>
                   </div>
                 </dialog>
-                <button onclick={openModalRoadmap} class="btn btn-sm">로드맵</button>
-                <dialog id="my_modal_3" class="modal" bind:this={modalRoadmap}>
-                  <div class="modal-box">
-                    <button
-                      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                      on:click={() => modalRoadmap.close()}>✕</button
-                    >
-                    <div class="flex flex-col p-6 bg-white shadow rounded-lg">
-                      <h2 class="text-xl font-semibold mb-4 pb-2">로드맵 등록</h2>
-                      <select
-                        bind:value={selectedRoadmap}
-                        class="select select-bordered w-full mb-4 focus:outline-none focus:border-gray-700"
-                      >
-                        <option value="">로드맵을 선택하세요</option>
-                        {#each myRoadmap as roadmap}
-                          <option value={roadmap.id}>{roadmap.title}</option>
-                        {/each}
-                      </select>
-                      <input
-                        type="number"
-                        bind:value={changeNum}
-                        placeholder="로드맵 순서"
-                        class="input input-bordered focus:outline-none focus:border-gray-700 w-full mb-4"
-                      />
-                      <button
-                        on:click={registerCourseToRoadmap}
-                        class="btn border border-gray-500 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
-                        >등록</button
-                      >
-                    </div>
-                  </div>
-                </dialog>
               {/if}
+              <button onclick={openModalRoadmap} class="btn btn-sm">로드맵</button>
+              <dialog id="my_modal_3" class="modal" bind:this={modalRoadmap}>
+                <div class="modal-box">
+                  <button
+                    class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                    on:click={() => modalRoadmap.close()}>✕</button
+                  >
+                  <div class="flex flex-col p-6 bg-white shadow rounded-lg">
+                    <h2 class="text-xl font-semibold mb-4 pb-2">로드맵 등록</h2>
+                    <select
+                      bind:value={selectedRoadmap}
+                      class="select select-bordered w-full mb-4 focus:outline-none focus:border-gray-700"
+                    >
+                      <option value="">로드맵을 선택하세요</option>
+                      {#each myRoadmap as roadmap}
+                        <option value={roadmap.id}>{roadmap.title}</option>
+                      {/each}
+                    </select>
+                    <input
+                      type="number"
+                      bind:value={changeNum}
+                      placeholder="로드맵 순서"
+                      class="input input-bordered focus:outline-none focus:border-gray-700 w-full mb-4"
+                    />
+                    <button
+                      on:click={registerCourseToRoadmap}
+                      class="btn border border-gray-500 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                      >등록</button
+                    >
+                  </div>
+                </div>
+              </dialog>
             </div>
           </div>
         {/if}
@@ -523,16 +511,16 @@
           ></ToastUiEditor>
         </div>
 
-        {#if rq.member.id === course.writer_id || rq.isAdmin()}
+        {#if rq.member.id === course.writer.id || rq.isAdmin()}
           <div class="flex justify-end">
             <a
               class=" mx-10 btn w-24 text-center"
-              href="/course/{$page.params.id}/videowrite?writer_id={course.writer_id}">강의 등록</a
+              href="/course/{$page.params.id}/videowrite?writer_id={course.writer.id}">강의 등록</a
             >
           </div>
         {/if}
 
-        {#if auth.enroll || rq.member.id === course.writer_id}
+        {#if auth.enroll || rq.member.id === course.writer.id}
           <div class="border shadow-sm rounded-lg">
             <div class="relative w-full overflow-auto">
               <table class="w-full table-fixed caption-bottom text-sm">
@@ -606,10 +594,11 @@
                       </td>
 
                       <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                        {#if rq.isAdmin() || rq.member.id === course.writer_id}
+                        {#if rq.isAdmin() || rq.member.id === course.writer.id}
                           <div class="mb-5 mx-2 items-center">
                             <a
-                              href="/course/{video.courseId}/videoedit/{video.id}?writer_id={course.writer_id}"
+                              href="/course/{video.courseId}/videoedit/{video.id}?writer_id={course
+                                .writer.id}"
                               class="btn btn-sm">수정</a
                             >
                             <button on:click={() => deleteVideo(video)} class="btn btn-sm"

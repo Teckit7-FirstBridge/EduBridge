@@ -70,7 +70,6 @@
         notice: newNoti,
         overView: newOverview,
         imgUrl: imgUrl,
-        writer_id: rq.member.id,
         hashtags: tags.join('@')
       }
     });
