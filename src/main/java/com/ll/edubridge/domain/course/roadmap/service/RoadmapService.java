@@ -118,6 +118,7 @@ public class RoadmapService {
         return roadmapRepository.save(roadmap);
     }
 
+    @Transactional
     public void delete(Long id) {
         Roadmap roadmap = this.getRoadmap(id);
         roadmapRepository.delete(roadmap);

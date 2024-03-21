@@ -58,6 +58,23 @@
     }
   }
 
+  async function deleteRoadmap(id) {
+    const isConfirmed = confirm('로드맵을 삭제하시겠습니까?');
+
+    if (isConfirmed) {
+      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/roadmap/roadmaps/{id}`, {
+        params: { path: { id: parseInt($page.params.id), id: id } }
+      });
+
+      if (data) {
+        rq.msgInfo('로드맵이 삭제되었습니다');
+        rq.goTo('/member/mycourse');
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
+    }
+  }
+
   async function clickLiked(item: components['schemas']['CourseDto']) {
     if (likesList[courselist!.indexOf(item)]) {
       const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}/like`, {
@@ -253,11 +270,19 @@
                     </div>
                   {/if}
                   {#if item.owner.id == rq.member.id}
-                    <a
-                      href="/roadmap/edit/{item.id}"
-                      class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
-                      >수정</a
-                    >
+                    <div class="flex justify-end">
+                      <a
+                        href="/roadmap/edit/{item.id}"
+                        class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                        >수정</a
+                      >
+                      <button
+                        on:click={() => deleteRoadmap(item.id)}
+                        class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                      >
+                        삭제
+                      </button>
+                    </div>
                   {/if}
                 </div>
               </div>

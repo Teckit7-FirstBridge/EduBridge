@@ -177,7 +177,7 @@ public class ApiV1RoadmapController {
                 Msg.E200_3_DELETE_SUCCEED.getMsg());
     }
 
-    @DeleteMapping("/roadmaps/{courseRoadmapId}")
+    @DeleteMapping("/roadmaps/course/{courseRoadmapId}")
     @Operation(summary = "특정 강좌를 어떤 로드맵에서 삭제 by courseRoadmap id")
     public RsData<Empty> courseRoadmapDelete(@PathVariable("courseRoadmapId") Long courseRoadmapId) {
 
