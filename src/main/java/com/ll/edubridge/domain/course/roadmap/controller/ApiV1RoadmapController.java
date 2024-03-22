@@ -104,13 +104,13 @@ public class ApiV1RoadmapController {
 
     @GetMapping("/byCourse/{courseId}")
     @Operation(summary = "강좌로 로드맵 목록 조회")
-    public RsData<RoadmapDto> getRoadmapByCourse(@PathVariable("courseId") Long courseId) {
+    public RsData<List<RoadmapDto>> getRoadmapByCourse(@PathVariable("courseId") Long courseId) {
         Course course = courseService.getCourse(courseId);
         List<Roadmap> roadmapList = roadmapService.getCourseRoadmapList(course);
-        RoadmapDto roadmapDto = new RoadmapDto(roadmapList);
+        List<RoadmapDto> roadmapDtoList = roadmapList.stream().map(RoadmapDto::new).toList();
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
-                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), roadmapDto);
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(), roadmapDtoList);
     }
 
     @PostMapping("/roadmaps")

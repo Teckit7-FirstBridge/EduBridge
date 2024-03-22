@@ -16,7 +16,7 @@
 
   function changeTab(tabName: string) {
     selectedTab = tabName;
-    rq.goTo(`/course`, { replaceState: true }); // URL을 변경하되, 쿼리 파라미터를 제거합니다.
+    rq.goTo(`/course?tab=${tabName}`, { replaceState: false }); // URL을 변경하되, 쿼리 파라미터를 제거합니다.
     load();
   }
 
@@ -39,6 +39,8 @@
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
+
+    selectedTab = $page.url.searchParams.get('tab') ?? 'course';
 
     const kw = $page.url.searchParams.get('kw') ?? '';
     const kwType = ($page.url.searchParams.get('kwType') ?? 'ALL') as KwTypeCourse;
@@ -138,7 +140,7 @@
             등록
           </a>
           <a
-            href="/member/mycourse"
+            href="/member/mycourse/?tab=course"
             class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
           >
             관리
@@ -177,13 +179,14 @@
               </form>
 
               <form
-                action="/course"
+                action="/course?tab=course&"
                 class="bg-base rounded flex flex-col gap-6"
                 onsubmit={() => {
             const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
             searchFormModal.close();
           }}
               >
+                <input type="hidden" name="tab" value={selectedTab} />
                 <div class="max-w-md mx-auto bg-white p-5">
                   <div class="form-control">
                     <label for="kwType" class="label text-sm font-bold text-gray-700"
@@ -315,7 +318,7 @@
             등록
           </a>
           <a
-            href="/member/mycourse"
+            href="/member/mycourse/?tab=roadmap"
             class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
           >
             관리
@@ -354,13 +357,15 @@
               </form>
 
               <form
-                action="/course"
+                action="/course?tab=roadmap&"
                 class="bg-base rounded flex flex-col gap-6"
                 onsubmit={() => {
             const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
             searchFormModal.close();
           }}
               >
+                <input type="hidden" name="tab" value={selectedTab} />
+
                 <div class="max-w-md mx-auto bg-white p-5">
                   <div class="form-control">
                     <label for="kwType" class="label text-sm font-bold text-gray-700"

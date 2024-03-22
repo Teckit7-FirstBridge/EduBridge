@@ -45,11 +45,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 Map<String, Object> attributes = oAuth2User.getAttributes();
                 Map attributesProperties = (Map) attributes.get("properties");
 
-                nickname = (String) attributesProperties.get("nickname");
+                nickname = (String) attributesProperties.get("nickname") + oauthId.substring(2,6);
                 profileImgUrl = (String) attributesProperties.get("profile_image");
                 break;
             case "GOOGLE":
-                nickname = (String) oAuth2User.getAttributes().get("name");
+                nickname = (String) oAuth2User.getAttributes().get("name") + oauthId.substring(2,6);
                 profileImgUrl = (String) oAuth2User.getAttributes().get("picture");
                 break;
         }
