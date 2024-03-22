@@ -73,6 +73,7 @@
   let courseConfirm: Boolean = $state();
   let myRoadmap: components['schemas']['RoadmapDto'][] | undefined;
   let reportReason;
+  let roadmapList: components['schemas']['RoadmapDto'][] | undefined;
 
   let overviewviewr: any | undefined = $state();
   let notiviewer: any | undefined = $state();
@@ -93,6 +94,15 @@
       }
     });
     videos = responseVideos.data?.data!;
+
+    const responseRoadmap = await rq.apiEndPoints().GET(`/api/v1/roadmap/byCourse/{courseId}`, {
+      params: {
+        path: {
+          courseId: parseInt($page.params.id)
+        }
+      }
+    });
+    roadmapList = responseRoadmap.data?.data!;
 
     const responseCourse = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}`, {
       params: {
@@ -127,14 +137,14 @@
     });
     auth = responseAuth.data?.data!;
 
-    const responseRoadmap = await rq.apiEndPoints().GET(`/api/v1/roadmap/myRoadmap`, {
+    const responseMyRoadmap = await rq.apiEndPoints().GET(`/api/v1/roadmap/myRoadmap`, {
       params: {}
     });
-    myRoadmap = responseRoadmap.data?.data!;
+    myRoadmap = responseMyRoadmap.data?.data!;
 
     changeNum = course.roadmapNum;
 
-    return { videos, course, auth, enroll, hashtags, myRoadmap };
+    return { videos, course, auth, enroll, hashtags, myRoadmap, roadmapList };
   }
 
   let modalreport;
@@ -311,7 +321,7 @@
 
 {#await load()}
   <div>loading...</div>
-{:then { videos, course, auth, enroll, hashtags, myRoadmap }}
+{:then { videos, course, auth, enroll, hashtags, myRoadmap, roadmapList }}
   <div class="flex w-full justify-center items-center">
     <div class="flex flex-col">
       <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
@@ -365,7 +375,7 @@
                     viewBox="0 0 24 24"
                     stroke-width="1.5"
                     stroke="black"
-                    class="w-7 h-7 mt-3 ml-2"
+                    class="w-7 h-7 mt-3 ml-4"
                   >
                     <path
                       stroke-linecap="round"
@@ -489,6 +499,23 @@
                 </div>
               </dialog>
             </div>
+          </div>
+        {:else}
+          <div class="flex justify-end">
+            <details class="dropdown dropdown-end">
+              <summary class="btn">로드맵</summary>
+              {#if roadmapList && roadmapList.length > 0}
+                <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                  {#each roadmapList as roadmap}
+                    <a href="/course?tab=roadmap&kwType=ALL&kw={roadmap.title}">
+                      <li class="p-2">{roadmap.title}</li>
+                    </a>
+                  {/each}
+                </ul>
+              {:else}
+                <li>등록된 로드맵이 없습니다.</li>
+              {/if}
+            </details>
           </div>
         {/if}
 

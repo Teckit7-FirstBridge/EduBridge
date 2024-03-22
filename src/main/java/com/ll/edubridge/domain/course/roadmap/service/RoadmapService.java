@@ -124,11 +124,13 @@ public class RoadmapService {
         roadmapRepository.delete(roadmap);
     }
 
+    @Transactional
     public void courseRoadmapDelete(Long id) {
         CourseRoadmap courseRoadmap = this.getCourseRoadmapById(id);
         courseRoadmapRepository.delete(courseRoadmap);
     }
 
+    @Transactional
     public void courseRoadmapDelete(Roadmap roadmap, Course course) {
         CourseRoadmap courseRoadmap = this.getCourseRoadmap(course, roadmap);
         courseRoadmapRepository.delete(courseRoadmap);

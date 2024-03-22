@@ -16,7 +16,7 @@
 
   function changeTab(tabName: string) {
     selectedTab = tabName;
-    rq.goTo(`/member/mycourse`, { replaceState: true }); // URL을 변경하되, 쿼리 파라미터를 제거합니다.
+    rq.goTo(`/member/mycourse?tab=${tabName}`, { replaceState: true }); // URL을 변경하되, 쿼리 파라미터를 제거합니다.
     load();
   }
 
@@ -63,8 +63,27 @@
 
     if (isConfirmed) {
       const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/roadmap/roadmaps/{id}`, {
-        params: { path: { id: parseInt($page.params.id), id: id } }
+        params: { path: { id: id } }
       });
+
+      if (data) {
+        rq.msgInfo('로드맵이 삭제되었습니다');
+        window.location.reload();
+      } else if (error) {
+        rq.msgError(error.msg);
+      }
+    }
+  }
+
+  async function deleteCourseInRoadmap(id) {
+    const isConfirmed = confirm('해당 강좌를 로드맵에서 제거 하시겠습니까?');
+
+    if (isConfirmed) {
+      const { data, error } = await rq
+        .apiEndPoints()
+        .DELETE(`/api/v1/roadmap/roadmaps/course/{courseRoadmapId}`, {
+          params: { path: { courseRoadmapId: id } }
+        });
 
       if (data) {
         rq.msgInfo('로드맵이 삭제되었습니다');
@@ -258,7 +277,7 @@
                   {#if item.curriculum}
                     <div class="flex flex-col">
                       {#each item.curriculum.sort((a, b) => a.courseOrder - b.courseOrder || a.id - b.id) as curriculum, index}
-                        <a href="/course/{curriculum.id}">
+                        <a href="/course/{curriculum.course.id}">
                           <div
                             class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
                           >
@@ -266,6 +285,12 @@
                             [{curriculum.courseOrder}번 강좌]
                           </div>
                         </a>
+                        <button
+                          on:click={() => deleteCourseInRoadmap(curriculum.id)}
+                          class="w-[100px] my-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                        >
+                          강좌 제거
+                        </button>
                       {/each}
                     </div>
                   {/if}
