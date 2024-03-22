@@ -162,7 +162,7 @@ public class ApiV1CourseController {
     }
 
     @GetMapping(value = "/mycourse")
-    @Operation(summary = "강좌 다건 조회")
+    @Operation(summary = "내가 등록한 강좌 조회")
     public RsData<GetCoursesResponsebody> getMyCourse(@RequestParam(defaultValue = "1") int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));

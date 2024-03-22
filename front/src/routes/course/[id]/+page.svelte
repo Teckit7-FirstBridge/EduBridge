@@ -111,7 +111,7 @@
         }
       }
     });
-    console.log(responseCourse);
+
     course = responseCourse.data?.data!;
     courseConfirm = course.confirm!;
     hashtags = course.hashtags!.split('@');
@@ -412,6 +412,26 @@
           </h1>
         </div>
         <div class="flex">
+          <details class="dropdown">
+            <summary class="flex items-center cursor-pointer">
+              <i class="fa-regular fa-user mr-1"></i>
+              {course.writer?.nickname}
+            </summary>
+            <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+              <li>
+                <a href="/course?tab=course&kwType=NAME&kw={course.writer?.nickname}"
+                  >{course.writer?.nickname} 강좌</a
+                >
+              </li>
+              <li>
+                <a href="/course?tab=roadmap&kwType=NAME&kw={course.writer?.nickname}"
+                  >{course.writer?.nickname} 로드맵</a
+                >
+              </li>
+            </ul>
+          </details>
+        </div>
+        <div class="flex">
           {#each hashtags as hashtag}
             <div class="">
               <div class="flex text-amber-600 text-sm text-center items-center ml-2">
@@ -508,7 +528,12 @@
                 <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
                   {#each roadmapList as roadmap}
                     <a href="/course?tab=roadmap&kwType=ALL&kw={roadmap.title}">
-                      <li class="p-2">{roadmap.title}</li>
+                      <li class="p-2">
+                        <div>
+                          <i class="fa-solid fa-flag"></i>
+                          {roadmap.title}
+                        </div>
+                      </li>
                     </a>
                   {/each}
                 </ul>
