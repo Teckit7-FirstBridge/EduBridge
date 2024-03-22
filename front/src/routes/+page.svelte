@@ -15,8 +15,17 @@
     // 나머지 필요한 필드 추가
   };
 
+  let hideButtonOnMobile = false;
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
+
+    const isMobileResponse = await rq.apiEndPoints().GET(`/api/v1/admin/deviceCheck`);
+    const { isMobile } = isMobileResponse.data?.data!;
+
+    if (isMobile) {
+      hideButtonOnMobile = true;
+      // console.log('모바일');
+    }
 
     const { data } = await rq.apiEndPoints().GET('/api/v1/home', {});
     courses = data!.data.items;
@@ -26,35 +35,44 @@
 
     return courses;
   }
+
   let activeSlide = 0;
-  const totalSlides = 2;
+  const totalSlides = 3;
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  function handleTouchStart(event) {
+    touchStartX = event.touches[0].clientX;
+  }
+
+  function handleTouchMove(event) {
+    touchEndX = event.touches[0].clientX;
+  }
+
+  function handleTouchEnd() {
+    if (touchStartX - touchEndX > 50) {
+      nextSlide();
+    } else if (touchEndX - touchStartX > 50) {
+      previousSlide();
+    }
+  }
 
   function nextSlide() {
     activeSlide = (activeSlide + 1) % totalSlides;
+    updateSlideTransform();
   }
 
   function previousSlide() {
     activeSlide = (activeSlide - 1 + totalSlides) % totalSlides;
+    updateSlideTransform();
   }
-  // function previousSlide() {
-  //   if (activeSlide > 0) {
-  //     activeSlide--;
-  //     updateSlideTransform();
-  //   }
-  // }
 
-  // function nextSlide() {
-  //   // Assuming courses.length is the total number of slides
-  //   if (activeSlide < courses.length - 1) {
-  //     activeSlide++;
-  //     updateSlideTransform();
-  //   }
-  // }
-
-  // function updateSlideTransform() {
-  //   const slideContainer = document.querySelector('.carousel-container');
-  //   slideContainer.style.transform = `translateX(-${activeSlide * 100}%)`;
-  // }
+  function updateSlideTransform() {
+    const slideContainer = document.querySelector('.carousel-container');
+    slideContainer.style.transform = `translateX(-${activeSlide * 100}%)`;
+    // console.log(activeSlide);
+  }
+  
 </script>
 
 {#await load()}
@@ -66,14 +84,17 @@
         <div class="relative w-full max-w-md mx-auto" role="region" aria-roledescription="carousel">
           <div class="overflow-hidden">
             <div
-              class="flex -ml-4 transition-transform duration-300"
-              style="transform: translateX(-{activeSlide * 100}%)"
-            >
+              class="flex -ml-4 transition-transform duration-300 carousel-container"
+              on:touchstart={handleTouchStart}
+              on:touchmove={handleTouchMove}
+              on:touchend={handleTouchEnd}>
               <div
                 role="group"
                 aria-roledescription="slide"
                 class="min-w-0 shrink-0 grow-0 basis-full pl-4"
-              >
+                style="width: 100%"
+                class:selected={activeSlide === 0}
+              > 
                 <h2 class="text-5xl font-extrabold">환영합니다!</h2>
                 <p class="mt-4 text-xl">학습 능률을 끌어올려줄 학습 징검다리, 에듀브릿지</p>
                 <p class="mt-4 text-x2">
@@ -85,57 +106,49 @@
                 role="group"
                 aria-roledescription="slide"
                 class="min-w-0 shrink-0 grow-0 basis-full pl-4"
+                style="width: 100%"
+                class:selected={activeSlide === 1}
               >
-                <h2 class="text-5xl font-extrabold">환영!!!</h2>
+                <h2 class="text-5xl font-extrabold">공지사항</h2>
                 <p class="mt-4 text-xl">무엇을 하시든 환영합니다</p>
                 <p class="mt-4 text-x2">
-                  커리큘럼을 따라 차근차근 학습하고, <br />
-                  포인트를 받아 다음 강좌로 건너가세요!
+                  열공하세요! <br />
+                </p>
+              </div>
+              <div
+                role="group"
+                aria-roledescription="slide"
+                class="min-w-0 shrink-0 grow-0 basis-full pl-4"
+                style="width: 100%"
+                class:selected={activeSlide === 2}
+              > 
+                <h2 class="text-5xl font-extrabold">공지222</h2>
+                <p class="mt-4 text-xl">업데이트 점검 안내</p>
+                <p class="mt-4 text-x2">
+                  3월 31일까지 점검 예정입니다.
                 </p>
               </div>
             </div>
           </div>
           <button
-            class="inline-flex items-center whitespace-nowrap shrink-0 justify-center text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm font-medium hover:bg-accent hover:text-accent-foreground absolute h-8 w-8 rounded-full -left-12 top-1/2 -translate-y-1/2"
+            class="inline-flex items-center whitespace-nowrap shrink-0 justify-center text-sm transition-colors 
+            focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none 
+            disabled:opacity-50 border border-input bg-background shadow-sm font-medium hover:bg-accent 
+            hover:text-accent-foreground absolute h-8 w-8 rounded-full -left-12 top-1/2 -translate-y-1/2 
+            {hideButtonOnMobile ? 'hidden' : ''}"
             on:click={previousSlide}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="h-4 w-4"
-            >
-              <path d="m12 19-7-7 7-7"></path>
-              <path d="M19 12H5"></path>
-            </svg>
-            <span class="sr-only">Previous slide</span>
+            &lt;
           </button>
           <button
             on:click={nextSlide}
-            class="inline-flex items-center whitespace-nowrap shrink-0 justify-center text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm font-medium hover:bg-accent hover:text-accent-foreground absolute h-8 w-8 rounded-full -right-12 top-1/2 -translate-y-1/2"
+            class="inline-flex items-center whitespace-nowrap shrink-0 justify-center text-sm transition-colors 
+            focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none 
+            disabled:opacity-50 border border-input bg-background shadow-sm font-medium hover:bg-accent 
+            hover:text-accent-foreground absolute h-8 w-8 rounded-full -right-12 top-1/2 -translate-y-1/2 
+            {hideButtonOnMobile ? 'hidden' : ''}"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="h-4 w-4"
-            >
-              <path d="M5 12h14"></path>
-              <path d="m12 5 7 7-7 7"></path>
-            </svg>
-            <span class="sr-only">Next slide</span>
+            &gt;
           </button>
         </div>
       </div>
