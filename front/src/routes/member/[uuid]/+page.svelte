@@ -35,7 +35,7 @@
       modalNickname.close();
       console.log(newNickname);
     } else {
-      rq.msgError('변경 오류');
+      rq.msgError('이미 사용중인 닉네임 입니다.');
     }
   };
 
