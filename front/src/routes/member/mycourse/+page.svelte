@@ -16,7 +16,7 @@
 
   function changeTab(tabName: string) {
     selectedTab = tabName;
-    rq.goTo(`/member/mycourse`, { replaceState: true }); // URL을 변경하되, 쿼리 파라미터를 제거합니다.
+    rq.goTo(`/member/mycourse?tab=${tabName}`, { replaceState: true }); // URL을 변경하되, 쿼리 파라미터를 제거합니다.
     load();
   }
 

@@ -2066,7 +2066,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataRoadmapDto"];
+          "application/json": components["schemas"]["RsDataListRoadmapDto"];
         };
       };
     };
