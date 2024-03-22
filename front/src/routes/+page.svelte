@@ -26,6 +26,35 @@
 
     return courses;
   }
+  let activeSlide = 0;
+  const totalSlides = 2;
+
+  function nextSlide() {
+    activeSlide = (activeSlide + 1) % totalSlides;
+  }
+
+  function previousSlide() {
+    activeSlide = (activeSlide - 1 + totalSlides) % totalSlides;
+  }
+  // function previousSlide() {
+  //   if (activeSlide > 0) {
+  //     activeSlide--;
+  //     updateSlideTransform();
+  //   }
+  // }
+
+  // function nextSlide() {
+  //   // Assuming courses.length is the total number of slides
+  //   if (activeSlide < courses.length - 1) {
+  //     activeSlide++;
+  //     updateSlideTransform();
+  //   }
+  // }
+
+  // function updateSlideTransform() {
+  //   const slideContainer = document.querySelector('.carousel-container');
+  //   slideContainer.style.transform = `translateX(-${activeSlide * 100}%)`;
+  // }
 </script>
 
 {#await load()}
@@ -37,18 +66,77 @@
         <div class="relative w-full max-w-md mx-auto" role="region" aria-roledescription="carousel">
           <div class="overflow-hidden">
             <div
-              role="group"
-              aria-roledescription="slide"
-              class="min-w-0 shrink-0 grow-0 basis-full pl-4"
+              class="flex -ml-4 transition-transform duration-300"
+              style="transform: translateX(-{activeSlide * 100}%)"
             >
-              <h2 class="text-5xl font-extrabold">환영합니다!</h2>
-              <p class="mt-4 text-xl">학습 능률을 끌어올려줄 학습 징검다리, 에듀브릿지</p>
-              <p class="mt-4 text-x2">
-                커리큘럼을 따라 차근차근 학습하고, <br />
-                포인트를 받아 다음 강좌로 건너가세요!
-              </p>
+              <div
+                role="group"
+                aria-roledescription="slide"
+                class="min-w-0 shrink-0 grow-0 basis-full pl-4"
+              >
+                <h2 class="text-5xl font-extrabold">환영합니다!</h2>
+                <p class="mt-4 text-xl">학습 능률을 끌어올려줄 학습 징검다리, 에듀브릿지</p>
+                <p class="mt-4 text-x2">
+                  커리큘럼을 따라 차근차근 학습하고, <br />
+                  포인트를 받아 다음 강좌로 건너가세요!
+                </p>
+              </div>
+              <div
+                role="group"
+                aria-roledescription="slide"
+                class="min-w-0 shrink-0 grow-0 basis-full pl-4"
+              >
+                <h2 class="text-5xl font-extrabold">환영!!!</h2>
+                <p class="mt-4 text-xl">무엇을 하시든 환영합니다</p>
+                <p class="mt-4 text-x2">
+                  커리큘럼을 따라 차근차근 학습하고, <br />
+                  포인트를 받아 다음 강좌로 건너가세요!
+                </p>
+              </div>
             </div>
           </div>
+          <button
+            class="inline-flex items-center whitespace-nowrap shrink-0 justify-center text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm font-medium hover:bg-accent hover:text-accent-foreground absolute h-8 w-8 rounded-full -left-12 top-1/2 -translate-y-1/2"
+            on:click={previousSlide}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
+              <path d="m12 19-7-7 7-7"></path>
+              <path d="M19 12H5"></path>
+            </svg>
+            <span class="sr-only">Previous slide</span>
+          </button>
+          <button
+            on:click={nextSlide}
+            class="inline-flex items-center whitespace-nowrap shrink-0 justify-center text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm font-medium hover:bg-accent hover:text-accent-foreground absolute h-8 w-8 rounded-full -right-12 top-1/2 -translate-y-1/2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+            <span class="sr-only">Next slide</span>
+          </button>
         </div>
       </div>
 
