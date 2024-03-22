@@ -43,7 +43,7 @@ public class CustomRoadmapRepositoryImpl implements CustomRoadmapRepository {
         switch (kwType) {
             case kwType.TITLE -> builder.and(roadmap.title.containsIgnoreCase(kw));
             case kwType.HASHTAGS -> builder.and(roadmap.hashtags.containsIgnoreCase(kw));
-            case kwType.NAME -> builder.and(roadmap.owner.username.containsIgnoreCase(kw));
+            case kwType.NAME -> builder.and(roadmap.owner.nickname.containsIgnoreCase(kw));
             default -> {
                 builder.andAnyOf(
                         roadmap.title.containsIgnoreCase(kw),

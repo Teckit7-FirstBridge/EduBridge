@@ -234,7 +234,7 @@
       </div>
       <div class="flex flex-col flex-1">
         <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {#if courselist}
+          {#if courselist && courselist.length > 0}
             {#each courselist as item}
               <div
                 class="border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center pt-2"
@@ -243,6 +243,28 @@
                   <div class="flex justify-center gap-2">
                     <h2 class="text-lg font-semibold my-1 ml-2">{formatTitle(item.title)}</h2>
                   </div>
+                </a>
+                <div class="flex justify-end mr-2">
+                  <details class="dropdown dropdown-end">
+                    <summary class="flex items-center cursor-pointer">
+                      <i class="fa-regular fa-user"></i>
+                      {item.writer?.nickname}
+                    </summary>
+                    <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                      <li>
+                        <a href="/course?tab=course&kwType=NAME&kw={item.writer?.nickname}"
+                          >{item.writer?.nickname} 강좌</a
+                        >
+                      </li>
+                      <li>
+                        <a href="/course?tab=roadmap&kwType=NAME&kw={item.writer?.nickname}"
+                          >{item.writer?.nickname} 로드맵</a
+                        >
+                      </li>
+                    </ul>
+                  </details>
+                </div>
+                <a href="/course/{item.id}">
                   <div class="flex justify-center p-2 bg-black rounded-lg m-4">
                     <img src={item.imgUrl} />
                   </div>
@@ -303,6 +325,8 @@
                 </div>
               </div>
             {/each}
+          {:else}
+            <div class="p-2">등록된 강좌가 없습니다.</div>
           {/if}
         </div>
       </div>
@@ -413,7 +437,7 @@
       </div>
       <div class="flex flex-col flex-1">
         <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {#if roadmaplist}
+          {#if roadmaplist && roadmaplist.length > 0}
             {#each roadmaplist as item}
               <div class="border collapse bg-white">
                 <input type="checkbox" class="peer" />
@@ -436,6 +460,28 @@
                   </div>
                 </div>
                 <div class="collapse-content bg-white peer-checked:bg-white mt-1">
+                  <div class="flex justify-end">
+                    <details class="dropdown dropdown-end">
+                      <summary class="flex items-center cursor-pointer">
+                        <i class="fa-regular fa-user mr-1"></i>
+                        {item.owner?.nickname}
+                      </summary>
+                      <ul
+                        class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
+                      >
+                        <li>
+                          <a href="/course?tab=course&kwType=NAME&kw={item.owner?.nickname}"
+                            >{item.owner?.nickname} 강좌</a
+                          >
+                        </li>
+                        <li>
+                          <a href="/course?tab=roadmap&kwType=NAME&kw={item.owner?.nickname}"
+                            >{item.owner?.nickname} 로드맵</a
+                          >
+                        </li>
+                      </ul>
+                    </details>
+                  </div>
                   <p class="text-lg text-gray-800 dark:text-gray-400 mx-2 font-semibold">개요</p>
                   <p class="text-sm text-gray-800 dark:text-gray-400 mx-2">
                     {removeMarkdown(item.overView)}
@@ -456,6 +502,8 @@
                 </div>
               </div>
             {/each}
+          {:else}
+            <p class="p-2">등록된 로드맵이 없습니다.</p>
           {/if}
         </div>
       </div>
