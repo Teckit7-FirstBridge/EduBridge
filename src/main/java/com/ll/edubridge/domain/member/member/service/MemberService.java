@@ -93,12 +93,12 @@ public class MemberService {
             );
         }
 
-        return modify(member, nickname, profileImgUrl);
+        return modify(member, profileImgUrl);
     }
 
     @Transactional
-    public RsData<Member> modify(Member member, String nickname, String profileImgUrl) {
-        member.setNickname(nickname);
+    public RsData<Member> modify(Member member, String profileImgUrl) {
+        member.setNickname(member.getNickname());
         member.setProfileImgUrl(profileImgUrl);
 
         return RsData.of("200-2","회원정보가 수정되었습니다.".formatted(member.getUsername()), member);
