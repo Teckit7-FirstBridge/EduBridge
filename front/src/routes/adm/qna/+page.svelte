@@ -9,7 +9,6 @@
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
-    console.log('dd');
 
     const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
 
@@ -22,9 +21,18 @@
     });
 
     const isAdminResponse = await rq.apiEndPoints().GET(`/api/v1/members/isAdmin`);
-    const { isAdmin } = isAdminResponse.data?.data!;
     const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
+    const isMobileResponse = await rq.apiEndPoints().GET(`/api/v1/admin/deviceCheck`);
+
+    const { isMobile } = isMobileResponse.data?.data!;
+    const { isAdmin } = isAdminResponse.data?.data!;
     const { isLogin } = isLoginResponse.data?.data!;
+
+    if (isMobile) {
+      rq.msgError('관리자 페이지는 pc로 접속 바랍니다.');
+      rq.goTo('/');
+    }
+
     if (!isAdmin && isLogin) {
       rq.msgError('관리자 권한이 없습니다');
       rq.goTo('/');
@@ -90,7 +98,7 @@
                   {#each qna as item}
                     <tr>
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        <a href="/member/qna/{item.id}" class="text-blue-600 hover:text-blue-900">
+                        <a href="/qna/{item.id}" class="text-blue-600 hover:text-blue-900">
                           {item.title}
                         </a>
                       </td>

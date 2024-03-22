@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "vite dev",
+    "dev": "vite dev --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
     "test": "npm run test:integration && npm run test:unit",
@@ -44,6 +44,9 @@
   },
   "type": "module",
   "dependencies": {
+    "@fullcalendar/core": "^6.1.11",
+    "@fullcalendar/daygrid": "^6.1.11",
+    "@fullcalendar/interaction": "^6.1.11",
     "@toast-ui/editor": "^3.2.2",
     "@toast-ui/editor-plugin-chart": "^3.0.1",
     "@toast-ui/editor-plugin-code-syntax-highlight": "^3.1.0",

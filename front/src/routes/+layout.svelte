@@ -4,297 +4,247 @@
   import { untrack } from 'svelte';
   import rq from '$lib/rq/rq.svelte';
 
+  let isMypage = $state(false);
+  let isCourse = $state(false);
+  let isAlarm = $state(true);
+  let isQna = $state(false);
+  let isBoard = $state(false);
+  let isRoom = $state(false);
+  let exportNote = $page.url.pathname.includes('export');
+
   const { children } = $props();
   rq.effect(async () => {
     untrack(() => {
       rq.initAuth();
     });
+    isMypage = $page.url.pathname.includes('/member') ? true : false;
+    isCourse = $page.url.pathname.includes('/course') ? true : false;
+    isQna = $page.url.pathname.includes('/qna') ? true : false;
+    isQna = $page.url.pathname.includes('/qna') ? true : false;
+    isBoard = $page.url.pathname.includes('/board') ? true : false;
+    isRoom = $page.url.pathname.includes('/member/course') ? true : false;
+    if (isRoom) {
+      isMypage = false;
+      isCourse = false;
+    }
+
+    const notificationResponse = await rq.apiEndPoints().GET(`/api/v1/notification/isAlarm`);
+    isAlarm = notificationResponse.data?.data!;
+    console.log(isAlarm);
+    let sse = new EventSource(
+      `${import.meta.env.VITE_CORE_API_BASE_URL}/api/notification/subscribe?id=${rq.member.id}`
+    );
+    sse.addEventListener('addComment', (e) => {
+      rq.msgInfo('답변이 등록되었습니다.');
+    });
+    sse.addEventListener('addSummaryNotePoint', (e) => {
+      rq.msgInfo('요약노트 포인트가 지급되었습니다.');
+    });
+    sse.addEventListener('addAttendPoint', (e) => {
+      rq.msgInfo('출석 포인트가 지급되었습니다.');
+    });
   });
 </script>
 
-<header class="navbar bg-base-100 shadow">
-  <div class="flex-1">
-    <div class="flex-none">
-      <div class="dropdown">
-        <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            ><path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h7"
-            /></svg
+{#if !exportNote}
+  <header class="navbar bg-gray-50 shadow">
+    <div class="flex-1">
+      <div class="flex-none">
+        <div class="dropdown">
+          <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h7"
+              /></svg
+            >
+          </div>
+          <ul
+            tabindex="0"
+            class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
-        </div>
-        <ul
-          tabindex="0"
-          class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-        >
-          {#if rq.isAdmin()}
-            <li>
-              <a href="/adm" class="font-semi-bold"
-                ><i class="fa-solid fa-right-to-bracket"></i> 관리자</a
-              >
-            </li>
-          {/if}
-          {#if rq.isLogout()}
-            <li>
-              <a class="font-semi-bold" href="/member/login"
-                ><i class="fa-solid fa-right-to-bracket"></i> 로그인</a
-              >
-            </li>
-          {/if}
-          {#if rq.isLogin()}
-            <li>
-              <a class="font-semi-bold" href="/board/myList"
-                ><i class="fa-solid fa-list-check"></i> 내 글</a
-              >
-            </li>
-            {#if !rq.isAdmin()}
+            {#if rq.isAdmin()}
               <li>
-                <a class="font-semi-bold" href="/member/qna"
-                  ><i class="fa-solid fa-list-check"></i> 1대1 문의</a
+                <a href="/adm" class="font-semi-bold"
+                  ><i class="fa-solid fa-right-to-bracket"></i> 관리자</a
                 >
               </li>
             {/if}
-            <li class="font-semi-bold">
-              <button on:click={() => rq.logout()}>
-                <i class="fa-solid fa-right-from-bracket"></i> 로그아웃
-              </button>
-            </li>
-          {/if}
-        </ul>
+            {#if rq.isLogout()}
+              <li>
+                <a class="font-semi-bold" href="/member/login"
+                  ><i class="fa-solid fa-right-to-bracket"></i> 로그인</a
+                >
+              </li>
+            {/if}
+            {#if rq.isLogin()}
+              <li>
+                <a class="font-semi-bold" href="/board/myList"
+                  ><i class="fa-solid fa-list-check"></i> 내 Q&A</a
+                >
+              </li>
+              {#if !rq.isAdmin()}
+                <li>
+                  <a class="font-semi-bold" href="/qna"
+                    ><i class="fa-regular fa-circle-question"></i> 1대1 문의</a
+                  >
+                </li>
+              {/if}
+              <li class="font-semi-bold">
+                <button on:click={() => rq.logout()}>
+                  <i class="fa-solid fa-right-from-bracket"></i> 로그아웃
+                </button>
+              </li>
+            {/if}
+          </ul>
+        </div>
       </div>
+      <div class="flex-1"></div>
     </div>
-    <div class="flex-1">
-      <a href="/board" class="btn btn-ghost font-semi-bold">게 시 판</a>
-      <a href="/course" class="btn btn-ghost font-semi-bold">강의</a>
+    <div class="flex-1 flex justify-center">
+      <a href="/" class="font-bold">EduBridge</a>
     </div>
-  </div>
-  <div class="flex-1 flex justify-center">
-    <a href="/" class="font-bold">EduBridge</a>
-  </div>
 
-  <div class="flex-1 justify-end">
-    <div class="flex-none flex justify-col">
-      <div>
-        <button
-          class="btn btn-ghost"
-          onclick={() => {
-        const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
-        const searchFormInputSearch = (document.querySelector('#searchFormModal input[type=search]') as HTMLDialogElement);
-
-        searchFormModal.showModal();
-
-        searchFormInputSearch.focus();
-      }}
-        >
+    <div class="flex-1 justify-end mr-4">
+      <div class="flex gap-x-4 relative items-center">
+        <button on:click={() => rq.goTo(`/member/mypage/alarm`)}>
+          {#if isAlarm}
+            <span class="relative flex h-2 w-2">
+              <span
+                class=" absolute top-2 left-3 animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+              ></span>
+              <span
+                class="absolute top-2 left-3 relative inline-flex rounded-full h-2 w-2 bg-sky-500"
+              ></span>
+            </span>
+          {/if}
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
             fill="none"
             viewBox="0 0 24 24"
+            stroke-width="1.5"
             stroke="currentColor"
-            ><path
+            class="w-6 h-6"
+          >
+            <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            /></svg
-          >
+              d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+            />
+          </svg>
         </button>
       </div>
-      {#if rq.isLogin()}
-        <div>
-          {#if !rq.isAdmin()}
-            <a href="/member/course" class="btn btn-ghost font-semi-bold">내 강의실</a>
-          {/if}
-          {#if rq.isAdmin()}
-            <a href="/adm" class="btn btn-ghost font-semi-bold">관 리 자</a>
-          {/if}
-        </div>
-        <div>
-          <a href="/member/{rq.member.id}" class="btn btn-ghost">
-            <img
-              class="inline-block rounded-circle"
-              src={rq.member.profileImgUrl}
-              width="30"
-              alt=""
-            />
-            {rq.member.name}
+    </div>
+  </header>
+
+  <main>{@render children()}</main>
+
+  <footer class=" bottom-0 w-full bg-white text-gray-300">
+    <div class="container mx-auto flex justify-around items-center">
+      <div class="flex flex-col items-center flex-1">
+        <a href="/qna">
+          <div>
+            <div
+              class={isQna
+                ? 'w-9 h-9 text-xl flex items-center justify-center text-blue-600'
+                : 'w-9 h-9 text-xl flex items-center justify-center text-gray-300'}
+            >
+              <i class="text-2xl fa-solid fa-circle-question"></i>
+            </div>
+          </div>
+          <p class={isQna ? 'text-blue-600' : 'text-gray-300'}>문의</p>
+        </a>
+      </div>
+
+      <div class="flex flex-col items-center flex-1">
+        <a href="/board">
+          <div>
+            <div
+              class={isBoard
+                ? 'w-9 h-9 text-xl flex items-center justify-center text-blue-600'
+                : 'w-9 h-9 text-xl flex items-center justify-center text-gray-300'}
+            >
+              <i class="text-2xl fa-solid fa-comments"></i>
+            </div>
+          </div>
+          <p class={isBoard ? 'text-blue-600' : 'text-gray-300'}>질문</p>
+        </a>
+      </div>
+      <div class="flex flex-col items-center flex-1">
+        <a href="/course">
+          <div>
+            <div
+              class={isCourse
+                ? 'w-9 h-9 text-xl flex items-center justify-center text-blue-600'
+                : 'w-9 h-9 text-xl flex items-center justify-center text-gray-300'}
+            >
+              <i class="text-2xl fa-solid fa-book"></i>
+            </div>
+          </div>
+          <p class={isCourse ? 'text-blue-600' : 'text-gray-300'}>강좌</p>
+        </a>
+      </div>
+      <div class="flex flex-col items-center flex-1">
+        <a href="/member/course">
+          <div>
+            <div
+              class={isRoom
+                ? 'w-9 h-9 text-xl flex items-center justify-center text-blue-600'
+                : 'w-9 h-9 text-xl flex items-center justify-center text-gray-300'}
+            >
+              <i class="text-2xl ml-1 fa-solid fa-book-open"></i>
+            </div>
+          </div>
+          <p class={isRoom ? 'text-blue-600' : 'text-gray-300'}>강의실</p>
+        </a>
+      </div>
+      {#if rq.isAdmin()}
+        <div class="flex flex-col items-center flex-1">
+          <a href="/adm">
+            <div>
+              <div class="w-9 h-9 text-xl flex items-center justify-center">
+                <i class="text-3xl ml-1 fa-regular fa-circle-user"></i>
+              </div>
+            </div>
+            <p>관리자</p>
           </a>
+        </div>
+      {:else}
+        <div class="flex flex-col items-center flex-1">
+          {#if rq.isLogin()}
+            <a href="/member/{rq.member.uuid}">
+              <div>
+                <div
+                  class={isMypage
+                    ? 'w-9 h-9 text-xl flex items-center justify-center text-blue-600'
+                    : 'w-9 h-9 text-xl flex items-center justify-center text-gray-300'}
+                >
+                  <i class="text-3xl ml-1 fa-regular fa-circle-user"></i>
+                </div>
+              </div>
+              <p class={isMypage ? 'text-blue-600' : 'text-gray-300'}>내정보</p>
+            </a>
+          {:else}
+            <a href="/member/login">
+              <div>
+                <div class="w-9 h-9 text-xl flex items-center justify-center">
+                  <i class="text-3xl ml-1 fa-regular fa-circle-user"></i>
+                </div>
+              </div>
+              <p>내정보</p>
+            </a>
+          {/if}
         </div>
       {/if}
     </div>
-  </div>
-  <dialog id="searchFormModal" class="modal">
-    <div class="modal-box">
-      <form method="dialog">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-      </form>
-
-      <form
-        action="/course"
-        class="bg-base rounded flex flex-col gap-6"
-        onsubmit={() => {
-        const searchFormModal = (document.querySelector('#searchFormModal') as HTMLDialogElement);
-        searchFormModal.close();
-      }}
-      >
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">검색필터</span>
-          </label>
-
-          <select
-            name="kwType"
-            class="select select-bordered"
-            value={$page.url.searchParams.get('kwType') ?? 'ALL'}
-          >
-            <option value="ALL">전체</option>
-            <option value="TITLE">제목</option>
-            <option value="NAME">작성자</option>
-          </select>
-        </div>
-
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">검색어</span>
-          </label>
-
-          <input
-            placeholder="검색어"
-            class="input input-bordered"
-            name="kw"
-            type="search"
-            value={$page.url.searchParams.get('kw') ?? ''}
-            autocomplete="off"
-          />
-        </div>
-
-        <div>
-          <button class="btn btn-block btn-primary gap-1">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <span>검색</span>
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <form method="dialog" class="modal-backdrop">
-      <button>close</button>
-    </form>
-  </dialog>
-</header>
-
-<main>{@render children()}</main>
-<!--
-// v0 by Vercel.
-// https://v0.dev/t/6BHvI4qIs6U
--->
-<footer class=" bottom-0 w-full bg-gray-900 text-white py-4">
-  <div class="container mx-auto px-4 flex justify-around items-center">
-    <a class="flex items-center gap-2" href="https://github.com/harriet221" rel="ugc"
-      ><svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="h-6 w-6 text-white"
-        ><path
-          d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
-        ></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg
-      ><span>harriet221</span></a
-    ><a class="flex items-center gap-2" href="https://github.com/potato0221" rel="ugc"
-      ><svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="h-6 w-6 text-white"
-        ><path
-          d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
-        ></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg
-      ><span>potato0221</span></a
-    ><a class="flex items-center gap-2" href="https://github.com/onk108" rel="ugc"
-      ><svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="h-6 w-6 text-white"
-        ><path
-          d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
-        ></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg
-      ><span>onk108</span></a
-    ><a class="flex items-center gap-2" href="https://github.com/chanw12" rel="ugc"
-      ><svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="h-6 w-6 text-white"
-        ><path
-          d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
-        ></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg
-      ><span>chanw12</span></a
-    ><a class="flex items-center gap-2" href="https://github.com/sleo113" rel="ugc"
-      ><svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="h-6 w-6 text-white"
-        ><path
-          d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
-        ></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg
-      ><span>sleo113</span></a
-    ><a class="flex items-center gap-2" href="https://github.com/pakjongwook" rel="ugc"
-      ><svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="h-6 w-6 text-white"
-        ><path
-          d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
-        ></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg
-      ><span>pakjongwook</span></a
-    >
-  </div>
-</footer>
+  </footer>
+{:else}
+  <main>{@render children()}</main>
+{/if}

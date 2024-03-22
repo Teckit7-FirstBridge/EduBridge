@@ -1,5 +1,4 @@
 <script lang="ts">
-  import '@toast-ui/editor/dist/toastui-editor.css';
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';

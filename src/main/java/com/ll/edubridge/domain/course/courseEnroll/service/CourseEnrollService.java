@@ -37,14 +37,14 @@ public class CourseEnrollService {
     }
 
     @Transactional
-    public CourseEnroll create(Member member, Course course, int point,int price) {
+    public void create(Member member, Course course, int point,int price) {
         CourseEnroll courseEnroll = CourseEnroll.builder()
                 .course(course)
                 .member(member)
                 .build();
         member.setPoint(point - price);
         memberRepository.save(member); // member의 정보를 저장
-        return courseEnrollRepository.save(courseEnroll);
+        courseEnrollRepository.save(courseEnroll);
     }
 
     @Transactional
@@ -80,5 +80,10 @@ public class CourseEnrollService {
 
     public List<CourseEnroll> findByCourseId(Long courseId) {
         return courseEnrollRepository.findByCourseId(courseId);
+    }
+
+    public void delete(Member member) {
+        courseEnrollRepository.deleteAll(courseEnrollRepository.findByMember(member));
+        // courseEnrollRepository.deleteAll(member.getCourseEnrollList());
     }
 }

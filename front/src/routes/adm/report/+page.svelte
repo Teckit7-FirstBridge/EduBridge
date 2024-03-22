@@ -10,10 +10,21 @@
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
+    const responseReportPost = await rq.apiEndPoints().GET(`/api/v1/admin/reports/list`);
+
     const isAdminResponse = await rq.apiEndPoints().GET(`/api/v1/members/isAdmin`);
-    const { isAdmin } = isAdminResponse.data?.data!;
     const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
+    const isMobileResponse = await rq.apiEndPoints().GET(`/api/v1/admin/deviceCheck`);
+
+    const { isAdmin } = isAdminResponse.data?.data!;
     const { isLogin } = isLoginResponse.data?.data!;
+    const { isMobile } = isMobileResponse.data?.data!;
+
+    if (isMobile) {
+      rq.msgError('관리자 페이지는 pc로 접속 바랍니다.');
+      rq.goTo('/');
+    }
+
     if (!isAdmin && isLogin) {
       rq.msgError('관리자 권한이 없습니다');
       rq.goTo('/');
@@ -22,8 +33,6 @@
       rq.msgWarning('관리자 로그인 후 이용 해 주세요');
       rq.goTo('/member/login');
     }
-
-    const responseReportPost = await rq.apiEndPoints().GET(`/api/v1/admin/reports`);
 
     reportPost = responseReportPost.data?.data;
 

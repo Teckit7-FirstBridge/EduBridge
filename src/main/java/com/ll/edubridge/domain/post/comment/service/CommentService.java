@@ -9,6 +9,8 @@ import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,12 @@ public class CommentService {
     private final Rq rq;
     private final PostService postService;
 
+    public Page<Comment> getMyComment(Pageable pageable) {
+        Member member = rq.getMember();
+
+        return commentRepository.findByWriter(member, pageable);
+    }
+
     // 권한 검사 기능
     public boolean haveAuthority(Long id) {
 
@@ -35,21 +43,7 @@ public class CommentService {
         return comment.getWriter().equals(member);
     }
 
-    // 댓글 추천 권한 검사
-    public boolean canLike(Member member, Comment comment) {
-        if (member == null) {
-            return false;
-        }
-        return !comment.getVoter().contains(member);
-    }
 
-    // 댓글 취소 권한 검사
-    public boolean canCancelLike(Member member, Comment comment) {
-        if (member == null) {
-            return false;
-        }
-        return comment.getVoter().contains(member);
-    }
 
     // 댓글 작성 기능
     @Transactional
@@ -81,21 +75,6 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    // 댓글 추천 기능
-    @Transactional
-    public void vote(Long id, Member member) {
-        Comment comment = this.getComment(id);
-        comment.getVoter().add(member);
-        commentRepository.save(comment);
-    }
-
-    // 댓글 추천 취소 기능
-    @Transactional
-    public void deleteVote(Long id, Member member) {
-        Comment comment = this.getComment(id);
-        comment.getVoter().remove(member);
-        commentRepository.save(comment);
-    }
 
     // 댓글 조회 기능
     public Comment getComment(Long id) {
@@ -120,4 +99,3 @@ public class CommentService {
         return commentRepository.findBestComment(postId);
     }
 }
-

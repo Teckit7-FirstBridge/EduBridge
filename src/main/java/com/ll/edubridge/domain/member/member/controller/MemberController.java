@@ -1,18 +1,19 @@
 package com.ll.edubridge.domain.member.member.controller;
 
+import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.rq.Rq;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
     private final Rq rq;
+    private final MemberService memberService;
+
 
     @GetMapping("/socialLogin/{providerTypeCode}")
     @Operation(summary = "소셜로그인")
@@ -27,4 +28,6 @@ public class MemberController {
         // 즉 프론트에서 원래 사용자가 위치한 곳으로 돌아가기 위해서 설정
         return "redirect:/oauth2/authorization/" + providerTypeCode;
     }
+
+
 }

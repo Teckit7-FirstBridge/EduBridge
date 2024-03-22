@@ -4,26 +4,32 @@
 
   const { page, pageDelta = 1 } = $props<{ page: PageDto; pageDelta?: number }>();
 
-  // 페이지네이션 범위 계산 함수
-  function calculatePaginationRange(current: number, total: number, delta = 4) {
-    const left = current - delta;
-    const right = current + delta;
-    const range = [] as { no: number; text: string }[];
+  function calculatePaginationRange(current: number, total: number) {
+    const maxPageButtons = 5;
+    let startPage = (Math.ceil(current / maxPageButtons) - 1) * maxPageButtons + 1;
+    let endPage = Math.min(startPage + maxPageButtons - 1, total);
 
-    if (total <= 1) return [];
+    const range = [];
 
-    for (let i = 1; i <= total; i++) {
-      if (i === 1) {
-        range.push({ no: i, text: `${i}` });
-      } else if (i == left - 1) {
-        range.push({ no: i, text: `...` });
-      } else if (i >= left && i <= right) {
-        range.push({ no: i, text: `${i}` });
-      } else if (i === total) {
-        range.push({ no: i, text: `${i}` });
-      } else if (i == right + 1) {
-        range.push({ no: i, text: `...` });
-      }
+    // '이전' 버튼의 페이지 번호를 현재 범위의 마지막으로 설정
+    const currentPageRangeStart = (Math.ceil(current / maxPageButtons) - 1) * maxPageButtons + 1;
+    const previousPage = currentPageRangeStart - 1; // 이전 페이지 범위로 바로 이동
+
+    // '다음' 버튼의 페이지 번호 계산
+    const nextPage = endPage + 1;
+
+    // '이전' 버튼 추가
+    if (startPage > 1) {
+      range.push({ no: previousPage, text: '이전' });
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      range.push({ no: i, text: `${i}` });
+    }
+
+    // '다음' 버튼 추가
+    if (endPage < total) {
+      range.push({ no: nextPage, text: '다음' });
     }
 
     return range;
@@ -32,9 +38,9 @@
 
 <div class="flex justify-center">
   <div class="join">
-    {#each calculatePaginationRange(page.number, page.totalPagesCount, pageDelta) as pageNumber}
+    {#each calculatePaginationRange(page.number, page.totalPagesCount) as pageNumber}
       <button
-        class={`join-item btn ${pageNumber.no == page.number ? 'text-red-300' : ''}`}
+        class={`join-item btn bg-gray-50 ${pageNumber.no == page.number ? 'text-blue-400 bg-gray-100 shadow-inner' : ''} `}
         on:click={() => rq.goToCurrentPageWithNewParam('page', `${pageNumber.no}`)}
       >
         {pageNumber.text}

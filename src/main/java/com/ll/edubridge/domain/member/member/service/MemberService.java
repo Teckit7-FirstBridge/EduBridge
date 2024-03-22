@@ -1,9 +1,14 @@
 package com.ll.edubridge.domain.member.member.service;
 
+import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
+import com.ll.edubridge.domain.member.member.dto.NickNameDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
+import com.ll.edubridge.domain.point.point.entity.PointType;
+import com.ll.edubridge.domain.point.point.service.PointService;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
+import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +21,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+
+import static com.ll.edubridge.global.app.AppConfig.ALPHANUMERIC;
+import static com.ll.edubridge.global.app.AppConfig.ALPHANUMERIC_LENGTH;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +37,10 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthTokenService authTokenService;
+    private final PointService pointService;
+    private final CourseEnrollService courseEnrollService;
+
+    private final Rq rq;
 
     @Transactional
     public RsData<Member> join(String username, String password) {
@@ -39,16 +53,34 @@ public class MemberService {
             return RsData.of("400-2", "이미 존재하는 회원입니다.");
         }
 
+
         Member member = Member.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .refreshToken(authTokenService.genRefreshToken())
                 .nickname(nickname)
                 .profileImgUrl(profileImgUrl)
+                .point(PointType.Welcome.getAmount())
+                .uuid(generateRandomString())
                 .build();
+
         memberRepository.save(member);
 
+        pointService.addPoint(PointType.Welcome, member); // 포인트 내역 추가
+
         return RsData.of("200", "%s님 환영합니다. 회원가입이 완료되었습니다. 로그인 후 이용해주세요.".formatted(member.getUsername()), member);
+    }
+    public static String generateRandomString() {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(ALPHANUMERIC_LENGTH);
+
+        for (int i = 0; i < ALPHANUMERIC_LENGTH; i++) {
+            int randomIndex = random.nextInt(ALPHANUMERIC.length());
+            char randomChar = ALPHANUMERIC.charAt(randomIndex);
+            sb.append(randomChar);
+        }
+
+        return sb.toString();
     }
 
     @Transactional
@@ -61,17 +93,29 @@ public class MemberService {
             );
         }
 
-        return modify(member, nickname, profileImgUrl);
+        return modify(member, profileImgUrl);
     }
 
     @Transactional
-    public RsData<Member> modify(Member member, String nickname, String profileImgUrl) {
-        member.setNickname(nickname);
+    public RsData<Member> modify(Member member, String profileImgUrl) {
+        member.setNickname(member.getNickname());
         member.setProfileImgUrl(profileImgUrl);
 
         return RsData.of("200-2","회원정보가 수정되었습니다.".formatted(member.getUsername()), member);
     }
 
+    @Transactional
+    public Member modifyNickname(NickNameDto nicknameDto) {
+        Member member = rq.getMember();
+        member.setNickname(nicknameDto.getNickName());
+        System.out.println(member.getNickname()+"바뀜?");
+
+        memberRepository.save(member);
+        Member member1 = rq.getMember();
+        System.out.println(member1.getNickname()+"??");
+
+        return member;
+    }
 
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
@@ -101,8 +145,21 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
+    public Optional<Member> findByUUID(String uuid){return memberRepository.findByUuid(uuid);}
+
+    public Member GetMemberByUUID(String uuid){
+        Optional<Member> member = this.findByUUID(uuid);
+
+        if(member.isPresent()){
+            return member.get();
+        }else {
+            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
+        }
+    }
+
     public Member getMember(Long id) {
         Optional<Member> member = this.findById(id);
+
         if (member.isPresent()) {
             return member.get();
         } else {
@@ -183,6 +240,7 @@ public class MemberService {
         for (Member member : allMembers) {
             member.setVisitedToday(false);
             member.setDailyAchievement(0);
+            member.setEnrollCount(0);
         }
         memberRepository.saveAll(allMembers);
     }
@@ -203,5 +261,35 @@ public class MemberService {
     public void cancelReport(Member member) {
         member.setReport(false);
         memberRepository.save(member);
+    }
+
+    public boolean canEnroll(Member member){
+
+        if (member.getEnrollCount() < 5){
+            member.setEnrollCount(member.getEnrollCount() + 1);
+            memberRepository.save(member);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Transactional
+    public void dropMember() {
+        Member member = rq.getMember();
+
+        member.setNickname("탈퇴한 회원");
+        member.setRefreshToken(member.getUsername() + "_deleted_" + LocalDateTime.now()); // unique
+        member.setUsername(member.getUsername() + "_deleted_" + LocalDateTime.now()); // unique
+        member.setPassword("");
+        member.setUuid("");
+        member.setProfileImgUrl("");
+        member.setPoint(0);
+        member.setEnrollCount(0);
+
+        courseEnrollService.delete(member);
+
+        memberRepository.save(member);
+        rq.setLogout();
     }
 }

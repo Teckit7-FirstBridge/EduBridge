@@ -24,19 +24,6 @@
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
-    const isAdminResponse = await rq.apiEndPoints().GET(`/api/v1/members/isAdmin`);
-    const { isAdmin } = isAdminResponse.data?.data!;
-    const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
-    const { isLogin } = isLoginResponse.data?.data!;
-    if (!isAdmin && isLogin) {
-      rq.msgError('관리자 권한이 없습니다');
-      rq.goTo('/');
-    }
-    if (!isAdmin && !isLogin) {
-      rq.msgWarning('관리자 로그인 후 이용 해 주세요');
-      rq.goTo('/member/login');
-    }
-
     const kw = $page.url.searchParams.get('kw') ?? '';
     const kwType = ($page.url.searchParams.get('kwType') ?? 'ALL') as KwTypeCourse;
     const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
@@ -50,6 +37,28 @@
         }
       }
     });
+
+    const isAdminResponse = await rq.apiEndPoints().GET(`/api/v1/members/isAdmin`);
+    const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
+    const isMobileResponse = await rq.apiEndPoints().GET(`/api/v1/admin/deviceCheck`);
+
+    const { isAdmin } = isAdminResponse.data?.data!;
+    const { isLogin } = isLoginResponse.data?.data!;
+    const { isMobile } = isMobileResponse.data?.data!;
+
+    if (isMobile) {
+      rq.msgError('관리자 페이지는 pc로 접속 바랍니다.');
+      rq.goTo('/');
+    }
+
+    if (!isAdmin && isLogin) {
+      rq.msgError('관리자 권한이 없습니다');
+      rq.goTo('/');
+    }
+    if (!isAdmin && !isLogin) {
+      rq.msgWarning('관리자 로그인 후 이용 해 주세요');
+      rq.goTo('/member/login');
+    }
 
     return data!;
   }
@@ -75,11 +84,6 @@
                 <div class="flex justify-center gap-2">
                   <h2 class="text-lg font-semibold my-1 ml-2">{item.title}</h2>
 
-                  <div
-                    class={`inline-flex px-2 text-lg font-semibold rounded-full mt-1 my-1 ${item.grade === '초급' ? 'bg-blue-100 text-blue-800' : item.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
-                  >
-                    {item.grade}
-                  </div>
                   <div class="font-medium text-lg mt-1">
                     [수강 인원 : {item.enrollCount}명]
                   </div>
