@@ -60,11 +60,13 @@
   function nextSlide() {
     activeSlide = (activeSlide + 1) % totalSlides;
     updateSlideTransform();
+    updateButtonColors();
   }
 
   function previousSlide() {
     activeSlide = (activeSlide - 1 + totalSlides) % totalSlides;
     updateSlideTransform();
+    updateButtonColors();
   }
 
   function changeSlide(index) {
@@ -76,7 +78,7 @@
   function updateButtonColors() {
     const buttons = document.querySelectorAll('.button_slide');
     buttons.forEach((button, index) => {
-      const color = index === activeSlide ? 'blue' : 'gray';
+      const color = index === activeSlide ? 'black' : 'gray';
       button.style.backgroundColor = color;
     });
   }
@@ -112,8 +114,9 @@
                   <h3 class="text-5xl font-extrabold">환영합니다!</h3>
                   <p class="mt-4 text-xl">당신을 위한 학습 징검다리<br /> 에듀브릿지</p>
                   <p class="mt-4 text-x2">
-                    다양한 강좌를 마음껏 학습하고, <br />
-                    포인트를 받아 다음 배움으로 건너가세요!
+                    CS 영상이 너무 다양해서 망설여지시나요?<br />
+                    다른 사람의 커리큘럼을 따라 공부해보아요!<br />
+                    또, 좋은 커리큘럼이 있다면 공유해주세요!
                   </p>
                 </div>
                 <div
@@ -126,7 +129,7 @@
                   <h3 class="text-5xl font-extrabold">공지사항</h3>
                   <p class="mt-4 text-xl">강좌 / 강의 등록시,<br /> 제공되는 가이드를 참고해주세요</p>
                   <p class="mt-4 text-x2">
-                    썸네일 등록은 형식을 따라주셔야 합니다!<br />
+                    썸네일 등록은 반드시 형식을 따라주셔야 합니다!<br />
                   </p>
                 </div>
                 <div
@@ -139,7 +142,7 @@
                   <h3 class="text-5xl font-extrabold">점검 안내</h3>
                   <p class="mt-4 text-xl">업데이트 및 점검 안내</p>
                   <p class="mt-4 text-x2">
-                    3월 31일까지 점검 예정입니다.<br />
+                    3월 31일까지 임시 서비스입니다.<br />
                     서버가 불안정할 수 있음을 알려드립니다.
                   </p>
                 </div>
@@ -168,8 +171,8 @@
               {#each Array(totalSlides) as _, i}
                 <button
                   class="button_slide w-2 h-2 rounded-full mx-1 cursor-pointer"
-                  style="background-color: {i === activeSlide ? 'blue' : 'gray'}"
                   on:click={() => changeSlide(i)}
+                  style="background-color: {i === activeSlide ? 'black' : 'gray'}"
                 ></button>
               {/each}
             </div>
