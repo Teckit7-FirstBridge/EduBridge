@@ -63,8 +63,22 @@
       rq.msgWarning('썸네일 url을 jpg 형식으로 입력 해 주세요');
       return;
     }
+
+    const registerCount = await rq.member.registerCount;
+
+    const todayCanCount = 5 - registerCount;
+
+    const message = `강좌를 등록 하시겠습니까?\n오늘 등록 가능한 강좌 수 : ${todayCanCount}`;
+    const canRegister = registerCount < 5;
+
+    if (canRegister) {
+      const isConfirmed = confirm(message);
+      if (!isConfirmed) {
+        return;
+      }
+    }
+
     const { data, error } = await rq.apiEndPointsWithFetch(fetch).POST('/api/v1/courses/write', {
-      // url 설정
       body: {
         title: title,
         notice: newNoti,
@@ -75,8 +89,10 @@
     });
 
     if (data) {
-      rq.msgInfo(data.msg); //msg
+      rq.msgInfo(data.msg);
       rq.goTo('/member/mycourse');
+    } else {
+      alert('오늘 등록 가능한 강좌 수를 초과했습니다.');
     }
   };
 

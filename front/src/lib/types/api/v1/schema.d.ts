@@ -389,7 +389,7 @@ export interface components {
       /** Format: date-time */
       createDate?: string;
       /** Format: int32 */
-      enrollCount?: number;
+      registerCount?: number;
       username?: string;
       password?: string;
       nickname?: string;
@@ -406,8 +406,8 @@ export interface components {
       uuid?: string;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
-      authoritiesAsStringList?: string[];
       authorities?: components["schemas"]["GrantedAuthority"][];
+      authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
     };
     Roadmap: {
@@ -693,7 +693,7 @@ export interface components {
       /** Format: int32 */
       point?: number;
       /** Format: int32 */
-      enrollCount?: number;
+      registerCount?: number;
       uuid?: string;
     };
     RsDataLoginResponseBody: {
