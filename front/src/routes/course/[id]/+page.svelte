@@ -187,7 +187,7 @@
 
       if (data) {
         rq.msgInfo('강좌가 삭제되었습니다');
-        rq.goTo('/course');
+        rq.goTo('/member/mycourse');
       } else if (error) {
         rq.msgError(error.msg);
       }
