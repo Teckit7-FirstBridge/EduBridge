@@ -117,11 +117,9 @@
 {#await load()}
   <p>loading...</p>
 {:then}
-  <div
-    class="min-h-screen w-full flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8"
-  >
+  <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8 mt-2">
     <div class=" w-full space-y-8">
-      <div class="container mx-auto p-4 w-full">
+      <div class="container mx-auto w-full">
         <form
           class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           on:submit|preventDefault={submitForm}
@@ -129,7 +127,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> 제 목 </label>
             <input
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="title"
               type="text"
               placeholder="Enter the title "
@@ -189,7 +187,7 @@
                   </div>
                 </dialog>
               </label><label
-                class="ml-4 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
+                class=" text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
                 for="course-imgUrl"
               >
                 https://img.youtube.com/vi/VIDEO-ID/0.jpg
