@@ -46,7 +46,7 @@
             <div class=" space-y-4">
               <div class="flex justify-between">
                 <div>
-                  <h2 class="text-2xl font-semibold text-blue-600">1대1 문의</h2>
+                  <h2 class="text-2xl font-semibold">1대1 문의</h2>
                 </div>
                 <div class="flex justify-end">
                   <button
