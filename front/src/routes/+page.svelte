@@ -129,7 +129,7 @@
                   <h3 class="text-5xl font-extrabold">공지사항</h3>
                   <p class="mt-4 text-xl">강좌 / 강의 등록시,<br /> 제공되는 가이드를 참고해주세요</p>
                   <p class="mt-4 text-x2">
-                    썸네일 등록은 형식을 따라주셔야 합니다!<br />
+                    썸네일 등록은 반드시 형식을 따라주셔야 합니다!<br />
                   </p>
                 </div>
                 <div
