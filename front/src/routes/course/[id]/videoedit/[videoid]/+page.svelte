@@ -170,9 +170,10 @@
                     onclick={closeModalVidAdvice}>✕</button
                   >
                   <div>
-                    <div>형식에 맞추어 Youtube 영상의 url을 입력해주세요.</div>
-                    <div>https://www.youtube.com/watch?v=VIDEO-ID</div>
-                    <div>VIDEO-ID 뒤의 값(ex/ &list로 시작하는 부분 등)은 지우고 입력해주세요.</div>
+                    <div>※ Youtube 영상 URL 형식을 맞춰주세요!</div>
+                    <div>VIDEO-ID 위치에 Youtube 영상 id를 넣어주세요.</div>
+                    <div>Youtube 영상 id : URL v= 혹은 vi= 다음 값</div>
+                    <div>VIDEO-ID 뒤의 값(예: &list=VaLUe1234)은 지우고 입력해주세요.</div>
                   </div>
                 </div>
               </dialog>
@@ -201,11 +202,11 @@
                       onclick={closeModalThAdvice}>✕</button
                     >
                     <div>
-                      <div>제시된 형식에 맞춰 썸네일 이미지를 입력해주세요.</div>
+                      <div>※ 썸네일 등록 : URL 형식을 맞춰주세요 ※</div>
                       <br />
                       <div>VIDEO-ID 위치에 Youtube 영상 id를 넣어주세요.</div>
                       <br />
-                      <div>Youtube 영상 id : URL의 v= 혹은 vi= 다음 값</div>
+                      <div>Youtube 영상 id : URL v= 혹은 vi= 다음 값</div>
                     </div>
                   </div>
                 </dialog>
@@ -236,9 +237,9 @@
                     class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
                     onclick={closeModalKAdvice}>✕</button
                   >
-                  <div>등록하는 강의 영상의 내용을 충분히 숙지하고 키워드를 작성해주세요.</div>
-                  <div>해당 키워드는 강의 요약 노트를 채점하는 기준이 됩니다.</div>
-                  <div>한 강의당 키워드 개수는 3~5개를 권장합니다.</div>
+                  <div>※ 키워드는 해당 강의 요약노트 채점의 기준이 됩니다.</div>
+                  <div>등록하는 강의 영상의 내용을 숙지하고 키워드를 작성해주세요.</div>
+                  <div>키워드 개수는 3~5개를 권장합니다.</div>
                 </div>
               </dialog>
             </label>
