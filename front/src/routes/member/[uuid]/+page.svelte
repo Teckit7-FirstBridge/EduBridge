@@ -354,13 +354,16 @@
       <div class="ml-6">
         <input
           value="{import.meta.env.VITE_CORE_FRONT_BASE_URL}/export?uuid={member?.uuid}"
-          type="text"
+          type="hidden"
           id="inputUrl"
           placeholder="You can't touch this"
           class="input input-bordered w-full max-w-xs"
           disabled
         />
-        <button on:click={copyInputValue} class="btn btn-outline">Copy</button>
+        <button on:click={copyInputValue} class="btn btn-outline w-[250px] h-2 border-white shadow"
+          ><label class="text-xl">요약노트 for 포트폴리오</label><i class="fa-regular fa-paste"
+          ></i></button
+        >
       </div>
     </div>
   {:else}
