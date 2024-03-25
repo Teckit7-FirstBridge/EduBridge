@@ -67,6 +67,7 @@ public class ApiV1CourseController {
 
         if (memberService.canEnroll(rq.getMember())){
             course = courseService.create(createCourseDto);
+            memberService.increaseRegisterCount();
         } else {
             throw new GlobalException(CodeMsg.E400_9_COUNT_ALREADY_FULL.getCode(), CodeMsg.E400_9_COUNT_ALREADY_FULL.getMessage());
         }

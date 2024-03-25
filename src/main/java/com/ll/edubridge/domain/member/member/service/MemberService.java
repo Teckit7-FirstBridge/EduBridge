@@ -240,7 +240,7 @@ public class MemberService {
         for (Member member : allMembers) {
             member.setVisitedToday(false);
             member.setDailyAchievement(0);
-            member.setEnrollCount(0);
+            member.setRegisterCount(0);
         }
         memberRepository.saveAll(allMembers);
     }
@@ -265,13 +265,16 @@ public class MemberService {
 
     public boolean canEnroll(Member member){
 
-        if (member.getEnrollCount() < 5){
-            member.setEnrollCount(member.getEnrollCount() + 1);
-            memberRepository.save(member);
-            return true;
-        }else{
-            return false;
-        }
+        return member.getRegisterCount() < 5;
+    }
+
+    @Transactional
+    public void increaseRegisterCount(){
+        Member member = rq.getMember();
+
+        member.setRegisterCount(member.getRegisterCount() + 1);
+
+        memberRepository.save(member);
     }
 
     @Transactional
@@ -285,7 +288,7 @@ public class MemberService {
         member.setUuid("");
         member.setProfileImgUrl("");
         member.setPoint(0);
-        member.setEnrollCount(0);
+        member.setRegisterCount(0);
 
         courseEnrollService.delete(member);
 
