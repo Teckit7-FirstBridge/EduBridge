@@ -68,7 +68,7 @@ public class RoadmapService {
     }
 
     public List<Roadmap> getMyRoadmaps(Member member) {
-        return roadmapRepository.findByOwner(member);
+        return roadmapRepository.findByOwnerOrderByCreateDateDesc(member);
     }
 
     @Transactional
