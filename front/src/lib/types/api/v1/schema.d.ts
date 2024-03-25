@@ -30,6 +30,10 @@ export interface paths {
   "/api/v1/notification/read/{id}": {
     put: operations["readNotification"];
   };
+  "/api/v1/members/visit": {
+    /** 수동 출석체크 */
+    put: operations["visit"];
+  };
   "/api/v1/members/modifyNickName": {
     /** 회원 닉네임 변경 */
     put: operations["modifyNickName"];
@@ -389,7 +393,7 @@ export interface components {
       /** Format: date-time */
       createDate?: string;
       /** Format: int32 */
-      enrollCount?: number;
+      registerCount?: number;
       username?: string;
       password?: string;
       nickname?: string;
@@ -409,6 +413,7 @@ export interface components {
       authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
       authoritiesAsStringList?: string[];
+
     };
     Roadmap: {
       /** Format: int64 */
@@ -693,7 +698,7 @@ export interface components {
       /** Format: int32 */
       point?: number;
       /** Format: int32 */
-      enrollCount?: number;
+      registerCount?: number;
       uuid?: string;
     };
     RsDataLoginResponseBody: {
@@ -1441,6 +1446,17 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataGetNotificationResponseBody"];
+        };
+      };
+    };
+  };
+  /** 수동 출석체크 */
+  visit: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
         };
       };
     };

@@ -28,7 +28,7 @@ import static lombok.AccessLevel.PROTECTED;
 @ToString(callSuper = true)
 public class Member extends BaseEntity { // 보안이 들어있는 클래스
 
-    private int enrollCount;
+    private int registerCount;
 
     @Column(unique = true, length = 100)
     private String username;

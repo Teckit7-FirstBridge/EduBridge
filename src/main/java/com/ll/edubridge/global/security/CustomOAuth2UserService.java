@@ -3,9 +3,7 @@ package com.ll.edubridge.global.security;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
-import com.ll.edubridge.domain.notification.entity.NotificationType;
 import com.ll.edubridge.domain.notification.service.NotificationService;
-import com.ll.edubridge.domain.point.point.entity.PointType;
 import com.ll.edubridge.domain.point.point.service.PointService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,12 +58,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Member member = memberService.modifyOrJoin(username, providerTypeCode, nickname, profileImgUrl).getData();
 
         if(!member.isVisitedToday()) {
-            member.setVisitedToday(true);
-            int point = member.getPoint() + PointType.Attend.getAmount();
-            member.setPoint(point); // 실제 포인트 추가
-            notificationService.notifyAttendPoint(member.getId()); // 포인트 지급 알림
-            notificationService.createByPoint(NotificationType.POINTS, member, PointType.Attend.getAmount()); // 알림 내역 저장
-            pointService.addPoint(PointType.Attend, member); // 포인트 내역 추가
+            memberService.visit(member);
         }
 
         return new SecurityUser(member.getId(), member.getUsername(), member.getPassword(), member.getAuthorities());

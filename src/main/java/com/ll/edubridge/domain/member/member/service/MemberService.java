@@ -4,6 +4,8 @@ import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.domain.member.member.dto.NickNameDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
+import com.ll.edubridge.domain.notification.entity.NotificationType;
+import com.ll.edubridge.domain.notification.service.NotificationService;
 import com.ll.edubridge.domain.point.point.entity.PointType;
 import com.ll.edubridge.domain.point.point.service.PointService;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -39,6 +41,7 @@ public class MemberService {
     private final AuthTokenService authTokenService;
     private final PointService pointService;
     private final CourseEnrollService courseEnrollService;
+    private final NotificationService notificationService;
 
     private final Rq rq;
 
@@ -240,7 +243,7 @@ public class MemberService {
         for (Member member : allMembers) {
             member.setVisitedToday(false);
             member.setDailyAchievement(0);
-            member.setEnrollCount(0);
+            member.setRegisterCount(0);
         }
         memberRepository.saveAll(allMembers);
     }
@@ -265,13 +268,16 @@ public class MemberService {
 
     public boolean canEnroll(Member member){
 
-        if (member.getEnrollCount() < 5){
-            member.setEnrollCount(member.getEnrollCount() + 1);
-            memberRepository.save(member);
-            return true;
-        }else{
-            return false;
-        }
+        return member.getRegisterCount() < 5;
+    }
+
+    @Transactional
+    public void increaseRegisterCount(){
+        Member member = rq.getMember();
+
+        member.setRegisterCount(member.getRegisterCount() + 1);
+
+        memberRepository.save(member);
     }
 
     @Transactional
@@ -285,11 +291,22 @@ public class MemberService {
         member.setUuid("");
         member.setProfileImgUrl("");
         member.setPoint(0);
-        member.setEnrollCount(0);
+        member.setRegisterCount(0);
 
         courseEnrollService.delete(member);
 
         memberRepository.save(member);
         rq.setLogout();
+    }
+
+    @Transactional
+    public void visit(Member member){
+        member.setVisitedToday(true);
+        int point = member.getPoint() + PointType.Attend.getAmount();
+        member.setPoint(point); // 실제 포인트 추가
+        notificationService.notifyAttendPoint(member.getId()); // 포인트 지급 알림
+        notificationService.createByPoint(NotificationType.POINTS, member, PointType.Attend.getAmount()); // 알림 내역 저장
+        pointService.addPoint(PointType.Attend, member); // 포인트 내역 추가
+
     }
 }

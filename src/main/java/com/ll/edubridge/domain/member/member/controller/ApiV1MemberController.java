@@ -9,6 +9,7 @@ import com.ll.edubridge.domain.member.member.dto.MyPageDto;
 import com.ll.edubridge.domain.member.member.dto.NickNameDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
+import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.ll.edubridge.global.exceptions.CodeMsg.E400_11_AlREADY_VISITED;
 
 @RestController
 @RequestMapping("/api/v1/members")
@@ -125,9 +128,6 @@ public class ApiV1MemberController {
                 .map(courseEnroll -> new CourseDto(courseEnroll.getCourse(), member))
                 .collect(Collectors.toList());
 
-        member.getCourseVoters().stream().forEach(courseVoter1 -> System.out.println(courseVoter1.getMember() + " voted for " + courseVoter1.getCourse()));
-
-
         List<CourseDto> likeCourses = member.getCourseVoters().stream().map(courseVoter -> new CourseDto(courseVoter.getCourse(), member)).toList();
 
         MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,memberDto);
@@ -158,5 +158,18 @@ public class ApiV1MemberController {
 
         return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
                 Msg.E200_3_DELETE_SUCCEED.getMsg());
+    }
+
+    @PutMapping("visit")
+    @Operation(summary = "수동 출석체크")
+    public RsData<Empty> visit(){
+        Member member = rq.getMember();
+        if(!member.isVisitedToday()){
+            memberService.visit(member);
+        }else{
+            throw new GlobalException(E400_11_AlREADY_VISITED.getCode(), E400_11_AlREADY_VISITED.getMessage());
+        }
+
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(), Msg.E200_2_MODIFY_SUCCEED.getMsg());
     }
 }

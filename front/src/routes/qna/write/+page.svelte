@@ -44,7 +44,7 @@
   // https://v0.dev/t/BlOM8H6hEQ8
   -->
 <div class="">
-  <div class="max-w-lg mx-auto text-2xl text-blue-600 w-full px-4 sm:px-6 lg:px-8 mt-2">
+  <div class="max-w-lg mx-auto text-2xl font-semibold w-full px-4 sm:px-6 lg:px-8 mt-2">
     1대1 문의
   </div>
   <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8 mt-2">

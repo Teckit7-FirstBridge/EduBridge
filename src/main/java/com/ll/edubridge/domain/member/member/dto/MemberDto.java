@@ -34,7 +34,7 @@ public class MemberDto { // 엔티티(JPA(보안이 민감한 정보가 들어�
   
     private int point;
 
-    private int enrollCount;
+    private int registerCount;
 
     private String uuid;
 
@@ -49,7 +49,7 @@ public class MemberDto { // 엔티티(JPA(보안이 민감한 정보가 들어�
         this.dailyGoal = member.getDailyGoal();
         this.dailyAchievement = member.getDailyAchievement();
         this.point = member.getPoint();
-        this.enrollCount = member.getEnrollCount();
+        this.registerCount = member.getRegisterCount();
         this.uuid = member.getUuid();
     }
 }
