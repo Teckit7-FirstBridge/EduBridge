@@ -194,7 +194,7 @@
                     </div>
                   {/each}
                 {:else}
-                  <div class="py-10">
+                  <div class="p-2">
                     <p>등록된 글이 없습니다.</p>
                   </div>
                 {/if}
@@ -321,7 +321,7 @@
                     </div>
                   {/each}
                 {:else}
-                  <div class="py-10">
+                  <div class="p-2">
                     <p>등록된 댓글이 없습니다.</p>
                   </div>
                 {/if}
