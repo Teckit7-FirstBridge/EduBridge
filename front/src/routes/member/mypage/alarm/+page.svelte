@@ -4,7 +4,12 @@
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
-    console.log('hi');
+    const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
+    const { isLogin } = isLoginResponse.data?.data!;
+    if (!isLogin) {
+      rq.msgWarning('로그인이 필요한 서비스 입니다');
+      rq.goTo('/member/login');
+    }
     const { data } = await rq.apiEndPoints().GET('/api/v1/notification/get', {});
     const list: components['schemas']['NotificationDto'][] = data?.data.dtoList;
 

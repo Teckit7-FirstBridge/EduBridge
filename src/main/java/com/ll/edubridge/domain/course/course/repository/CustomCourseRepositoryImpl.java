@@ -93,6 +93,7 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
     public Page<Course> findByWriter(Member author, Pageable pageable) {
         List<Course> fetch = queryFactory.selectFrom(course)
                 .where(course.writer.id.eq(author.getId()))
+                .orderBy(course.createDate.desc())
                 .fetch();
         long count = queryFactory.selectFrom(course)
                 .where(course.writer.id.eq(author.getId()))

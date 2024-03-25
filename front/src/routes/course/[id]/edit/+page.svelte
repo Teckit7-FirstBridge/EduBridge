@@ -208,11 +208,11 @@
                       onclick={closeModalThAdvice}>✕</button
                     >
                     <div>
-                      <div>제시된 형식에 맞춰 썸네일 이미지를 입력해주세요.</div>
+                      <div>※ 썸네일 등록 : URL 형식을 맞춰주세요 ※</div>
                       <br />
-                      <div>VIDEO-ID 위치에 첫번째 강의의 Youtube 영상 id를 넣어주세요.</div>
+                      <div>VIDEO-ID 위치에 첫번째로 등록할 강의의 Youtube 영상 id를 넣어주세요.</div>
                       <br />
-                      <div>Youtube 영상 id : URL의 v= 혹은 vi= 다음 값</div>
+                      <div>Youtube 영상 id : URL v= 혹은 vi= 다음 값</div>
                     </div>
                   </div>
                 </dialog>
