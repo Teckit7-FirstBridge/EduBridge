@@ -170,7 +170,7 @@
             for="post-overview">강좌 개요</label
           >
           <ToastUiEditor bind:this={overvieweditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
-          <div>
+          <div class="flex flex-col">
             <label
               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               for="course-imgUrl mr-4"
@@ -194,7 +194,7 @@
                 </div>
               </dialog>
             </label><label
-              class="ml-4 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
+              class="mt-1 w-[290px] text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
               for="course-imgUrl"
             >
               https://img.youtube.com/vi/VIDEO-ID/0.jpg
