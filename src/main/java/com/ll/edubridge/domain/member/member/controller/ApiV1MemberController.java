@@ -125,9 +125,6 @@ public class ApiV1MemberController {
                 .map(courseEnroll -> new CourseDto(courseEnroll.getCourse(), member))
                 .collect(Collectors.toList());
 
-        member.getCourseVoters().stream().forEach(courseVoter1 -> System.out.println(courseVoter1.getMember() + " voted for " + courseVoter1.getCourse()));
-
-
         List<CourseDto> likeCourses = member.getCourseVoters().stream().map(courseVoter -> new CourseDto(courseVoter.getCourse(), member)).toList();
 
         MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,memberDto);
