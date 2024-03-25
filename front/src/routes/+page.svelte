@@ -60,11 +60,13 @@
   function nextSlide() {
     activeSlide = (activeSlide + 1) % totalSlides;
     updateSlideTransform();
+    updateButtonColors();
   }
 
   function previousSlide() {
     activeSlide = (activeSlide - 1 + totalSlides) % totalSlides;
     updateSlideTransform();
+    updateButtonColors();
   }
 
   function changeSlide(index) {
@@ -76,7 +78,7 @@
   function updateButtonColors() {
     const buttons = document.querySelectorAll('.button_slide');
     buttons.forEach((button, index) => {
-      const color = index === activeSlide ? 'blue' : 'gray';
+      const color = index === activeSlide ? 'black' : 'gray';
       button.style.backgroundColor = color;
     });
   }
@@ -168,8 +170,8 @@
               {#each Array(totalSlides) as _, i}
                 <button
                   class="button_slide w-2 h-2 rounded-full mx-1 cursor-pointer"
-                  style="background-color: {i === activeSlide ? 'blue' : 'gray'}"
                   on:click={() => changeSlide(i)}
+                  style="background-color: {i === activeSlide ? 'black' : 'gray'}"
                 ></button>
               {/each}
             </div>
