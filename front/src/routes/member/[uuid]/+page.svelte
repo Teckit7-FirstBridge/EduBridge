@@ -96,6 +96,21 @@
     modalDropMessage.close();
   }
 
+  const visit = async () => {
+    if (!rq.member.visitedToday) {
+      const confirmAttendance = confirm('출석체크 하시겠습니까?');
+
+      if (confirmAttendance) {
+        const { data, error } = await rq.apiEndPoints().PUT('/api/v1/members/visit');
+        if (data) {
+          rq.msgInfo('출석체크 완료');
+        } else {
+          rq.msgWarning('이미 출석 되었습니다.');
+        }
+      }
+    }
+  };
+
   let point: components['schemas']['PointDto'] = $state();
 
   async function load() {
@@ -297,11 +312,6 @@
                   href="/course/{favoriteCourse.id}"
                   class="flex-none w-48 p-6 bg-white rounded-lg shadow"
                 >
-                  <h3
-                    class={`inline-flex px-2 text-xs font-semibold rounded-full py-1 mx-2 ${favoriteCourse.grade === '초급' ? 'bg-blue-100 text-blue-800' : favoriteCourse.grade === '중급' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}
-                  >
-                    {favoriteCourse.grade}
-                  </h3>
                   <h3 class="text-sm mt-1 font-medium">{favoriteCourse.title}</h3>
                 </a>
               {/each}
@@ -360,7 +370,7 @@
 <div class="max-w-4xl mx-auto">
   <div class="flex gap-x-4 relative items-center">
     <button onclick={openModalCal} class="btn btn-sm text-xl m-4 bg-gray-100 border-white"
-      >출석 체크</button
+      >출석 달력</button
     >
     <dialog id="my_modal_3" class="modal" bind:this={calModal} on:click={handleOutsideClickCal}>
       <div class="modal-box">
@@ -372,6 +382,13 @@
         </div>
       </div>
     </dialog>
+  </div>
+</div>
+
+<div class="max-w-4xl mx-auto">
+  <div class="flex gap-x-4 relative items-center">
+    <button onclick={visit} class="btn btn-sm text-xl m-4 bg-gray-100 border-white">출석체크</button
+    >
   </div>
 </div>
 
