@@ -407,8 +407,8 @@ export interface components {
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
       authorities?: components["schemas"]["GrantedAuthority"][];
-      authoritiesAsStringList?: string[];
       profileImgUrlOrDefault?: string;
+      authoritiesAsStringList?: string[];
     };
     Roadmap: {
       /** Format: int64 */

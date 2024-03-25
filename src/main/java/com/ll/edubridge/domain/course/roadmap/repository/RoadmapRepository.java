@@ -12,7 +12,7 @@ public interface RoadmapRepository extends JpaRepository<Roadmap, Long>, CustomR
 
     // Page<Roadmap> findByKw(KwTypeCourse kwType, String kw, Pageable pageable);
 
-    List<Roadmap> findByOwner(Member owner);
+    List<Roadmap> findByOwnerOrderByCreateDateDesc(Member owner);
 
     // Roadmap findByCurriculumContains(Course course);
 
