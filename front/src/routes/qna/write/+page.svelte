@@ -54,7 +54,7 @@
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="post-title">제목</label
         ><input
-          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-blue-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-gray-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           id="post-title"
           placeholder="Enter title"
           bind:value={title}
@@ -70,7 +70,7 @@
       <div class="flex justify-end">
         <button
           on:click={Post__save}
-          class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
+          class="inline-block px-4 py-2 border border-gray-400 text-gray-700 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
           >저장</button
         >
       </div>

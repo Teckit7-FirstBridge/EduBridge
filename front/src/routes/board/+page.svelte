@@ -62,7 +62,7 @@
             <div
               tabindex="0"
               id="dropdownButton"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-gray-100 hover:text-accent-foreground h-10 px-4 py-2"
+              class="border-gray-400 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:text-accent-foreground focus:bg-white focus:border-gray-700 h-10 px-4 py-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -126,7 +126,7 @@
           </div>
           <select
             name="kwType"
-            class="mt-1 select select-bordered select-sm font-bold focus:outline-none focus:ring-0"
+            class="border-gray-400 mt-1 select select-bordered select-sm font-bold focus:outline-none focus:ring-0 focus:border-gray-700"
             value={$page.url.searchParams.get('kwType') ?? 'ALL'}
           >
             <option value="ALL">전체</option>
@@ -137,7 +137,7 @@
         </div>
         <div class="flex items-center gap-4 mb-6">
           <input
-            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:border-blue-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 flex-grow"
+            class="border-gray-400 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:border-gray-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 flex-grow"
             placeholder="검색어"
             name="kw"
             type="search"
@@ -146,14 +146,14 @@
           />
 
           <button
-            class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
+            class="border-gray-400 inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground h-10 px-4 py-2 hover:bg-gray-700 hover:text-white"
             type="submit"
           >
             검색하기
           </button>
 
           <button
-            class="inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-100 h-10 px-4 py-2"
+            class="border-gray-400 inline-flex border items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-700 hover:text-white focus:bg=gray-700 focus:text-white h-10 px-4 py-2"
             type="button"
             on:click={() => {
               location.href = '/board/write';

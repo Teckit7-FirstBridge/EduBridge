@@ -125,111 +125,117 @@
   }
 </script>
 
-{#await load()}
-  <p>loading...</p>
-{:then}
-  <div>
-    <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8 mt-2">
-      <div class="space-y-4">
-        <div class="space-y-2">
-          <label
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            for="post-title">강좌 제목</label
-          ><input
-            class="flex h-10 w-full rounded-md border px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-            id="post-title"
-            placeholder="Enter title"
-            bind:value={title}
-          />
-        </div>
-        <!-- hi -->
-        <div class="my-4">
-          <input
-            type="text"
-            bind:value={newTag}
-            placeholder="태그를 입력하세요"
-            class="px-4 py-2 border rounded-lg mr-2 focus:outline-none focus:border-blue-500"
-            on:keypress={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault(); // 기본 동작인 폼 전송을 막습니다.
-                addTag();
-              }
-            }}
-          />
-          <button
-            on:click={addTag}
-            class="inline-block px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-black hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >추가</button
-          >
-        </div>
-
-        <div class="my-4">
-          {#each tags as tag}
-            <span
-              class="inline-flex items-center bg-gray-200 text-gray-800 px-2 py-1 rounded-full mr-2 mb-2"
-            >
-              <span>{tag}</span>
-              <button on:click={() => removeTag(tag)} class="ml-2">&times;</button>
-            </span>
-          {/each}
-        </div>
-        <div class="space-y-2">
-          <label
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            for="post-noti">공지사항</label
-          >
-          <div bind:this={divNoti} id="post-noti"></div>
-          <ToastUiEditor bind:this={notieditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
-
-          <label
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            for="post-overview">강좌 개요</label
-          >
-          <ToastUiEditor bind:this={overvieweditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
-          <div class="flex flex-col">
+<div class="max-w-4xl mx-auto">
+  {#await load()}
+    <p>loading...</p>
+  {:then}
+    <div>
+      <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8 mt-2">
+        <div class="space-y-4">
+          <div class="space-y-2">
             <label
               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              for="course-imgUrl mr-4"
-              >강좌 이미지 Url
-              <a href="#" onclick={openModalThAdvice}>
-                <i class="fa-solid fa-circle-exclamation text-red-500"></i>
-              </a>
-              <dialog id="my_modal_3" class="modal" bind:this={thumbnailAdvice}>
-                <div class="modal-box modal-box-2">
-                  <button
-                    class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                    onclick={closeModalThAdvice}>✕</button
-                  >
-                  <div>
-                    <div>※ 썸네일 등록 : URL 형식을 맞춰주세요 ※</div>
-                    <br />
-                    <div>VIDEO-ID 위치에 첫번째로 등록할 강의의 Youtube 영상 id를 넣어주세요.</div>
-                    <br />
-                    <div>Youtube 영상 id : URL v= 혹은 vi= 다음 값</div>
-                  </div>
-                </div>
-              </dialog>
-            </label><label
-              class="mt-1 w-[290px] text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
-              for="course-imgUrl"
-            >
-              https://img.youtube.com/vi/VIDEO-ID/0.jpg
-            </label>
+              for="post-title">강좌 제목</label
+            ><input
+              class="flex h-10 w-full rounded-md border px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
+              id="post-title"
+              placeholder="Enter title"
+              bind:value={title}
+            />
           </div>
-          <input
-            class="flex h-10 w-full rounded-md border px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-            id="post-imgUrl"
-            placeholder="Enter ImgUrl"
-            bind:value={imgUrl}
-          />
-        </div>
+          <!-- hi -->
+          <div class="my-4">
+            <input
+              type="text"
+              bind:value={newTag}
+              placeholder="태그를 입력하세요"
+              class="px-4 py-2 border rounded-lg mr-2 focus:outline-none focus:border-gray-700"
+              on:keypress={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault(); // 기본 동작인 폼 전송을 막습니다.
+                  addTag();
+                }
+              }}
+            />
+            <button
+              on:click={addTag}
+              class="inline-block px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-black hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+              >추가</button
+            >
+          </div>
 
-        <button
-          on:click={Course__save}
-          class="inline-block px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-black hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >저장</button
-        >
+          <div class="my-4">
+            {#each tags as tag}
+              <span
+                class="inline-flex items-center bg-gray-200 text-gray-800 px-2 py-1 rounded-full mr-2 mb-2"
+              >
+                <span>{tag}</span>
+                <button on:click={() => removeTag(tag)} class="ml-2">&times;</button>
+              </span>
+            {/each}
+          </div>
+          <div class="space-y-2">
+            <label
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              for="post-noti">공지사항</label
+            >
+            <div bind:this={divNoti} id="post-noti"></div>
+            <ToastUiEditor bind:this={notieditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
+
+            <label
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              for="post-overview">강좌 개요</label
+            >
+            <ToastUiEditor bind:this={overvieweditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
+            <div class="flex flex-col">
+              <label
+                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                for="course-imgUrl mr-4"
+                >강좌 이미지 Url
+                <a href="#" onclick={openModalThAdvice}>
+                  <i class="fa-solid fa-circle-exclamation text-red-500"></i>
+                </a>
+                <dialog id="my_modal_3" class="modal" bind:this={thumbnailAdvice}>
+                  <div class="modal-box modal-box-2">
+                    <button
+                      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                      onclick={closeModalThAdvice}>✕</button
+                    >
+                    <div>
+                      <div>※ 썸네일 등록 : URL 형식을 맞춰주세요 ※</div>
+                      <br />
+                      <div>
+                        VIDEO-ID 위치에 첫번째로 등록할 강의의 Youtube 영상 id를 넣어주세요.
+                      </div>
+                      <br />
+                      <div>Youtube 영상 id : URL v= 혹은 vi= 다음 값</div>
+                    </div>
+                  </div>
+                </dialog>
+              </label><label
+                class="mt-1 w-[290px] text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
+                for="course-imgUrl"
+              >
+                https://img.youtube.com/vi/VIDEO-ID/0.jpg
+              </label>
+            </div>
+            <input
+              class="flex h-10 w-full rounded-md border px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
+              id="post-imgUrl"
+              placeholder="Enter ImgUrl"
+              bind:value={imgUrl}
+            />
+          </div>
+
+          <div class="flex justify-end">
+            <button
+              on:click={Course__save}
+              class="inline-block px-4 py-2 border border-gray-400 text-gray-700 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+              >저장</button
+            >
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-{/await}
+  {/await}
+</div>

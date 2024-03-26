@@ -398,7 +398,7 @@
                   <div class="flex justify-end mt-4">
                     <button
                       on:click={reportPost}
-                      class="inline-block px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-black hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      class="inline-block px-4 py-2 border border-gray-400 text-gray-700 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
                     >
                       제출
                     </button>
@@ -415,12 +415,19 @@
           <div class="flex">
             {#if rq.member.id == post.authorId || rq.isAdmin()}
               <div class="mb-5 mx-1 flex">
-                <a class="btn btn-sm" on:click={deletePost}>삭제</a>
+                <a
+                  class="inline-block px-3 py-2 border border-gray-400 text-gray-700 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+                  on:click={deletePost}>삭제</a
+                >
               </div>
             {/if}
             {#if rq.member.id == post.authorId}
               <div class="mb-5 mx-1 flex">
-                <a href="/board/{post.id}/edit" class="btn btn-sm">수정</a>
+                <a
+                  href="/board/{post.id}/edit"
+                  class="inline-block px-3 py-2 border border-gray-400 text-gray-700 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+                  >수정</a
+                >
               </div>
             {/if}
           </div>
@@ -474,12 +481,15 @@
           <div class="mt-8 flex gap-2 items-center">
             <textarea
               id="commentbody"
-              class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-gray-600"
               rows="2"
               placeholder="댓글을 입력하세요..."
               bind:value={body}
             ></textarea>
-            <button class="btn" on:click={Comment__save}>댓글 등록</button>
+            <button
+              class="btn bg-white border-gray-400 hover:bg-gray-700 hover:text-white hover:outline-none focus:outline-none"
+              on:click={Comment__save}>댓글 등록</button
+            >
           </div>
         </div>
       {/if}

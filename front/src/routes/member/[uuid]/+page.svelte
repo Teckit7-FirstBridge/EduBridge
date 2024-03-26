@@ -242,7 +242,11 @@
         >
 
         <div class="flex gap-x-4 relative items-center">
-          <button onclick={openModalPoint} class="btn btn-sm">포인트 : {member?.point}</button>
+          <button
+            onclick={openModalPoint}
+            class="mr-2 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+            >포인트 : {member?.point}</button
+          >
           <dialog
             id="my_modal_3"
             class="modal"
@@ -377,14 +381,20 @@
           class="input input-bordered w-full max-w-xs"
           disabled
         />
-        <button on:click={copyInputValue} class="btn btn-outline w-[200px] h-3 border-white shadow"
-          ><label class="text-l"><div>요약노트 for <br />포트폴리오</div></label><i class="fa-regular fa-paste"
+        <button on:click={copyInputValue} class="btn btn-outline w-[200px] h-3 border-gray-400"
+          ><label class="text-l"><div>요약노트 for <br />포트폴리오</div></label><i
+            class="fa-regular fa-paste"
           ></i></button
         >
-        <a href="#" onclick={openModalAdvice}>
-          <i class="fa-solid fa-circle-question text-blue-900"></i>
-        </a>
-        <dialog id="my_modal_3" class="modal" bind:this={modalAdvice} on:click={handleOutsideClickAdvice}>
+        <button onclick={openModalAdvice}>
+          <i class="ml-2 fa-solid fa-circle-question text-blue-900"></i>
+        </button>
+        <dialog
+          id="my_modal_3"
+          class="modal"
+          bind:this={modalAdvice}
+          on:click={handleOutsideClickAdvice}
+        >
           <div class="modal-box modal-box-2">
             <button
               class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -396,7 +406,9 @@
               <div>CS 공부한 내역을 증명하고 싶을 때, 해당 페이지를 첨부해보세요.</div>
               <div>버튼을 눌러 복사된 URL을 새 창에서 열어보세요. (PC 권장)</div>
               <div>브라우저의 인쇄 기능을 이용하여 pdf로 출력해보세요.</div>
-              <div>작성한 요약노트의 세부 내용도 넣고 싶다면 URL의 export 뒤에 '/detail'을 추가하세요.</div>
+              <div>
+                작성한 요약노트의 세부 내용도 넣고 싶다면 URL의 export 뒤에 '/detail'을 추가하세요.
+              </div>
             </div>
           </div>
         </dialog>
@@ -406,10 +418,13 @@
     <a href="/" class="btn btn-outline btn-error m-5">접근 불가 메인으로</a>
   {/if}
 {/await}
-<div class="max-w-4xl mx-auto">
+<div class="ml-6 mt-4 max-w-4xl mx-auto">
   <div class="flex gap-x-4 relative items-center">
-    <button onclick={openModalCal} class="btn btn-sm text-xl m-4 bg-gray-100 border-white"
-      >출석 달력</button
+    <button
+      onclick={openModalCal}
+      class="font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+      ><i class="fa-regular fa-calendar-days mr-1"></i>
+      출석 달력</button
     >
     <dialog id="my_modal_3" class="modal" bind:this={calModal} on:click={handleOutsideClickCal}>
       <div class="modal-box">
@@ -421,19 +436,23 @@
         </div>
       </div>
     </dialog>
+    <div class="flex gap-x-4 relative items-center">
+      <button
+        onclick={visit}
+        class="font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+        ><i class="fa-regular fa-calendar-check mr-2"></i>출석 체크</button
+      >
+    </div>
   </div>
 </div>
 
-<div class="max-w-4xl mx-auto">
-  <div class="flex gap-x-4 relative items-center">
-    <button onclick={visit} class="btn btn-sm text-xl m-4 bg-gray-100 border-white">출석체크</button
-    >
-  </div>
-</div>
+<div class="max-w-4xl mx-auto"></div>
 
 <div class="max-w-4xl mx-auto">
   <div class="flex gap-x-4 relative items-center">
-    <button onclick={openModalNickname} class="btn btn-sm text-xl m-4 bg-gray-100 border-white"
+    <button
+      onclick={openModalNickname}
+      class="ml-6 mt-4 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
       >닉네임 변경</button
     >
     <dialog
@@ -463,7 +482,9 @@
 
 <div class="max-w-4xl mx-auto">
   <div class="flex gap-x-4 relative items-center">
-    <button onclick={openModalDropMessage} class="btn btn-sm text-xl m-4 bg-gray-100 border-white"
+    <button
+      onclick={openModalDropMessage}
+      class="text-xs ml-6 mt-4 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
       >회원 탈퇴</button
     >
     <dialog
@@ -479,12 +500,10 @@
         <div class="flex flex-col bg-white shadow rounded-lg mt-4">
           <div>※ 탈퇴 전 안내사항을 숙지해주시기 바랍니다. ※</div>
           <p>
-            1. 탈퇴 시, 해당 계정으로 작성된 글, 댓글, 강좌, 로드맵에는 모두 '탈퇴한 회원'으로 표시됩니다.<br
-            />
-            2. 해당 데이터가 남지 않기를 원하시는 경우, 탈퇴 전에 직접 삭제해주시기 바랍니다.<br
-            />
-            3. 같은 소셜 계정으로 다시 회원가입 하실 수 있습니다.<br
-            />
+            1. 탈퇴 시, 해당 계정으로 작성된 글, 댓글, 강좌, 로드맵에는 모두 '탈퇴한 회원'으로
+            표시됩니다.<br />
+            2. 해당 데이터가 남지 않기를 원하시는 경우, 탈퇴 전에 직접 삭제해주시기 바랍니다.<br />
+            3. 같은 소셜 계정으로 다시 회원가입 하실 수 있습니다.<br />
             4. 즐거운 마음으로 떠나시기를 기원합니다. 안녕히 가십시오.
           </p>
           <div class="flex justify-between mb-1">

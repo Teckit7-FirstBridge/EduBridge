@@ -121,200 +121,204 @@
   }
 </script>
 
-<div role="tablist" class="tabs tabs-bordered flex px-4 max-w-4xl mx-auto mt-4">
-  <a
-    role="tab"
-    class={`tab ${selectedTab === 'course' ? 'tab-active' : ''}`}
-    on:click={() => {
-      changeTab('course');
-      load();
-    }}
-  >
-    강좌
-  </a>
-  <a
-    role="tab"
-    class={`tab ${selectedTab === 'roadmap' ? 'tab-active' : ''}`}
-    on:click={() => {
-      changeTab('roadmap');
-      load();
-    }}
-  >
-    로드맵
-  </a>
-</div>
-{#await load()}
-  <p>loading...</p>
-{:then { data }}
-  {#if selectedTab === 'course'}
-    <div class="">
-      <div class="flex justify-between items-center justify-center mt-2 mb-4 ml-2">
-        <div>
-          <a
-            href="/course/write"
-            class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
-          >
-            등록
-          </a>
+<div class="max-w-4xl mx-auto my-8">
+  <div role="tablist" class="tabs tabs-bordered flex px-4 max-w-4xl mx-auto mt-4">
+    <a
+      role="tab"
+      class={`tab ${selectedTab === 'course' ? 'tab-active' : ''}`}
+      on:click={() => {
+        changeTab('course');
+        load();
+      }}
+    >
+      강좌
+    </a>
+    <a
+      role="tab"
+      class={`tab ${selectedTab === 'roadmap' ? 'tab-active' : ''}`}
+      on:click={() => {
+        changeTab('roadmap');
+        load();
+      }}
+    >
+      로드맵
+    </a>
+  </div>
+  {#await load()}
+    <p>loading...</p>
+  {:then { data }}
+    {#if selectedTab === 'course'}
+      <div class="">
+        <div class="flex justify-between items-center justify-center mt-2 mb-4 ml-2">
+          <div>
+            <a
+              href="/course/write"
+              class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+            >
+              등록
+            </a>
+          </div>
         </div>
-      </div>
-      <div class="flex flex-col flex-1">
-        <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {#if courselist}
-            {#each courselist as item}
-              <div
-                class="border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center pt-2"
-              >
-                <a href="/course/{item.id}">
-                  <div class="flex justify-center gap-2">
-                    <h2 class="text-lg font-semibold my-1 ml-2">{formatTitle(item.title)}</h2>
-                  </div>
-                  <div class="flex justify-center p-2 bg-black rounded-lg m-4">
-                    <img src={item.imgUrl} />
-                  </div>
+        <div class="flex flex-col flex-1">
+          <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {#if courselist}
+              {#each courselist as item}
+                <div
+                  class="border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center pt-2"
+                >
+                  <a href="/course/{item.id}">
+                    <div class="flex justify-center gap-2">
+                      <h2 class="text-lg font-semibold my-1 ml-2">{formatTitle(item.title)}</h2>
+                    </div>
+                    <div class="flex justify-center p-2 bg-black rounded-lg m-4">
+                      <img src={item.imgUrl} />
+                    </div>
 
-                  <p class="text-sm text-gray-500 dark:text-gray-400 my-4 mx-2">
-                    {removeMarkdown(item.overView)}
-                  </p>
-                </a>
-                <div class="flex items-center justify-between">
-                  {#if item.hashtags}
-                    <div class="flex ml-4">
-                      {#each item.hashtags.split('@') as hashtag}
-                        <div class="flex text-amber-600 text-sm text-center items-center ml-2">
-                          #{hashtag}
-                        </div>
-                      {/each}
-                    </div>
-                  {/if}
-                  <div class=" flex justify-end gap-2 p-2" on:click={() => clickLiked(item)}>
-                    {#if likesList[courselist.indexOf(item)]}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        height="24"
-                      >
-                        <!-- 빨간색 채워진 하트 -->
-                        <path
-                          fill="red"
-                          stroke="red"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                        />
-                      </svg>{:else}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        height="24"
-                      >
-                        <!-- 빨간색 빈 하트 -->
-                        <path
-                          fill="none"
-                          stroke="red"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                        />
-                      </svg>
-                    {/if}
-                    <span>
-                      {voteNumList[courselist!.indexOf(item)]}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            {/each}
-          {/if}
-        </div>
-      </div>
-    </div>
-  {:else}
-    <div class="">
-      <div class="flex justify-between items-center justify-center mb-4 mt-2 ml-2">
-        <div>
-          <a
-            href="/roadmap/write"
-            class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
-          >
-            등록
-          </a>
-        </div>
-      </div>
-      <div class="flex flex-col flex-1">
-        <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {#if roadmaplist}
-            {#each roadmaplist as item}
-              <div class="border collapse bg-white peer-checked:border-blue-600">
-                <input type="checkbox" class="peer" />
-                <div class="collapse-title bg-white">
-                  <div class="rounded-lg dark:border-gray-800 flex-col text-center">
-                    <div class="flex justify-between gap-2">
-                      <h2 class="text-lg font-semibold ml-2">{formatTitle(item.title)}</h2>
-                    </div>
-                    <div class="flex items-center justify-between">
-                      {#if item.hashtags}
-                        <div class="flex">
-                          {#each item.hashtags.split('@') as hashtag}
-                            <div class="flex text-amber-600 text-sm text-center items-center ml-2">
-                              #{hashtag}
-                            </div>
-                          {/each}
-                        </div>
-                      {/if}
-                    </div>
-                  </div>
-                </div>
-                <div class="collapse-content bg-white peer-checked:bg-white mt-1">
-                  <p class="text-lg text-gray-800 dark:text-gray-400 mx-2 font-semibold">개요</p>
-                  <p class="text-sm text-gray-800 dark:text-gray-400 mx-2">
-                    {removeMarkdown(item.overView)}
-                  </p>
-                  {#if item.curriculum}
-                    <div class="flex flex-col">
-                      {#each item.curriculum.sort((a, b) => a.courseOrder - b.courseOrder || a.id - b.id) as curriculum, index}
-                        <a href="/course/{curriculum.course.id}">
-                          <div
-                            class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
-                          >
-                            {index + 1}. {curriculum.course?.title}
-                            [{curriculum.courseOrder}번 강좌]
+                    <p class="text-sm text-gray-500 dark:text-gray-400 my-4 mx-2">
+                      {removeMarkdown(item.overView)}
+                    </p>
+                  </a>
+                  <div class="flex items-center justify-between">
+                    {#if item.hashtags}
+                      <div class="flex ml-4">
+                        {#each item.hashtags.split('@') as hashtag}
+                          <div class="flex text-amber-600 text-sm text-center items-center ml-2">
+                            #{hashtag}
                           </div>
-                        </a>
-                        <button
-                          on:click={() => deleteCourseInRoadmap(curriculum.id)}
-                          class="w-[100px] my-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                        {/each}
+                      </div>
+                    {/if}
+                    <div class=" flex justify-end gap-2 p-2" on:click={() => clickLiked(item)}>
+                      {#if likesList[courselist.indexOf(item)]}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
                         >
-                          강좌 제거
-                        </button>
-                      {/each}
+                          <!-- 빨간색 채워진 하트 -->
+                          <path
+                            fill="red"
+                            stroke="red"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                          />
+                        </svg>{:else}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                        >
+                          <!-- 빨간색 빈 하트 -->
+                          <path
+                            fill="none"
+                            stroke="red"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                          />
+                        </svg>
+                      {/if}
+                      <span>
+                        {voteNumList[courselist!.indexOf(item)]}
+                      </span>
                     </div>
-                  {/if}
-                  {#if item.owner.id == rq.member.id}
-                    <div class="flex justify-end">
-                      <a
-                        href="/roadmap/edit/{item.id}"
-                        class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
-                        >수정</a
-                      >
-                      <button
-                        on:click={() => deleteRoadmap(item.id)}
-                        class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
-                      >
-                        삭제
-                      </button>
-                    </div>
-                  {/if}
+                  </div>
                 </div>
-              </div>
-            {/each}
-          {/if}
+              {/each}
+            {/if}
+          </div>
         </div>
       </div>
-    </div>
-  {/if}
-{/await}
+    {:else}
+      <div class="">
+        <div class="flex justify-between items-center justify-center mb-4 mt-2 ml-2">
+          <div>
+            <a
+              href="/roadmap/write"
+              class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+            >
+              등록
+            </a>
+          </div>
+        </div>
+        <div class="flex flex-col flex-1">
+          <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {#if roadmaplist}
+              {#each roadmaplist as item}
+                <div class="border collapse bg-white peer-checked:border-blue-600">
+                  <input type="checkbox" class="peer" />
+                  <div class="collapse-title bg-white">
+                    <div class="rounded-lg dark:border-gray-800 flex-col text-center">
+                      <div class="flex justify-between gap-2">
+                        <h2 class="text-lg font-semibold ml-2">{formatTitle(item.title)}</h2>
+                      </div>
+                      <div class="flex items-center justify-between">
+                        {#if item.hashtags}
+                          <div class="flex">
+                            {#each item.hashtags.split('@') as hashtag}
+                              <div
+                                class="flex text-amber-600 text-sm text-center items-center ml-2"
+                              >
+                                #{hashtag}
+                              </div>
+                            {/each}
+                          </div>
+                        {/if}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="collapse-content bg-white peer-checked:bg-white mt-1">
+                    <p class="text-lg text-gray-800 dark:text-gray-400 mx-2 font-semibold">개요</p>
+                    <p class="text-sm text-gray-800 dark:text-gray-400 mx-2">
+                      {removeMarkdown(item.overView)}
+                    </p>
+                    {#if item.curriculum}
+                      <div class="flex flex-col">
+                        {#each item.curriculum.sort((a, b) => a.courseOrder - b.courseOrder || a.id - b.id) as curriculum, index}
+                          <a href="/course/{curriculum.course.id}">
+                            <div
+                              class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
+                            >
+                              {index + 1}. {curriculum.course?.title}
+                              [{curriculum.courseOrder}번 강좌]
+                            </div>
+                          </a>
+                          <button
+                            on:click={() => deleteCourseInRoadmap(curriculum.id)}
+                            class="w-[100px] my-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                          >
+                            강좌 제거
+                          </button>
+                        {/each}
+                      </div>
+                    {/if}
+                    {#if item.owner.id == rq.member.id}
+                      <div class="flex justify-end">
+                        <a
+                          href="/roadmap/edit/{item.id}"
+                          class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                          >수정</a
+                        >
+                        <button
+                          on:click={() => deleteRoadmap(item.id)}
+                          class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    {/if}
+                  </div>
+                </div>
+              {/each}
+            {/if}
+          </div>
+        </div>
+      </div>
+    {/if}
+  {/await}
+</div>

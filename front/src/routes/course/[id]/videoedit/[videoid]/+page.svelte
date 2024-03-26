@@ -132,6 +132,7 @@
         }
       });
     if (data) {
+      rq.msgInfo(data.msg);
       rq.goTo(`/course/${$page.params.id}`);
     }
   };
@@ -262,8 +263,13 @@
               bind:value={overview}
             ></textarea>
           </div>
-          <div class="flex items-center justify-between">
-            <button class="btn btn-primary" type="submit"> 등 록 </button>
+          <div class="flex items-center justify-end">
+            <button
+              class="inline-block px-4 py-2 border border-gray-400 text-gray-700 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+              type="submit"
+            >
+              등 록
+            </button>
           </div>
         </form>
       </div>

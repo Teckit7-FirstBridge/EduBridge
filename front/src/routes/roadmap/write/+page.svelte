@@ -87,7 +87,7 @@
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             for="post-title">로드맵 제목</label
           ><input
-            class="flex h-10 w-full rounded-md border px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+            class="flex h-10 w-full rounded-md border px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
             id="post-title"
             placeholder="Enter title"
             bind:value={title}
@@ -99,7 +99,7 @@
             type="text"
             bind:value={newTag}
             placeholder="태그를 입력하세요"
-            class="px-4 py-2 border rounded-lg mr-2 focus:outline-none focus:border-blue-500"
+            class="px-4 py-2 border rounded-lg mr-2 focus:outline-none focus:border-gray-700"
             on:keypress={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault(); // 기본 동작인 폼 전송을 막습니다.
@@ -109,7 +109,7 @@
           />
           <button
             on:click={addTag}
-            class="inline-block px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-black hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
             >추가</button
           >
         </div>
@@ -131,11 +131,13 @@
           >
           <ToastUiEditor bind:this={overvieweditor} height={'calc(60dvh - 64px)'}></ToastUiEditor>
         </div>
-        <button
-          on:click={RoadMap__save}
-          class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
-          >저장</button
-        >
+        <div class="flex justify-end">
+          <button
+            on:click={RoadMap__save}
+            class="inline-block px-4 py-2 border border-gray-400 text-gray-700 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+            >저장</button
+          >
+        </div>
       </div>
     </div>
   </div>
