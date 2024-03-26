@@ -4,6 +4,7 @@ package com.ll.edubridge.domain.course.course.controller;
 import com.ll.edubridge.domain.CourseVoter.service.CourseVoterService;
 import com.ll.edubridge.domain.course.course.dto.CourseAuthDto;
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
+import com.ll.edubridge.domain.course.course.dto.CourseListDto;
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
@@ -51,11 +52,11 @@ public class ApiV1CourseController {
     @Getter
     public class GetCoursesResponsebody {
         @NonNull
-        private final List<CourseDto> items;
+        private final List<CourseListDto> items;
 
         public GetCoursesResponsebody(Page<Course> page) {
             this.items = page.getContent().stream()
-                    .map(course -> new CourseDto(course,rq.getMember()))
+                    .map(course -> new CourseListDto(course,rq.getMember()))
                     .toList();
         }
     }

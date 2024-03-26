@@ -3,7 +3,7 @@
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
 
-  let courselist: components['schemas']['CourseDto'][] | undefined;
+  let courselist: components['schemas']['CourseListDto'][] | undefined;
   let roadmaplist: components['schemas']['RoadmapDto'][] | undefined;
   let likesList: Boolean[] = $state([]);
   let voteNumList: number[] = $state([]);
