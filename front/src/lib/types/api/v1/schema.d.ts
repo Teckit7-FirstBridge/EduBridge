@@ -1002,8 +1002,20 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    CourseListDto: {
+      /** Format: int64 */
+      id?: number;
+      title?: string;
+      imgUrl?: string;
+      overView?: string;
+      /** Format: int32 */
+      voteCount?: number;
+      likedByCurrentUser?: boolean;
+      writer?: components["schemas"]["Member"];
+      hashtags?: string;
+    };
     GetCoursesResponsebody: {
-      items: components["schemas"]["CourseDto"][];
+      items: components["schemas"]["CourseListDto"][];
     };
     RsDataGetCoursesResponsebody: {
       resultCode: string;
