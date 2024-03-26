@@ -44,6 +44,14 @@
       rq.msgInfo('출석 포인트가 지급되었습니다.');
     });
   });
+
+  async function read() {
+    console.log('hi');
+
+    const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/notification/read/{id}`, {
+      params: { path: { id: rq.member.id } }
+    });
+  }
 </script>
 
 {#if !exportNote}
@@ -114,7 +122,12 @@
 
     <div class="flex-1 justify-end mr-4">
       <div class="flex gap-x-4 relative items-center">
-        <button on:click={() => rq.goTo(`/member/mypage/alarm`)}>
+        <button
+          on:click={() => {
+            rq.goTo(`/member/mypage/alarm`);
+            read();
+          }}
+        >
           {#if isAlarm}
             <span class="relative flex h-2 w-2">
               <span

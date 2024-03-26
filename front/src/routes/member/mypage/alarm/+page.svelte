@@ -15,12 +15,6 @@
 
     return { list };
   }
-
-  async function read(id: number) {
-    const { data, error } = await rq.apiEndPoints().PUT(`/api/v1/notification/read/{id}`, {
-      params: { path: { id: id } }
-    });
-  }
 </script>
 
 {#await load()}
@@ -66,7 +60,7 @@
             <li
               class="flex p-4 hover:bg-gray-100 cursor-pointer {li.read ? 'bg-gray-100' : ''}"
               on:click={() => {
-                read(li.id);
+                read();
                 rq.goTo(`/qna/${li.post_id}`);
               }}
             >
@@ -93,12 +87,7 @@
               </div>
             </li>
           {:else}
-            <li
-              class="flex p-4 hover:bg-gray-100 cursor-pointer {li.read ? 'bg-gray-100' : ''}"
-              on:click={() => {
-                read(li.id);
-              }}
-            >
+            <li class="flex p-4 hover:bg-gray-100 cursor-pointer {li.read ? 'bg-gray-100' : ''}">
               <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full mr-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

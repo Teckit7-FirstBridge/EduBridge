@@ -60,4 +60,5 @@ public class ApiV1NotificationController {
         notificationService.readNoti(id);
         return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),Msg.E200_2_MODIFY_SUCCEED.getMsg(),null);
     }
+
 }
