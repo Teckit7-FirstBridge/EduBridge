@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -33,10 +34,8 @@ public class NotificationService {
     }
     @Transactional
     public void readNoti(Long id) {
-        Notification notification = notificationRepository.findById(id).get();
-        notification.setRead(true);
-        notificationRepository.save(notification);
-
+        List<Notification> byMemberId = notificationRepository.findByMemberId(id);
+        byMemberId.forEach(notification -> notification.setRead(true));
     }
 
     @Transactional
