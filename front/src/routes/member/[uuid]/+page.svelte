@@ -96,6 +96,23 @@
     modalDropMessage.close();
   }
 
+  let modalAdvice;
+
+  function openModalAdvice() {
+    modalAdvice.showModal();
+  }
+
+  function closeModalAdvice(event) {
+    event.preventDefault();
+    modalAdvice.close();
+  }
+
+  function handleOutsideClickAdvice(event) {
+    if (event.target === modalAdvice) {
+      modalAdvice.close();
+    }
+  }
+
   const visit = async () => {
     if (!rq.member.visitedToday) {
       const confirmAttendance = confirm('출석체크 하시겠습니까?');
@@ -360,10 +377,29 @@
           class="input input-bordered w-full max-w-xs"
           disabled
         />
-        <button on:click={copyInputValue} class="btn btn-outline w-[250px] h-2 border-white shadow"
-          ><label class="text-xl">요약노트 for 포트폴리오</label><i class="fa-regular fa-paste"
+        <button on:click={copyInputValue} class="btn btn-outline w-[200px] h-3 border-white shadow"
+          ><label class="text-l"><div>요약노트 for <br />포트폴리오</div></label><i class="fa-regular fa-paste"
           ></i></button
         >
+        <a href="#" onclick={openModalAdvice}>
+          <i class="fa-solid fa-circle-question text-blue-900"></i>
+        </a>
+        <dialog id="my_modal_3" class="modal" bind:this={modalAdvice} on:click={handleOutsideClickAdvice}>
+          <div class="modal-box modal-box-2">
+            <button
+              class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              onclick={closeModalAdvice}>✕</button
+            >
+            <div>
+              <div>※ 포트폴리오 첨부를 위한 내보내기 안내 ※</div>
+              <br />
+              <div>CS 공부한 내역을 증명하고 싶을 때, 해당 페이지를 첨부해보세요.</div>
+              <div>버튼을 눌러 복사된 URL을 새 창에서 열어보세요. (PC 권장)</div>
+              <div>브라우저의 인쇄 기능을 이용하여 pdf로 출력해보세요.</div>
+              <div>작성한 요약노트의 세부 내용도 넣고 싶다면 URL의 export 뒤에 '/detail'을 추가하세요.</div>
+            </div>
+          </div>
+        </dialog>
       </div>
     </div>
   {:else}
