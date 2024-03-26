@@ -91,11 +91,13 @@
           <!-- <div bind:this={div} id="post-body"></div> -->
           <ToastUiEditor bind:this={toastUiEditor} body={initialData?.body}></ToastUiEditor>
         </div>
-        <button
-          on:click={Post__save}
-          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
-          >저장</button
-        >
+        <div class="flex justify-end">
+          <button
+            on:click={Post__save}
+            class="inline-block px-4 py-2 border border-gray-400 text-gray-700 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+            >저장</button
+          >
+        </div>
       </div>
     </div>
   </div>
