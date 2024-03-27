@@ -117,8 +117,10 @@ public class CourseService {
         return courseRepository.findByWriter(writer, pageable);
     }
 
-    public List<Course> findLatestCourse(int num) {
-        return courseRepository.findLatestCourse(num);
+
+
+    public List<Course> findTopVotedCourses(int num){
+        return courseRepository.findTopVotedCourse(num);
     }
 
     @Transactional

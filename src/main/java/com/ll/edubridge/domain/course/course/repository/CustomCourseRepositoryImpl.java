@@ -72,11 +72,10 @@ public class CustomCourseRepositoryImpl implements CustomCourseRepository{
 
 
     @Override
-    public List<Course> findLatestCourse(int num) {
-
+    public List<Course> findTopVotedCourse(int num) {
         return queryFactory.selectFrom(course)
                 .where(course.confirm)
-                .orderBy(course.createDate.desc())
+                .orderBy(course.courseVoters.size().desc())
                 .limit(num)
                 .fetch();
     }
