@@ -17,7 +17,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +35,12 @@ public class NotificationService {
     public void readNoti(Long id) {
         List<Notification> byMemberId = notificationRepository.findByMemberId(id);
         byMemberId.forEach(notification -> notification.setRead(true));
+    }
+
+    @Transactional
+    public void deleteByComment(Comment comment){
+        Notification notification = notificationRepository.findByComment(comment);
+        notificationRepository.delete(notification);
     }
 
     @Transactional
