@@ -15,6 +15,8 @@
 
     return { list };
   }
+
+  async function read(id) {}
 </script>
 
 {#await load()}
