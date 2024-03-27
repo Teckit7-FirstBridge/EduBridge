@@ -465,15 +465,22 @@
         <form method="dialog">
           <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
-        <div class="flex flex-col bg-white shadow rounded-lg mt-4">
+        <div class="m-4 flex flex-col bg-white rounded-lg">
+          <label class="font-semibold text-lg mb-2">닉네임 변경</label>
           <input
             type="text"
             bind:value={newNickname}
             id="newNickname"
-            class="input mt-1 block w-full"
+            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-gray-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             placeholder="새 닉네임 입력"
           />
-          <button onclick={updateNickname} class="btn mt-4">변경하기</button>
+          <div class="m-4 flex justify-end">
+            <button
+              onclick={updateNickname}
+              class=" w-[100px] font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+              >변경하기</button
+            >
+          </div>
         </div>
       </div>
     </dialog>
