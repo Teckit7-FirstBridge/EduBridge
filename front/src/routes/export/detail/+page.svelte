@@ -48,7 +48,7 @@
                 </div>
                 <div class="ml-2 flex-shrink-0 flex">
                   <p class="text-sm text-gray-500">
-                    작성일: {`${new Date(memberName).getFullYear()}년 ${new Date(item.createDate).getMonth() + 1}월 ${new Date(item.createDate).getDate()}일`}
+                    작성일: {`${new Date(item.createDate).getFullYear()}년 ${new Date(item.createDate).getMonth() + 1}월 ${new Date(item.createDate).getDate()}일`}
                   </p>
                 </div>
               </div>
