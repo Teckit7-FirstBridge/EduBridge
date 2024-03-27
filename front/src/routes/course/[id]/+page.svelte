@@ -218,22 +218,26 @@
     }
   }
   async function stopCourse() {
-    const isConfirmed = confirm('강좌를 비공개 하시겠습니까?');
+    if (course.enrollCount! > 0) {
+      rq.msgError('수강생이 있을 경우 비공개 처리가 불가합니다.');
+    } else {
+      const isConfirmed = confirm('강좌를 비공개 하시겠습니까?');
 
-    if (isConfirmed) {
-      const { data, error } = await rq
-        .apiEndPoints()
-        .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
-          params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer.id! } }
-        });
+      if (isConfirmed) {
+        const { data, error } = await rq
+          .apiEndPoints()
+          .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
+            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer.id! } }
+          });
 
-      if (data) {
-        rq.msgInfo('강좌가 비공개되었습니다');
-        courseConfirm = false;
-        // window.location.reload();
-      } else if (error) {
-        rq.msgError(error.msg);
-        window.location.reload();
+        if (data) {
+          rq.msgInfo('강좌가 비공개되었습니다');
+          courseConfirm = false;
+          // window.location.reload();
+        } else if (error) {
+          rq.msgError(error.msg);
+          window.location.reload();
+        }
       }
     }
   }
