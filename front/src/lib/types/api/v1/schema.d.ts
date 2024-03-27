@@ -410,9 +410,9 @@ export interface components {
       uuid?: string;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
       authoritiesAsStringList?: string[];
-      authorities?: components["schemas"]["GrantedAuthority"][];
     };
     Roadmap: {
       /** Format: int64 */
