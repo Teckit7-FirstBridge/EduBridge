@@ -159,6 +159,10 @@ export interface paths {
     /** 내가 등록한 로드맵 다건 조회 */
     get: operations["getMyRoadmaps"];
   };
+  "/api/v1/roadmap/myRoadmapTitle": {
+    /** 내가 등록한 로드맵 다건 조회(제목만) */
+    get: operations["getMyRoadmaps_1"];
+  };
   "/api/v1/roadmap/byCourse/{courseId}": {
     /** 강좌로 로드맵 목록 조회 */
     get: operations["getRoadmapByCourse"];
@@ -2105,6 +2109,17 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetRoadmapsResponseBody"];
+        };
+      };
+    };
+  };
+  /** 내가 등록한 로드맵 다건 조회(제목만) */
+  getMyRoadmaps_1: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListRoadmapDto"];
         };
       };
     };

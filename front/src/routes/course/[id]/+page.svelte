@@ -137,7 +137,7 @@
     });
     auth = responseAuth.data?.data!;
 
-    const responseMyRoadmap = await rq.apiEndPoints().GET(`/api/v1/roadmap/myRoadmap`, {
+    const responseMyRoadmap = await rq.apiEndPoints().GET(`/api/v1/roadmap/myRoadmapTitle`, {
       params: {}
     });
     myRoadmap = responseMyRoadmap.data?.data!;
