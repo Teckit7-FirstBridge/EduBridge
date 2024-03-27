@@ -21,10 +21,10 @@ import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.KwTypeCourse;
+import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,17 +49,7 @@ public class ApiV1CourseController {
     private final MemberService memberService;
     private final CourseVoterService courseVoterService;
 
-    @Getter
-    public class GetCoursesResponsebody {
-        @NonNull
-        private final List<CourseListDto> items;
 
-        public GetCoursesResponsebody(Page<Course> page) {
-            this.items = page.getContent().stream()
-                    .map(course -> new CourseListDto(course,rq.getMember()))
-                    .toList();
-        }
-    }
 
     @PostMapping("/write")
     @Operation(summary = "강좌 등록")
@@ -135,9 +125,12 @@ public class ApiV1CourseController {
         );
     }
 
+    public record GetCoursesResponseBody(@NonNull PageDto<CourseListDto> itemPage) {
+    }
+
     @GetMapping(value = "")
     @Operation(summary = "강좌 다건 조회")
-    public RsData<GetCoursesResponsebody> getCourses(
+    public RsData<GetCoursesResponseBody> getCourses(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "") String kw,
             @RequestParam(defaultValue = "ALL") KwTypeCourse kwType
@@ -146,40 +139,36 @@ public class ApiV1CourseController {
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
 
-        Page<Course> coursePage;
-        if (rq.isAdmin()) {
-            coursePage = courseService.findByKwAdmin(kwType, kw, null, pageable);
-        } else {
-            coursePage = courseService.findByKw(kwType, kw, null, pageable);
-        }
+        Page<Course> coursePage = courseService.findByKw(kwType, kw, null, pageable);
 
-        GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage);
+        Page<CourseListDto> courseListDtoPage = coursePage.map(this::courseToDto);
 
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
-                responseBody
+                new GetCoursesResponseBody(new PageDto<>(courseListDtoPage))
 
         );
     }
 
-    @GetMapping(value = "/mycourse")
+    private CourseListDto courseToDto(Course course) {
+        return new CourseListDto(course, rq.getMember());
+    }
+
+    @GetMapping(value = "/myCourse")
     @Operation(summary = "내가 등록한 강좌 조회")
-    public RsData<GetCoursesResponsebody> getMyCourse(@RequestParam(defaultValue = "1") int page) {
+    public RsData<GetCoursesResponseBody> getMyCourse(@RequestParam(defaultValue = "1") int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+        Page<Course> coursePage = courseService.findMyCourse(rq.getMember(),pageable);
 
-        Page<Course> coursePage;
-        coursePage = courseService.findMyCourse(rq.getMember(),pageable);
-
-
-        GetCoursesResponsebody responseBody = new GetCoursesResponsebody(coursePage);
+        Page<CourseListDto> courseListDtoPage = coursePage.map(this::courseToDto);
 
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
-                responseBody
+                new GetCoursesResponseBody(new PageDto<>(courseListDtoPage))
 
         );
     }

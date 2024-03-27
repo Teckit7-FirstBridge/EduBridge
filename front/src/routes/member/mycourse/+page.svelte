@@ -2,9 +2,10 @@
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
+  import Pagination from '$lib/components/Pagination.svelte';
 
-  let courselist: components['schemas']['CourseListDto'][] | undefined;
-  let roadmaplist: components['schemas']['RoadmapDto'][] | undefined;
+  let courselist: components['schemas']['CourseListDto'][] = $state([]);
+  let roadmaplist: components['schemas']['RoadmapDto'][] = $state([]);
   let likesList: Boolean[] = $state([]);
   let voteNumList: number[] = $state([]);
   let hashtags: string[] = $state([]);
@@ -40,20 +41,31 @@
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
     selectedTab = $page.url.searchParams.get('tab') ?? 'course';
+
+    const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
+
     if (selectedTab === 'course') {
-      const { data } = await rq.apiEndPoints().GET('/api/v1/courses/mycourse', {
-        params: {}
+      const { data } = await rq.apiEndPoints().GET('/api/v1/courses/myCourse', {
+        params: {
+          query: {
+            page: page_
+          }
+        }
       });
-      courselist = data?.data.items!;
+      courselist = data?.data.itemPage.content;
       likesList = courselist!.map((course) => course!.likedByCurrentUser!);
       voteNumList = courselist!.map((course) => course!.voteCount!);
 
-      return { data }!;
+      return data!;
     } else {
       const { data } = await rq.apiEndPoints().GET('/api/v1/roadmap/myRoadmap', {
-        params: {}
+        params: {
+          query: {
+            page: page_
+          }
+        }
       });
-      roadmaplist = data?.data;
+      roadmaplist = data?.data.itemPage.content;
       return data!;
     }
   }
@@ -146,7 +158,7 @@
   </div>
   {#await load()}
     <p>loading...</p>
-  {:then { data }}
+  {:then { data: { itemPage } }}
     {#if selectedTab === 'course'}
       <div class="">
         <div class="flex justify-between items-center justify-center mt-2 mb-4 ml-2">
@@ -232,6 +244,9 @@
               {/each}
             {/if}
           </div>
+          <div class="mt-2">
+            <Pagination page={itemPage} />
+          </div>
         </div>
       </div>
     {:else}
@@ -315,7 +330,12 @@
                   </div>
                 </div>
               {/each}
+            {:else}
+              <p class="p-2">등록된 로드맵이 없습니다.</p>
             {/if}
+          </div>
+          <div class="mt-2">
+            <Pagination page={itemPage} />
           </div>
         </div>
       </div>

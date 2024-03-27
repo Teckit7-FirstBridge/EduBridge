@@ -2,11 +2,13 @@
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
+  import Pagination from '$lib/components/Pagination.svelte';
 
-  let courselist: components['schemas']['CourseListDto'][] | undefined;
-  let roadmaplist: components['schemas']['RoadmapDto'][] | undefined;
+  let courselist: components['schemas']['PageDtoCourseListDto'][] = $state([]);
+  let roadmaplist: components['schemas']['PageDtoRoadmapDto'][] = $state([]);
   let likesList: Boolean[] = $state([]);
   let voteNumList: number[] = $state([]);
+
   let hashtags: string[] = $state([]);
   let selectedTab = $state('course');
 
@@ -56,11 +58,11 @@
           }
         }
       });
-      courselist = data?.data.items!;
+      courselist = data?.data.itemPage.content;
       likesList = courselist!.map((course) => course!.likedByCurrentUser!);
       voteNumList = courselist!.map((course) => course!.voteCount!);
 
-      return { data }!;
+      return data!;
     } else {
       const { data } = await rq.apiEndPoints().GET('/api/v1/roadmap', {
         params: {
@@ -71,7 +73,7 @@
           }
         }
       });
-      roadmaplist = data?.data.items;
+      roadmaplist = data?.data.itemPage.content;
 
       return data!;
     }
@@ -129,7 +131,7 @@
   </div>
   {#await load()}
     <p>loading...</p>
-  {:then { data }}
+  {:then { data: { itemPage } }}
     {#if selectedTab === 'course'}
       <div class="">
         <div class="flex justify-between items-center justify-center mb-4 ml-2">
@@ -303,7 +305,8 @@
                             stroke-linejoin="round"
                             d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
                           />
-                        </svg>{:else}
+                        </svg>
+                      {:else}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
@@ -322,7 +325,7 @@
                         </svg>
                       {/if}
                       <span>
-                        {voteNumList[courselist!.indexOf(item)]}
+                        {item.voteCount}
                       </span>
                     </div>
                   </div>
@@ -331,6 +334,9 @@
             {:else}
               <div class="p-2">등록된 강좌가 없습니다.</div>
             {/if}
+          </div>
+          <div class="mt-2">
+            <Pagination page={itemPage} />
           </div>
         </div>
       </div>
@@ -510,6 +516,9 @@
             {:else}
               <p class="p-2">등록된 로드맵이 없습니다.</p>
             {/if}
+          </div>
+          <div class="mt-2">
+            <Pagination page={itemPage} />
           </div>
         </div>
       </div>

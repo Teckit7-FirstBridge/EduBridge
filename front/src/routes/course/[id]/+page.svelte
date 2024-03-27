@@ -264,7 +264,7 @@
         rq.msgInfo('수강이 등록 되었습니다.');
         window.location.reload();
       } else if (error) {
-        rq.msgError(error.msg);
+        window.location.reload();
       }
     }
   }

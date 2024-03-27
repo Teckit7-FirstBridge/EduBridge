@@ -4,17 +4,26 @@ import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import lombok.Getter;
+import org.springframework.lang.NonNull;
 
 @Getter
 public class CourseListDto {
 
+    @NonNull
     private Long id;
+    @NonNull
     private String title;
+    @NonNull
     private String imgUrl;
+    @NonNull
     private String overView;
+    @NonNull
     private int voteCount;
+    @NonNull
     private boolean likedByCurrentUser;
+    @NonNull
     private Member writer;
+    @NonNull
     private String hashtags;
 
 

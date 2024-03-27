@@ -15,10 +15,10 @@ import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.KwTypeCourse;
+import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,21 +42,13 @@ public class ApiV1RoadmapController {
     private final CourseService courseService;
     private final MemberService memberService;
 
-    @Getter
-    public class GetRoadmapsResponsebody {
-        @NonNull
-        private final List<RoadmapDto> items;
-
-        public GetRoadmapsResponsebody(Page<Roadmap> page) {
-            this.items = page.getContent().stream()
-                    .map(RoadmapDto::new)
-                    .toList();
-        }
+    public record GetRoadmapsResponseBody(@NonNull PageDto<RoadmapDto> itemPage) {
     }
+
 
     @GetMapping(value = "")
     @Operation(summary = "로드맵 다건 조회")
-    public RsData<GetRoadmapsResponsebody> getRoadmaps(
+    public RsData<GetRoadmapsResponseBody> getRoadmaps(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "") String kw,
             @RequestParam(defaultValue = "ALL") KwTypeCourse kwType
@@ -66,28 +58,35 @@ public class ApiV1RoadmapController {
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
 
         Page<Roadmap> roadmapPage = roadmapService.findByKw(kwType, kw, pageable);
-
-        GetRoadmapsResponsebody responseBody = new GetRoadmapsResponsebody(roadmapPage);
+        Page<RoadmapDto> roadmapDtoPage = roadmapPage.map(this::roadmapToDto);
 
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
-                responseBody
+                new GetRoadmapsResponseBody(new PageDto<>(roadmapDtoPage))
         );
+    }
+
+    private RoadmapDto roadmapToDto(Roadmap roadmap) {
+        return new RoadmapDto(roadmap);
     }
 
     @GetMapping(value = "/myRoadmap")
     @Operation(summary = "내가 등록한 로드맵 다건 조회")
-    public RsData<List<RoadmapDto>> getMyRoadmaps() {
+    public RsData<GetRoadmapsResponseBody> getMyRoadmaps(
+            @RequestParam(defaultValue = "1") int page) {
 
-        List<Roadmap> roadmapList = roadmapService.getMyRoadmaps(rq.getMember());
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
 
-        List<RoadmapDto> roadmapDtoList = roadmapList.stream().map(RoadmapDto::new).toList();
+        Page<Roadmap> roadmapPage = roadmapService.getMyRoadmaps(rq.getMember(), pageable);
+        Page<RoadmapDto> roadmapDtoPage = roadmapPage.map(this::roadmapToDto);
 
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
-                roadmapDtoList
+                new GetRoadmapsResponseBody(new PageDto<>(roadmapDtoPage))
         );
     }
 
