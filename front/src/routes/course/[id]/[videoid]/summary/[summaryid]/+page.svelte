@@ -2,8 +2,10 @@
   import rq from '$lib/rq/rq.svelte';
   import { page } from '$app/stores';
   import type { components } from '$lib/types/api/v1/schema';
+  import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
 
   let summarynote: components['schemas']['SummaryNoteDto'];
+  let noteviewer: any | undefined = $state();
   async function deleteSummary() {
     const { data } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{videoId}/note/{noteId}`, {
       params: {
@@ -97,9 +99,12 @@
     </div>
 
     <div class="p-5 bg-white shadow rounded-md">
-      <p class="w-auto break-all text-gray-700 text-lg leading-relaxed">
-        {summarynote.content}
-      </p>
+      <ToastUiEditor
+        bind:this={noteviewer}
+        body={summarynote.content}
+        height={'calc(50dvh - 64px)'}
+        viewer={true}
+      ></ToastUiEditor>
     </div>
   </div>
 {/await}
