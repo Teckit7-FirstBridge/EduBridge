@@ -127,7 +127,7 @@
 
 <div class="max-w-4xl mx-auto">
   {#await load()}
-    <p>loading...</p>
+    <span class="loading loading-spinner loading-xs m-2"></span>
   {:then}
     <div>
       <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8 mt-2">

@@ -26,7 +26,7 @@
 </script>
 
 {#await load()}
-  <p class="text-center">loading...</p>
+  <span class="loading loading-spinner loading-xs m-2"></span>
 {:then { notes }}
   {#if notes && notes.length > 0}
     <div class="flex flex-col w-full max-w-screen min-h-screen px-4 mt-10 md:px-6 lg:px-40">

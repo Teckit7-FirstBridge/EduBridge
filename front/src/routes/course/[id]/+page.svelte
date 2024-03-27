@@ -321,7 +321,7 @@
 
 <div class="max-w-4xl mx-auto">
   {#await load()}
-    <div>loading...</div>
+    <span class="loading loading-spinner loading-xs m-2"></span>
   {:then { videos, course, auth, enroll, hashtags, myRoadmap, roadmapList }}
     <div class="flex w-full justify-center items-center">
       <div class="flex flex-col">

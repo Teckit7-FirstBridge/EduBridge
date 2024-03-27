@@ -139,7 +139,7 @@
 </script>
 
 {#await load()}
-  <div>loading...</div>
+  <span class="loading loading-spinner loading-xs m-2"></span>
 {:then video}
   <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8 mt-2">
     <div class=" w-full space-y-8">

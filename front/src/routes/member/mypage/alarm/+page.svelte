@@ -18,7 +18,7 @@
 </script>
 
 {#await load()}
-  <h2>loading...</h2>
+  <span class="loading loading-spinner loading-xs m-2"></span>
 {:then { list }}
   <div class="max-w-sm mx-auto bg-white mt-2">
     <ul class="divide-y">

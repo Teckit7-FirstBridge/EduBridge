@@ -157,7 +157,7 @@
     </a>
   </div>
   {#await load()}
-    <p>loading...</p>
+    <span class="loading loading-spinner loading-xs m-2"></span>
   {:then { data: { itemPage } }}
     {#if selectedTab === 'course'}
       <div class="">
