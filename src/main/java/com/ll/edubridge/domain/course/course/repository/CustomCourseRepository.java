@@ -13,8 +13,8 @@ public interface CustomCourseRepository {
     Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member author, Pageable pageable);
 
     Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author, Pageable pageable);
-    List<Course> findLatestCourse(int num);
-//    List<Course> findByVoter(Member member);
+
+    List<Course> findTopVotedCourse(int num);
 
     Page<Course> findByWriter(Member writer, Pageable pageable);
 }

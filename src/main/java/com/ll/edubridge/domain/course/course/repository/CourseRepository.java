@@ -17,4 +17,5 @@ public interface CourseRepository extends JpaRepository<Course, Long>,CustomCour
 
     List<Course> findTop5ByOrderByIdDesc();
 
+
 }

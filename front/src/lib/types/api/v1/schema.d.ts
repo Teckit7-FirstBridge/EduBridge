@@ -218,7 +218,7 @@ export interface paths {
     get: operations["isAdmin"];
   };
   "/api/v1/home": {
-    /** 홈화면 최신 강좌 N개조회 */
+    /** 홈화면 좋아요 순으로 강좌 N개조회 */
     get: operations["getPosts_1"];
   };
   "/api/v1/enroll": {
@@ -410,9 +410,9 @@ export interface components {
       uuid?: string;
       courseEnrollList?: components["schemas"]["CourseEnroll"][];
       name?: string;
+      authorities?: components["schemas"]["GrantedAuthority"][];
       profileImgUrlOrDefault?: string;
       authoritiesAsStringList?: string[];
-      authorities?: components["schemas"]["GrantedAuthority"][];
     };
     Roadmap: {
       /** Format: int64 */
@@ -2304,7 +2304,7 @@ export interface operations {
       };
     };
   };
-  /** 홈화면 최신 강좌 N개조회 */
+  /** 홈화면 좋아요 순으로 강좌 N개조회 */
   getPosts_1: {
     responses: {
       /** @description OK */
