@@ -67,8 +67,8 @@ public class RoadmapService {
         return courseRoadmapRepository.findCourseRoadmapById(id);
     }
 
-    public List<Roadmap> getMyRoadmaps(Member member) {
-        return roadmapRepository.findByOwnerOrderByCreateDateDesc(member);
+    public Page<Roadmap> getMyRoadmaps(Member member, Pageable pageable) {
+        return roadmapRepository.findByOwnerOrderByCreateDateDesc(member, pageable);
     }
 
     @Transactional
