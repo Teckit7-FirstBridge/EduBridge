@@ -398,11 +398,12 @@
                       <div class="flex flex-col p-6 bg-white shadow rounded-lg">
                         <h2 class="text-xl font-semibold mb-4 pb-2">신고 사유 입력</h2>
                         <form>
-                          <input
-                            bind:value={reportReason}
-                            class="border rounded-md shadow-sm mb-2"
-                          />
-
+                          <div class="flex items-center justify-center">
+                            <input
+                              bind:value={reportReason}
+                              class=" w-[200px] border rounded-md mb-2 focus:outline-none focus:border-gray-700"
+                            />
+                          </div>
                           <div class="flex justify-end mt-4">
                             <button
                               on:click={reportPost}
