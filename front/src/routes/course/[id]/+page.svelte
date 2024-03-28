@@ -137,7 +137,7 @@
     });
     auth = responseAuth.data?.data!;
 
-    const responseMyRoadmap = await rq.apiEndPoints().GET(`/api/v1/roadmap/myRoadmap`, {
+    const responseMyRoadmap = await rq.apiEndPoints().GET(`/api/v1/roadmap/myRoadmapTitle`, {
       params: {}
     });
     myRoadmap = responseMyRoadmap.data?.data!;
@@ -218,22 +218,26 @@
     }
   }
   async function stopCourse() {
-    const isConfirmed = confirm('강좌를 비공개 하시겠습니까?');
+    if (course.enrollCount! > 0) {
+      rq.msgError('수강생이 있을 경우 비공개 처리가 불가합니다.');
+    } else {
+      const isConfirmed = confirm('강좌를 비공개 하시겠습니까?');
 
-    if (isConfirmed) {
-      const { data, error } = await rq
-        .apiEndPoints()
-        .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
-          params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer.id! } }
-        });
+      if (isConfirmed) {
+        const { data, error } = await rq
+          .apiEndPoints()
+          .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
+            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer.id! } }
+          });
 
-      if (data) {
-        rq.msgInfo('강좌가 비공개되었습니다');
-        courseConfirm = false;
-        // window.location.reload();
-      } else if (error) {
-        rq.msgError(error.msg);
-        window.location.reload();
+        if (data) {
+          rq.msgInfo('강좌가 비공개되었습니다');
+          courseConfirm = false;
+          // window.location.reload();
+        } else if (error) {
+          rq.msgError(error.msg);
+          window.location.reload();
+        }
       }
     }
   }
@@ -321,7 +325,7 @@
 
 <div class="max-w-4xl mx-auto">
   {#await load()}
-    <div>loading...</div>
+    <span class="loading loading-spinner loading-xs m-2"></span>
   {:then { videos, course, auth, enroll, hashtags, myRoadmap, roadmapList }}
     <div class="flex w-full justify-center items-center">
       <div class="flex flex-col">
@@ -394,11 +398,12 @@
                       <div class="flex flex-col p-6 bg-white shadow rounded-lg">
                         <h2 class="text-xl font-semibold mb-4 pb-2">신고 사유 입력</h2>
                         <form>
-                          <input
-                            bind:value={reportReason}
-                            class="border rounded-md shadow-sm mb-2"
-                          />
-
+                          <div class="flex items-center justify-center">
+                            <input
+                              bind:value={reportReason}
+                              class=" w-[200px] border rounded-md mb-2 focus:outline-none focus:border-gray-700"
+                            />
+                          </div>
                           <div class="flex justify-end mt-4">
                             <button
                               on:click={reportPost}

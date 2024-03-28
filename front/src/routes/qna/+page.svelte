@@ -37,7 +37,7 @@
 
 <div class="max-w-4xl mx-auto my-8">
   {#await load()}
-    <p class="text-center">loading...</p>
+    <span class="loading loading-spinner loading-xs m-2"></span>
   {:then { data: { itemPage } }}
     <div class="flex flex-col w-full max-w-screen min-h-screen px-4 md:px-6">
       <div class="space-y-4">

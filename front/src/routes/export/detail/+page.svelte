@@ -26,7 +26,7 @@
 </script>
 
 {#await load()}
-  <p class="text-center">loading...</p>
+  <span class="loading loading-spinner loading-xs m-2"></span>
 {:then { notes }}
   {#if notes && notes.length > 0}
     <div class="flex flex-col w-full max-w-screen min-h-screen px-4 mt-10 md:px-6 lg:px-40">
@@ -48,7 +48,7 @@
                 </div>
                 <div class="ml-2 flex-shrink-0 flex">
                   <p class="text-sm text-gray-500">
-                    작성일: {`${new Date(memberName).getFullYear()}년 ${new Date(item.createDate).getMonth() + 1}월 ${new Date(item.createDate).getDate()}일`}
+                    작성일: {`${new Date(item.createDate).getFullYear()}년 ${new Date(item.createDate).getMonth() + 1}월 ${new Date(item.createDate).getDate()}일`}
                   </p>
                 </div>
               </div>

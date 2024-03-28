@@ -139,7 +139,7 @@
 </script>
 
 {#await load()}
-  <div>loading...</div>
+  <span class="loading loading-spinner loading-xs m-2"></span>
 {:then video}
   <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8 mt-2">
     <div class=" w-full space-y-8">
@@ -211,12 +211,15 @@
                     </div>
                   </div>
                 </dialog>
-              </label><label
-                class=" text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
-                for="course-imgUrl"
-              >
-                https://img.youtube.com/vi/VIDEO-ID/0.jpg
               </label>
+              <div>
+                <label
+                  class=" text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
+                  for="course-imgUrl"
+                >
+                  https://img.youtube.com/vi/VIDEO-ID/0.jpg
+                </label>
+              </div>
             </div>
             <input
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

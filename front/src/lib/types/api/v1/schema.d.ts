@@ -159,6 +159,10 @@ export interface paths {
     /** 내가 등록한 로드맵 다건 조회 */
     get: operations["getMyRoadmaps"];
   };
+  "/api/v1/roadmap/myRoadmapTitle": {
+    /** 내가 등록한 로드맵 다건 조회(제목만) */
+    get: operations["getMyRoadmaps_1"];
+  };
   "/api/v1/roadmap/byCourse/{courseId}": {
     /** 강좌로 로드맵 목록 조회 */
     get: operations["getRoadmapByCourse"];
@@ -218,7 +222,7 @@ export interface paths {
     get: operations["isAdmin"];
   };
   "/api/v1/home": {
-    /** 홈화면 최신 강좌 N개조회 */
+    /** 홈화면 좋아요 순으로 강좌 N개조회 */
     get: operations["getPosts_1"];
   };
   "/api/v1/enroll": {
@@ -2109,6 +2113,17 @@ export interface operations {
       };
     };
   };
+  /** 내가 등록한 로드맵 다건 조회(제목만) */
+  getMyRoadmaps_1: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListRoadmapDto"];
+        };
+      };
+    };
+  };
   /** 강좌로 로드맵 목록 조회 */
   getRoadmapByCourse: {
     parameters: {
@@ -2331,7 +2346,7 @@ export interface operations {
       };
     };
   };
-  /** 홈화면 최신 강좌 N개조회 */
+  /** 홈화면 좋아요 순으로 강좌 N개조회 */
   getPosts_1: {
     responses: {
       /** @description OK */

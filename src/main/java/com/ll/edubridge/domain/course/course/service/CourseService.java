@@ -125,6 +125,12 @@ public class CourseService {
 
     @Transactional
     public Course startOrStop(Course course){
+
+        if(!course.getCourseEnrollList().isEmpty()){
+            throw new GlobalException(
+                    CodeMsg.E400_12_ALREADY_HAS_ENROLL.getCode(),
+                    CodeMsg.E400_12_ALREADY_HAS_ENROLL.getMessage());
+        }
         course.setConfirm(!course.getConfirm());
         return courseRepository.save(course);
     }

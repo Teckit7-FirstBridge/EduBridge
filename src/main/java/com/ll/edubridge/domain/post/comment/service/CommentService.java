@@ -1,6 +1,7 @@
 package com.ll.edubridge.domain.post.comment.service;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.notification.service.NotificationService;
 import com.ll.edubridge.domain.post.comment.dto.CreateCommentDto;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.comment.repository.CommentRepository;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final NotificationService notificationService;
     private final Rq rq;
     private final PostService postService;
 
@@ -71,6 +73,8 @@ public class CommentService {
     @Transactional
     public void delete(Long commentId) {
         Comment comment = this.getComment(commentId);
+
+        notificationService.deleteByComment(comment);
 
         commentRepository.delete(comment);
     }

@@ -40,7 +40,7 @@
 </script>
 
 {#await load()}
-  <h1>loading...</h1>
+  <span class="loading loading-spinner loading-xs m-2"></span>
 {:then { summarynote }}
   <div class="max-w-4xl mx-auto my-8">
     <div class="flex items-center justify-between mt-3 mb-20">

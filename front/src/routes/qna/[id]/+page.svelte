@@ -114,7 +114,7 @@
 </script>
 
 {#await load()}
-  <h1>loading...</h1>
+  <span class="loading loading-spinner loading-xs m-2"></span>
 {:then { comments, qna }}
   <div class="max-w-lg mx-auto w-full px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between mt-8">

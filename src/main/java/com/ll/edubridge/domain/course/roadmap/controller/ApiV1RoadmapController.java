@@ -90,6 +90,21 @@ public class ApiV1RoadmapController {
         );
     }
 
+    @GetMapping(value = "/myRoadmapTitle")
+    @Operation(summary = "내가 등록한 로드맵 다건 조회(제목만)")
+    public RsData<List<RoadmapDto>> getMyRoadmaps() {
+
+        List<Roadmap> roadmapList = roadmapService.getMyRoadmaps(rq.getMember());
+
+        List<RoadmapDto> roadmapDtoList = roadmapList.stream().map(RoadmapDto::new).toList();
+
+        return RsData.of(
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                roadmapDtoList
+        );
+    }
+
     @GetMapping("/{roadmapId}")
     @Operation(summary = "로드맵 아이디로 로드맵 단건 조회")
     public RsData<RoadmapDto> getRoadmapById(@PathVariable("roadmapId") Long roadmapId) {

@@ -97,7 +97,7 @@
 
 <div class="max-w-4xl mx-auto">
   {#await load()}
-    <h1>loading...</h1>
+    <span class="loading loading-spinner loading-xs m-2"></span>
   {:then { initialData }}
     {#if rq.isAdmin() || rq.member.id === initialData.owner.id}
       <div class="">

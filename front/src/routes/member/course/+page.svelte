@@ -27,7 +27,7 @@
 </script>
 
 {#await load()}
-  <p>loading...</p>
+  <span class="loading loading-spinner loading-xs m-2"></span>
 {:then { enrolls }}
   <div class="flex">
     <div class="flex flex-col flex-1">

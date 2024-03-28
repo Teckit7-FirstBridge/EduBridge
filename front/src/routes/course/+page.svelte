@@ -13,7 +13,7 @@
   let selectedTab = $state('course');
 
   function formatTitle(title) {
-    return title.length > 11 ? `${title.substring(0, 11)}...` : title;
+    return title.length > 14 ? `${title.substring(0, 14)}...` : title;
   }
 
   function changeTab(tabName: string) {
@@ -130,7 +130,7 @@
     </a>
   </div>
   {#await load()}
-    <p>loading...</p>
+    <span class="loading loading-spinner loading-xs m-2"></span>
   {:then { data: { itemPage } }}
     {#if selectedTab === 'course'}
       <div class="">
