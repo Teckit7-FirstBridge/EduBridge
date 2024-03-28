@@ -19,4 +19,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findTop5ByOrderByIdDesc();
 
     Optional<Member> findByUuid(String uuid);
+
+    Boolean existsMemberByUuid(String uuid);
 }
