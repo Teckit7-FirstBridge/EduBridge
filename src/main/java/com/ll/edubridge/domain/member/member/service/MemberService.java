@@ -55,6 +55,10 @@ public class MemberService {
         if (findByUsername(username).isPresent()) {
             return RsData.of("400-2", "이미 존재하는 회원입니다.");
         }
+        String uuid = generateRandomString();
+        while(this.checkUUID(uuid)){
+            uuid = generateRandomString();
+        }
 
 
         Member member = Member.builder()
@@ -64,7 +68,7 @@ public class MemberService {
                 .nickname(nickname)
                 .profileImgUrl(profileImgUrl)
                 .point(PointType.Welcome.getAmount())
-                .uuid(generateRandomString())
+                .uuid(uuid)
                 .build();
 
         memberRepository.save(member);
@@ -84,6 +88,9 @@ public class MemberService {
         }
 
         return sb.toString();
+    }
+    public Boolean checkUUID(String uuid){
+        return memberRepository.existsMemberByUuid(uuid);
     }
 
     @Transactional
