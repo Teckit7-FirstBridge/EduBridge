@@ -499,7 +499,7 @@
                     </p>
                     {#if item.curriculum}
                       <div class="flex flex-col">
-                        {#each item.curriculum as curriculum, index}
+                        {#each item.curriculum.sort((a, b) => a.courseOrder - b.courseOrder || a.id - b.id) as curriculum, index}
                           <a href="/course/{curriculum.course.id}">
                             <div
                               class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
