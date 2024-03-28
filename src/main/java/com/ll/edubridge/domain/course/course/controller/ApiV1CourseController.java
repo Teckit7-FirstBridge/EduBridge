@@ -137,7 +137,7 @@ public class ApiV1CourseController {
     ) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
-        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize()-1, Sort.by(sorts));
 
         Page<Course> coursePage = courseService.findByKw(kwType, kw, null, pageable);
 
@@ -160,7 +160,7 @@ public class ApiV1CourseController {
     public RsData<GetCoursesResponseBody> getMyCourse(@RequestParam(defaultValue = "1") int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
-        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize()-1, Sort.by(sorts));
         Page<Course> coursePage = courseService.findMyCourse(rq.getMember(),pageable);
 
         Page<CourseListDto> courseListDtoPage = coursePage.map(this::courseToDto);

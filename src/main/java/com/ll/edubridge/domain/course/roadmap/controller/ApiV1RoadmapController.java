@@ -55,7 +55,7 @@ public class ApiV1RoadmapController {
     ) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
-        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize()-1, Sort.by(sorts));
 
         Page<Roadmap> roadmapPage = roadmapService.findByKw(kwType, kw, pageable);
         Page<RoadmapDto> roadmapDtoPage = roadmapPage.map(this::roadmapToDto);
@@ -78,7 +78,7 @@ public class ApiV1RoadmapController {
 
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
-        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize()-1, Sort.by(sorts));
 
         Page<Roadmap> roadmapPage = roadmapService.getMyRoadmaps(rq.getMember(), pageable);
         Page<RoadmapDto> roadmapDtoPage = roadmapPage.map(this::roadmapToDto);
