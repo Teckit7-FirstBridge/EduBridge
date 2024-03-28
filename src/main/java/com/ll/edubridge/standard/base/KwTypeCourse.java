@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 public enum KwTypeCourse {
     ALL("all"),
     TITLE("title"),
+    HASHTAGS("hashtags"),
     NAME("owner");
 
     private final String value;

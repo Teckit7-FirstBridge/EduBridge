@@ -18,7 +18,6 @@ public class AdminCourseDto {
     public AdminCourseDto(Course course) {
         this.id = course.getId();
         this.title = course.getTitle();
-        this.grade = course.getGrade();
         this.enrollCount = course.getCourseEnrollList().size();
     }
 }

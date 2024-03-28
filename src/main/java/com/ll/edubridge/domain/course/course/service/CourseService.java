@@ -1,10 +1,12 @@
 package com.ll.edubridge.domain.course.course.service;
 
-import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
+import com.ll.edubridge.domain.course.course.dto.NumDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
-import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
+import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
+import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
+import com.ll.edubridge.domain.course.roadmap.service.RoadmapService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
@@ -25,7 +27,8 @@ import java.util.Optional;
 public class CourseService {
     private final CourseRepository courseRepository;
     private final Rq rq;
-    private final CourseEnrollRepository courseEnrollRepository;
+    private final RoadmapService roadmapService;
+
 
     public List<Course> findAll() {
         return courseRepository.findAll();
@@ -35,22 +38,10 @@ public class CourseService {
         return courseRepository.findById(id);
     }
 
-
     @Transactional
     public Course create(CreateCourseDto createCourseDto) {
 
-        int price = 0;
-
-        switch (createCourseDto.getGrade()){
-            case "초급":
-                break;
-            case "중급":
-                price = 5000;
-                break;
-            case "고급":
-                price = 10000;
-                break;
-        }
+        int price = 2000;
 
         Course course = Course.builder()
                 .title(createCourseDto.getTitle())
@@ -58,20 +49,34 @@ public class CourseService {
                 .imgUrl(createCourseDto.getImgUrl())
                 .overView(createCourseDto.getOverView())
                 .price(price)
-                .grade(createCourseDto.getGrade())
+                .writer(rq.getMember())
+                .hashtags(createCourseDto.getHashtags())
                 .build();
 
         return courseRepository.save(course);
     }
 
     @Transactional
-    public Course modify(Long id, CourseDto courseDto) {
+    public void changeRoadmapNum(Long roadmapId, Long courseId, NumDto numDto){
+
+        Roadmap roadmap = roadmapService.getRoadmap(roadmapId);
+        Course course = this.getCourse(courseId);
+
+        CourseRoadmap courseRoadmap = roadmapService.getCourseRoadmap(course, roadmap);
+        courseRoadmap.setCourseOrder(numDto.getNum());
+
+        courseRepository.save(course);
+    }
+
+    @Transactional
+    public Course modify(Long id, CreateCourseDto courseDto) {
         Course course = this.getCourse(id);
 
         course.setTitle(courseDto.getTitle());
         course.setNotice(courseDto.getNotice());
         course.setImgUrl(courseDto.getImgUrl());
         course.setOverView(courseDto.getOverView());
+        course.setHashtags(courseDto.getHashtags());
 
         return courseRepository.save(course);
     }
@@ -93,60 +98,39 @@ public class CourseService {
     }
 
     @Transactional
-    public boolean haveAuthority() {
+    public boolean haveAuthority(Long id) {
         Member member = rq.getMember();
 
         if (member == null) return false;
 
-        if (rq.isAdmin()) return true;
+        if (rq.isAdmin() || rq.getMember().getId().equals(id)) return true;
 
         return false;
     }
-    public Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member author,String grade, Pageable pageable) {
-        return courseRepository.findByKwAdmin(kwType, kw, author,grade, pageable);
+    public Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {
+        return courseRepository.findByKwAdmin(kwType, kw, author, pageable);
     }
-    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author,String grade, Pageable pageable) {
-        return courseRepository.findByKw(kwType, kw, author,grade, pageable);
+    public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {
+        return courseRepository.findByKw(kwType, kw, author, pageable);
+    }
+    public Page<Course> findMyCourse(Member writer, Pageable pageable){
+        return courseRepository.findByWriter(writer, pageable);
     }
 
-    public List<Course> findLatestCourse(int num) {
-        return courseRepository.findLatestCourse(num);
-    }
 
-    @Transactional
-    public void vote(Long id, Member member) {
-        Course course = this.getCourse(id);
-        course.getVoter().add(member);
-        courseRepository.save(course);
+
+    public List<Course> findTopVotedCourses(int num){
+        return courseRepository.findTopVotedCourse(num);
     }
 
     @Transactional
-    public void deleteVote(Long id, Member member){
-        Course course = this.getCourse(id);
-        course.getVoter().remove(member);
-        courseRepository.save(course);
-    }
+    public Course startOrStop(Course course){
 
-    public boolean canLike(Member member, Course course) {
-        if (member == null) return false;
-        if (course == null) return false;
-
-        return !course.getVoter().contains(member);
-    }
-    public boolean canCancelLike(Member member, Course course) {
-        if (member == null) return false;
-        if (course == null) return false;
-
-        return course.getVoter().contains(member);
-    }
-
-    public List<Course> findByVoter(Member member){
-        return courseRepository.findByVoter(member);
-    }
-
-    @Transactional
-    public Course startOrstop(Long courseId){
-        Course course = this.getCourse(courseId);
+        if(!course.getCourseEnrollList().isEmpty()){
+            throw new GlobalException(
+                    CodeMsg.E400_12_ALREADY_HAS_ENROLL.getCode(),
+                    CodeMsg.E400_12_ALREADY_HAS_ENROLL.getMessage());
+        }
         course.setConfirm(!course.getConfirm());
         return courseRepository.save(course);
     }
@@ -155,4 +139,5 @@ public class CourseService {
     public List<Course> findRecentCourse() {
         return courseRepository.findTop5ByOrderByIdDesc();
     }
+
 }

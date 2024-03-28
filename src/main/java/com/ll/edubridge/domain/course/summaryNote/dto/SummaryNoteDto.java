@@ -17,6 +17,7 @@ public class SummaryNoteDto {
     private Long courseId;
     private Long videoId;
     private String courseName;
+    private String title;
     public SummaryNoteDto(SummaryNote summaryNote){
         this.id = summaryNote.getId();
         this.content = summaryNote.getContent();
@@ -27,5 +28,6 @@ public class SummaryNoteDto {
         this.videoId = summaryNote.getVideo().getId();
         this.createDate = summaryNote.getCreateDate();
         this.courseName = summaryNote.getVideo().getCourse().getTitle();
+        this.title = summaryNote.getVideo().getTitle();
     }
 }

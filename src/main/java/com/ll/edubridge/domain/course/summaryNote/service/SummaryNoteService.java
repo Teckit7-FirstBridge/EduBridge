@@ -1,6 +1,5 @@
 package com.ll.edubridge.domain.course.summaryNote.service;
 
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.summaryNote.dto.CreateSummaryNoteDto;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
@@ -97,7 +96,7 @@ public class SummaryNoteService {
     }
 
     public List<SummaryNote> findByWriterId(Long id) {
-        return summaryNoteRepository.findByWriterId(id);
+        return summaryNoteRepository.findByWriterIdAndScoreGreaterThanEqual(id,70L);
     }
 
     public List<SummaryNote> findByWriterIdAndCourseId(Long memberId, Long courseId) {

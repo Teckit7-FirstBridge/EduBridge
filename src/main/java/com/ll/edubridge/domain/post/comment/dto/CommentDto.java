@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.post.comment.dto;
 
+import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import lombok.Getter;
@@ -19,6 +20,8 @@ public class CommentDto {
     private String authorName;
     @NonNull
     private String body;
+    @NonNull
+    private String postTitle;
     private boolean likedByCurrentUser;
     @NonNull
     private Long postId;
@@ -31,8 +34,9 @@ public class CommentDto {
         this.authorId = comment.getWriter().getId();
         this.authorName = comment.getWriter().getNickname();
         this.body = comment.getContent();
-        this.likedByCurrentUser = comment.getVoter().contains(member);
+        this.likedByCurrentUser = comment.getCommentVoters().contains(new CommentVoter(member,comment));
         this.postId = comment.getPost().getId();
-        this.voteCount = comment.getVoteCount();
+        this.voteCount = comment.getCommentVoters().size();
+        this.postTitle = comment.getPost().getTitle();
     }
 }

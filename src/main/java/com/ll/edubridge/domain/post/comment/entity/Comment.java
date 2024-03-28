@@ -1,5 +1,6 @@
 package com.ll.edubridge.domain.post.comment.entity;
 
+import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
@@ -26,13 +27,12 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Post post;
 
-    @ManyToMany
-    Set<Member> voter;
+    @OneToMany(mappedBy = "comment",cascade = CascadeType.REMOVE)
+    Set<CommentVoter> commentVoters;
 
     @ManyToOne(optional = false)
     private Member writer;
 
-    @Formula("(select count(*) from comment_voter cv where cv.comment_id = id)")
+    @Formula("(select count(*) from comment_member cm where cm.comment_id = id)")
     private int voteCount;
-
 }

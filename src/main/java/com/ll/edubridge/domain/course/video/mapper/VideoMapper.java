@@ -23,6 +23,7 @@ public class VideoMapper {
             .overView(video.getOverView())
             .summaryNotes(filteredSummaryNotes)
                 .keywords(video.getKeywords())
+                .title(video.getTitle())
             .build();
     }
 }

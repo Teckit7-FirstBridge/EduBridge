@@ -19,7 +19,8 @@ public interface SummaryNoteRepository extends JpaRepository<SummaryNote, Long> 
 
     List<SummaryNote> findTop5ByOrderByIdDesc();
 
-    List<SummaryNote> findByWriterId(Long id);
+
+    List<SummaryNote> findByWriterIdAndScoreGreaterThanEqual(Long id, Long score);
 
     @Query("from SummaryNote s where s.video.course.id = :courseId and s.writer.id = :memberId order by s.video.id asc")
     List<SummaryNote> findByWriterIdAndCourseId(Long memberId, Long courseId);

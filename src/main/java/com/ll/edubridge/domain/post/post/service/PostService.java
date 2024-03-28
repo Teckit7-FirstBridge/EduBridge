@@ -82,19 +82,9 @@ public class PostService {
         return postRepository.findAll(pageable);
     }
 
-    @Transactional
-    public void vote(Long id, Member member) {
-        Post post = this.getPost(id);
-        post.getVoter().add(member);
-        postRepository.save(post);
-    }
 
-    @Transactional
-    public void deleteVote(Long id, Member member) {
-        Post post = this.getPost(id);
-        post.getVoter().remove(member);
-        postRepository.save(post);
-    }
+
+
 
     public Post getPost(Long id) {
         Optional<Post> comment = this.findById(id);
@@ -127,20 +117,6 @@ public class PostService {
     }
 
 
-    public boolean canLike(Member member, Post post) {
-        if (member == null) return false;
-        if (post == null) return false;
-
-        return !post.getVoter().contains(member);
-    }
-
-    public boolean canCancelLike(Member member, Post post) {
-
-        if (member == null) return false;
-        if (post == null) return false;
-
-        return post.getVoter().contains(member);
-    }
 
     public boolean canReport(Member member, Post post) {
         if (member == null) return false;
@@ -181,16 +157,18 @@ public class PostService {
         return postRepository.findByPublishedOrderByIdDesc(published, pageable);
     }
 
-    public List<Post> getMyPosts() {
+    public Page<Post> getMyPosts(Pageable pageable) {
         Member member = rq.getMember();
 
-        return postRepository.findByWriterAndPublished(member, true);
+        return postRepository.findByWriterAndPublishedOrderByIdDesc(member,true, pageable);
     }
 
-    public List<Post> getMyQna() {
+
+
+    public Page<Post> getMyQna(Pageable pageable) {
         Member member = rq.getMember();
 
-        return postRepository.findByWriterAndPublished(member, false);
+        return postRepository.findByWriterAndPublishedOrderByIdDesc(member, false, pageable);
     }
 
 
@@ -228,7 +206,7 @@ public class PostService {
     }
 
     public List<Post> recentQna() {
-      return postRepository.findTop5ByPublished(false);
+        return postRepository.findTop5ByPublished(false);
     }
 
 }
