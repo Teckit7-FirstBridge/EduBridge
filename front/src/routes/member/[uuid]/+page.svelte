@@ -298,7 +298,7 @@
               {#each learningCourses as learningCourse}
                 <a
                   href="/course/{learningCourse.id}"
-                  class="flex-none w-48 p-6 bg-white rounded-lg shadow"
+                  class="flex-none w-48 p-6 rounded-lg shadow border border-gray-400 bg-gray-50"
                 >
                   <h3 class="text-sm font-medium">{learningCourse.title}</h3>
                   <p class="text-xs text-gray-500">
@@ -331,7 +331,7 @@
               {#each favoriteCourses as favoriteCourse}
                 <a
                   href="/course/{favoriteCourse.id}"
-                  class="flex-none w-48 p-6 bg-white rounded-lg shadow"
+                  class="flex-none w-48 p-6 rounded-lg shadow border border-gray-400 bg-gray-50"
                 >
                   <h3 class="text-sm mt-1 font-medium">{favoriteCourse.title}</h3>
                 </a>
