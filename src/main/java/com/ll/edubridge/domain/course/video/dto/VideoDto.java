@@ -41,6 +41,8 @@ public class VideoDto {
 
     @NonNull
     private String keywords;
+    @NonNull
+    private String title;
 
 
     public VideoDto(Video video) {
@@ -50,6 +52,7 @@ public class VideoDto {
         this.courseId = video.getCourse().getId();
         this.imgUrl = video.getImgUrl();
         this.keywords = video.getKeywords();
+        this.title = video.getTitle();
     }
 
     public VideoDto() {

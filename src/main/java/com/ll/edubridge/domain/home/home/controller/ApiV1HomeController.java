@@ -39,12 +39,11 @@ public class ApiV1HomeController {
     }
 
     @GetMapping("")
-    @Operation(summary = "홈화면 최신 강좌 N개조회")
+    @Operation(summary = "홈화면 좋아요 순으로 강좌 N개조회")
     public RsData<GetPostsResponseBody> getPosts() {
 
-        List<Course> courses = courseService.findLatestCourse(6);
+        List<Course> courses = courseService.findTopVotedCourses(6);
         GetPostsResponseBody responseBody = new GetPostsResponseBody(courses, rq.getMember());
-
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),

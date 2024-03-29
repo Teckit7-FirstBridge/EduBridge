@@ -24,15 +24,13 @@ html > body {
   flex-direction: column;
 }
 
-/* 토스트 UI 에디터에 폰트 적용 /
 html > body .ProseMirror,
 html > body .toastui-editor-contents,
 html > body .toastui-editor-defaultUI {
   font-family: var(--base-font-family);
-  font-size: 1rem;
+  font-size: 20px;
 }
 
-/ 기본 CSS */
 .form-control .label .label-text {
   opacity: 0.8;
 }
@@ -91,12 +89,11 @@ main {
 }
 
 .rounded-container {
-  width: 100%; 
-  height: auto; 
-  object-fit: cover; 
-  object-position: center 0px; 
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center 0px;
 }
-
 
 .equal-width-th {
   width: 25%; /* 각 th 요소가 전체 너비의 25%를 차지하도록 설정 */
@@ -109,4 +106,86 @@ main {
 
 toastui-editor-contents {
   font-size: 20px;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #000; /* 배경색 설정 */
+  color: white; /* 텍스트 색상 설정 */
+  text-align: center;
+  padding: 10px; /* 패딩으로 푸터 높이 조정 */
+  box-shadow: 0 0px 5px 0px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+body {
+  padding-bottom: 100px; /* 푸터 높이에 맞게 조정 */
+  background-color: white;
+  color: black;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: -100%; /* 초기에는 화면 왼쪽 밖에 위치 */
+  width: 250px;
+  height: 100%;
+  background: #f3f4f6; /* light gray */
+  transition: left 0.3s;
+  z-index: 100;
+}
+.drawer.open {
+  left: 0; /* 사이드바가 열렸을 때 위치 */
+}
+.overlay {
+  display: none; /* 기본적으로 오버레이는 표시하지 않음 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* 반투명한 검정색 배경 */
+  z-index: 99;
+}
+.overlay.show {
+  display: block; /* 사이드바가 열렸을 때 오버레이 표시 */
+}
+
+.modal-box-1 {
+  height: 500px;
+}
+
+.modal-box-2 {
+  font-size: 15px;
+}
+
+.fc-event {
+  display: flex; /* Flexbox 컨테이너 설정 */
+  align-items: center; /* 세로축 가운데 정렬 */
+  justify-content: center; /* 가로축 가운데 정렬 */
+}
+
+.fc-header-toolbar {
+  font-size: 14px; /* 줄이고 싶은 글씨 크기로 조정 */
+  padding: 5px; /* 필요에 따라 패딩 조정 */
+}
+
+.fc-daygrid-day-number {
+  font-size: 12px; /* 원하는 글씨 크기로 조정 */
+}
+
+@media (max-width: 280px) {
+  .fc-header-toolbar {
+    font-size: 10px; /* 가로 길이가 300px 미만일 때 글씨 크기 */
+  }
+  .fc-daygrid-day-number {
+    font-size: 8px; /* 원하는 글씨 크기로 조정 */
+  }
+}
+
+.collapse-content {
+  border-radius: 15px;
 }

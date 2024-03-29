@@ -3,6 +3,8 @@ package com.ll.edubridge.global.security;
 
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
+import com.ll.edubridge.domain.notification.service.NotificationService;
+import com.ll.edubridge.domain.point.point.service.PointService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -20,6 +22,8 @@ import java.util.Map;
 @Slf4j
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberService memberService;
+    private final NotificationService notificationService;
+    private final PointService pointService;
 
     // 카카오톡 로그인이 성공할 때 마다 이 함수가 실행된다.
     @Override
@@ -39,11 +43,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 Map<String, Object> attributes = oAuth2User.getAttributes();
                 Map attributesProperties = (Map) attributes.get("properties");
 
-                nickname = (String) attributesProperties.get("nickname");
+                nickname = (String) attributesProperties.get("nickname") + oauthId.substring(2,6);
                 profileImgUrl = (String) attributesProperties.get("profile_image");
                 break;
             case "GOOGLE":
-                nickname = (String) oAuth2User.getAttributes().get("name");
+                nickname = (String) oAuth2User.getAttributes().get("name") + oauthId.substring(2,6);
                 profileImgUrl = (String) oAuth2User.getAttributes().get("picture");
                 break;
         }
@@ -54,9 +58,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Member member = memberService.modifyOrJoin(username, providerTypeCode, nickname, profileImgUrl).getData();
 
         if(!member.isVisitedToday()) {
-            member.setVisitedToday(true);
-            int point = member.getPoint() + 500;
-            member.setPoint(point);
+            memberService.visit(member);
         }
 
         return new SecurityUser(member.getId(), member.getUsername(), member.getPassword(), member.getAuthorities());

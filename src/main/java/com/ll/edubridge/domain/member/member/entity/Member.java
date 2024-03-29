@@ -1,5 +1,9 @@
 package com.ll.edubridge.domain.member.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
+import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
+import com.ll.edubridge.domain.PostVoter.entity.PostVoter;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
 import com.ll.edubridge.standard.util.Ut;
@@ -11,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -23,13 +28,15 @@ import static lombok.AccessLevel.PROTECTED;
 @ToString(callSuper = true)
 public class Member extends BaseEntity { // 보안이 들어있는 클래스
 
-    @Column(unique = true, length = 50)
+    private int registerCount;
+
+    @Column(unique = true, length = 100)
     private String username;
 
     @Column(length = 72)
     private String password;
 
-    @Column(length = 20)
+    @Column(unique = true, length = 50)
     private String nickname;
 
     private int point;
@@ -48,8 +55,23 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
 
     private int dailyAchievement;
 
+    private String uuid;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private Set<CourseVoter> courseVoters;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member" , cascade = CascadeType.REMOVE)
+    private Set<PostVoter> postVoters;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member" , cascade = CascadeType.REMOVE)
+    private Set<CommentVoter> commentVoters;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CourseEnroll> courseEnrollList;
+
 
     public String getProfileImgUrlOrDefault() {
         return Ut.str.hasLength(profileImgUrl) ? profileImgUrl : "https://placehold.co/640x640?text=O_O";

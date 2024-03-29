@@ -1,12 +1,15 @@
 package com.ll.edubridge.domain.member.member.controller;
 
 
+import com.ll.edubridge.domain.CourseVoter.service.CourseVoterService;
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.member.member.dto.MemberDto;
 import com.ll.edubridge.domain.member.member.dto.MyPageDto;
+import com.ll.edubridge.domain.member.member.dto.NickNameDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
+import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
@@ -16,20 +19,21 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ll.edubridge.global.exceptions.CodeMsg.E400_11_AlREADY_VISITED;
+
 @RestController
 @RequestMapping("/api/v1/members")
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class ApiV1MemberController {
     private final MemberService memberService;
     private final Rq rq;
     private final CourseService courseService;
+    private final CourseVoterService courseVoterService;
 
     public record LoginRequestBody(@NotBlank String username, @NotBlank String password) {
     }
@@ -90,6 +94,13 @@ public class ApiV1MemberController {
                 )
         );
     }
+    @GetMapping("/uuid/{uuid}")
+    public RsData<MemberDto> getMember(@PathVariable String uuid){
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                new MemberDto(
+                        memberService.findByUUID(uuid).get()
+                ));
+    }
 
     @PostMapping("/logout")
     public RsData<Empty> logout() {
@@ -104,23 +115,61 @@ public class ApiV1MemberController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/{uuid}")
     @Operation(summary = "마이 페이지 데이터 요청")
-    public RsData<MyPageResponseBody> myPage(@PathVariable("id") Long id){
-        Member member = memberService.getMember(id);
+    public RsData<MyPageResponseBody> myPage(@PathVariable("uuid") String uuid){
+        Member member = memberService.GetMemberByUUID(uuid);
+
+        MemberDto memberDto = new MemberDto(member);
 
         List<CourseDto> learningCourses = member
                 .getCourseEnrollList()
                 .stream()
                 .map(courseEnroll -> new CourseDto(courseEnroll.getCourse(), member))
                 .collect(Collectors.toList());
-        List<CourseDto> likeCourses = courseService.findByVoter(member).stream().map(course -> new CourseDto(course,member)).collect(Collectors.toList());
 
-        MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,member);
+        List<CourseDto> likeCourses = member.getCourseVoters().stream().map(courseVoter -> new CourseDto(courseVoter.getCourse(), member)).toList();
+
+        MyPageDto myPageDto = new MyPageDto(learningCourses,likeCourses,memberDto);
         return RsData.of("200","성공",
                 new MyPageResponseBody(
                         myPageDto
                 ));
     }
 
+    @PutMapping("/modifyNickName")
+    @Operation(summary = "회원 닉네임 변경")
+    public RsData<NickNameDto> modifyNickName(@RequestBody NickNameDto nickNameDto) {
+
+        Member member = memberService.modifyNickname(nickNameDto);
+
+        NickNameDto modifyNickNameDto = new NickNameDto(member.getNickname());
+
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
+                Msg.E200_2_MODIFY_SUCCEED.getMsg(),
+                modifyNickNameDto);
+    }
+
+    // 회원 탈퇴지만 DB에서 삭제하지 않기 때문에 drop으로 명시
+    @PutMapping("/drop")
+    @Operation(summary = "회원 탈퇴")
+    public RsData<Empty> drop() {
+        memberService.dropMember();
+
+        return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
+                Msg.E200_3_DELETE_SUCCEED.getMsg());
+    }
+
+    @PutMapping("visit")
+    @Operation(summary = "수동 출석체크")
+    public RsData<Empty> visit(){
+        Member member = rq.getMember();
+        if(!member.isVisitedToday()){
+            memberService.visit(member);
+        }else{
+            throw new GlobalException(E400_11_AlREADY_VISITED.getCode(), E400_11_AlREADY_VISITED.getMessage());
+        }
+
+        return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(), Msg.E200_2_MODIFY_SUCCEED.getMsg());
+    }
 }

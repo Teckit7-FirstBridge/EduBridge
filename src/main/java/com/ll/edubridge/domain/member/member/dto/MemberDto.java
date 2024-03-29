@@ -20,6 +20,8 @@ public class MemberDto { // 엔티티(JPA(보안이 민감한 정보가 들어�
     @NonNull
     private String name;
     @NonNull
+    private String username;
+    @NonNull
     private String profileImgUrl;
     @NonNull
     private List<String> authorities;
@@ -32,15 +34,22 @@ public class MemberDto { // 엔티티(JPA(보안이 민감한 정보가 들어�
   
     private int point;
 
+    private int registerCount;
+
+    private String uuid;
+
     public MemberDto(Member member) {
         this.id = member.getId();
         this.createDate = member.getCreateDate();
         this.name = member.getNickname();
+        this.username = member.getUsername();
         this.profileImgUrl = member.getProfileImgUrlOrDefault();
         this.authorities = member.getAuthoritiesAsStringList();
         this.visitedToday = member.isVisitedToday();
         this.dailyGoal = member.getDailyGoal();
         this.dailyAchievement = member.getDailyAchievement();
         this.point = member.getPoint();
+        this.registerCount = member.getRegisterCount();
+        this.uuid = member.getUuid();
     }
 }

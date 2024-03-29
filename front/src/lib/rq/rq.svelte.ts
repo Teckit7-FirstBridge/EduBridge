@@ -22,12 +22,15 @@ class Rq {
   constructor() {
     let id = $state(0);
     let name = $state('');
+    let username = $state('');
     let profileImgUrl = $state('');
     let createDate = $state('');
     let point = $state(0);
     let authorities: string[] = $state([]);
     let dailyGoal: number = $state(0);
+    let registerCount: number = $state(0);
     let dailyAchievement: number = $state(0);
+    let uuid = $state('');
 
     this.member = {
       get id() {
@@ -48,6 +51,12 @@ class Rq {
       set name(value: string) {
         name = value;
       },
+      get username() {
+        return username;
+      },
+      set username(value: string) {
+        username = value;
+      },
       get profileImgUrl() {
         return profileImgUrl;
       },
@@ -66,6 +75,12 @@ class Rq {
       set point(value: number) {
         point = value;
       },
+      get registerCount() {
+        return registerCount;
+      },
+      set registerCount(value: number) {
+        registerCount = value;
+      },
       get dailyGoal() {
         return dailyGoal;
       },
@@ -77,6 +92,12 @@ class Rq {
       },
       set dailyAchievement(value: number) {
         dailyAchievement = value;
+      },
+      get uuid() {
+        return uuid;
+      },
+      set uuid(value: string) {
+        uuid = value;
       }
     };
   }
@@ -94,6 +115,10 @@ class Rq {
       baseUrl: import.meta.env.VITE_CORE_API_BASE_URL,
       credentials: 'include'
     });
+  }
+  public msgInfoUrl(message: string, url: string) {
+    toastr.info(message);
+    window.location.href = url;
   }
 
   public msgInfo(message: string) {
@@ -121,10 +146,13 @@ class Rq {
     this.member.createDate = member.createDate;
     this.member.profileImgUrl = member.profileImgUrl;
     this.member.name = member.name;
+    this.member.username = member.username;
     this.member.authorities = member.authorities;
     this.member.dailyGoal = member.dailyGoal;
     this.member.dailyAchievement = member.dailyAchievement;
     this.member.point = member.point;
+    this.member.registerCount = member.registerCount;
+    this.member.uuid = member.uuid;
   }
 
   public setLogout() {

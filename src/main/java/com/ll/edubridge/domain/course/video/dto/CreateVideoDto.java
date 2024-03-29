@@ -25,12 +25,16 @@ public class CreateVideoDto {
     @Size(max = 100)
     private String keywords;
 
+    @NotEmpty
+    private String title;
+
     public CreateVideoDto(Video video) {
         this.url = video.getUrl();
         this.overView = video.getOverView();
         this.courseId = video.getCourse().getId();
         this.imgUrl = video.getImgUrl();
         this.keywords  = video.getKeywords();
+        this.title = video.getTitle();
     }
 
     public CreateVideoDto() {
