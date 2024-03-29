@@ -42,7 +42,17 @@ TECH!T back-end 7기 1차 프로젝트 : 교육 영상 플랫폼 EduBridge
 
 ## 3. 프로덕트 세부 (주요 페이지 소개)
 
-[영상]
+### 수강 신청 ~ 요약노트 작성
+
+![GIFMaker_one](https://github.com/Teckit7-FirstBridge/EduBridge/assets/101785754/fb689680-aa5e-4229-ab1b-235d81075432)
+
+### 강좌 등록 ~ 로드맵 등록
+
+![GIFMaker_two](https://github.com/Teckit7-FirstBridge/EduBridge/assets/101785754/452c65d1-1854-4657-917a-19a1ef0ede18)
+
+### 요약노트 내보내기
+
+![GIFMaker_three](https://github.com/Teckit7-FirstBridge/EduBridge/assets/101785754/84341c50-7784-4abe-8e67-b2059b107218)
 
 <br><br>
  
