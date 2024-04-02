@@ -548,7 +548,6 @@ export interface components {
     CreateCourseDto: {
       title: string;
       notice: string;
-      imgUrl: string;
       overView: string;
       hashtags?: string;
     };

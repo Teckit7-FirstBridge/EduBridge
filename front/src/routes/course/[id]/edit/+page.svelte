@@ -12,17 +12,6 @@
   let notieditor: any | undefined = $state();
   let initialData: components['schemas']['CourseDto'] | undefined = $state();
 
-  let thumbnailAdvice;
-
-  function openModalThAdvice() {
-    thumbnailAdvice.showModal();
-  }
-
-  function closeModalThAdvice(event) {
-    event.preventDefault();
-    thumbnailAdvice.close();
-  }
-
   async function load() {
     const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
     const { isLogin } = isLoginResponse.data?.data!;
@@ -50,7 +39,6 @@
     const newNoti = notieditor.editor.getMarkdown().trim();
     const newOverview = overvieweditor.editor.getMarkdown().trim();
     const title = initialData?.title;
-    const imgUrl = initialData?.imgUrl;
 
     if (title?.length < 1) {
       console.log('dd');
@@ -68,16 +56,6 @@
       return;
     }
 
-    if (imgUrl?.length < 1) {
-      rq.msgWarning('썸네일 주소를 입력 해 주세요');
-      return;
-    }
-
-    if (!imgUrl.includes('jpg')) {
-      rq.msgWarning('썸네일 url을 jpg 형식으로 입력 해 주세요');
-      return;
-    }
-
     const { data, error } = await rq.apiEndPointsWithFetch(fetch).PUT('/api/v1/courses/{id}', {
       params: { path: { id: parseInt($page.params.id) } },
       // url 설정
@@ -85,7 +63,6 @@
         title: title,
         notice: newNoti,
         overView: newOverview,
-        imgUrl: initialData?.imgUrl,
         hashtags: tags.join('@')
       }
     });
@@ -195,44 +172,6 @@
                 body={initialData.overView}
                 height={'calc(60dvh - 64px)'}
               ></ToastUiEditor>
-              <div class="flex flex-col">
-                <label
-                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  for="course-imgUrl mr-4"
-                  >강좌 이미지 Url
-                  <a href="#" onclick={openModalThAdvice}>
-                    <i class="fa-solid fa-circle-exclamation text-red-500"></i>
-                  </a>
-                  <dialog id="my_modal_3" class="modal" bind:this={thumbnailAdvice}>
-                    <div class="modal-box modal-box-2">
-                      <button
-                        class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                        onclick={closeModalThAdvice}>✕</button
-                      >
-                      <div>
-                        <div>※ 썸네일 등록 : URL 형식을 맞춰주세요 ※</div>
-                        <br />
-                        <div>
-                          VIDEO-ID 위치에 첫번째로 등록할 강의의 Youtube 영상 id를 넣어주세요.
-                        </div>
-                        <br />
-                        <div>Youtube 영상 id : URL v= 혹은 vi= 다음 값</div>
-                      </div>
-                    </div>
-                  </dialog>
-                </label><label
-                  class="mt-1 w-[290px] text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
-                  for="course-imgUrl"
-                >
-                  https://img.youtube.com/vi/VIDEO-ID/0.jpg
-                </label>
-              </div>
-              <input
-                class="flex h-10 w-full rounded-md border px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
-                id="course-imgUrl"
-                placeholder="Enter ImgUrl"
-                bind:value={initialData.imgUrl}
-              />
             </div>
 
             <div class="flex justify-end">

@@ -149,10 +149,9 @@
                     onclick={closeModalVidAdvice}>✕</button
                   >
                   <div>
-                    <div>※ Youtube 영상 URL 형식을 맞춰주세요!</div>
-                    <div>VIDEO-ID 위치에 Youtube 영상 id를 넣어주세요.</div>
-                    <div>Youtube 영상 id : URL v= 혹은 vi= 다음 값</div>
-                    <div>VIDEO-ID 뒤의 값(예: &list=VaLUe1234)은 지우고 입력해주세요.</div>
+                    <div>※ Youtube 영상 URL을 넣어주세요!</div>
+                    <div>쇼츠 영상은 넣을 수 없습니다.</div>
+                    <div>Youtube 영상 URL이 정확한지 다시 한번 확인해주세요.</div>
                   </div>
                 </div>
               </dialog>
