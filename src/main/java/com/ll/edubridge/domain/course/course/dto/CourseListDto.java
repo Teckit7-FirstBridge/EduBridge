@@ -25,6 +25,8 @@ public class CourseListDto {
     private Member writer;
     @NonNull
     private String hashtags;
+    @NonNull
+    private boolean confirm;
 
 
     public CourseListDto(Course course, Member member) {
@@ -36,6 +38,7 @@ public class CourseListDto {
         this.likedByCurrentUser = course.getCourseVoters().contains(new CourseVoter(member,course));
         this.writer = course.getWriter();
         this.hashtags = course.getHashtags();
+        this.confirm = course.getConfirm();
     }
 
     public CourseListDto(Course course) {
