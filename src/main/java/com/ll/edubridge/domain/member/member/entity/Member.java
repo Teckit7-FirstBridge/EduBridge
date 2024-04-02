@@ -57,15 +57,12 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
 
     private String uuid;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private Set<CourseVoter> courseVoters;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "member" , cascade = CascadeType.REMOVE)
     private Set<PostVoter> postVoters;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "member" , cascade = CascadeType.REMOVE)
     private Set<CommentVoter> commentVoters;
 

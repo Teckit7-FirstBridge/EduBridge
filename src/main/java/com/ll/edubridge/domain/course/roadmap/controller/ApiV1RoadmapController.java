@@ -5,6 +5,7 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.roadmap.dto.CreateRoadmapDto;
 import com.ll.edubridge.domain.course.roadmap.dto.RoadmapDto;
+import com.ll.edubridge.domain.course.roadmap.dto.RoadmapListDto;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
 import com.ll.edubridge.domain.course.roadmap.service.RoadmapService;
 import com.ll.edubridge.domain.member.member.entity.Member;
@@ -92,12 +93,11 @@ public class ApiV1RoadmapController {
 
     @GetMapping(value = "/myRoadmapTitle")
     @Operation(summary = "내가 등록한 로드맵 다건 조회(제목만)")
-    public RsData<List<RoadmapDto>> getMyRoadmaps() {
+    public RsData<List<RoadmapListDto>> getMyRoadmaps() {
 
         List<Roadmap> roadmapList = roadmapService.getMyRoadmaps(rq.getMember());
 
-        List<RoadmapDto> roadmapDtoList = roadmapList.stream().map(RoadmapDto::new).toList();
-
+        List<RoadmapListDto> roadmapDtoList = roadmapList.stream().map(RoadmapListDto::new).toList();
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
@@ -118,10 +118,10 @@ public class ApiV1RoadmapController {
 
     @GetMapping("/byCourse/{courseId}")
     @Operation(summary = "강좌로 로드맵 목록 조회")
-    public RsData<List<RoadmapDto>> getRoadmapByCourse(@PathVariable("courseId") Long courseId) {
+    public RsData<List<RoadmapListDto>> getRoadmapByCourse(@PathVariable("courseId") Long courseId) {
         Course course = courseService.getCourse(courseId);
         List<Roadmap> roadmapList = roadmapService.getCourseRoadmapList(course);
-        List<RoadmapDto> roadmapDtoList = roadmapList.stream().map(RoadmapDto::new).toList();
+        List<RoadmapListDto> roadmapDtoList = roadmapList.stream().map(RoadmapListDto::new).toList();
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(), roadmapDtoList);

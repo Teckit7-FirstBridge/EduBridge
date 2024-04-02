@@ -21,7 +21,6 @@ public class CourseRoadmap extends BaseEntity {
     @ManyToOne(optional = false)
     private Course course;
 
-    @JsonIgnore
     @ManyToOne(optional = false)
     private Roadmap roadmap;
 

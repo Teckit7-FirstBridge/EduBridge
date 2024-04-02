@@ -86,6 +86,7 @@
       rq.msgWarning('로그인이 필요한 서비스 입니다');
       rq.goTo('/member/login');
     }
+    console.log(1);
     const responseVideos = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}/videos`, {
       params: {
         path: {
@@ -94,6 +95,7 @@
       }
     });
     videos = responseVideos.data?.data!;
+    console.log(2);
 
     const responseRoadmap = await rq.apiEndPoints().GET(`/api/v1/roadmap/byCourse/{courseId}`, {
       params: {
@@ -122,7 +124,7 @@
         params: {
           path: {
             courseId: parseInt($page.params.id),
-            writerId: course.writer?.id
+            writerId: course.writer_id
           }
         }
       });
@@ -141,8 +143,7 @@
       params: {}
     });
     myRoadmap = responseMyRoadmap.data?.data!;
-
-    changeNum = course.roadmapNum;
+    console.log(responseMyRoadmap);
 
     return { videos, course, auth, enroll, hashtags, myRoadmap, roadmapList };
   }
@@ -182,7 +183,7 @@
 
     if (isConfirmed) {
       const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}/{writer_id}`, {
-        params: { path: { id: parseInt($page.params.id), writer_id: course.writer.id } }
+        params: { path: { id: parseInt($page.params.id), writer_id: course.writer_id } }
       });
 
       if (data) {
@@ -204,7 +205,7 @@
         const { data, error } = await rq
           .apiEndPoints()
           .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
-            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer.id! } }
+            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
           });
 
         if (data) {
@@ -227,7 +228,7 @@
         const { data, error } = await rq
           .apiEndPoints()
           .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
-            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer.id! } }
+            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
           });
 
         if (data) {
@@ -284,7 +285,7 @@
             path: {
               courseId: parseInt($page.params.id),
               id: video.id,
-              writer_id: course.writer.id!
+              writer_id: course.writer_id!
             }
           }
         });
@@ -424,17 +425,17 @@
             <details class="dropdown">
               <summary class="flex items-center cursor-pointer">
                 <i class="fa-regular fa-user mr-1"></i>
-                {course.writer?.nickname}
+                {course.writer_nickname}
               </summary>
               <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
                 <li>
-                  <a href="/course?tab=course&kwType=NAME&kw={course.writer?.nickname}"
-                    >{course.writer?.nickname} 강좌</a
+                  <a href="/course?tab=course&kwType=NAME&kw={course.writer_nickname}"
+                    >{course.writer_nickname} 강좌</a
                   >
                 </li>
                 <li>
-                  <a href="/course?tab=roadmap&kwType=NAME&kw={course.writer?.nickname}"
-                    >{course.writer?.nickname} 로드맵</a
+                  <a href="/course?tab=roadmap&kwType=NAME&kw={course.writer_nickname}"
+                    >{course.writer_nickname} 로드맵</a
                   >
                 </li>
               </ul>
@@ -450,7 +451,7 @@
             {/each}
           </div>
           <div class="flex justify-end">
-            {#if !auth.enroll && !(rq.member.id == course.writer.id) && !rq.isAdmin()}
+            {#if !auth.enroll && !(rq.member.id == course.writer_id) && !rq.isAdmin()}
               <div class="flex">
                 <div class="mt-2">
                   <p class="course-price mt-4">{course.price}원</p>
@@ -463,7 +464,7 @@
               </div>
             {/if}
           </div>
-          {#if rq.member.id === course.writer.id || rq.isAdmin()}
+          {#if rq.member.id === course.writer_id || rq.isAdmin()}
             <div class="mx-2 items-center">
               <div class="mb-2">
                 <a
@@ -602,11 +603,11 @@
           </div>
 
           <div class="flex justify-end">
-            {#if rq.member.id === course.writer.id || rq.isAdmin()}
+            {#if rq.member.id === course.writer_id || rq.isAdmin()}
               <div class="flex justify-end">
                 <a
                   class="mr-2 h-10 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
-                  href="/course/{$page.params.id}/videowrite?writer_id={course.writer.id}"
+                  href="/course/{$page.params.id}/videowrite?writer_id={course.writer_id}"
                   >강의 등록</a
                 >
               </div>
@@ -619,7 +620,7 @@
               >
             </div>
           </div>
-          {#if auth.enroll || rq.member.id === course.writer.id}
+          {#if auth.enroll || rq.member.id === course.writer_id}
             <div class="border shadow-sm rounded-lg">
               <div class="relative w-full overflow-auto">
                 <table class="w-full table-fixed caption-bottom text-sm">
@@ -662,11 +663,10 @@
                               on:click={() => window.open(video.url, '_blank')}
                             />
                             <div class="flex justify-center">{video.title}</div>
-                            {#if rq.isAdmin() || rq.member.id === course.writer.id}
+                            {#if rq.isAdmin() || rq.member.id === course.writer_id}
                               <div class="flex justify-end">
                                 <a
-                                  href="/course/{video.courseId}/videoedit/{video.id}?writer_id={course
-                                    .writer.id}"
+                                  href="/course/{video.courseId}/videoedit/{video.id}?writer_id={course.writer_id}"
                                   class="mr-2 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
                                   >수정</a
                                 >
