@@ -18,10 +18,6 @@ public class CreateVideoDto {
     private Long courseId;
 
     @NotEmpty
-    @Size(max = 150)
-    private String imgUrl;
-
-    @NotEmpty
     @Size(max = 100)
     private String keywords;
 
@@ -32,7 +28,6 @@ public class CreateVideoDto {
         this.url = video.getUrl();
         this.overView = video.getOverView();
         this.courseId = video.getCourse().getId();
-        this.imgUrl = video.getImgUrl();
         this.keywords  = video.getKeywords();
         this.title = video.getTitle();
     }

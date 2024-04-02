@@ -718,7 +718,6 @@ export interface components {
       overView: string;
       /** Format: int64 */
       courseId?: number;
-      imgUrl: string;
       keywords: string;
       title: string;
     };
