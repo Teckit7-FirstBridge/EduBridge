@@ -30,13 +30,11 @@ public class Notification extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private NotificationType type;
 
-    @JsonIgnore
     @ManyToOne
     private Post post;
 
     private  int point = 0;
 
-    @JsonIgnore
     @OneToOne
     private Comment comment;
 }

@@ -42,18 +42,15 @@ public class Course extends BaseEntity {
     @Builder.Default
     private Boolean confirm = false;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     private List<Video> videoList;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CourseEnroll> courseEnrollList;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "course",cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Set<CourseVoter> courseVoters;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     private List<CourseRoadmap> roadmapList;
 

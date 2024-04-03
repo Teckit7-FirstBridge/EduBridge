@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 public class SummaryNoteDto {
     private Long id;
     private LocalDateTime createDate;
-    private Member member;
+    private Long member_id;
+    private String member_nickname;
     private String content;
     private Long score;
     private boolean isPass;
@@ -21,7 +22,8 @@ public class SummaryNoteDto {
     public SummaryNoteDto(SummaryNote summaryNote){
         this.id = summaryNote.getId();
         this.content = summaryNote.getContent();
-        this.member = summaryNote.getWriter();
+        this.member_id = summaryNote.getWriter().getId();
+        this.member_nickname = summaryNote.getWriter().getNickname();
         this.score = summaryNote.getScore();
         this.isPass = summaryNote.getScore() >= 70;
         this.courseId = summaryNote.getVideo().getCourse().getId();

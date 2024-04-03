@@ -66,6 +66,7 @@
         }
       });
       roadmaplist = data?.data.itemPage.content;
+      console.log(roadmaplist);
       return data!;
     }
   }
@@ -307,14 +308,14 @@
                     <p class="text-sm text-gray-800 dark:text-gray-400 mx-2">
                       {removeMarkdown(item.overView)}
                     </p>
-                    {#if item.curriculum}
+                    {#if item.curriculum && item.curriculum.length > 0}
                       <div class="flex flex-col">
                         {#each item.curriculum.sort((a, b) => a.courseOrder - b.courseOrder || a.id - b.id) as curriculum, index}
-                          <a href="/course/{curriculum.course.id}">
+                          <a href="/course/{curriculum.id}">
                             <div
                               class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
                             >
-                              {index + 1}. {curriculum.course?.title}
+                              {index + 1}. {curriculum.title}
                               [{curriculum.courseOrder}번 강좌]
                             </div>
                           </a>
@@ -327,7 +328,7 @@
                         {/each}
                       </div>
                     {/if}
-                    {#if item.owner.id == rq.member.id}
+                    {#if item.owner_id == rq.member.id}
                       <div class="flex justify-end">
                         <a
                           href="/roadmap/edit/{item.id}"

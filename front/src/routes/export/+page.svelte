@@ -15,7 +15,7 @@
         }
       }
     });
-    memberName = data?.data.member.nickname!;
+    memberName = data?.data.member_nickname;
 
     if (data?.data.items) {
       notes = data.data.items.sort((a, b) => a.courseId - b.courseId || a.id - b.id);
@@ -30,7 +30,7 @@
 {:then { notes }}
   {#if notes && notes.length > 0}
     <div class="flex flex-col w-full max-w-screen min-h-screen px-4 mt-10 md:px-6 lg:px-40">
-      <p class="text-3xl font-semibold mb-4">{memberName}님의 통과된 요약노트</p>
+      <p class="text-3xl font-semibold mb-4">{memberName} 님의 통과된 요약노트</p>
       <div class="mb-5">
         {#each notes as item, index}
           {#if index === 0 || item.courseId !== notes[index - 1].courseId}

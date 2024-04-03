@@ -25,14 +25,12 @@ public class Roadmap extends BaseEntity {
     @Column(length = 300)
     private String overView;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "roadmap", cascade = CascadeType.REMOVE)
     private List<CourseRoadmap> curriculum;
 
     @Column
     private String hashtags;
 
-    @JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Member owner;
 }

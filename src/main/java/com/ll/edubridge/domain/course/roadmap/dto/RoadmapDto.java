@@ -1,5 +1,7 @@
 package com.ll.edubridge.domain.course.roadmap.dto;
 
+import com.ll.edubridge.domain.course.course.dto.CourseDto;
+import com.ll.edubridge.domain.course.course.dto.CourseListDto;
 import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
 import com.ll.edubridge.domain.member.member.entity.Member;
@@ -10,6 +12,7 @@ import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -27,28 +30,26 @@ public class RoadmapDto {
     private String overView;
 
     @NonNull
-    private List<CourseRoadmap> curriculum;
-
-    @NonNull
     private String hashtags;
 
     @NonNull
-    private Member owner;
+    private Long owner_id;
 
     @NonNull
-    private List<Roadmap> roadmapList;
+    private String owner_nickname;
 
-    public RoadmapDto(List<Roadmap> roadmapList) {
-        this.roadmapList = roadmapList;
-    }
+    @NonNull
+    private List<CurriculumDto> curriculum;
+
 
     public RoadmapDto(Roadmap roadmap) {
         this.id = roadmap.getId();
         this.title = roadmap.getTitle();
         this.overView = roadmap.getOverView();
-        this.curriculum = roadmap.getCurriculum();
         this.hashtags = roadmap.getHashtags();
-        this.owner = roadmap.getOwner();
+        this.owner_nickname = roadmap.getOwner().getNickname();
+        this.owner_id = roadmap.getOwner().getId();
+        this.curriculum = roadmap.getCurriculum().stream().map(courseRoadmap -> {return new CurriculumDto(courseRoadmap.getCourse(),courseRoadmap.getCourseOrder());}).collect(Collectors.toList());
     }
 
 

@@ -21,7 +21,7 @@
     });
 
     initialData = data!.data;
-    if (rq.member.id !== initialData.writer.id && isLogin) {
+    if (rq.member.id !== initialData.writer_id && isLogin) {
       rq.msgError(' 권한이 없는 유저입니다');
       rq.goTo('/');
     }
@@ -106,7 +106,7 @@
   {#await load()}
     <span class="loading loading-spinner loading-xs m-2"></span>
   {:then { initialData }}
-    {#if rq.isAdmin() || rq.member.id === initialData.writer.id}
+    {#if rq.isAdmin() || rq.member.id === initialData.writer_id}
       <div class="">
         <div class="flex flex-col h-full px-4 py-6 md:px-6 lg:py-16 md:py-12">
           <div class="space-y-4">

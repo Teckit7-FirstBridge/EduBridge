@@ -74,7 +74,6 @@
         }
       });
       roadmaplist = data?.data.itemPage.content;
-
       return data!;
     }
   }
@@ -251,19 +250,19 @@
                     <details class="dropdown dropdown-end">
                       <summary class="flex items-center cursor-pointer">
                         <i class="fa-regular fa-user"></i>
-                        {item.writer?.nickname}
+                        {item.writer}
                       </summary>
                       <ul
                         class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
                       >
                         <li>
-                          <a href="/course?tab=course&kwType=NAME&kw={item.writer?.nickname}"
-                            >{item.writer?.nickname} 강좌</a
+                          <a href="/course?tab=course&kwType=NAME&kw={item.writer}"
+                            >{item.writer} 강좌</a
                           >
                         </li>
                         <li>
-                          <a href="/course?tab=roadmap&kwType=NAME&kw={item.writer?.nickname}"
-                            >{item.writer?.nickname} 로드맵</a
+                          <a href="/course?tab=roadmap&kwType=NAME&kw={item.writer}"
+                            >{item.writer} 로드맵</a
                           >
                         </li>
                       </ul>
@@ -453,7 +452,9 @@
                   <div class="collapse-title bg-white peer-checked:bg-yellow-50">
                     <div class="rounded-lg dark:border-gray-800 flex-col text-center">
                       <div class="flex justify-between gap-2">
-                        <h2 class="text-lg font-semibold ml-2">{formatTitle(item.title)}</h2>
+                        <h2 class="text-lg font-semibold ml-2">
+                          {formatTitle(item.title)}
+                        </h2>
                       </div>
                       <div class="flex items-center justify-between">
                         {#if item.hashtags}
@@ -475,19 +476,19 @@
                       <details class="dropdown dropdown-end">
                         <summary class="flex items-center cursor-pointer">
                           <i class="fa-regular fa-user mr-1"></i>
-                          {item.owner?.nickname}
+                          {item.owner_nickname}
                         </summary>
                         <ul
                           class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
                         >
                           <li>
-                            <a href="/course?tab=course&kwType=NAME&kw={item.owner?.nickname}"
-                              >{item.owner?.nickname} 강좌</a
+                            <a href="/course?tab=course&kwType=NAME&kw={item.owner_nickname}"
+                              >{item.owner_nickname} 강좌</a
                             >
                           </li>
                           <li>
-                            <a href="/course?tab=roadmap&kwType=NAME&kw={item.owner?.nickname}"
-                              >{item.owner?.nickname} 로드맵</a
+                            <a href="/course?tab=roadmap&kwType=NAME&kw={item.owner_nickname}"
+                              >{item.owner_nickname} 로드맵</a
                             >
                           </li>
                         </ul>
@@ -497,14 +498,15 @@
                     <p class="text-sm text-gray-800 dark:text-gray-400 mx-2">
                       {removeMarkdown(item.overView)}
                     </p>
-                    {#if item.curriculum}
+                    {#if item.curriculum && item.curriculum.length > 0}
                       <div class="flex flex-col">
-                        {#each item.curriculum.sort((a, b) => a.courseOrder - b.courseOrder || a.id - b.id) as curriculum, index}
-                          <a href="/course/{curriculum.course.id}">
+                        {#each item.curriculum as curriculum, index}
+                          <a href="/course/{curriculum.id}">
+
                             <div
                               class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
                             >
-                              {index + 1}. {curriculum.course?.title}
+                              {index + 1}. {curriculum.title}
                             </div>
                           </a>
                         {/each}

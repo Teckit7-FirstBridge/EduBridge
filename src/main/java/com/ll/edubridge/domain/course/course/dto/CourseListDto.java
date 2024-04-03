@@ -2,6 +2,7 @@ package com.ll.edubridge.domain.course.course.dto;
 
 import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.course.course.entity.Course;
+import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
@@ -22,7 +23,7 @@ public class CourseListDto {
     @NonNull
     private boolean likedByCurrentUser;
     @NonNull
-    private Member writer;
+    private String writer;
     @NonNull
     private String hashtags;
     @NonNull
@@ -36,7 +37,7 @@ public class CourseListDto {
         this.overView = course.getOverView();
         this.voteCount = course.getCourseVoters().size();
         this.likedByCurrentUser = course.getCourseVoters().contains(new CourseVoter(member,course));
-        this.writer = course.getWriter();
+        this.writer = course.getWriter().getNickname();
         this.hashtags = course.getHashtags();
         this.confirm = course.getConfirm();
     }
