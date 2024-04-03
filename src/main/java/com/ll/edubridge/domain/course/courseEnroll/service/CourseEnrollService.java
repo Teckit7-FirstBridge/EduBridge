@@ -6,6 +6,8 @@ import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.repository.MemberRepository;
+import com.ll.edubridge.domain.point.point.entity.PointType;
+import com.ll.edubridge.domain.point.point.service.PointService;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
@@ -26,6 +28,7 @@ public class CourseEnrollService {
     private final CourseEnrollRepository courseEnrollRepository;
     private final CourseService courseService;
     private final MemberRepository memberRepository;
+    private final PointService pointService;
 
     public Page<CourseEnroll> findByMemberId(Pageable pageable) {
         Long memberId=rq.getMember().getId();
@@ -42,6 +45,7 @@ public class CourseEnrollService {
                 .course(course)
                 .member(member)
                 .build();
+        pointService.subPoint(PointType.Enroll, member, price); // 포인트 내역 추가
         member.setPoint(point - price);
         memberRepository.save(member); // member의 정보를 저장
         courseEnrollRepository.save(courseEnroll);
