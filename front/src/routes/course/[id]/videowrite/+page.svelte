@@ -3,7 +3,6 @@
   import { page } from '$app/stores';
   let url = $state('');
   let overview = $state('');
-  let imgUrl = $state('');
   let keywords = $state('');
   let title = $state('');
 
@@ -16,17 +15,6 @@
   function closeModalKAdvice(event) {
     event.preventDefault();
     keywordsAdvice.close();
-  }
-
-  let thumbnailAdvice;
-
-  function openModalThAdvice() {
-    thumbnailAdvice.showModal();
-  }
-
-  function closeModalThAdvice(event) {
-    event.preventDefault();
-    thumbnailAdvice.close();
   }
 
   let videoAdvice;
@@ -72,22 +60,17 @@
       rq.msgWarning('동영상 주소를 입력 해 주세요.');
       return;
     }
-    if (imgUrl.length < 1) {
-      rq.msgWarning('썸네일 주소를 입력 해 주세요.');
-      return;
-    }
-    if (!imgUrl.includes('jpg')) {
-      rq.msgWarning('썸네일 url을 jpg 형식으로 입력 해 주세요');
-      return;
-    }
+
     if (keywords.length < 1) {
       rq.msgWarning('키워드를 입력 해 주세요.');
       return;
     }
+
     if (overview.length < 1) {
       rq.msgWarning('개요를 입력 해 주세요.');
       return;
     }
+
     console.log(title);
 
     const { data, error } = await rq
@@ -103,7 +86,6 @@
           url,
           overView: overview,
           courseId: parseInt($page.params.id),
-          imgUrl: imgUrl,
           keywords: keywords,
           title: title
         }
@@ -147,10 +129,9 @@
                     onclick={closeModalVidAdvice}>✕</button
                   >
                   <div>
-                    <div>※ Youtube 영상 URL 형식을 맞춰주세요!</div>
-                    <div>VIDEO-ID 위치에 Youtube 영상 id를 넣어주세요.</div>
-                    <div>Youtube 영상 id : URL v= 혹은 vi= 다음 값</div>
-                    <div>VIDEO-ID 뒤의 값(예: &list=VaLUe1234)은 지우고 입력해주세요.</div>
+                    <div>※ Youtube 영상 URL을 넣어주세요!</div>
+                    <div>쇼츠 영상은 넣을 수 없습니다.</div>
+                    <div>Youtube 영상 URL이 정확한지 다시 한번 확인해주세요.</div>
                   </div>
                 </div>
               </dialog>
@@ -161,45 +142,6 @@
               type="text"
               placeholder="Enter video URL"
               bind:value={url}
-            />
-          </div>
-          <div class="mb-4">
-            <div class="mb-2">
-              <label
-                class="text-sm font-bold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                for="course-imgUrl mr-4"
-                >강의 썸네일 Url
-                <a href="#" onclick={openModalThAdvice}>
-                  <i class="fa-solid fa-circle-exclamation text-red-500"></i>
-                </a>
-                <dialog id="my_modal_3" class="modal" bind:this={thumbnailAdvice}>
-                  <div class="modal-box modal-box-2">
-                    <button
-                      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                      onclick={closeModalThAdvice}>✕</button
-                    >
-                    <div>
-                      <div>※ 썸네일 등록 : URL 형식을 맞춰주세요 ※</div>
-                      <br />
-                      <div>VIDEO-ID 위치에 Youtube 영상 id를 넣어주세요.</div>
-                      <br />
-                      <div>Youtube 영상 id : URL v= 혹은 vi= 다음 값</div>
-                    </div>
-                  </div>
-                </dialog>
-              </label><label
-                class=" text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 bg-blue-400 text-white p-2 rounded"
-                for="course-imgUrl"
-              >
-                https://img.youtube.com/vi/VIDEO-ID/0.jpg
-              </label>
-            </div>
-            <input
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="video-imgUrl"
-              type="text"
-              placeholder="Enter img URL"
-              bind:value={imgUrl}
             />
           </div>
           <div class="mb-4">

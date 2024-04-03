@@ -548,7 +548,6 @@ export interface components {
     CreateCourseDto: {
       title: string;
       notice: string;
-      imgUrl: string;
       overView: string;
       hashtags?: string;
     };
@@ -718,7 +717,6 @@ export interface components {
       overView: string;
       /** Format: int64 */
       courseId?: number;
-      imgUrl: string;
       keywords: string;
       title: string;
     };
