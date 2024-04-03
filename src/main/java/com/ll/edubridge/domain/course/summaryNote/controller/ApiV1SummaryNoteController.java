@@ -138,11 +138,10 @@ public class ApiV1SummaryNoteController {
         private final List<SummaryNoteDto> items;
 
         @NonNull
-        private final Member member;
-
-        public GetSummaryandMemberNoteResponsebody(List<SummaryNoteDto> items, Member member) {
+        private String member_nickname;
+        public GetSummaryandMemberNoteResponsebody(List<SummaryNoteDto> items,String member_nickname) {
             this.items = items;
-            this.member = member;
+            this.member_nickname = member_nickname;
         }
     }
 
@@ -153,7 +152,7 @@ public class ApiV1SummaryNoteController {
         Member member = memberService.findByUUID(uuid).get();
         List<SummaryNoteDto> byUuid = summaryNoteService.findByWriterId(member.getId()).stream().map(SummaryNoteDto::new).collect(Collectors.toList());
 
-        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(),new GetSummaryandMemberNoteResponsebody(byUuid,member));
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(),new GetSummaryandMemberNoteResponsebody(byUuid,member.getNickname()));
     }
 
 
