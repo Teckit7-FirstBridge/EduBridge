@@ -16,7 +16,8 @@ public enum CodeMsg {
     E400_9_COUNT_ALREADY_FULL("400-9", "이미 등록 가능한 횟수가 가득 찼습니다."),
     E400_10_VIDEO_LESS_THAN_5_CANNOT_PUBLISH("400-10","영상이 일정 개수 이하이면 강좌를 공개할 수 없습니다."),
     E400_11_AlREADY_VISITED("400-11","이미 출석체크 되었습니다."),
-    E400_12_ALREADY_HAS_ENROLL("400-12", "수강생이 있어서 비공개 할 수 없습니다.");
+    E400_12_ALREADY_HAS_ENROLL("400-12", "수강생이 있어서 비공개 할 수 없습니다."),
+    E400_13_WRONG_URL("400-13", "잘못된 URL 형식입니다.");
 
     private  final String code;
     private final String message;

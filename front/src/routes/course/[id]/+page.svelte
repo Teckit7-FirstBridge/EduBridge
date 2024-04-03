@@ -211,7 +211,7 @@
         if (data) {
           rq.msgInfo('강좌가 공개되었습니다');
           courseConfirm = true;
-          // window.location.reload();
+          window.location.reload();
         } else if (error) {
           rq.msgError('영상이 5개 이하이면 공개할 수 없습니다');
         }
@@ -234,7 +234,7 @@
         if (data) {
           rq.msgInfo('강좌가 비공개되었습니다');
           courseConfirm = false;
-          // window.location.reload();
+          window.location.reload();
         } else if (error) {
           rq.msgError(error.msg);
           window.location.reload();
@@ -704,48 +704,50 @@
                         </td>
 
                         <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                          {#if video.summaryNotes.length > 0}
-                            <a
-                              class="flex items-center gap-3 w-10 h-10 rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                              href="/course/{video.courseId}/{video.id}/summary/{video
-                                .summaryNotes[0].id}"
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="w-6 h-6"
+                          {#if course.confirm}
+                            {#if video.summaryNotes.length > 0}
+                              <a
+                                class="flex items-center gap-3 w-10 h-10 rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+                                href="/course/{video.courseId}/{video.id}/summary/{video
+                                  .summaryNotes[0].id}"
                               >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  d="M21.75 17.25v-.228a4.5 4.5 0 0 0-.12-1.03l-2.268-9.64a3.375 3.375 0 0 0-3.285-2.602H7.923a3.375 3.375 0 0 0-3.285 2.602l-2.268 9.64a4.5 4.5 0 0 0-.12 1.03v.228m19.5 0a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3m19.5 0a3 3 0 0 0-3-3H5.25a3 3 0 0 0-3 3m16.5 0h.008v.008h-.008v-.008Zm-3 0h.008v.008h-.008v-.008Z"
-                                />
-                              </svg>
-                            </a>
-                          {:else}
-                            <a
-                              class="flex items-center gap-3 w-10 h-10 rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                              href="/course/{video.courseId}/{video.id}/summary/write"
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="w-6 h-6"
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke-width="1.5"
+                                  stroke="currentColor"
+                                  class="w-6 h-6"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M21.75 17.25v-.228a4.5 4.5 0 0 0-.12-1.03l-2.268-9.64a3.375 3.375 0 0 0-3.285-2.602H7.923a3.375 3.375 0 0 0-3.285 2.602l-2.268 9.64a4.5 4.5 0 0 0-.12 1.03v.228m19.5 0a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3m19.5 0a3 3 0 0 0-3-3H5.25a3 3 0 0 0-3 3m16.5 0h.008v.008h-.008v-.008Zm-3 0h.008v.008h-.008v-.008Z"
+                                  />
+                                </svg>
+                              </a>
+                            {:else}
+                              <a
+                                class="flex items-center gap-3 w-10 h-10 rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+                                href="/course/{video.courseId}/{video.id}/summary/write"
                               >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
-                                />
-                              </svg>
-                            </a>
-                          {/if}
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke-width="1.5"
+                                  stroke="currentColor"
+                                  class="w-6 h-6"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                                  />
+                                </svg>
+                              </a>
+                            {/if}
+                          {:else}{/if}
                         </td>
                       </tr>
                     {/each}

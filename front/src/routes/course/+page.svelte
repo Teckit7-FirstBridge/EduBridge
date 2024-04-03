@@ -502,6 +502,7 @@
                       <div class="flex flex-col">
                         {#each item.curriculum as curriculum, index}
                           <a href="/course/{curriculum.id}">
+
                             <div
                               class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
                             >

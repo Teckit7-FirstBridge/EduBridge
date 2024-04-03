@@ -183,6 +183,21 @@
                     <div class="flex justify-center gap-2">
                       <h2 class="text-lg font-semibold my-1 ml-2">{formatTitle(item.title)}</h2>
                     </div>
+                    <div class="flex justify-end mr-4">
+                      {#if item.confirm}
+                        <h2
+                          class="text-blue-800 bg-blue-100 inline-flex px-2 text-lg font-semibold rounded-full"
+                        >
+                          공개
+                        </h2>
+                      {:else}
+                        <h2
+                          class="text-red-800 bg-red-100 inline-flex px-2 text-lg font-semibold rounded-full"
+                        >
+                          비공개
+                        </h2>
+                      {/if}
+                    </div>
                     <div class="flex justify-center p-2 bg-black rounded-lg m-4">
                       <img src={item.imgUrl} />
                     </div>
