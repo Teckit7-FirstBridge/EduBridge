@@ -85,6 +85,7 @@
     if (!isLogin) {
       rq.msgWarning('로그인이 필요한 서비스 입니다');
       rq.goTo('/member/login');
+      return;
     }
     console.log(1);
     const responseVideos = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}/videos`, {
