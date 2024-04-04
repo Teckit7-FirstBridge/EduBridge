@@ -1,19 +1,13 @@
-package com.ll.edubridge.domain.CommentVoter.service;
+package com.ll.edubridge.domain.post.commentVoter.service;
 
-import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
-import com.ll.edubridge.domain.CommentVoter.repository.CommentVoterRepository;
-import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
-import com.ll.edubridge.domain.CourseVoter.repositry.CourseVoterRepository;
-import com.ll.edubridge.domain.course.course.entity.Course;
-import com.ll.edubridge.domain.course.course.repository.CourseRepository;
+import com.ll.edubridge.domain.post.commentVoter.entity.CommentVoter;
+import com.ll.edubridge.domain.post.commentVoter.repository.CommentVoterRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

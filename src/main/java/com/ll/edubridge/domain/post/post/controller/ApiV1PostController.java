@@ -1,6 +1,6 @@
 package com.ll.edubridge.domain.post.post.controller;
 
-import com.ll.edubridge.domain.PostVoter.service.PostVoterService;
+import com.ll.edubridge.domain.post.postVoter.service.PostVoterService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.comment.service.CommentService;
 import com.ll.edubridge.domain.post.post.dto.CreatePostDto;

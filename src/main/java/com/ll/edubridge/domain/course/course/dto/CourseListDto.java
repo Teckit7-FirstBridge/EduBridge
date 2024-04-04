@@ -1,8 +1,7 @@
 package com.ll.edubridge.domain.course.course.dto;
 
-import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
+import com.ll.edubridge.domain.course.courseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.course.course.entity.Course;
-import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import lombok.Getter;
 import org.springframework.lang.NonNull;

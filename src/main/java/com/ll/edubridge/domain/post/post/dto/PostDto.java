@@ -1,6 +1,6 @@
 package com.ll.edubridge.domain.post.post.dto;
 
-import com.ll.edubridge.domain.PostVoter.entity.PostVoter;
+import com.ll.edubridge.domain.post.postVoter.entity.PostVoter;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import lombok.Getter;

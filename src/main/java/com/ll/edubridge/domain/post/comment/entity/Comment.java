@@ -1,6 +1,6 @@
 package com.ll.edubridge.domain.post.comment.entity;
 
-import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
+import com.ll.edubridge.domain.post.commentVoter.entity.CommentVoter;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;

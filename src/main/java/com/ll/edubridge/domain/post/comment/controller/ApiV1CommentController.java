@@ -1,7 +1,6 @@
 package com.ll.edubridge.domain.post.comment.controller;
 
-import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
-import com.ll.edubridge.domain.CommentVoter.service.CommentVoterService;
+import com.ll.edubridge.domain.post.commentVoter.service.CommentVoterService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.notification.entity.NotificationType;
 import com.ll.edubridge.domain.post.comment.dto.CommentDto;

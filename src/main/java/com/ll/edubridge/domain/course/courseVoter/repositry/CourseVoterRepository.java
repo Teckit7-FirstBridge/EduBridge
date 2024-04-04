@@ -1,6 +1,6 @@
-package com.ll.edubridge.domain.CourseVoter.repositry;
+package com.ll.edubridge.domain.course.courseVoter.repositry;
 
-import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
+import com.ll.edubridge.domain.course.courseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

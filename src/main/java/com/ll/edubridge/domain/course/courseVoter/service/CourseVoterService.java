@@ -1,7 +1,7 @@
-package com.ll.edubridge.domain.CourseVoter.service;
+package com.ll.edubridge.domain.course.courseVoter.service;
 
-import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
-import com.ll.edubridge.domain.CourseVoter.repositry.CourseVoterRepository;
+import com.ll.edubridge.domain.course.courseVoter.entity.CourseVoter;
+import com.ll.edubridge.domain.course.courseVoter.repositry.CourseVoterRepository;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;

@@ -1,7 +1,5 @@
-package com.ll.edubridge.domain.PostVoter.entity;
+package com.ll.edubridge.domain.post.postVoter.entity;
 
-import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import jakarta.persistence.*;
