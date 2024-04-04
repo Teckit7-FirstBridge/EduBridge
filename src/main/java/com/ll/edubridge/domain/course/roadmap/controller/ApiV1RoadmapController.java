@@ -9,7 +9,6 @@ import com.ll.edubridge.domain.course.roadmap.dto.RoadmapListDto;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
 import com.ll.edubridge.domain.course.roadmap.service.RoadmapService;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
@@ -41,7 +40,6 @@ public class ApiV1RoadmapController {
     private final RoadmapService roadmapService;
     private final Rq rq;
     private final CourseService courseService;
-    private final MemberService memberService;
 
     public record GetRoadmapsResponseBody(@NonNull PageDto<RoadmapDto> itemPage) {
     }

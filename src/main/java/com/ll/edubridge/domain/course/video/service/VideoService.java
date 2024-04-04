@@ -82,7 +82,6 @@ public class VideoService {
         videoRepository.delete(video);
     }
 
-    @Transactional
     public Video getVideo(Long id) {
         Optional<Video> video = this.findById(id);
         if (video.isPresent()) {
@@ -92,18 +91,14 @@ public class VideoService {
         }
     }
 
-    @Transactional
     public Optional<Video> findById(Long id) {
         return Optional.ofNullable(videoRepository.findById(id));
     }
-
-    @Transactional
 
     public Video findByCourseIdAndId(Long courseId, Long id) {
         return videoRepository.findByCourseIdAndId(courseId, id);
     }
 
-    @Transactional
     public List<Video> findByCourseId(Long courseId) {
         return videoRepository.findByCourseIdOrderByIdAsc(courseId);
     }
@@ -113,7 +108,6 @@ public class VideoService {
         videoRepository.save(video);
     }
 
-    @Transactional
     public boolean haveAuthority(Course course) {
         Member member = rq.getMember();
         return member.getId().equals(course.getWriter().getId());

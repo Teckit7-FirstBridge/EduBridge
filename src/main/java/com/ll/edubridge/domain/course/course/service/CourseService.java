@@ -30,10 +30,6 @@ public class CourseService {
     private final RoadmapService roadmapService;
 
 
-    public List<Course> findAll() {
-        return courseRepository.findAll();
-    }
-
     public Optional<Course> findById(Long id) {
         return courseRepository.findById(id);
     }
@@ -93,7 +89,6 @@ public class CourseService {
         courseRepository.delete(course);
     }
 
-    @Transactional
     public Course getCourse(Long id) {
         Optional<Course> course = this.findById(id);
         if (course.isPresent()) {
@@ -103,7 +98,6 @@ public class CourseService {
         }
     }
 
-    @Transactional
     public boolean haveAuthority(Long id) {
         Member member = rq.getMember();
 
@@ -113,17 +107,13 @@ public class CourseService {
 
         return false;
     }
-    public Page<Course> findByKwAdmin(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {
-        return courseRepository.findByKwAdmin(kwType, kw, author, pageable);
-    }
+
     public Page<Course> findByKw(KwTypeCourse kwType, String kw, Member author, Pageable pageable) {
         return courseRepository.findByKw(kwType, kw, author, pageable);
     }
     public Page<Course> findMyCourse(Member writer, Pageable pageable){
         return courseRepository.findByWriter(writer, pageable);
     }
-
-
 
     public List<Course> findTopVotedCourses(int num){
         return courseRepository.findTopVotedCourse(num);
@@ -146,7 +136,6 @@ public class CourseService {
         course.setConfirm(!course.getConfirm());
         return courseRepository.save(course);
     }
-
 
     public List<Course> findRecentCourse() {
         return courseRepository.findTop5ByOrderByIdDesc();
