@@ -15,12 +15,8 @@ public class ChatRequest {
 
     public ChatRequest(String model, String prompt) {
         this.model = model;
-
         this.messages = new ArrayList<>();
         this.messages.add(new Message("user", prompt));
-    }
-
-    public ChatRequest() {
     }
 
     public ChatRequest(String model, List<Message> messages,double temperature) {
@@ -28,5 +24,6 @@ public class ChatRequest {
         this.messages = messages;
         this.temperature = temperature;
     }
-    // getters and setters
+
+    public ChatRequest() {}
 }
