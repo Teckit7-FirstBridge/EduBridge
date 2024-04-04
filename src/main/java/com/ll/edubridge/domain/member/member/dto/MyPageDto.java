@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 public class MyPageDto {
 
-
     private List<CourseDto> learningCourses;
 
     private List<CourseDto> favoriteCourses;
@@ -22,6 +21,5 @@ public class MyPageDto {
         this.member = member;
 
     }
-    public MyPageDto() {
-    }
+    public MyPageDto() {}
 }

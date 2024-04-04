@@ -7,9 +7,10 @@ import lombok.Getter;
 public class NickNameDto {
 
     private String nickName;
+
     public NickNameDto(String nickName) {
         this.nickName = nickName;
     }
-    public NickNameDto() {
-    }
+
+    public NickNameDto() {}
 }

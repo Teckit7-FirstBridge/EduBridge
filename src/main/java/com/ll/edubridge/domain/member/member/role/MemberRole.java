@@ -12,12 +12,5 @@ public enum MemberRole {
     MemberRole(String roleName) {
         this.roleName = roleName;
     }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-
-
 }
 

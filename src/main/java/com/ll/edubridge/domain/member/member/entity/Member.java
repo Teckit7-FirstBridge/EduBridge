@@ -68,11 +68,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CourseEnroll> courseEnrollList;
 
-
     public String getProfileImgUrlOrDefault() {
         return Ut.str.hasLength(profileImgUrl) ? profileImgUrl : "https://placehold.co/640x640?text=O_O";
     }
-
 
     @Transient
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -98,5 +96,4 @@ public class Member extends BaseEntity {
     public String getName() {
         return username;
     }
-
 }
