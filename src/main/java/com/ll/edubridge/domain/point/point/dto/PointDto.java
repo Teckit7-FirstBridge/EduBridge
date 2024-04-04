@@ -26,4 +26,6 @@ public class PointDto {
         this.ownerId = point.getOwnerId();
         this.amount = point.getAmount();
     }
+
+    public PointDto(){}
 }

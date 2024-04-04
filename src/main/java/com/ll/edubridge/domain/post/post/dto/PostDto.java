@@ -45,16 +45,5 @@ public class PostDto {
         this.commentCount = post.getCommentList().size();
     }
 
-    public PostDto(Post post) {
-        this.id = post.getId();
-        this.createDate = post.getCreateDate();
-        this.authorId = post.getWriter().getId();
-        this.authorName = post.getWriter().getNickname();
-        this.title = post.getTitle();
-        this.body = post.getContent();
-        this.voteCount = post.getVoteCount();
-        this.isReport = post.isReport();
-    }
-
     public PostDto(){}
 }

@@ -15,4 +15,6 @@ public class AttendDto {
     public AttendDto(Point point){
         this.createDate = point.getCreateDate();
     }
+
+    public AttendDto(){}
 }
