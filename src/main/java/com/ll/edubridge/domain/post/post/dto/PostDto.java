@@ -25,10 +25,8 @@ public class PostDto {
 
     @NonNull
     private int voteCount;
-
     @NonNull
     private boolean likedByCurrentUser;
-
     @NonNull
     private boolean isReport;
     @NonNull
@@ -47,10 +45,6 @@ public class PostDto {
         this.commentCount = post.getCommentList().size();
     }
 
-    public PostDto(){
-
-    }
-
     public PostDto(Post post) {
         this.id = post.getId();
         this.createDate = post.getCreateDate();
@@ -61,4 +55,6 @@ public class PostDto {
         this.voteCount = post.getVoteCount();
         this.isReport = post.isReport();
     }
+
+    public PostDto(){}
 }

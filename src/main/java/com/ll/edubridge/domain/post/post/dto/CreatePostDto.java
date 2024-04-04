@@ -8,7 +8,6 @@ import org.springframework.lang.NonNull;
 
 @Getter
 public class CreatePostDto {
-
     @NonNull
     @Size(max = 200)
     private String title;
@@ -20,8 +19,5 @@ public class CreatePostDto {
         this.body = post.getContent();
     }
 
-    public CreatePostDto(){
-
-    }
-
+    public CreatePostDto(){}
 }

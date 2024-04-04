@@ -23,7 +23,6 @@ public class QnaDto {
     @NonNull
     private int commentCount;
 
-
     public QnaDto(Post post) {
         this.id = post.getId();
         this.createDate = post.getCreateDate();
@@ -33,4 +32,6 @@ public class QnaDto {
         this.body = post.getContent();
         this.commentCount = post.getCommentList().size();
     }
+
+    public QnaDto(){}
 }
