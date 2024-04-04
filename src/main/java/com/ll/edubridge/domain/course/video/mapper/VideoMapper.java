@@ -18,12 +18,12 @@ public class VideoMapper {
         return VideoDto.builder()
                 .id(video.getId())
                 .courseId(video.getCourse().getId())
-            .url(video.getUrl())
-            .imgUrl(video.getImgUrl())
-            .overView(video.getOverView())
-            .summaryNotes(filteredSummaryNotes)
+                .url(video.getUrl())
+                .imgUrl(video.getImgUrl())
+                .overView(video.getOverView())
+                .summaryNotes(filteredSummaryNotes)
                 .keywords(video.getKeywords())
                 .title(video.getTitle())
-            .build();
+                .build();
     }
 }

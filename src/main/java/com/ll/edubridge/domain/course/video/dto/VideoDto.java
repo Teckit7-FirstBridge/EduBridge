@@ -5,6 +5,8 @@ import com.ll.edubridge.domain.course.video.entity.Video;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
@@ -12,9 +14,10 @@ import org.springframework.lang.NonNull;
 import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
-
-@Getter
+@AllArgsConstructor(access = PROTECTED)
 @NoArgsConstructor(access = PROTECTED)
+@Builder
+@Getter
 public class VideoDto {
     @NonNull
     private Long id;
@@ -39,7 +42,6 @@ public class VideoDto {
     private String keywords;
     @NonNull
     private String title;
-
 
     public VideoDto(Video video) {
         this.id = video.getId();
