@@ -12,11 +12,7 @@ public class AttendDto {
     @NonNull
     private LocalDateTime createDate;
 
-
     public AttendDto(Point point){
-
         this.createDate = point.getCreateDate();
-
     }
-
 }
