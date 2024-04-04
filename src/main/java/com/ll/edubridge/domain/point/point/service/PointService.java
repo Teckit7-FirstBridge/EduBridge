@@ -18,12 +18,12 @@ public class PointService {
 
     @Transactional
     public void addPoint(PointType pointType, Member member) {
-
         Point point = Point.builder()
                 .content(pointType.getContent())
                 .ownerId(member.getId())
                 .amount(pointType.getAmount())
                 .build();
+
         pointRepository.save(point);
     }
 
@@ -34,6 +34,7 @@ public class PointService {
                 .ownerId(member.getId())
                 .amount(-pointType.getAmount())
                 .build();
+
         pointRepository.save(point);
     }
 
@@ -44,5 +45,4 @@ public class PointService {
     public List<Point> findByOwnerIdAndContent(Long memberId){
         return pointRepository.findByOwnerIdAndContent(memberId, PointType.Attend.getContent());
     }
-
 }

@@ -1,10 +1,9 @@
 package com.ll.edubridge.domain.post.commentVoter.service;
 
-import com.ll.edubridge.domain.post.commentVoter.entity.CommentVoter;
-import com.ll.edubridge.domain.post.commentVoter.repository.CommentVoterRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
-import com.ll.edubridge.domain.post.comment.repository.CommentRepository;
+import com.ll.edubridge.domain.post.commentVoter.entity.CommentVoter;
+import com.ll.edubridge.domain.post.commentVoter.repository.CommentVoterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,20 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommentVoterService {
     private final CommentVoterRepository commentVoterRepository;
-    private final CommentRepository commentRepository;
 
-    public Boolean isVote(Member member, Comment comment){
-        return false;
-    }
     public void vote(Member member, Comment comment){
-
         CommentVoter commentVoter = new CommentVoter(member, comment);
         commentVoterRepository.save(commentVoter);
     }
 
     @Transactional
     public void deleteVote(Comment comment, Member member){
-
         commentVoterRepository.deleteCommentVoterByCommentAndMember(comment,member);
     }
 
@@ -41,5 +34,4 @@ public class CommentVoterService {
 
         return comment.getCommentVoters().contains(new CommentVoter(member,comment));
     }
-
 }

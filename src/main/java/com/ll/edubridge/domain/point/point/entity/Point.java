@@ -22,5 +22,4 @@ public class Point extends BaseEntity {
     private Long ownerId;
 
     private int amount;
-
 }

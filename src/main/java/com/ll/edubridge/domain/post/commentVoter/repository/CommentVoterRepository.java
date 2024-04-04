@@ -6,6 +6,5 @@ import com.ll.edubridge.domain.post.comment.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CommentVoterRepository extends JpaRepository<CommentVoter,Long> {
-
-    public void deleteCommentVoterByCommentAndMember(Comment comment, Member member);
+    void deleteCommentVoterByCommentAndMember(Comment comment, Member member);
 }

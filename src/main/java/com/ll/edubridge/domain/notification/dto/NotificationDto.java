@@ -1,6 +1,7 @@
-package com.ll.edubridge.domain.notification.entity;
+package com.ll.edubridge.domain.notification.dto;
 
-import lombok.Builder;
+import com.ll.edubridge.domain.notification.entity.Notification;
+import com.ll.edubridge.domain.notification.entity.NotificationType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,10 +23,12 @@ public class NotificationDto {
     private String post_title;
 
     private Long post_id;
+
     private  int point;
+
     private Long comment_id;
 
-    public NotificationDto(Notification notification,String recipient,String sender){
+    public NotificationDto(Notification notification, String recipient, String sender){
           this.id =notification.getId();
           this.recipient = recipient;
           this.read = notification.isRead();

@@ -27,13 +27,12 @@ public class PostVoter {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public PostVoter() {
-    }
-
     public PostVoter(Post post, Member member) {
         this.post = post;
         this.member = member;
     }
+
+    public PostVoter() {}
 
     @Override
     public boolean equals(Object obj) {
@@ -47,5 +46,4 @@ public class PostVoter {
     public int hashCode() {
         return Objects.hash(member, post);
     }
-
 }

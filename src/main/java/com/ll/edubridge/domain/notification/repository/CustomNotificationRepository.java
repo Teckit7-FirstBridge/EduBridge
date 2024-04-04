@@ -5,6 +5,5 @@ import com.ll.edubridge.domain.notification.entity.Notification;
 import java.util.List;
 
 public interface CustomNotificationRepository {
-    public List<Notification> findByMemberId(Long id);
-
+    List<Notification> findByMemberId(Long id);
 }

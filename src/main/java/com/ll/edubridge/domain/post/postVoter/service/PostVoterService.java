@@ -24,7 +24,6 @@ public class PostVoterService {
         postVoterRepository.deletePostVoterByPostAndMember(post,member);
     }
 
-
     public boolean canLike(Member member, Post post) {
         if (member == null) return false;
         if (post == null) return false;
@@ -33,13 +32,9 @@ public class PostVoterService {
     }
 
     public boolean canCancelLike(Member member, Post post) {
-
         if (member == null) return false;
         if (post == null) return false;
 
         return post.getPostVoters().contains(new PostVoter(post,member));
     }
-
-
-
 }

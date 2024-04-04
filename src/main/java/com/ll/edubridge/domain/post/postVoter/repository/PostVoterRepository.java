@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostVoterRepository extends JpaRepository<PostVoter,Long> {
-    public void deletePostVoterByPostAndMember(Post post, Member member);
+    void deletePostVoterByPostAndMember(Post post, Member member);
 }

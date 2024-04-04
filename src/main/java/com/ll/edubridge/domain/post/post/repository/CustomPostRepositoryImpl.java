@@ -1,9 +1,7 @@
 package com.ll.edubridge.domain.post.post.repository;
 
-import com.ll.edubridge.domain.course.course.entity.QCourse;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.entity.Post;
-import com.ll.edubridge.domain.post.post.entity.QPost;
 import com.ll.edubridge.standard.base.KwTypeV1;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
@@ -17,10 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
-import java.util.List;
-
-import static com.ll.edubridge.domain.course.course.entity.QCourse.course;
-import static com.ll.edubridge.domain.post.post.entity.QPost.*;
+import static com.ll.edubridge.domain.post.post.entity.QPost.post;
 
 @RequiredArgsConstructor
 public class CustomPostRepositoryImpl implements CustomPostRepository{
@@ -51,8 +46,6 @@ public class CustomPostRepositoryImpl implements CustomPostRepository{
 
         return PageableExecutionUtils.getPage(postsQuery.fetch(), pageable, totalQuery::fetchOne);
     }
-
-
 
     private void applyKeywordFilter(KwTypeV1 kwType, String kw, BooleanBuilder builder) {
         switch (kwType) {
@@ -87,5 +80,4 @@ public class CustomPostRepositoryImpl implements CustomPostRepository{
                 .from(post)
                 .where(builder);
     }
-
 }
