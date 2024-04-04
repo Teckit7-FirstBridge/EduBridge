@@ -1,13 +1,16 @@
 package com.ll.edubridge.domain.course.course.dto;
 
-import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.course.course.entity.Course;
-import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
+import com.ll.edubridge.domain.course.courseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class CourseListDto {
 
     @NonNull
@@ -40,15 +43,6 @@ public class CourseListDto {
         this.writer = course.getWriter().getNickname();
         this.hashtags = course.getHashtags();
         this.confirm = course.getConfirm();
-    }
-
-    public CourseListDto(Course course) {
-        this.id = course.getId();
-        this.title = course.getTitle();
-    }
-
-    public CourseListDto() {
-
     }
 
 }

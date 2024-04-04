@@ -34,7 +34,6 @@ public class SummaryNoteService {
         return summaryNoteRepository.findById(id);
     }
 
-    @Transactional
     public SummaryNote getSummaryNote(Long id) {
         Optional<SummaryNote> summaryNote = this.findById(id);
         if (summaryNote.isPresent()) {
@@ -78,8 +77,7 @@ public class SummaryNoteService {
         summaryNoteRepository.deleteByWriterIdAndCourseId(writerId, courseId);
     }
 
-    @Transactional
-    public boolean haveAuthority(Long id) {
+    public boolean haveAuthority() {
         Member member = rq.getMember();
 
         if (member == null) return false;

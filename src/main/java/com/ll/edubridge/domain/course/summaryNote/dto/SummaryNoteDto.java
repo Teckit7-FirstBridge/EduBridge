@@ -1,12 +1,15 @@
 package com.ll.edubridge.domain.course.summaryNote.dto;
 
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
-import com.ll.edubridge.domain.member.member.entity.Member;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class SummaryNoteDto {
     private Long id;
     private LocalDateTime createDate;

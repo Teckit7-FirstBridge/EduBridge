@@ -1,11 +1,15 @@
 package com.ll.edubridge.domain.course.course.dto;
 
-import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.course.course.entity.Course;
+import com.ll.edubridge.domain.course.courseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import static lombok.AccessLevel.PROTECTED;
 
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class CourseDto {
 
     private Long id;
@@ -39,15 +43,6 @@ public class CourseDto {
         this.hashtags = course.getHashtags();
         this.writer_nickname = course.getWriter().getNickname();
         this.writer_id = course.getWriter().getId();
-    }
-
-    public CourseDto(Course course) {
-        this.id = course.getId();
-        this.title = course.getTitle();
-    }
-
-    public CourseDto() {
-
     }
 
 }

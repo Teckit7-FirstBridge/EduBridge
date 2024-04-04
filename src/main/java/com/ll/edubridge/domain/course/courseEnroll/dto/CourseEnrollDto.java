@@ -2,8 +2,12 @@ package com.ll.edubridge.domain.course.courseEnroll.dto;
 
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import static lombok.AccessLevel.PROTECTED;
 
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class CourseEnrollDto {
 
     private Long courseId;
@@ -13,8 +17,6 @@ public class CourseEnrollDto {
     private String imgUrl;
 
     private int price;
-
-
 
     public CourseEnrollDto(CourseEnroll courseEnroll){
         this.courseId=courseEnroll.getCourse().getId();

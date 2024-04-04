@@ -1,7 +1,7 @@
 package com.ll.edubridge.domain.course.course.controller;
 
 
-import com.ll.edubridge.domain.CourseVoter.service.CourseVoterService;
+import com.ll.edubridge.domain.course.courseVoter.service.CourseVoterService;
 import com.ll.edubridge.domain.course.course.dto.CourseAuthDto;
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CourseListDto;

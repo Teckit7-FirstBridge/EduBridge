@@ -66,7 +66,7 @@ public class ApiV1CourseEnrollControllerTest {
         when(courseRepository.findById(123L)).thenReturn(Optional.of(mockCourse));
         when(memberService.findByUsername("testUser")).thenReturn(Optional.ofNullable(mockMember));
 
-        ApiV1CourseEnrollController apiController = new ApiV1CourseEnrollController(courseEnrollService, courseService, rq, pointService);
+        ApiV1CourseEnrollController apiController = new ApiV1CourseEnrollController(courseEnrollService, courseService, rq, memberService);
         when(rq.getMember()).thenReturn(mockMember);
         when(courseService.getCourse(123L)).thenReturn(mockCourse);
 

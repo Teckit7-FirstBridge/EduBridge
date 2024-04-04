@@ -8,8 +8,6 @@ import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.point.point.entity.PointType;
 import com.ll.edubridge.domain.point.point.service.PointService;
-import com.ll.edubridge.global.exceptions.CodeMsg;
-import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,10 +33,6 @@ public class CourseEnrollService {
         return courseEnrollRepository.findByMemberId(pageable, memberId);
     }
 
-    public Optional<CourseEnroll> findById(Long id) {
-        return courseEnrollRepository.findById(id);
-    }
-
     @Transactional
     public void create(Member member, Course course) {
         CourseEnroll courseEnroll = CourseEnroll.builder()
@@ -49,18 +43,7 @@ public class CourseEnrollService {
         courseEnrollRepository.save(courseEnroll);
     }
 
-    @Transactional
-    public CourseEnroll getCourseEnroll(Long id) {
-        Optional<CourseEnroll> courseEnroll = this.findById(id);
-        if (courseEnroll.isPresent()) {
-            return courseEnroll.get();
-        } else {
-            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(),CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
-        }
-    }
-
-    @Transactional
-    public boolean haveAuthority(Long id) {
+    public boolean haveAuthority() {
         Member member = rq.getMember();
 
         if (member == null) return false;
@@ -84,9 +67,9 @@ public class CourseEnrollService {
         return courseEnrollRepository.findByCourseId(courseId);
     }
 
+    @Transactional
     public void delete(Member member) {
         courseEnrollRepository.deleteAll(courseEnrollRepository.findByMember(member));
-        // courseEnrollRepository.deleteAll(member.getCourseEnrollList());
     }
 
     @Transactional
@@ -103,7 +86,6 @@ public class CourseEnrollService {
         }
     }
 
-    @Transactional
     public boolean canRefund(Long courseId){
         return summaryNoteService.findByWriterIdAndCourseId(rq.getMember().getId(), courseId).isEmpty();
     }

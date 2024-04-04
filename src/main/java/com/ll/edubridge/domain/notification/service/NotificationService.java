@@ -24,8 +24,8 @@ public class NotificationService {
     @Transactional(readOnly = true)
     public List<Notification> findByMemberId(Long memberId){
         return notificationRepository.findByMemberId(memberId);
-
     }
+
     @Transactional
     public void readNoti(Long id) {
         List<Notification> byMemberId = notificationRepository.findByMemberId(id);
@@ -40,7 +40,6 @@ public class NotificationService {
 
     @Transactional
     public void createByComment(NotificationType type, Member member, Post post, Member sender, Comment comment) {
-
         Notification notification = Notification.builder()
                 .type(type)
                 .recipient_id(member.getId())
@@ -54,7 +53,6 @@ public class NotificationService {
 
     @Transactional
     public void createByPoint(NotificationType type, Member member,int point) {
-
         Notification notification = Notification.builder()
                 .type(type)
                 .recipient_id(member.getId())
@@ -124,12 +122,11 @@ public class NotificationService {
         }
     }
 
-
     public boolean isAlarm(Member member) {
         List<Notification> byMemberId = notificationRepository.findByMemberId(member.getId());
         if( byMemberId.stream().filter(notification -> notification.isRead() == false).count()>0){
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -139,7 +136,6 @@ public class NotificationService {
         for (Comment comment : comments) {
             notificationRepository.deleteByComment(comment);
         }
-
     }
 }
 

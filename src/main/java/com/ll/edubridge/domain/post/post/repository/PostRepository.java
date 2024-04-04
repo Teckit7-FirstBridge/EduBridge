@@ -9,11 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long>, CustomPostRepository {
-    Page<Post> findByPublishedOrderByIdDesc(boolean published, Pageable pageable);
-
-    Page<Post> findByReport(Pageable pageable, boolean report);
-
-    Page<Post> findByWriterAndPublished(Member member, boolean isPublished, Pageable pageable);
 
     List<Post> findTop5ByReport(boolean report);
 

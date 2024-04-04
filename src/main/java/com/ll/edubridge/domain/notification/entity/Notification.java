@@ -16,14 +16,11 @@ import lombok.*;
 @ToString(callSuper = true)
 public class Notification extends BaseEntity {
 
-
-
     private Long sender_id;
 
     private Long recipient_id;
 
     private boolean read;
-
 
     @Enumerated(EnumType.STRING)
     private NotificationType type;

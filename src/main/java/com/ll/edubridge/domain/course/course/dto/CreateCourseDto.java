@@ -4,8 +4,12 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import static lombok.AccessLevel.PROTECTED;
 
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class CreateCourseDto {
 
     @NotEmpty
@@ -24,9 +28,5 @@ public class CreateCourseDto {
         this.notice = course.getNotice();
         this.overView = course.getOverView();
         this.hashtags = course.getHashtags();
-    }
-
-    public CreateCourseDto() {
-
     }
 }

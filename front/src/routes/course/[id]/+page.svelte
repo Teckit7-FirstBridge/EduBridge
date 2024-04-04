@@ -162,8 +162,7 @@
     }
 
     if (reportReason) {
-      const { data, error } = await rq.apiEndPoints().POST(`/api/v1/report/course/{courseId}`, {
-        params: { path: { courseId: parseInt($page.params.id) } },
+      const { data, error } = await rq.apiEndPoints().POST(`/api/v1/report/course`, {
         body: {
           reportReason: reportReason,
           materialId: parseInt($page.params.id)

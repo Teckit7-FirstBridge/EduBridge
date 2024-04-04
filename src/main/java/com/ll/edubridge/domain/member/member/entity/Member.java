@@ -1,8 +1,8 @@
 package com.ll.edubridge.domain.member.member.entity;
 
-import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
-import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
-import com.ll.edubridge.domain.PostVoter.entity.PostVoter;
+import com.ll.edubridge.domain.post.commentVoter.entity.CommentVoter;
+import com.ll.edubridge.domain.course.courseVoter.entity.CourseVoter;
+import com.ll.edubridge.domain.post.postVoter.entity.PostVoter;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
 import com.ll.edubridge.standard.util.Ut;
@@ -68,11 +68,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CourseEnroll> courseEnrollList;
 
-
     public String getProfileImgUrlOrDefault() {
         return Ut.str.hasLength(profileImgUrl) ? profileImgUrl : "https://placehold.co/640x640?text=O_O";
     }
-
 
     @Transient
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -98,5 +96,4 @@ public class Member extends BaseEntity {
     public String getName() {
         return username;
     }
-
 }

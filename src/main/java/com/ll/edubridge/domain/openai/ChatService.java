@@ -31,7 +31,6 @@ public class ChatService {
     @Value("${openai.api.url}")
     private String apiUrl;
 
-
     @Autowired
     SummaryNoteService summaryNoteService;
 
@@ -47,7 +46,6 @@ public class ChatService {
     @Autowired
     PointService pointService;
 
-
     @Async
     @Transactional
     public void chat(Long summaryNoteId, String prompt, Member member) {
@@ -57,9 +55,9 @@ public class ChatService {
         // call the API
         ChatResponse response = restTemplate.postForObject(apiUrl, request, ChatResponse.class);
         
-        if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
+        if(response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
 
-        }else{
+        } else {
             String numberOnly = response.getChoices().get(0).getMessage().getContent().replaceAll("[^\\d]", "");
             Long score = Long.parseLong((numberOnly));
             summaryNote.setScore(score);
@@ -73,7 +71,6 @@ public class ChatService {
                 notificationService.createByPoint(NotificationType.POINTS, summaryNote.getWriter(), PointType.SNote.getAmount()); // 알림 내역 저장
                 pointService.addPoint(PointType.SNote, summaryNote.getWriter()); // 포인트 내역 추가
             }
-
         }
     }
 }

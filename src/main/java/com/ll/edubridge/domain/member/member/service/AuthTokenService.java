@@ -25,7 +25,6 @@ public class AuthTokenService {
                 .add("authorities", member.getAuthoritiesAsStringList())
                 .build();
 
-
         Date issuedAt = new Date();
         Date expiration = new Date(issuedAt.getTime() + 1000 * expireSeconds);
 

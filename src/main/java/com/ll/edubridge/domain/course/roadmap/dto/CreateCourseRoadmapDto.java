@@ -5,9 +5,13 @@ import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class CreateCourseRoadmapDto {
 
     @NonNull
@@ -28,6 +32,4 @@ public class CreateCourseRoadmapDto {
         this.courseOrder = courseRoadmap.getCourseOrder();
         this.RoadmapOwner = courseRoadmap.getRoadmap().getOwner();
     }
-
-    public CreateCourseRoadmapDto(){}
 }

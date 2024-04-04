@@ -32,9 +32,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ApiV1ReportController {
     private final ReportService reportService;
 
-    @PostMapping("/course/{courseId}")
+    @PostMapping("/course")
     @Operation(summary = "강좌 신고 생성")
-    public RsData<CreateReportDto> createCourseReport(@Valid @RequestBody CreateReportDto createReportDto, @PathVariable Long courseId) {
+    public RsData<CreateReportDto> createCourseReport(@Valid @RequestBody CreateReportDto createReportDto) {
         Report report = reportService.create(createReportDto, ReportType.Course);
 
         CreateReportDto reportDto = new CreateReportDto(report);
@@ -43,9 +43,9 @@ public class ApiV1ReportController {
                 Msg.E200_0_CREATE_SUCCEED.getMsg(), reportDto);
     }
 
-    @PostMapping("/post/{postId}")
+    @PostMapping("/post")
     @Operation(summary = "글 신고 생성")
-    public RsData<CreateReportDto> createPostReport(@Valid @RequestBody CreateReportDto createReportDto, @PathVariable Long postId) {
+    public RsData<CreateReportDto> createPostReport(@Valid @RequestBody CreateReportDto createReportDto) {
         Report report = reportService.create(createReportDto, ReportType.Post);
 
         CreateReportDto reportDto = new CreateReportDto(report);
@@ -118,7 +118,6 @@ public class ApiV1ReportController {
     }
 
     private ReportDto getReportToDto(Report report) {
-        ReportDto dto = new ReportDto(report);
-        return dto;
+        return new ReportDto(report);
     }
 }

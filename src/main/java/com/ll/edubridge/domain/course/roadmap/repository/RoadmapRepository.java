@@ -12,12 +12,8 @@ import java.util.List;
 @Repository
 public interface RoadmapRepository extends JpaRepository<Roadmap, Long>, CustomRoadmapRepository {
 
-    // Page<Roadmap> findByKw(KwTypeCourse kwType, String kw, Pageable pageable);
-
     Page<Roadmap> findByOwnerOrderByCreateDateDesc(Member owner, Pageable pageable);
 
     List<Roadmap> findByOwnerOrderByCreateDateDesc(Member owner);
-
-    // Roadmap findByCurriculumContains(Course course);
 
 }
