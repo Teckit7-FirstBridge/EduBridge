@@ -190,7 +190,7 @@
         rq.msgInfo('강좌가 삭제되었습니다');
         rq.goTo('/member/mycourse');
       } else if (error) {
-        rq.msgError(error.msg);
+        rq.msgError('수강생이 있는 경우 삭제가 불가합니다. 관리자에게 문의하세요.');
       }
     }
   }
@@ -199,7 +199,9 @@
     if (course.videoCount! <= 5) {
       rq.msgWarning('영상이 5개 이하이면 공개할 수 없습니다');
     } else {
-      const isConfirmed = confirm('강좌를 공개하시겠습니까?');
+      const isConfirmed = confirm(
+        '강좌를 공개하시겠습니까? \n공개 후 수강생이 생기면 삭제나 비공개가 불가합니다.'
+      );
 
       if (isConfirmed) {
         const { data, error } = await rq
