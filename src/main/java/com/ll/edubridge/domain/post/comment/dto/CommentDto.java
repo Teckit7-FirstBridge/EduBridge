@@ -39,4 +39,6 @@ public class CommentDto {
         this.voteCount = comment.getCommentVoters().size();
         this.postTitle = comment.getPost().getTitle();
     }
+
+    public CommentDto(){}
 }

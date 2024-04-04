@@ -15,10 +15,8 @@ public class CreateCommentDto {
 
     public CreateCommentDto(Comment comment) {
         this.body = comment.getContent();
-        this.postId=comment.getPost().getId();
+        this.postId = comment.getPost().getId();
     }
 
-    public CreateCommentDto(){
-
-    }
+    public CreateCommentDto(){}
 }
