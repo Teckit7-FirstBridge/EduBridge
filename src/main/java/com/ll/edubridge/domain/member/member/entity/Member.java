@@ -1,6 +1,5 @@
 package com.ll.edubridge.domain.member.member.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
 import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
 import com.ll.edubridge.domain.PostVoter.entity.PostVoter;
@@ -26,7 +25,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Setter
 @Getter
 @ToString(callSuper = true)
-public class Member extends BaseEntity { // 보안이 들어있는 클래스
+public class Member extends BaseEntity {
 
     private int registerCount;
 

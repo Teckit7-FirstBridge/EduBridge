@@ -276,6 +276,23 @@
     }
   }
 
+  async function cancelEnroll() {
+    let confirmMessage =
+      '수강 등록을 취소하시겠습니까?\n등록된 요약노트가 있을 경우 요약노트가 삭제되고\n포인트 환불이 불가합니다.';
+    const isConfirmed = confirm(confirmMessage);
+
+    if (isConfirmed) {
+      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/enroll/{courseId}`, {
+        params: { path: { courseId: parseInt($page.params.id) } }
+      });
+
+      if (data) {
+        rq.msgInfo('수강이 취소되었습니다.');
+        window.location.reload();
+      }
+    }
+  }
+
   async function deleteVideo(video: components['schemas']['VideoDto']) {
     const isConfirmed = confirm('동영상을 삭제하시겠습니까?');
 
@@ -462,6 +479,15 @@
                   on:click={enrollCourse}
                   class="ml-2 h-12 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
                   >수강 등록</button
+                >
+              </div>
+            {/if}
+            {#if auth.enroll && !(rq.member.id == course.writer_id) && !rq.isAdmin()}
+              <div class="flex">
+                <button
+                  on:click={cancelEnroll}
+                  class="ml-2 h-12 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+                  >수강 취소</button
                 >
               </div>
             {/if}
