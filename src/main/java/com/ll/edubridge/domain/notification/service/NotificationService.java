@@ -1,15 +1,12 @@
 package com.ll.edubridge.domain.notification.service;
 
-import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.domain.notification.controller.NotificationController;
 import com.ll.edubridge.domain.notification.entity.Notification;
 import com.ll.edubridge.domain.notification.entity.NotificationType;
 import com.ll.edubridge.domain.notification.repository.NotificationRepository;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.post.entity.Post;
-import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
-    private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
-    private final SummaryNoteRepository summaryNoteRepository;
+
     private final NotificationRepository notificationRepository;
 
     @Transactional(readOnly = true)
@@ -137,6 +132,14 @@ public class NotificationService {
         }else{
             return false;
         }
+    }
+
+    @Transactional
+    public void deleteComments(List<Comment> comments){
+        for (Comment comment : comments) {
+            notificationRepository.deleteByComment(comment);
+        }
+
     }
 }
 

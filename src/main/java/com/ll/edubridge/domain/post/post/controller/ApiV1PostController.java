@@ -1,8 +1,8 @@
 package com.ll.edubridge.domain.post.post.controller;
 
-import com.ll.edubridge.domain.PostVoter.entity.PostVoter;
 import com.ll.edubridge.domain.PostVoter.service.PostVoterService;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.post.comment.service.CommentService;
 import com.ll.edubridge.domain.post.post.dto.CreatePostDto;
 import com.ll.edubridge.domain.post.post.dto.PostDto;
 import com.ll.edubridge.domain.post.post.dto.QnaDto;
@@ -41,6 +41,7 @@ public class ApiV1PostController {
     private final PostService postService;
     private final Rq rq;
     private final PostVoterService postVoterService;
+    private final CommentService commentService;
 
 
     public record GetPostsResponseBody(@NonNull PageDto<PostDto> itemPage) {
@@ -122,6 +123,7 @@ public class ApiV1PostController {
         if (!postService.haveAuthority(id))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
+        commentService.deleteByPostId(id);
         postService.delete(id);
 
         return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),

@@ -1,7 +1,5 @@
 package com.ll.edubridge.domain.notification.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
@@ -35,6 +33,6 @@ public class Notification extends BaseEntity {
 
     private  int point = 0;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Comment comment;
 }

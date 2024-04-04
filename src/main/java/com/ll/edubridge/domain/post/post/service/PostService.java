@@ -26,9 +26,7 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
-
     private final MemberService memberService;
-
     private final Rq rq;
     private final MemberRepository memberRepository;
 

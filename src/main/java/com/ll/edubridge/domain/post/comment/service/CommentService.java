@@ -102,4 +102,12 @@ public class CommentService {
     public List<Comment> findTop2(Long postId) {
         return commentRepository.findBestComment(postId);
     }
+
+    @Transactional
+    public void deleteByPostId(Long postId) {
+
+        List<Comment> comments = findByPostId(postId);
+
+        notificationService.deleteComments(comments);
+    }
 }
