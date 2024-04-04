@@ -6,7 +6,6 @@ import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteReposito
 import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.member.member.service.MemberService;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.rq.Rq;
@@ -24,7 +23,6 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class SummaryNoteService {
     private final SummaryNoteRepository summaryNoteRepository;
-    private final MemberService memberService;
     private final Rq rq;
     private final VideoService videoService;
 
@@ -73,6 +71,11 @@ public class SummaryNoteService {
     public void delete(Long id) {
         SummaryNote summaryNote = this.getSummaryNote(id);
         summaryNoteRepository.delete(summaryNote);
+    }
+
+    @Transactional
+    public void deleteByWriterIdAndCourseId(Long writerId, Long courseId) {
+        summaryNoteRepository.deleteByWriterIdAndCourseId(writerId, courseId);
     }
 
     @Transactional

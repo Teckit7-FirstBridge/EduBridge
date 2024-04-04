@@ -46,6 +46,24 @@ public class MemberService {
     private final Rq rq;
 
     @Transactional
+    public void addPoint(PointType pointType){
+        Member member = rq.getMember();
+
+        member.setPoint(member.getPoint()+pointType.getAmount());
+
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    public void subPoint(PointType pointType){
+        Member member = rq.getMember();
+
+        member.setPoint(member.getPoint()-pointType.getAmount());
+
+        memberRepository.save(member);
+    }
+
+    @Transactional
     public RsData<Member> join(String username, String password) {
         return join(username, password, username, "");
     }

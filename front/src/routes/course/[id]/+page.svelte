@@ -190,7 +190,7 @@
         rq.msgInfo('강좌가 삭제되었습니다');
         rq.goTo('/member/mycourse');
       } else if (error) {
-        rq.msgError(error.msg);
+        rq.msgError('수강생이 있는 경우 삭제가 불가합니다. 관리자에게 문의하세요.');
       }
     }
   }
@@ -199,7 +199,9 @@
     if (course.videoCount! <= 5) {
       rq.msgWarning('영상이 5개 이하이면 공개할 수 없습니다');
     } else {
-      const isConfirmed = confirm('강좌를 공개하시겠습니까?');
+      const isConfirmed = confirm(
+        '강좌를 공개하시겠습니까? \n공개 후 수강생이 생기면 삭제나 비공개가 불가합니다.'
+      );
 
       if (isConfirmed) {
         const { data, error } = await rq
@@ -269,6 +271,23 @@
         rq.msgInfo('수강이 등록 되었습니다.');
         window.location.reload();
       } else if (error) {
+        window.location.reload();
+      }
+    }
+  }
+
+  async function cancelEnroll() {
+    let confirmMessage =
+      '수강 등록을 취소하시겠습니까?\n등록된 요약노트가 있을 경우 요약노트가 삭제되고\n포인트 환불이 불가합니다.';
+    const isConfirmed = confirm(confirmMessage);
+
+    if (isConfirmed) {
+      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/enroll/{courseId}`, {
+        params: { path: { courseId: parseInt($page.params.id) } }
+      });
+
+      if (data) {
+        rq.msgInfo('수강이 취소되었습니다.');
         window.location.reload();
       }
     }
@@ -460,6 +479,15 @@
                   on:click={enrollCourse}
                   class="ml-2 h-12 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
                   >수강 등록</button
+                >
+              </div>
+            {/if}
+            {#if auth.enroll && !(rq.member.id == course.writer_id) && !rq.isAdmin()}
+              <div class="flex">
+                <button
+                  on:click={cancelEnroll}
+                  class="ml-2 h-12 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+                  >수강 취소</button
                 >
               </div>
             {/if}

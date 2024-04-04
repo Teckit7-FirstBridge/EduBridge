@@ -110,6 +110,8 @@ export interface paths {
   "/api/v1/enroll/{courseId}": {
     /** 수강 등록 */
     post: operations["create"];
+    /** 수강신청 취소 */
+    delete: operations["cancelEnroll"];
   };
   "/api/v1/courses/{videoId}/note": {
     /** 강의 요약 노트 등록 */
@@ -1834,6 +1836,22 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataVoid"];
+        };
+      };
+    };
+  };
+  /** 수강신청 취소 */
+  cancelEnroll: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };

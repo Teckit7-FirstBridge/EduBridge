@@ -4,8 +4,8 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
+import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.domain.point.point.entity.PointType;
 import com.ll.edubridge.domain.point.point.service.PointService;
 import com.ll.edubridge.global.exceptions.CodeMsg;
@@ -27,8 +27,8 @@ public class CourseEnrollService {
     private final Rq rq;
     private final CourseEnrollRepository courseEnrollRepository;
     private final CourseService courseService;
-    private final MemberRepository memberRepository;
     private final PointService pointService;
+    private final SummaryNoteService summaryNoteService;
 
     public Page<CourseEnroll> findByMemberId(Pageable pageable) {
         Long memberId=rq.getMember().getId();
@@ -40,14 +40,12 @@ public class CourseEnrollService {
     }
 
     @Transactional
-    public void create(Member member, Course course, int point,int price) {
+    public void create(Member member, Course course) {
         CourseEnroll courseEnroll = CourseEnroll.builder()
                 .course(course)
                 .member(member)
                 .build();
-        pointService.subPoint(PointType.Enroll, member, price); // 포인트 내역 추가
-        member.setPoint(point - price);
-        memberRepository.save(member); // member의 정보를 저장
+        pointService.subPoint(PointType.Enroll, member); // 포인트 내역 추가
         courseEnrollRepository.save(courseEnroll);
     }
 
@@ -89,5 +87,24 @@ public class CourseEnrollService {
     public void delete(Member member) {
         courseEnrollRepository.deleteAll(courseEnrollRepository.findByMember(member));
         // courseEnrollRepository.deleteAll(member.getCourseEnrollList());
+    }
+
+    @Transactional
+    public void cancelEnroll(Long courseId){
+
+        CourseEnroll courseEnroll = courseEnrollRepository.findByMemberIdAndCourseId(rq.getMember().getId(), courseId);
+
+        if(!this.canRefund(courseId)){
+            courseEnrollRepository.delete(courseEnroll);
+            summaryNoteService.deleteByWriterIdAndCourseId(rq.getMember().getId(), courseId);
+        }else {
+            pointService.addPoint(PointType.Refund, rq.getMember());
+            courseEnrollRepository.delete(courseEnroll);
+        }
+    }
+
+    @Transactional
+    public boolean canRefund(Long courseId){
+        return summaryNoteService.findByWriterIdAndCourseId(rq.getMember().getId(), courseId).isEmpty();
     }
 }

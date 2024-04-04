@@ -83,6 +83,13 @@ public class CourseService {
     @Transactional
     public void delete(Long id) {
         Course course = this.getCourse(id);
+
+        if(course.getConfirm()){
+            throw new GlobalException(
+                    CodeMsg.E400_12_ALREADY_HAS_ENROLL.getCode(),
+                    CodeMsg.E400_12_ALREADY_HAS_ENROLL.getMessage());
+        }
+
         courseRepository.delete(course);
     }
 
