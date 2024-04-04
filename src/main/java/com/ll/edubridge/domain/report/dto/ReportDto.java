@@ -23,4 +23,6 @@ public class ReportDto {
         this.reportReason = report.getReportReason();
         this.materialId = report.getMaterialId();
     }
+
+    public ReportDto() {}
 }
