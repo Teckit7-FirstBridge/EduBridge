@@ -1,13 +1,17 @@
 package com.ll.edubridge.domain.post.post.dto;
 
-import com.ll.edubridge.domain.post.postVoter.entity.PostVoter;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.entity.Post;
+import com.ll.edubridge.domain.post.postVoter.entity.PostVoter;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 
+import static lombok.AccessLevel.PROTECTED;
+
+@NoArgsConstructor(access = PROTECTED)
 @Getter
 public class PostDto {
     @NonNull
@@ -44,6 +48,4 @@ public class PostDto {
         this.isReport = post.isReport();
         this.commentCount = post.getCommentList().size();
     }
-
-    public PostDto(){}
 }

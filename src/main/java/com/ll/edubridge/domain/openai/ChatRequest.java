@@ -1,10 +1,14 @@
 package com.ll.edubridge.domain.openai;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static lombok.AccessLevel.PROTECTED;
+
+@NoArgsConstructor(access = PROTECTED)
 @Data
 public class ChatRequest {
 
@@ -24,6 +28,4 @@ public class ChatRequest {
         this.messages = messages;
         this.temperature = temperature;
     }
-
-    public ChatRequest() {}
 }

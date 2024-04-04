@@ -2,10 +2,14 @@ package com.ll.edubridge.domain.post.post.dto;
 
 import com.ll.edubridge.domain.post.post.entity.Post;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 
+import static lombok.AccessLevel.PROTECTED;
+
+@NoArgsConstructor(access = PROTECTED)
 @Getter
 public class QnaDto {
     @NonNull
@@ -32,6 +36,4 @@ public class QnaDto {
         this.body = post.getContent();
         this.commentCount = post.getCommentList().size();
     }
-
-    public QnaDto(){}
 }

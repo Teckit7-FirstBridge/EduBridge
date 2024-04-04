@@ -1,7 +1,11 @@
 package com.ll.edubridge.domain.openai;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import static lombok.AccessLevel.PROTECTED;
+
+@NoArgsConstructor(access = PROTECTED)
 @Data
 public class Message {
     private String role;
@@ -11,6 +15,4 @@ public class Message {
         this.role = role;
         this.content = content;
     }
-
-    public Message() {}
 }
