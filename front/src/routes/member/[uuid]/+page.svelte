@@ -490,7 +490,7 @@
   <div class="flex gap-x-4 relative items-center">
     <button
       onclick={openModalDropMessage}
-      class="text-xs ml-6 mt-4 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+      class="text-xs ml-6 my-4 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
       >회원 탈퇴</button
     >
     <dialog
