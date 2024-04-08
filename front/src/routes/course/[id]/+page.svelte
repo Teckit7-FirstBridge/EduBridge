@@ -196,8 +196,8 @@
   }
 
   async function startCourse() {
-    if (course.videoCount! <= 5) {
-      rq.msgWarning('영상이 5개 이하이면 공개할 수 없습니다');
+    if (course.videoCount! < 3) {
+      rq.msgWarning('영상이 3개 이하이면 공개할 수 없습니다');
     } else {
       const isConfirmed = confirm(
         '강좌를 공개하시겠습니까? \n공개 후 수강생이 생기면 삭제나 비공개가 불가합니다.'
@@ -215,7 +215,7 @@
           courseConfirm = true;
           window.location.reload();
         } else if (error) {
-          rq.msgError('영상이 5개 이하이면 공개할 수 없습니다');
+          rq.msgError('영상이 3개 이하이면 공개할 수 없습니다');
         }
       }
     }
