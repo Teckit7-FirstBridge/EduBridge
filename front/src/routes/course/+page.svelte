@@ -237,7 +237,7 @@
         <div class="flex flex-col flex-1">
           <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {#if courselist && courselist.length > 0}
-              {#each courselist as item}
+              {#each courselist as item, index}
                 <div
                   class="border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center pt-2"
                 >
