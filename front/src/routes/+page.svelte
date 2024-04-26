@@ -129,7 +129,8 @@
                 <h3 class="text-5xl font-extrabold">공지사항</h3>
                 <p class="mt-4 text-xl">강좌 / 강의 등록시,<br /> 제공되는 가이드를 참고해주세요</p>
                 <p class="mt-4 text-x2">
-                  썸네일 등록은 반드시 형식을 따라주셔야 합니다!<br />
+                  본문에 링크를 삽입 할 경우 마크다운 형식으로<br /> 한글 바로가기를 생성 해주시길
+                  바랍니다.<br />
                 </p>
               </div>
               <div
@@ -139,11 +140,13 @@
                 style="width: 100%"
                 class:selected={activeSlide === 2}
               >
-                <h3 class="text-5xl font-extrabold">점검 안내</h3>
-                <p class="mt-4 text-xl">업데이트 및 점검 안내</p>
+                <h3 class="text-5xl font-extrabold">GitHub 주소</h3>
+                <p class="mt-4 text-xl">이슈 PR 환영</p>
                 <p class="mt-4 text-x2">
-                  3월 31일까지 임시 서비스입니다.<br />
-                  서버가 불안정할 수 있음을 알려드립니다.
+                  사용중 문제가 발생하면 이슈를 남겨주세요! PR도 환영!<br />
+                  <a href="https://github.com/Teckit7-FirstBridge/EduBridge"
+                    >▶EduBridge GitHub 바로가기◀</a
+                  >
                 </p>
               </div>
             </div>

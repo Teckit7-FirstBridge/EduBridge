@@ -88,7 +88,9 @@
         likesList[courselist!.indexOf(item)] = !likesList[courselist!.indexOf(item)];
         voteNumList[courselist!.indexOf(item)] -= 1;
       } else if (error) {
-        rq.msgError(error.msg);
+        rq.msgWarning('로그인이 필요한 서비스 입니다');
+        rq.goTo('/member/login');
+        return;
       }
     } else {
       const { data, error } = await rq.apiEndPoints().POST(`/api/v1/courses/{id}/like`, {
@@ -99,7 +101,9 @@
         likesList[courselist!.indexOf(item)] = !likesList[courselist!.indexOf(item)];
         voteNumList[courselist!.indexOf(item)] += 1;
       } else if (error) {
-        rq.msgError(error.msg);
+        rq.msgWarning('로그인이 필요한 서비스 입니다');
+        rq.goTo('/member/login');
+        return;
       }
     }
   }
@@ -278,15 +282,17 @@
                     </p>
                   </a>
                   <div class="flex items-center justify-between">
-                    {#if item.hashtags}
-                      <div class="flex ml-4">
-                        {#each item.hashtags.split('@') as hashtag}
-                          <div class="flex text-amber-600 text-sm text-center items-center ml-2">
-                            #{hashtag}
-                          </div>
-                        {/each}
-                      </div>
-                    {/if}
+                    <div class="flex flex-wrap m-2">
+                      {#each item.hashtags.split('@') as hashtag, index}
+                        <div
+                          class="{index > 3
+                            ? 'w-full'
+                            : ''} flex text-blue-600 text-sm text-center items-center ml-2"
+                        >
+                          #{hashtag}
+                        </div>
+                      {/each}
+                    </div>
                     <div class=" flex justify-end gap-2 p-2" on:click={() => clickLiked(item)}>
                       {#if likesList[courselist.indexOf(item)]}
                         <svg
@@ -460,9 +466,7 @@
                         {#if item.hashtags}
                           <div class="flex">
                             {#each item.hashtags.split('@') as hashtag}
-                              <div
-                                class="flex text-amber-600 text-sm text-center items-center ml-2"
-                              >
+                              <div class="flex text-blue-600 text-sm text-center items-center ml-2">
                                 #{hashtag}
                               </div>
                             {/each}
