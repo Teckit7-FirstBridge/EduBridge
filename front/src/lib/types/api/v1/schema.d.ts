@@ -74,11 +74,15 @@ export interface paths {
     /** 로드맵 생성 */
     post: operations["createRoadmap"];
   };
-  "/api/v1/report/post/{postId}": {
+  "/api/v1/report/post": {
+    /** 글 신고 목록 조회 */
+    get: operations["reportedPostList"];
     /** 글 신고 생성 */
     post: operations["createPostReport"];
   };
-  "/api/v1/report/course/{courseId}": {
+  "/api/v1/report/course": {
+    /** 강좌 신고 목록 조회 */
+    get: operations["reportedCourseList"];
     /** 강좌 신고 생성 */
     post: operations["createCourseReport"];
   };
@@ -168,14 +172,6 @@ export interface paths {
   "/api/v1/roadmap/byCourse/{courseId}": {
     /** 강좌로 로드맵 목록 조회 */
     get: operations["getRoadmapByCourse"];
-  };
-  "/api/v1/report/post": {
-    /** 글 신고 목록 조회 */
-    get: operations["reportedPostList"];
-  };
-  "/api/v1/report/course": {
-    /** 강좌 신고 목록 조회 */
-    get: operations["reportedCourseList"];
   };
   "/api/v1/report/all": {
     /** 전체 신고 목록 조회 */
@@ -1263,7 +1259,6 @@ export interface components {
       /** Format: int64 */
       id: number;
       title: string;
-      grade: string;
       /** Format: int32 */
       enrollCount: number;
     };
@@ -1658,13 +1653,24 @@ export interface operations {
       };
     };
   };
-  /** 글 신고 생성 */
-  createPostReport: {
+  /** 글 신고 목록 조회 */
+  reportedPostList: {
     parameters: {
-      path: {
-        postId: number;
+      query?: {
+        page?: number;
       };
     };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetReportList"];
+        };
+      };
+    };
+  };
+  /** 글 신고 생성 */
+  createPostReport: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateReportDto"];
@@ -1679,13 +1685,24 @@ export interface operations {
       };
     };
   };
-  /** 강좌 신고 생성 */
-  createCourseReport: {
+  /** 강좌 신고 목록 조회 */
+  reportedCourseList: {
     parameters: {
-      path: {
-        courseId: number;
+      query?: {
+        page?: number;
       };
     };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetReportList"];
+        };
+      };
+    };
+  };
+  /** 강좌 신고 생성 */
+  createCourseReport: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateReportDto"];
@@ -2100,38 +2117,6 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataListRoadmapListDto"];
-        };
-      };
-    };
-  };
-  /** 글 신고 목록 조회 */
-  reportedPostList: {
-    parameters: {
-      query?: {
-        page?: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataGetReportList"];
-        };
-      };
-    };
-  };
-  /** 강좌 신고 목록 조회 */
-  reportedCourseList: {
-    parameters: {
-      query?: {
-        page?: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataGetReportList"];
         };
       };
     };
