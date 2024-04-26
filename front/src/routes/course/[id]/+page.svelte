@@ -463,7 +463,7 @@
           <div class="flex">
             {#each hashtags as hashtag}
               <div class="">
-                <div class="flex text-amber-600 text-sm text-center items-center ml-2">
+                <div class="flex text-blue-600 text-sm text-center items-center ml-2">
                   #{hashtag}
                 </div>
               </div>
@@ -610,7 +610,7 @@
               </details>
             </div>{/if}
 
-          <div class="mb-4 bg-white p-4 rounded-lg shadow-md">
+          <div class="mb-4 bg-white p-4 rounded-lg shadow-md w-full">
             <h2 class="text-md md:text-lg font-semibold">공지사항</h2>
 
             <ToastUiEditor
@@ -620,7 +620,7 @@
               viewer={true}
             ></ToastUiEditor>
           </div>
-          <div class="mb-4 bg-white p-4 rounded-lg shadow-md">
+          <div class="mb-4 bg-white p-4 rounded-lg shadow-md w-full">
             <h2 class="text-md md:text-lg font-semibold">강좌 설명</h2>
             <ToastUiEditor
               bind:this={overviewviewr}
