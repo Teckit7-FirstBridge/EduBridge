@@ -84,3 +84,11 @@ openai:
   api:
     key: ON_SECRET
     url: https://api.openai.com/v1/chat/completions
+
+youtube:
+  api:
+    key: ON_SECRET
+  client:
+    id: ON_SECRET
+    secret: ON_SECRET
+
