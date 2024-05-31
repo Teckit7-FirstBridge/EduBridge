@@ -74,7 +74,6 @@
         }
       });
       roadmaplist = data?.data.itemPage.content;
-
       return data!;
     }
   }
@@ -89,7 +88,9 @@
         likesList[courselist!.indexOf(item)] = !likesList[courselist!.indexOf(item)];
         voteNumList[courselist!.indexOf(item)] -= 1;
       } else if (error) {
-        rq.msgError(error.msg);
+        rq.msgWarning('로그인이 필요한 서비스 입니다');
+        rq.goTo('/member/login');
+        return;
       }
     } else {
       const { data, error } = await rq.apiEndPoints().POST(`/api/v1/courses/{id}/like`, {
@@ -100,7 +101,9 @@
         likesList[courselist!.indexOf(item)] = !likesList[courselist!.indexOf(item)];
         voteNumList[courselist!.indexOf(item)] += 1;
       } else if (error) {
-        rq.msgError(error.msg);
+        rq.msgWarning('로그인이 필요한 서비스 입니다');
+        rq.goTo('/member/login');
+        return;
       }
     }
   }
@@ -238,7 +241,7 @@
         <div class="flex flex-col flex-1">
           <div class="px-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {#if courselist && courselist.length > 0}
-              {#each courselist as item}
+              {#each courselist as item, index}
                 <div
                   class="border border-gray-200 rounded-lg dark:border-gray-800 flex-col text-center pt-2"
                 >
@@ -251,19 +254,19 @@
                     <details class="dropdown dropdown-end">
                       <summary class="flex items-center cursor-pointer">
                         <i class="fa-regular fa-user"></i>
-                        {item.writer?.nickname}
+                        {item.writer}
                       </summary>
                       <ul
                         class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
                       >
                         <li>
-                          <a href="/course?tab=course&kwType=NAME&kw={item.writer?.nickname}"
-                            >{item.writer?.nickname} 강좌</a
+                          <a href="/course?tab=course&kwType=NAME&kw={item.writer}"
+                            >{item.writer} 강좌</a
                           >
                         </li>
                         <li>
-                          <a href="/course?tab=roadmap&kwType=NAME&kw={item.writer?.nickname}"
-                            >{item.writer?.nickname} 로드맵</a
+                          <a href="/course?tab=roadmap&kwType=NAME&kw={item.writer}"
+                            >{item.writer} 로드맵</a
                           >
                         </li>
                       </ul>
@@ -279,15 +282,17 @@
                     </p>
                   </a>
                   <div class="flex items-center justify-between">
-                    {#if item.hashtags}
-                      <div class="flex ml-4">
-                        {#each item.hashtags.split('@') as hashtag}
-                          <div class="flex text-amber-600 text-sm text-center items-center ml-2">
-                            #{hashtag}
-                          </div>
-                        {/each}
-                      </div>
-                    {/if}
+                    <div class="flex flex-wrap m-2">
+                      {#each item.hashtags.split('@') as hashtag, index}
+                        <div
+                          class="{index > 3
+                            ? 'w-full'
+                            : ''} flex text-blue-600 text-sm text-center items-center ml-2"
+                        >
+                          #{hashtag}
+                        </div>
+                      {/each}
+                    </div>
                     <div class=" flex justify-end gap-2 p-2" on:click={() => clickLiked(item)}>
                       {#if likesList[courselist.indexOf(item)]}
                         <svg
@@ -453,15 +458,15 @@
                   <div class="collapse-title bg-white peer-checked:bg-yellow-50">
                     <div class="rounded-lg dark:border-gray-800 flex-col text-center">
                       <div class="flex justify-between gap-2">
-                        <h2 class="text-lg font-semibold ml-2">{formatTitle(item.title)}</h2>
+                        <h2 class="text-lg font-semibold ml-2">
+                          {formatTitle(item.title)}
+                        </h2>
                       </div>
                       <div class="flex items-center justify-between">
                         {#if item.hashtags}
                           <div class="flex">
                             {#each item.hashtags.split('@') as hashtag}
-                              <div
-                                class="flex text-amber-600 text-sm text-center items-center ml-2"
-                              >
+                              <div class="flex text-blue-600 text-sm text-center items-center ml-2">
                                 #{hashtag}
                               </div>
                             {/each}
@@ -475,19 +480,19 @@
                       <details class="dropdown dropdown-end">
                         <summary class="flex items-center cursor-pointer">
                           <i class="fa-regular fa-user mr-1"></i>
-                          {item.owner?.nickname}
+                          {item.owner_nickname}
                         </summary>
                         <ul
                           class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
                         >
                           <li>
-                            <a href="/course?tab=course&kwType=NAME&kw={item.owner?.nickname}"
-                              >{item.owner?.nickname} 강좌</a
+                            <a href="/course?tab=course&kwType=NAME&kw={item.owner_nickname}"
+                              >{item.owner_nickname} 강좌</a
                             >
                           </li>
                           <li>
-                            <a href="/course?tab=roadmap&kwType=NAME&kw={item.owner?.nickname}"
-                              >{item.owner?.nickname} 로드맵</a
+                            <a href="/course?tab=roadmap&kwType=NAME&kw={item.owner_nickname}"
+                              >{item.owner_nickname} 로드맵</a
                             >
                           </li>
                         </ul>
@@ -497,14 +502,14 @@
                     <p class="text-sm text-gray-800 dark:text-gray-400 mx-2">
                       {removeMarkdown(item.overView)}
                     </p>
-                    {#if item.curriculum}
+                    {#if item.curriculum && item.curriculum.length > 0}
                       <div class="flex flex-col">
                         {#each item.curriculum.sort((a, b) => a.courseOrder - b.courseOrder || a.id - b.id) as curriculum, index}
-                          <a href="/course/{curriculum.course.id}">
+                          <a href="/course/{curriculum.id}">
                             <div
                               class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
                             >
-                              {index + 1}. {curriculum.course?.title}
+                              {index + 1}. {curriculum.title}
                             </div>
                           </a>
                         {/each}

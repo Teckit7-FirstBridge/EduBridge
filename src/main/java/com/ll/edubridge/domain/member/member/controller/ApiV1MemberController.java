@@ -1,7 +1,7 @@
 package com.ll.edubridge.domain.member.member.controller;
 
 
-import com.ll.edubridge.domain.CourseVoter.service.CourseVoterService;
+import com.ll.edubridge.domain.course.courseVoter.service.CourseVoterService;
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.member.member.dto.MemberDto;
@@ -42,19 +42,17 @@ public class ApiV1MemberController {
     }
 
     public record isLoginResponseBody(@NonNull Boolean isLogin){
-
     }
 
     public record isAdminResponseBody(@NonNull Boolean isAdmin){
-
     }
+
     @GetMapping("/isAdmin")
     @Operation(summary = "관리자 여부 확인")
     public RsData<isAdminResponseBody> isAdmin(){
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),Msg.E200_1_INQUIRY_SUCCEED.getMsg(),new isAdminResponseBody(rq.isAdmin()));
     }
-
 
     @GetMapping("/isLogin")
     @Operation(summary = "로그인 여부 확인")
@@ -81,7 +79,6 @@ public class ApiV1MemberController {
         );
     }
 
-
     public record MeResponseBody(@NonNull MemberDto item) {
     }
 
@@ -94,6 +91,7 @@ public class ApiV1MemberController {
                 )
         );
     }
+
     @GetMapping("/uuid/{uuid}")
     public RsData<MemberDto> getMember(@PathVariable String uuid){
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
@@ -111,9 +109,7 @@ public class ApiV1MemberController {
     }
 
     public record MyPageResponseBody(@NonNull MyPageDto item){
-
     }
-
 
     @GetMapping("/{uuid}")
     @Operation(summary = "마이 페이지 데이터 요청")
@@ -166,7 +162,7 @@ public class ApiV1MemberController {
         Member member = rq.getMember();
         if(!member.isVisitedToday()){
             memberService.visit(member);
-        }else{
+        } else {
             throw new GlobalException(E400_11_AlREADY_VISITED.getCode(), E400_11_AlREADY_VISITED.getMessage());
         }
 

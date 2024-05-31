@@ -1,7 +1,5 @@
-package com.ll.edubridge.domain.CommentVoter.entity;
+package com.ll.edubridge.domain.post.commentVoter.entity;
 
-import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import jakarta.persistence.*;
@@ -17,7 +15,6 @@ public class CommentVoter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment;
@@ -31,8 +28,7 @@ public class CommentVoter {
         this.member = member;
     }
 
-    public CommentVoter() {
-    }
+    public CommentVoter() {}
 
     @Override
     public boolean equals(Object obj) {

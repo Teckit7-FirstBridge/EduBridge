@@ -1,9 +1,7 @@
-package com.ll.edubridge.domain.PostVoter.service;
+package com.ll.edubridge.domain.post.postVoter.service;
 
-import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
-import com.ll.edubridge.domain.PostVoter.entity.PostVoter;
-import com.ll.edubridge.domain.PostVoter.repository.PostVoterRepository;
-import com.ll.edubridge.domain.course.course.entity.Course;
+import com.ll.edubridge.domain.post.postVoter.entity.PostVoter;
+import com.ll.edubridge.domain.post.postVoter.repository.PostVoterRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +24,6 @@ public class PostVoterService {
         postVoterRepository.deletePostVoterByPostAndMember(post,member);
     }
 
-
     public boolean canLike(Member member, Post post) {
         if (member == null) return false;
         if (post == null) return false;
@@ -35,13 +32,9 @@ public class PostVoterService {
     }
 
     public boolean canCancelLike(Member member, Post post) {
-
         if (member == null) return false;
         if (post == null) return false;
 
         return post.getPostVoters().contains(new PostVoter(post,member));
     }
-
-
-
 }

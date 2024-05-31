@@ -24,11 +24,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostService {
-
     private final PostRepository postRepository;
-
     private final MemberService memberService;
-
     private final Rq rq;
     private final MemberRepository memberRepository;
 
@@ -77,24 +74,14 @@ public class PostService {
         postRepository.save(post);
     }
 
-    @Transactional
-    public Page<Post> findAll(Pageable pageable) {
-        return postRepository.findAll(pageable);
-    }
-
-
-
-
-
     public Post getPost(Long id) {
         Optional<Post> comment = this.findById(id);
-        if (comment.isPresent()) {
+        if(comment.isPresent()) {
             return comment.get();
         } else {
             throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(),CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
     }
-
 
     public Optional<Post> findById(Long id) {
         return postRepository.findById(id);
@@ -112,12 +99,6 @@ public class PostService {
         memberRepository.save(member);
     }
 
-    public Page<Post> getReport(Pageable pageable) {
-        return postRepository.findByReport(pageable, true);
-    }
-
-
-
     public boolean canReport(Member member, Post post) {
         if (member == null) return false;
         if (post == null) return false;
@@ -127,11 +108,9 @@ public class PostService {
 
     public boolean haveAuthority(Long id) {
         Member member = rq.getMember();
-
         Post post = this.getPost(id);
 
         if (member == null) return false;
-
         if (rq.isAdmin()) return true;
 
         return post.getWriter().equals(member);
@@ -139,7 +118,6 @@ public class PostService {
 
     public boolean canRead(Post post) {
         Member member = rq.getMember();
-
         if(!post.isPublished()&&member.equals(post.getWriter())) return false;
 
         return true;
@@ -147,30 +125,20 @@ public class PostService {
 
     public boolean canReadQna(Post post) {
         Member member = rq.getMember();
-
         if(rq.isAdmin()||member.getId().equals(post.getWriter().getId())) return true;
 
         return false;
     }
 
-    public Page<Post> findByPublished(boolean published, Pageable pageable) {
-        return postRepository.findByPublishedOrderByIdDesc(published, pageable);
-    }
-
     public Page<Post> getMyPosts(Pageable pageable) {
         Member member = rq.getMember();
-
         return postRepository.findByWriterAndPublishedOrderByIdDesc(member,true, pageable);
     }
 
-
-
     public Page<Post> getMyQna(Pageable pageable) {
         Member member = rq.getMember();
-
         return postRepository.findByWriterAndPublishedOrderByIdDesc(member, false, pageable);
     }
-
 
     public Page<Post> findByKw(KwTypeV1 kwType, String kw, Member author, Boolean published, Pageable pageable) {
         return postRepository.findByKw(kwType, kw, author, published, pageable);
@@ -188,14 +156,12 @@ public class PostService {
         if (rq.isAdmin() && post.isReport()){
             return true;
         }
-
         return false;
     }
 
     @Transactional
     public void deleteReport(Long id) {
         Post post = this.getPost(id);
-
         post.setReport(false);
 
         postRepository.save(post);
@@ -208,5 +174,4 @@ public class PostService {
     public List<Post> recentQna() {
         return postRepository.findTop5ByPublished(false);
     }
-
 }

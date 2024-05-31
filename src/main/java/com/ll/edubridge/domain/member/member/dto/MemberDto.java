@@ -12,7 +12,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class MemberDto { // 엔티티(JPA(보안이 민감한 정보가 들어있는))가 들어 있는 고객에 노출한 단순 정보가 들어있는 저장소
+public class MemberDto {
     @NonNull
     private long id;
     @NonNull

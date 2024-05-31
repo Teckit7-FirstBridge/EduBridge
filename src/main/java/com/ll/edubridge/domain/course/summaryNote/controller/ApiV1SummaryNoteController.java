@@ -6,9 +6,7 @@ import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
-import com.ll.edubridge.domain.notification.service.NotificationService;
 import com.ll.edubridge.domain.openai.ChatService;
-import com.ll.edubridge.domain.point.point.service.PointService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
@@ -42,8 +40,6 @@ public class ApiV1SummaryNoteController {
     private final SummaryNoteService summaryNoteService;
     private final Rq rq;
     private final ChatService chatService;
-    private final NotificationService notificationService;
-    private final PointService pointService;
     private final MemberService memberService;
 
     @Getter
@@ -51,7 +47,7 @@ public class ApiV1SummaryNoteController {
         @NonNull
         private final List<SummaryNoteDto> items;
 
-        public GetSummaryNoteResponsebody(Page<SummaryNote> page, Member currentUser) {
+        public GetSummaryNoteResponsebody(Page<SummaryNote> page) {
             this.items = page.getContent().stream()
                     .map(summaryNote -> new SummaryNoteDto(summaryNote))
                     .toList();
@@ -77,7 +73,7 @@ public class ApiV1SummaryNoteController {
         if(summaryNoteService.getSummaryNote(id).getScore()>=AppConfig.SummaryPassScore){
             throw new GlobalException(CodeMsg.E400_8_ALREADY_PASSED.getCode(),CodeMsg.E400_8_ALREADY_PASSED.getMessage());
         }
-        if(!summaryNoteService.haveAuthority(id))
+        if(!summaryNoteService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         SummaryNote modifySummaryNote = summaryNoteService.modify(id, createSummaryNoteDto);
@@ -96,7 +92,7 @@ public class ApiV1SummaryNoteController {
             throw new GlobalException(CodeMsg.E400_8_ALREADY_PASSED.getCode(),CodeMsg.E400_8_ALREADY_PASSED.getMessage());
         }
 
-        if(!summaryNoteService.haveAuthority(id))
+        if(!summaryNoteService.haveAuthority())
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
         summaryNoteService.delete(id);
@@ -111,7 +107,7 @@ public class ApiV1SummaryNoteController {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "id"));
 
         Page<SummaryNote> summaryNotes = summaryNoteService.findByVideoId(pageable, videoId);
-        GetSummaryNoteResponsebody responseBody = new ApiV1SummaryNoteController.GetSummaryNoteResponsebody(summaryNotes, rq.getMember());
+        GetSummaryNoteResponsebody responseBody = new ApiV1SummaryNoteController.GetSummaryNoteResponsebody(summaryNotes);
 
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(), responseBody);
     }
@@ -138,11 +134,10 @@ public class ApiV1SummaryNoteController {
         private final List<SummaryNoteDto> items;
 
         @NonNull
-        private final Member member;
-
-        public GetSummaryandMemberNoteResponsebody(List<SummaryNoteDto> items, Member member) {
+        private String member_nickname;
+        public GetSummaryandMemberNoteResponsebody(List<SummaryNoteDto> items,String member_nickname) {
             this.items = items;
-            this.member = member;
+            this.member_nickname = member_nickname;
         }
     }
 
@@ -153,7 +148,7 @@ public class ApiV1SummaryNoteController {
         Member member = memberService.findByUUID(uuid).get();
         List<SummaryNoteDto> byUuid = summaryNoteService.findByWriterId(member.getId()).stream().map(SummaryNoteDto::new).collect(Collectors.toList());
 
-        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(),new GetSummaryandMemberNoteResponsebody(byUuid,member));
+        return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(), Msg.E200_1_INQUIRY_SUCCEED.getMsg(),new GetSummaryandMemberNoteResponsebody(byUuid,member.getNickname()));
     }
 
 

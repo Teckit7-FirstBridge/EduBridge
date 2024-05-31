@@ -3,7 +3,6 @@ package com.ll.edubridge.domain.home.home.controller;
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
-import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
@@ -31,7 +30,7 @@ public class ApiV1HomeController {
         @NonNull
         private final List<CourseDto> items;
 
-        public GetPostsResponseBody(List<Course> courses, Member currentUser) {
+        public GetPostsResponseBody(List<Course> courses) {
             this.items = courses.stream()
                     .map(course -> new CourseDto(course,rq.getMember()))
                     .toList();
@@ -43,7 +42,7 @@ public class ApiV1HomeController {
     public RsData<GetPostsResponseBody> getPosts() {
 
         List<Course> courses = courseService.findTopVotedCourses(6);
-        GetPostsResponseBody responseBody = new GetPostsResponseBody(courses, rq.getMember());
+        GetPostsResponseBody responseBody = new GetPostsResponseBody(courses);
         return RsData.of(
                 Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),

@@ -85,7 +85,9 @@
     if (!isLogin) {
       rq.msgWarning('로그인이 필요한 서비스 입니다');
       rq.goTo('/member/login');
+      return;
     }
+    console.log(1);
     const responseVideos = await rq.apiEndPoints().GET(`/api/v1/courses/{courseId}/videos`, {
       params: {
         path: {
@@ -94,6 +96,7 @@
       }
     });
     videos = responseVideos.data?.data!;
+    console.log(2);
 
     const responseRoadmap = await rq.apiEndPoints().GET(`/api/v1/roadmap/byCourse/{courseId}`, {
       params: {
@@ -122,7 +125,7 @@
         params: {
           path: {
             courseId: parseInt($page.params.id),
-            writerId: course.writer?.id
+            writerId: course.writer_id
           }
         }
       });
@@ -141,8 +144,7 @@
       params: {}
     });
     myRoadmap = responseMyRoadmap.data?.data!;
-
-    changeNum = course.roadmapNum;
+    console.log(responseMyRoadmap);
 
     return { videos, course, auth, enroll, hashtags, myRoadmap, roadmapList };
   }
@@ -160,8 +162,7 @@
     }
 
     if (reportReason) {
-      const { data, error } = await rq.apiEndPoints().POST(`/api/v1/report/course/{courseId}`, {
-        params: { path: { courseId: parseInt($page.params.id) } },
+      const { data, error } = await rq.apiEndPoints().POST(`/api/v1/report/course`, {
         body: {
           reportReason: reportReason,
           materialId: parseInt($page.params.id)
@@ -182,37 +183,39 @@
 
     if (isConfirmed) {
       const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/courses/{id}/{writer_id}`, {
-        params: { path: { id: parseInt($page.params.id), writer_id: course.writer.id } }
+        params: { path: { id: parseInt($page.params.id), writer_id: course.writer_id } }
       });
 
       if (data) {
         rq.msgInfo('강좌가 삭제되었습니다');
         rq.goTo('/member/mycourse');
       } else if (error) {
-        rq.msgError(error.msg);
+        rq.msgError('수강생이 있는 경우 삭제가 불가합니다. 관리자에게 문의하세요.');
       }
     }
   }
 
   async function startCourse() {
-    if (course.videoCount! <= 5) {
-      rq.msgWarning('영상이 5개 이하이면 공개할 수 없습니다');
+    if (course.videoCount! < 3) {
+      rq.msgWarning('영상이 3개 이하이면 공개할 수 없습니다');
     } else {
-      const isConfirmed = confirm('강좌를 공개하시겠습니까?');
+      const isConfirmed = confirm(
+        '강좌를 공개하시겠습니까? \n공개 후 수강생이 생기면 삭제나 비공개가 불가합니다.'
+      );
 
       if (isConfirmed) {
         const { data, error } = await rq
           .apiEndPoints()
           .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
-            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer.id! } }
+            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
           });
 
         if (data) {
           rq.msgInfo('강좌가 공개되었습니다');
           courseConfirm = true;
-          // window.location.reload();
+          window.location.reload();
         } else if (error) {
-          rq.msgError('영상이 5개 이하이면 공개할 수 없습니다');
+          rq.msgError('영상이 3개 이하이면 공개할 수 없습니다');
         }
       }
     }
@@ -227,13 +230,13 @@
         const { data, error } = await rq
           .apiEndPoints()
           .PUT(`/api/v1/courses/{courseId}/startOrStop/{writer_id}`, {
-            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer.id! } }
+            params: { path: { courseId: parseInt($page.params.id), writer_id: course.writer_id! } }
           });
 
         if (data) {
           rq.msgInfo('강좌가 비공개되었습니다');
           courseConfirm = false;
-          // window.location.reload();
+          window.location.reload();
         } else if (error) {
           rq.msgError(error.msg);
           window.location.reload();
@@ -273,6 +276,23 @@
     }
   }
 
+  async function cancelEnroll() {
+    let confirmMessage =
+      '수강 등록을 취소하시겠습니까?\n등록된 요약노트가 있을 경우 요약노트가 삭제되고\n포인트 환불이 불가합니다.';
+    const isConfirmed = confirm(confirmMessage);
+
+    if (isConfirmed) {
+      const { data, error } = await rq.apiEndPoints().DELETE(`/api/v1/enroll/{courseId}`, {
+        params: { path: { courseId: parseInt($page.params.id) } }
+      });
+
+      if (data) {
+        rq.msgInfo('수강이 취소되었습니다.');
+        window.location.reload();
+      }
+    }
+  }
+
   async function deleteVideo(video: components['schemas']['VideoDto']) {
     const isConfirmed = confirm('동영상을 삭제하시겠습니까?');
 
@@ -284,7 +304,7 @@
             path: {
               courseId: parseInt($page.params.id),
               id: video.id,
-              writer_id: course.writer.id!
+              writer_id: course.writer_id!
             }
           }
         });
@@ -424,17 +444,17 @@
             <details class="dropdown">
               <summary class="flex items-center cursor-pointer">
                 <i class="fa-regular fa-user mr-1"></i>
-                {course.writer?.nickname}
+                {course.writer_nickname}
               </summary>
               <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
                 <li>
-                  <a href="/course?tab=course&kwType=NAME&kw={course.writer?.nickname}"
-                    >{course.writer?.nickname} 강좌</a
+                  <a href="/course?tab=course&kwType=NAME&kw={course.writer_nickname}"
+                    >{course.writer_nickname} 강좌</a
                   >
                 </li>
                 <li>
-                  <a href="/course?tab=roadmap&kwType=NAME&kw={course.writer?.nickname}"
-                    >{course.writer?.nickname} 로드맵</a
+                  <a href="/course?tab=roadmap&kwType=NAME&kw={course.writer_nickname}"
+                    >{course.writer_nickname} 로드맵</a
                   >
                 </li>
               </ul>
@@ -443,14 +463,14 @@
           <div class="flex">
             {#each hashtags as hashtag}
               <div class="">
-                <div class="flex text-amber-600 text-sm text-center items-center ml-2">
+                <div class="flex text-blue-600 text-sm text-center items-center ml-2">
                   #{hashtag}
                 </div>
               </div>
             {/each}
           </div>
           <div class="flex justify-end">
-            {#if !auth.enroll && !(rq.member.id == course.writer.id) && !rq.isAdmin()}
+            {#if !auth.enroll && !(rq.member.id == course.writer_id) && !rq.isAdmin()}
               <div class="flex">
                 <div class="mt-2">
                   <p class="course-price mt-4">{course.price}원</p>
@@ -462,8 +482,17 @@
                 >
               </div>
             {/if}
+            {#if auth.enroll && !(rq.member.id == course.writer_id) && !rq.isAdmin()}
+              <div class="flex">
+                <button
+                  on:click={cancelEnroll}
+                  class="ml-2 h-12 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+                  >수강 취소</button
+                >
+              </div>
+            {/if}
           </div>
-          {#if rq.member.id === course.writer.id || rq.isAdmin()}
+          {#if rq.member.id === course.writer_id || rq.isAdmin()}
             <div class="mx-2 items-center">
               <div class="mb-2">
                 <a
@@ -581,7 +610,7 @@
               </details>
             </div>{/if}
 
-          <div class="mb-4 bg-white p-4 rounded-lg shadow-md">
+          <div class="mb-4 bg-white p-4 rounded-lg shadow-md w-full">
             <h2 class="text-md md:text-lg font-semibold">공지사항</h2>
 
             <ToastUiEditor
@@ -591,7 +620,7 @@
               viewer={true}
             ></ToastUiEditor>
           </div>
-          <div class="mb-4 bg-white p-4 rounded-lg shadow-md">
+          <div class="mb-4 bg-white p-4 rounded-lg shadow-md w-full">
             <h2 class="text-md md:text-lg font-semibold">강좌 설명</h2>
             <ToastUiEditor
               bind:this={overviewviewr}
@@ -602,11 +631,11 @@
           </div>
 
           <div class="flex justify-end">
-            {#if rq.member.id === course.writer.id || rq.isAdmin()}
+            {#if rq.member.id === course.writer_id || rq.isAdmin()}
               <div class="flex justify-end">
                 <a
                   class="mr-2 h-10 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
-                  href="/course/{$page.params.id}/videowrite?writer_id={course.writer.id}"
+                  href="/course/{$page.params.id}/videowrite?writer_id={course.writer_id}"
                   >강의 등록</a
                 >
               </div>
@@ -619,7 +648,7 @@
               >
             </div>
           </div>
-          {#if auth.enroll || rq.member.id === course.writer.id}
+          {#if auth.enroll || rq.member.id === course.writer_id}
             <div class="border shadow-sm rounded-lg">
               <div class="relative w-full overflow-auto">
                 <table class="w-full table-fixed caption-bottom text-sm">
@@ -662,11 +691,10 @@
                               on:click={() => window.open(video.url, '_blank')}
                             />
                             <div class="flex justify-center">{video.title}</div>
-                            {#if rq.isAdmin() || rq.member.id === course.writer.id}
+                            {#if rq.isAdmin() || rq.member.id === course.writer_id}
                               <div class="flex justify-end">
                                 <a
-                                  href="/course/{video.courseId}/videoedit/{video.id}?writer_id={course
-                                    .writer.id}"
+                                  href="/course/{video.courseId}/videoedit/{video.id}?writer_id={course.writer_id}"
                                   class="mr-2 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
                                   >수정</a
                                 >
@@ -704,48 +732,50 @@
                         </td>
 
                         <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                          {#if video.summaryNotes.length > 0}
-                            <a
-                              class="flex items-center gap-3 w-10 h-10 rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                              href="/course/{video.courseId}/{video.id}/summary/{video
-                                .summaryNotes[0].id}"
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="w-6 h-6"
+                          {#if course.confirm}
+                            {#if video.summaryNotes.length > 0}
+                              <a
+                                class="flex items-center gap-3 w-10 h-10 rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+                                href="/course/{video.courseId}/{video.id}/summary/{video
+                                  .summaryNotes[0].id}"
                               >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  d="M21.75 17.25v-.228a4.5 4.5 0 0 0-.12-1.03l-2.268-9.64a3.375 3.375 0 0 0-3.285-2.602H7.923a3.375 3.375 0 0 0-3.285 2.602l-2.268 9.64a4.5 4.5 0 0 0-.12 1.03v.228m19.5 0a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3m19.5 0a3 3 0 0 0-3-3H5.25a3 3 0 0 0-3 3m16.5 0h.008v.008h-.008v-.008Zm-3 0h.008v.008h-.008v-.008Z"
-                                />
-                              </svg>
-                            </a>
-                          {:else}
-                            <a
-                              class="flex items-center gap-3 w-10 h-10 rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                              href="/course/{video.courseId}/{video.id}/summary/write"
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="w-6 h-6"
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke-width="1.5"
+                                  stroke="currentColor"
+                                  class="w-6 h-6"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M21.75 17.25v-.228a4.5 4.5 0 0 0-.12-1.03l-2.268-9.64a3.375 3.375 0 0 0-3.285-2.602H7.923a3.375 3.375 0 0 0-3.285 2.602l-2.268 9.64a4.5 4.5 0 0 0-.12 1.03v.228m19.5 0a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3m19.5 0a3 3 0 0 0-3-3H5.25a3 3 0 0 0-3 3m16.5 0h.008v.008h-.008v-.008Zm-3 0h.008v.008h-.008v-.008Z"
+                                  />
+                                </svg>
+                              </a>
+                            {:else}
+                              <a
+                                class="flex items-center gap-3 w-10 h-10 rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+                                href="/course/{video.courseId}/{video.id}/summary/write"
                               >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
-                                />
-                              </svg>
-                            </a>
-                          {/if}
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke-width="1.5"
+                                  stroke="currentColor"
+                                  class="w-6 h-6"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                                  />
+                                </svg>
+                              </a>
+                            {/if}
+                          {:else}{/if}
                         </td>
                       </tr>
                     {/each}

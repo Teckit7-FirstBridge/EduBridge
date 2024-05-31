@@ -4,10 +4,10 @@ import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.domain.course.courseEnroll.repository.CourseEnrollRepository;
+import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.member.member.repository.MemberRepository;
-import com.ll.edubridge.global.exceptions.CodeMsg;
-import com.ll.edubridge.global.exceptions.GlobalException;
+import com.ll.edubridge.domain.point.point.entity.PointType;
+import com.ll.edubridge.domain.point.point.service.PointService;
 import com.ll.edubridge.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,40 +25,25 @@ public class CourseEnrollService {
     private final Rq rq;
     private final CourseEnrollRepository courseEnrollRepository;
     private final CourseService courseService;
-    private final MemberRepository memberRepository;
+    private final PointService pointService;
+    private final SummaryNoteService summaryNoteService;
 
     public Page<CourseEnroll> findByMemberId(Pageable pageable) {
         Long memberId=rq.getMember().getId();
         return courseEnrollRepository.findByMemberId(pageable, memberId);
     }
 
-    public Optional<CourseEnroll> findById(Long id) {
-        return courseEnrollRepository.findById(id);
-    }
-
     @Transactional
-    public void create(Member member, Course course, int point,int price) {
+    public void create(Member member, Course course) {
         CourseEnroll courseEnroll = CourseEnroll.builder()
                 .course(course)
                 .member(member)
                 .build();
-        member.setPoint(point - price);
-        memberRepository.save(member); // member의 정보를 저장
+        pointService.subPoint(PointType.Enroll, member); // 포인트 내역 추가
         courseEnrollRepository.save(courseEnroll);
     }
 
-    @Transactional
-    public CourseEnroll getCourseEnroll(Long id) {
-        Optional<CourseEnroll> courseEnroll = this.findById(id);
-        if (courseEnroll.isPresent()) {
-            return courseEnroll.get();
-        } else {
-            throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(),CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
-        }
-    }
-
-    @Transactional
-    public boolean haveAuthority(Long id) {
+    public boolean haveAuthority() {
         Member member = rq.getMember();
 
         if (member == null) return false;
@@ -82,8 +67,26 @@ public class CourseEnrollService {
         return courseEnrollRepository.findByCourseId(courseId);
     }
 
+    @Transactional
     public void delete(Member member) {
         courseEnrollRepository.deleteAll(courseEnrollRepository.findByMember(member));
-        // courseEnrollRepository.deleteAll(member.getCourseEnrollList());
+    }
+
+    @Transactional
+    public void cancelEnroll(Long courseId){
+
+        CourseEnroll courseEnroll = courseEnrollRepository.findByMemberIdAndCourseId(rq.getMember().getId(), courseId);
+
+        if(!this.canRefund(courseId)){
+            courseEnrollRepository.delete(courseEnroll);
+            summaryNoteService.deleteByWriterIdAndCourseId(rq.getMember().getId(), courseId);
+        }else {
+            pointService.addPoint(PointType.Refund, rq.getMember());
+            courseEnrollRepository.delete(courseEnroll);
+        }
+    }
+
+    public boolean canRefund(Long courseId){
+        return summaryNoteService.findByWriterIdAndCourseId(rq.getMember().getId(), courseId).isEmpty();
     }
 }

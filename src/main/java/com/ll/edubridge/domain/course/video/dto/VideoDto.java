@@ -1,7 +1,6 @@
 package com.ll.edubridge.domain.course.video.dto;
 
 import com.ll.edubridge.domain.course.summaryNote.dto.SummaryNoteDto;
-import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.video.entity.Video;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -15,10 +14,10 @@ import org.springframework.lang.NonNull;
 import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
-
-@Getter
-@Builder
 @AllArgsConstructor(access = PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
+@Builder
+@Getter
 public class VideoDto {
     @NonNull
     private Long id;
@@ -44,7 +43,6 @@ public class VideoDto {
     @NonNull
     private String title;
 
-
     public VideoDto(Video video) {
         this.id = video.getId();
         this.url = video.getUrl();
@@ -53,9 +51,5 @@ public class VideoDto {
         this.imgUrl = video.getImgUrl();
         this.keywords = video.getKeywords();
         this.title = video.getTitle();
-    }
-
-    public VideoDto() {
-
     }
 }

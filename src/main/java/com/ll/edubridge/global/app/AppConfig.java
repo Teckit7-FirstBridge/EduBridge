@@ -4,13 +4,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 
 @Configuration
 public class AppConfig {
+
+    @Bean
+    public WebClient.Builder webClientBuilder() {
+        return WebClient.builder();
+    }
+
     @Getter
     public static String jwtSecretKey;
 
@@ -116,7 +124,7 @@ public class AppConfig {
     public static int SummaryPassScore = 70;
 
     @Getter
-    public static int videoMinNum = 5;
+    public static int videoMinNum = 3;
 
     public static final String ALPHANUMERIC = "0123456789abcdefghjklmnopqrstuvwxyz";
     public static final int ALPHANUMERIC_LENGTH = 6;

@@ -1,8 +1,8 @@
 package com.ll.edubridge.domain.post.post.controller;
 
-import com.ll.edubridge.domain.PostVoter.entity.PostVoter;
-import com.ll.edubridge.domain.PostVoter.service.PostVoterService;
+import com.ll.edubridge.domain.post.postVoter.service.PostVoterService;
 import com.ll.edubridge.domain.member.member.entity.Member;
+import com.ll.edubridge.domain.post.comment.service.CommentService;
 import com.ll.edubridge.domain.post.post.dto.CreatePostDto;
 import com.ll.edubridge.domain.post.post.dto.PostDto;
 import com.ll.edubridge.domain.post.post.dto.QnaDto;
@@ -41,7 +41,7 @@ public class ApiV1PostController {
     private final PostService postService;
     private final Rq rq;
     private final PostVoterService postVoterService;
-
+    private final CommentService commentService;
 
     public record GetPostsResponseBody(@NonNull PageDto<PostDto> itemPage) {
     }
@@ -53,7 +53,6 @@ public class ApiV1PostController {
             @RequestParam(defaultValue = "") String kw,
             @RequestParam(defaultValue = "ALL") KwTypeV1 kwType
     ) {
-
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
@@ -66,11 +65,10 @@ public class ApiV1PostController {
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 new GetPostsResponseBody(new PageDto<>(postPage))
         );
-
     }
+
     private PostDto postToDto(Post post) {
         PostDto dto = new PostDto(post, rq.getMember());
-
         return dto;
     }
 
@@ -78,7 +76,6 @@ public class ApiV1PostController {
     @Operation(summary = "글 등록")
     public RsData<CreatePostDto> createPost(@Valid @RequestBody CreatePostDto createPostDto) {
         Post post = postService.create(rq.getMember(), createPostDto);
-
         CreatePostDto createdPostDto = new CreatePostDto(post);
 
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
@@ -108,7 +105,6 @@ public class ApiV1PostController {
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         Post modifyPost = postService.modify(id, postDto);
-
         PostDto modifyPostDto = new PostDto(modifyPost, rq.getMember());
 
         return RsData.of(Msg.E200_2_MODIFY_SUCCEED.getCode(),
@@ -122,6 +118,7 @@ public class ApiV1PostController {
         if (!postService.haveAuthority(id))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
+        commentService.deleteByPostId(id);
         postService.delete(id);
 
         return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
@@ -149,6 +146,7 @@ public class ApiV1PostController {
     public RsData<Void> deleteVote(@PathVariable("id") Long id) {
         Member member = rq.getMember();
         Post post = postService.getPost(id);
+
         if (!postVoterService.canCancelLike(member, post)) {
             throw new GlobalException(CodeMsg.E400_2_NOT_RECOMMENDED_YET.getCode(),CodeMsg.E400_2_NOT_RECOMMENDED_YET.getMessage());
         }
@@ -178,7 +176,6 @@ public class ApiV1PostController {
     public RsData<GetMyPostsResponseBody> getMyPosts(
             @RequestParam(defaultValue = "1") int page
     ) {
-
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
@@ -195,7 +192,6 @@ public class ApiV1PostController {
 
     private PostDto postMyToDto(Post post) {
         PostDto dto = new PostDto(post, rq.getMember());
-
         return dto;
     }
 
@@ -207,7 +203,6 @@ public class ApiV1PostController {
     public RsData<GetQnaResponseBody> getMyQna(
             @RequestParam(defaultValue = "1") int page
     ) {
-
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
@@ -216,17 +211,13 @@ public class ApiV1PostController {
 
         Page<QnaDto> qnaPage = qna.map(this::postQnaDto);
 
-
         return RsData.of(Msg.E200_1_INQUIRY_SUCCEED.getCode(),
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 new GetQnaResponseBody(new PageDto<>(qnaPage)));
-
     }
 
     private QnaDto postQnaDto(Post post) {
-        QnaDto dto = new QnaDto(post);
-
-        return dto;
+        return new QnaDto(post);
     }
 
     @GetMapping("/qna/{id}")
@@ -245,7 +236,6 @@ public class ApiV1PostController {
     @DeleteMapping("/qna/{id}")
     @Operation(summary = "1대1 문의 삭제")
     public RsData<Empty> deleteQna(@PathVariable("id") Long id) {
-
         if (!postService.haveAuthority(id))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
@@ -258,7 +248,6 @@ public class ApiV1PostController {
     @PatchMapping("/{postId}/report")
     @Operation(summary = "신고하기")
     public RsData<Void> report(@PathVariable("postId") Long id) {
-
         Post post = postService.getPost(id);
 
         if (!postService.canReport(rq.getMember(), postService.getPost(id))) {

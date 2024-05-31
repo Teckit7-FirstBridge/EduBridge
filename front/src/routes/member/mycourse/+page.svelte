@@ -66,6 +66,7 @@
         }
       });
       roadmaplist = data?.data.itemPage.content;
+      console.log(roadmaplist);
       return data!;
     }
   }
@@ -182,6 +183,21 @@
                     <div class="flex justify-center gap-2">
                       <h2 class="text-lg font-semibold my-1 ml-2">{formatTitle(item.title)}</h2>
                     </div>
+                    <div class="flex justify-end mr-4">
+                      {#if item.confirm}
+                        <h2
+                          class="text-blue-800 bg-blue-100 inline-flex px-2 text-lg font-semibold rounded-full"
+                        >
+                          공개
+                        </h2>
+                      {:else}
+                        <h2
+                          class="text-red-800 bg-red-100 inline-flex px-2 text-lg font-semibold rounded-full"
+                        >
+                          비공개
+                        </h2>
+                      {/if}
+                    </div>
                     <div class="flex justify-center p-2 bg-black rounded-lg m-4">
                       <img src={item.imgUrl} />
                     </div>
@@ -292,14 +308,14 @@
                     <p class="text-sm text-gray-800 dark:text-gray-400 mx-2">
                       {removeMarkdown(item.overView)}
                     </p>
-                    {#if item.curriculum}
+                    {#if item.curriculum && item.curriculum.length > 0}
                       <div class="flex flex-col">
                         {#each item.curriculum.sort((a, b) => a.courseOrder - b.courseOrder || a.id - b.id) as curriculum, index}
-                          <a href="/course/{curriculum.course.id}">
+                          <a href="/course/{curriculum.id}">
                             <div
                               class="mt-2 flex text-gray-800 text-lg font-semibold text-center items-center ml-2"
                             >
-                              {index + 1}. {curriculum.course?.title}
+                              {index + 1}. {curriculum.title}
                               [{curriculum.courseOrder}번 강좌]
                             </div>
                           </a>
@@ -312,7 +328,7 @@
                         {/each}
                       </div>
                     {/if}
-                    {#if item.owner.id == rq.member.id}
+                    {#if item.owner_id == rq.member.id}
                       <div class="flex justify-end">
                         <a
                           href="/roadmap/edit/{item.id}"

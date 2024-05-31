@@ -1,6 +1,6 @@
 package com.ll.edubridge.domain.post.comment.dto;
 
-import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
+import com.ll.edubridge.domain.post.commentVoter.entity.CommentVoter;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import lombok.Getter;
@@ -39,4 +39,6 @@ public class CommentDto {
         this.voteCount = comment.getCommentVoters().size();
         this.postTitle = comment.getPost().getTitle();
     }
+
+    public CommentDto(){}
 }

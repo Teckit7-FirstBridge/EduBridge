@@ -42,8 +42,25 @@ public class MemberService {
     private final PointService pointService;
     private final CourseEnrollService courseEnrollService;
     private final NotificationService notificationService;
-
     private final Rq rq;
+
+    @Transactional
+    public void addPoint(PointType pointType){
+        Member member = rq.getMember();
+
+        member.setPoint(member.getPoint()+pointType.getAmount());
+
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    public void subPoint(PointType pointType){
+        Member member = rq.getMember();
+
+        member.setPoint(member.getPoint()-pointType.getAmount());
+
+        memberRepository.save(member);
+    }
 
     @Transactional
     public RsData<Member> join(String username, String password) {
@@ -60,7 +77,6 @@ public class MemberService {
             uuid = generateRandomString();
         }
 
-
         Member member = Member.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
@@ -72,11 +88,11 @@ public class MemberService {
                 .build();
 
         memberRepository.save(member);
-
         pointService.addPoint(PointType.Welcome, member); // 포인트 내역 추가
 
         return RsData.of("200", "%s님 환영합니다. 회원가입이 완료되었습니다. 로그인 후 이용해주세요.".formatted(member.getUsername()), member);
     }
+
     public static String generateRandomString() {
         Random random = new Random();
         StringBuilder sb = new StringBuilder(ALPHANUMERIC_LENGTH);
@@ -89,6 +105,7 @@ public class MemberService {
 
         return sb.toString();
     }
+
     public Boolean checkUUID(String uuid){
         return memberRepository.existsMemberByUuid(uuid);
     }
@@ -102,7 +119,6 @@ public class MemberService {
                     username, "", nickname, profileImgUrl
             );
         }
-
         return modify(member, profileImgUrl);
     }
 
@@ -162,7 +178,7 @@ public class MemberService {
 
         if(member.isPresent()){
             return member.get();
-        }else {
+        } else {
             throw new GlobalException(CodeMsg.E404_1_DATA_NOT_FIND.getCode(), CodeMsg.E404_1_DATA_NOT_FIND.getMessage());
         }
     }
@@ -177,7 +193,6 @@ public class MemberService {
         }
     }
 
-
     public record AuthAndMakeTokensResponseBody(
             @NonNull
             Member member,
@@ -185,8 +200,7 @@ public class MemberService {
             String accessToken,
             @NonNull
             String refreshToken
-    ) {
-    }
+    ) {}
 
     @Transactional
     public RsData<AuthAndMakeTokensResponseBody> authAndMakeTokens(String username, String password) {
@@ -274,7 +288,6 @@ public class MemberService {
     }
 
     public boolean canEnroll(Member member){
-
         return member.getRegisterCount() < 5;
     }
 
@@ -314,6 +327,5 @@ public class MemberService {
         notificationService.notifyAttendPoint(member.getId()); // 포인트 지급 알림
         notificationService.createByPoint(NotificationType.POINTS, member, PointType.Attend.getAmount()); // 알림 내역 저장
         pointService.addPoint(PointType.Attend, member); // 포인트 내역 추가
-
     }
 }

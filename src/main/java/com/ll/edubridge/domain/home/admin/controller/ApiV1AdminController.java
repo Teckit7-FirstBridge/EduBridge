@@ -1,17 +1,9 @@
 package com.ll.edubridge.domain.home.admin.controller;
 
-import com.ll.edubridge.domain.course.course.dto.CourseDto;
-import com.ll.edubridge.domain.course.course.dto.CreateCourseDto;
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.course.course.service.CourseService;
-import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
-import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
 import com.ll.edubridge.domain.course.summaryNote.service.SummaryNoteService;
-import com.ll.edubridge.domain.course.video.dto.CreateVideoDto;
-import com.ll.edubridge.domain.course.video.dto.VideoDto;
-import com.ll.edubridge.domain.course.video.entity.Video;
-import com.ll.edubridge.domain.course.video.service.VideoService;
 import com.ll.edubridge.domain.home.admin.dto.*;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
@@ -21,14 +13,12 @@ import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
 import com.ll.edubridge.global.msg.Msg;
-import com.ll.edubridge.global.rq.Rq;
 import com.ll.edubridge.global.rsData.RsData;
 import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -53,10 +43,6 @@ public class ApiV1AdminController {
     private final MemberService memberService;
     private final PostService postService;
     private final SummaryNoteService summaryNoteService;
-    private final VideoService videoService;
-    private final CourseEnrollService courseEnrollService;
-
-    private final Rq rq;
 
     @GetMapping(value = "/courses")
     @Operation(summary = "강좌 최신순")

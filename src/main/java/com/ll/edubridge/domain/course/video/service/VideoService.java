@@ -27,24 +27,49 @@ public class VideoService {
 
     @Transactional
     public Video create(CreateVideoDto createVideoDto) {
+
+        String videoID = this.getVideoId(createVideoDto.getUrl());
+
         Video video = Video.builder()
-                .url(createVideoDto.getUrl())
+                .url("https://youtu.be/"+videoID)
                 .overView(createVideoDto.getOverView())
                 .course(courseService.getCourse(createVideoDto.getCourseId()))
-                .imgUrl(createVideoDto.getImgUrl())
+                .imgUrl("https://img.youtube.com/vi/"+videoID+"/0.jpg")
                 .keywords(createVideoDto.getKeywords())
                 .title(createVideoDto.getTitle())
                 .build();
         return videoRepository.save(video);
     }
 
+    private String getVideoId(String url) {
+        if( !(url.startsWith("https://www.youtube.com") || url.startsWith("https://youtu.be")) ) {
+            throw new GlobalException(CodeMsg.E400_13_WRONG_URL.getCode(), CodeMsg.E400_13_WRONG_URL.getMessage());
+        }
+
+        if(url.startsWith("https://www.youtube.com/shorts")) {
+            throw new GlobalException(CodeMsg.E400_13_WRONG_URL.getCode(), CodeMsg.E400_13_WRONG_URL.getMessage());
+        }
+
+        String videoID = url.substring(8);
+        if(videoID.startsWith("youtu.be/")) {
+            videoID = videoID.substring(9, 9+11);
+            return videoID;
+        } else if(videoID.startsWith("www.youtube.com/")) {
+            videoID = videoID.substring(24, 24+11);
+            return videoID;
+        } else {
+            throw new GlobalException(CodeMsg.E400_13_WRONG_URL.getCode(), CodeMsg.E400_13_WRONG_URL.getMessage());
+        }
+    }
+
     @Transactional
     public Video modify(Long id, VideoDto videoDto) {
         Video video = this.getVideo(id);
+        String videoID = this.getVideoId(videoDto.getUrl());
 
-        video.setUrl(videoDto.getUrl());
+        video.setUrl("https://youtu.be/"+videoID);
         video.setOverView(videoDto.getOverView());
-        video.setImgUrl(videoDto.getImgUrl());
+        video.setImgUrl("https://img.youtube.com/vi/"+videoID+"/0.jpg");
         video.setKeywords(videoDto.getKeywords());
         video.setTitle(videoDto.getTitle());
 
@@ -57,7 +82,6 @@ public class VideoService {
         videoRepository.delete(video);
     }
 
-    @Transactional
     public Video getVideo(Long id) {
         Optional<Video> video = this.findById(id);
         if (video.isPresent()) {
@@ -67,18 +91,14 @@ public class VideoService {
         }
     }
 
-    @Transactional
     public Optional<Video> findById(Long id) {
         return Optional.ofNullable(videoRepository.findById(id));
     }
-
-    @Transactional
 
     public Video findByCourseIdAndId(Long courseId, Long id) {
         return videoRepository.findByCourseIdAndId(courseId, id);
     }
 
-    @Transactional
     public List<Video> findByCourseId(Long courseId) {
         return videoRepository.findByCourseIdOrderByIdAsc(courseId);
     }
@@ -88,7 +108,6 @@ public class VideoService {
         videoRepository.save(video);
     }
 
-    @Transactional
     public boolean haveAuthority(Course course) {
         Member member = rq.getMember();
         return member.getId().equals(course.getWriter().getId());

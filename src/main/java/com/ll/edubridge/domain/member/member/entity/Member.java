@@ -1,9 +1,8 @@
 package com.ll.edubridge.domain.member.member.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
-import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
-import com.ll.edubridge.domain.PostVoter.entity.PostVoter;
+import com.ll.edubridge.domain.post.commentVoter.entity.CommentVoter;
+import com.ll.edubridge.domain.course.courseVoter.entity.CourseVoter;
+import com.ll.edubridge.domain.post.postVoter.entity.PostVoter;
 import com.ll.edubridge.domain.course.courseEnroll.entity.CourseEnroll;
 import com.ll.edubridge.global.jpa.entity.BaseEntity;
 import com.ll.edubridge.standard.util.Ut;
@@ -26,7 +25,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Setter
 @Getter
 @ToString(callSuper = true)
-public class Member extends BaseEntity { // 보안이 들어있는 클래스
+public class Member extends BaseEntity {
 
     private int registerCount;
 
@@ -57,26 +56,21 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
 
     private String uuid;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private Set<CourseVoter> courseVoters;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "member" , cascade = CascadeType.REMOVE)
     private Set<PostVoter> postVoters;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "member" , cascade = CascadeType.REMOVE)
     private Set<CommentVoter> commentVoters;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CourseEnroll> courseEnrollList;
 
-
     public String getProfileImgUrlOrDefault() {
         return Ut.str.hasLength(profileImgUrl) ? profileImgUrl : "https://placehold.co/640x640?text=O_O";
     }
-
 
     @Transient
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -102,5 +96,4 @@ public class Member extends BaseEntity { // 보안이 들어있는 클래스
     public String getName() {
         return username;
     }
-
 }

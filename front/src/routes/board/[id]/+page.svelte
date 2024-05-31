@@ -137,8 +137,7 @@
     }
 
     if (selectedReason) {
-      const { data, error } = await rq.apiEndPoints().POST(`/api/v1/report/post/{postId}`, {
-        params: { path: { postId: parseInt($page.params.id) } },
+      const { data, error } = await rq.apiEndPoints().POST(`/api/v1/report/post`, {
         body: {
           reportReason: selectedReason,
           materialId: parseInt($page.params.id)

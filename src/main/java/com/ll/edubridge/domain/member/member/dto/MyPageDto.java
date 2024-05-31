@@ -2,13 +2,15 @@ package com.ll.edubridge.domain.member.member.dto;
 
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import static lombok.AccessLevel.PROTECTED;
 
+@NoArgsConstructor(access = PROTECTED)
 @Getter
 public class MyPageDto {
-
 
     private List<CourseDto> learningCourses;
 
@@ -21,7 +23,5 @@ public class MyPageDto {
         this.favoriteCourses = favoriteCourses;
         this.member = member;
 
-    }
-    public MyPageDto() {
     }
 }

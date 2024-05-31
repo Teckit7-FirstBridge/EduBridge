@@ -1,4 +1,4 @@
-package com.ll.edubridge.domain.CourseVoter.entity;
+package com.ll.edubridge.domain.course.courseVoter.entity;
 
 import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.member.member.entity.Member;

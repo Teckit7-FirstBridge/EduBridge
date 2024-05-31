@@ -12,7 +12,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long>,CustomCo
 
     List<Comment> findByPostId(Long postId);
 
-    List<Comment> findTop2ByPostIdOrderByVoteCountDesc(Long postId);
-
     Page<Comment> findByWriter(Member member, Pageable pageable);
 }

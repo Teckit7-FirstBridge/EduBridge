@@ -1,15 +1,12 @@
 package com.ll.edubridge.domain.notification.service;
 
-import com.ll.edubridge.domain.course.summaryNote.repository.SummaryNoteRepository;
 import com.ll.edubridge.domain.member.member.entity.Member;
-import com.ll.edubridge.domain.member.member.repository.MemberRepository;
 import com.ll.edubridge.domain.notification.controller.NotificationController;
 import com.ll.edubridge.domain.notification.entity.Notification;
 import com.ll.edubridge.domain.notification.entity.NotificationType;
 import com.ll.edubridge.domain.notification.repository.NotificationRepository;
 import com.ll.edubridge.domain.post.comment.entity.Comment;
 import com.ll.edubridge.domain.post.post.entity.Post;
-import com.ll.edubridge.domain.post.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,16 +18,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
-    private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
-    private final SummaryNoteRepository summaryNoteRepository;
+
     private final NotificationRepository notificationRepository;
 
     @Transactional(readOnly = true)
     public List<Notification> findByMemberId(Long memberId){
         return notificationRepository.findByMemberId(memberId);
-
     }
+
     @Transactional
     public void readNoti(Long id) {
         List<Notification> byMemberId = notificationRepository.findByMemberId(id);
@@ -45,7 +40,6 @@ public class NotificationService {
 
     @Transactional
     public void createByComment(NotificationType type, Member member, Post post, Member sender, Comment comment) {
-
         Notification notification = Notification.builder()
                 .type(type)
                 .recipient_id(member.getId())
@@ -59,7 +53,6 @@ public class NotificationService {
 
     @Transactional
     public void createByPoint(NotificationType type, Member member,int point) {
-
         Notification notification = Notification.builder()
                 .type(type)
                 .recipient_id(member.getId())
@@ -129,13 +122,19 @@ public class NotificationService {
         }
     }
 
-
     public boolean isAlarm(Member member) {
         List<Notification> byMemberId = notificationRepository.findByMemberId(member.getId());
         if( byMemberId.stream().filter(notification -> notification.isRead() == false).count()>0){
             return true;
-        }else{
+        } else {
             return false;
+        }
+    }
+
+    @Transactional
+    public void deleteComments(List<Comment> comments){
+        for (Comment comment : comments) {
+            notificationRepository.deleteByComment(comment);
         }
     }
 }

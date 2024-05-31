@@ -1,7 +1,7 @@
 package com.ll.edubridge.domain.course.course.controller;
 
 
-import com.ll.edubridge.domain.CourseVoter.service.CourseVoterService;
+import com.ll.edubridge.domain.course.courseVoter.service.CourseVoterService;
 import com.ll.edubridge.domain.course.course.dto.CourseAuthDto;
 import com.ll.edubridge.domain.course.course.dto.CourseDto;
 import com.ll.edubridge.domain.course.course.dto.CourseListDto;
@@ -179,7 +179,7 @@ public class ApiV1CourseController {
         if (!courseService.haveAuthority(writer_id))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
         Course course = courseService.getCourse(courseId);
-        if(course.getVideoList().size()<=AppConfig.videoMinNum){
+        if(course.getVideoList().size()<AppConfig.videoMinNum){
             throw new GlobalException(CodeMsg.E400_10_VIDEO_LESS_THAN_5_CANNOT_PUBLISH.getCode(),CodeMsg.E400_10_VIDEO_LESS_THAN_5_CANNOT_PUBLISH.getMessage());
         }
         course = courseService.startOrStop(course);

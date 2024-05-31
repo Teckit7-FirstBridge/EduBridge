@@ -45,8 +45,6 @@ public class CommentService {
         return comment.getWriter().equals(member);
     }
 
-
-
     // 댓글 작성 기능
     @Transactional
     public Comment create(Member author, CreateCommentDto createCommentDto) {
@@ -79,7 +77,6 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-
     // 댓글 조회 기능
     public Comment getComment(Long id) {
         Optional<Comment> comment = this.findById(id);
@@ -94,12 +91,17 @@ public class CommentService {
         return commentRepository.findById(id);
     }
 
-
     public List<Comment> findByPostId(Long postId) {
         return commentRepository.findByPostId(postId);
     }
 
     public List<Comment> findTop2(Long postId) {
         return commentRepository.findBestComment(postId);
+    }
+
+    @Transactional
+    public void deleteByPostId(Long postId) {
+        List<Comment> comments = findByPostId(postId);
+        notificationService.deleteComments(comments);
     }
 }

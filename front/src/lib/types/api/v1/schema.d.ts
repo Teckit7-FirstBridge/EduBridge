@@ -74,11 +74,15 @@ export interface paths {
     /** 로드맵 생성 */
     post: operations["createRoadmap"];
   };
-  "/api/v1/report/post/{postId}": {
+  "/api/v1/report/post": {
+    /** 글 신고 목록 조회 */
+    get: operations["reportedPostList"];
     /** 글 신고 생성 */
     post: operations["createPostReport"];
   };
-  "/api/v1/report/course/{courseId}": {
+  "/api/v1/report/course": {
+    /** 강좌 신고 목록 조회 */
+    get: operations["reportedCourseList"];
     /** 강좌 신고 생성 */
     post: operations["createCourseReport"];
   };
@@ -110,6 +114,8 @@ export interface paths {
   "/api/v1/enroll/{courseId}": {
     /** 수강 등록 */
     post: operations["create"];
+    /** 수강신청 취소 */
+    delete: operations["cancelEnroll"];
   };
   "/api/v1/courses/{videoId}/note": {
     /** 강의 요약 노트 등록 */
@@ -147,6 +153,24 @@ export interface paths {
     /** 게시물 신고 취소 */
     patch: operations["cancelReport"];
   };
+  "/api/v1/youtube/search": {
+    get: operations["search"];
+  };
+  "/api/v1/youtube/has-subtitles": {
+    get: operations["hasSubtitles"];
+  };
+  "/api/v1/youtube/getKeywords": {
+    get: operations["runScript"];
+  };
+  "/api/v1/youtube/get-subtitle": {
+    get: operations["getSubtitle"];
+  };
+  "/api/v1/youtube/downloadCaption": {
+    get: operations["downloadCaption"];
+  };
+  "/api/v1/youtube/captions": {
+    get: operations["getCaptions"];
+  };
   "/api/v1/roadmap": {
     /** 로드맵 다건 조회 */
     get: operations["getRoadmaps"];
@@ -166,14 +190,6 @@ export interface paths {
   "/api/v1/roadmap/byCourse/{courseId}": {
     /** 강좌로 로드맵 목록 조회 */
     get: operations["getRoadmapByCourse"];
-  };
-  "/api/v1/report/post": {
-    /** 글 신고 목록 조회 */
-    get: operations["reportedPostList"];
-  };
-  "/api/v1/report/course": {
-    /** 강좌 신고 목록 조회 */
-    get: operations["reportedCourseList"];
   };
   "/api/v1/report/all": {
     /** 전체 신고 목록 조회 */
@@ -349,93 +365,31 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["Empty"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     CreateRoadmapDto: {
       title?: string;
       overView?: string;
       hashtags: string;
     };
-    Course: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
+    CurriculumDto: {
       title?: string;
-      notice?: string;
-      imgUrl?: string;
-      overView?: string;
-      /** Format: int32 */
-      price?: number;
-      confirm?: boolean;
-      courseEnrollList?: components["schemas"]["CourseEnroll"][];
-      hashtags?: string;
-      writer?: components["schemas"]["Member"];
-    };
-    CourseEnroll: {
       /** Format: int64 */
       id?: number;
-      /** Format: date-time */
-      createDate?: string;
-    };
-    CourseRoadmap: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      course?: components["schemas"]["Course"];
       /** Format: int32 */
       courseOrder?: number;
-    };
-    GrantedAuthority: {
-      authority?: string;
-    };
-    Member: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      /** Format: int32 */
-      registerCount?: number;
-      username?: string;
-      password?: string;
-      nickname?: string;
-      /** Format: int32 */
-      point?: number;
-      report?: boolean;
-      refreshToken?: string;
-      profileImgUrl?: string;
-      visitedToday?: boolean;
-      /** Format: int32 */
-      dailyGoal?: number;
-      /** Format: int32 */
-      dailyAchievement?: number;
-      uuid?: string;
-      courseEnrollList?: components["schemas"]["CourseEnroll"][];
-      name?: string;
-      authorities?: components["schemas"]["GrantedAuthority"][];
-      profileImgUrlOrDefault?: string;
-      authoritiesAsStringList?: string[];
-    };
-    Roadmap: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: date-time */
-      createDate?: string;
-      title?: string;
-      overView?: string;
-      hashtags?: string;
     };
     RoadmapDto: {
       /** Format: int64 */
       id: number;
       title?: string;
       overView?: string;
-      curriculum: components["schemas"]["CourseRoadmap"][];
       hashtags: string;
-      owner: components["schemas"]["Member"];
-      roadmapList: components["schemas"]["Roadmap"][];
+      /** Format: int64 */
+      owner_id: number;
+      owner_nickname: string;
+      curriculum: components["schemas"]["CurriculumDto"][];
     };
     RsDataRoadmapDto: {
       resultCode: string;
@@ -443,8 +397,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["RoadmapDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     NumDto: {
       /** Format: int32 */
@@ -473,8 +427,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["PostDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetNotificationResponseBody: {
       dtoList: components["schemas"]["NotificationDto"][];
@@ -501,8 +455,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetNotificationResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     NickNameDto: {
       nickName?: string;
@@ -513,8 +467,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["NickNameDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     CreateSummaryNoteDto: {
       content: string;
@@ -525,15 +479,17 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["SummaryNoteDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     SummaryNoteDto: {
       /** Format: int64 */
       id?: number;
       /** Format: date-time */
       createDate?: string;
-      member?: components["schemas"]["Member"];
+      /** Format: int64 */
+      member_id?: number;
+      member_nickname?: string;
       content?: string;
       /** Format: int64 */
       score?: number;
@@ -548,7 +504,6 @@ export interface components {
     CreateCourseDto: {
       title: string;
       notice: string;
-      imgUrl: string;
       overView: string;
       hashtags?: string;
     };
@@ -569,8 +524,10 @@ export interface components {
       confirm?: boolean;
       /** Format: int32 */
       enrollCount?: number;
-      writer?: components["schemas"]["Member"];
       hashtags?: string;
+      writer_nickname?: string;
+      /** Format: int64 */
+      writer_id?: number;
     };
     RsDataCourseDto: {
       resultCode: string;
@@ -578,8 +535,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CourseDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     VideoDto: {
       /** Format: int64 */
@@ -599,8 +556,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["VideoDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     CreateCommentDto: {
       body: string;
@@ -629,8 +586,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CommentDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataCreateRoadmapDto: {
       resultCode: string;
@@ -638,8 +595,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateRoadmapDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     CreateReportDto: {
       reportReason: string;
@@ -652,8 +609,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateReportDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     CreatePostDto: {
       title: string;
@@ -665,8 +622,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreatePostDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataVoid: {
       resultCode: string;
@@ -674,8 +631,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: Record<string, never>;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     LoginRequestBody: {
       username: string;
@@ -710,15 +667,14 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["LoginResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     CreateVideoDto: {
       url: string;
       overView: string;
       /** Format: int64 */
       courseId?: number;
-      imgUrl: string;
       keywords: string;
       title: string;
     };
@@ -728,8 +684,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateVideoDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataCreateCourseDto: {
       resultCode: string;
@@ -737,8 +693,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateCourseDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataCreateCommentDto: {
       resultCode: string;
@@ -746,9 +702,262 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CreateCommentDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
+    PlaylistResult: {
+      playlistId?: string;
+      videoLinks?: components["schemas"]["VideoLink"][];
+    };
+    VideoLink: {
+      link?: string;
+    };
+    YouTubeResponse: {
+      playlists?: components["schemas"]["PlaylistResult"][];
+    };
+    RsDataString: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: string;
+      fail: boolean;
+      success: boolean;
+    };
+    Caption: {
+      classInfo?: components["schemas"]["ClassInfo"];
+      etag?: string;
+      id?: string;
+      kind?: string;
+      snippet?: {
+        classInfo?: components["schemas"]["ClassInfo"];
+        audioTrackType?: string;
+        failureReason?: string;
+        isAutoSynced?: boolean;
+        isCC?: boolean;
+        isDraft?: boolean;
+        isEasyReader?: boolean;
+        isLarge?: boolean;
+        language?: string;
+        lastUpdated?: components["schemas"]["DateTime"];
+        name?: string;
+        status?: string;
+        trackKind?: string;
+        videoId?: string;
+        factory?: components["schemas"]["JsonFactory"];
+        unknownKeys?: {
+          [key: string]: Record<string, never>;
+        };
+        empty?: boolean;
+        [key: string]: Record<string, never> | undefined;
+      };
+      factory?: components["schemas"]["JsonFactory"];
+      unknownKeys?: {
+        [key: string]: Record<string, never>;
+      };
+      empty?: boolean;
+      [key: string]: Record<string, never> | undefined;
+    };
+    ClassInfo: {
+      ignoreCase?: boolean;
+      names?: string[];
+      enum?: boolean;
+      fieldInfos?: components["schemas"]["FieldInfo"][];
+    };
+    DateTime: {
+      /** Format: int64 */
+      value?: number;
+      dateOnly?: boolean;
+      /** Format: int32 */
+      timeZoneShift?: number;
+    };
+    FieldInfo: {
+      field?: {
+        name?: string;
+        /** Format: int32 */
+        modifiers?: number;
+        synthetic?: boolean;
+        declaredAnnotations?: Record<string, never>[];
+        /** @deprecated */
+        accessible?: boolean;
+        genericType?: {
+          typeName?: string;
+        };
+        enumConstant?: boolean;
+        annotatedType?: {
+          annotations?: Record<string, never>[];
+          declaredAnnotations?: Record<string, never>[];
+          type?: {
+            typeName?: string;
+          };
+        };
+        annotations?: Record<string, never>[];
+      };
+      name?: string;
+      primitive?: boolean;
+      final?: boolean;
+      genericType?: {
+        typeName?: string;
+      };
+      classInfo?: components["schemas"]["ClassInfo"];
+      tersMethodForField?: {
+          name?: string;
+          /** Format: int32 */
+          modifiers?: number;
+          typeParameters?: {
+              annotatedBounds?: {
+                  annotations?: Record<string, never>[];
+                  declaredAnnotations?: Record<string, never>[];
+                  type?: {
+                    typeName?: string;
+                  };
+                }[];
+              name?: string;
+              bounds?: {
+                  typeName?: string;
+                }[];
+              typeName?: string;
+              annotations?: Record<string, never>[];
+              declaredAnnotations?: Record<string, never>[];
+            }[];
+          synthetic?: boolean;
+          declaredAnnotations?: Record<string, never>[];
+          /** @deprecated */
+          accessible?: boolean;
+          varArgs?: boolean;
+          /** Format: int32 */
+          parameterCount?: number;
+          parameterAnnotations?: Record<string, never>[][];
+          genericParameterTypes?: {
+              typeName?: string;
+            }[];
+          genericExceptionTypes?: {
+              typeName?: string;
+            }[];
+          default?: boolean;
+          genericReturnType?: {
+            typeName?: string;
+          };
+          bridge?: boolean;
+          defaultValue?: Record<string, never>;
+          annotatedReturnType?: {
+            annotations?: Record<string, never>[];
+            declaredAnnotations?: Record<string, never>[];
+            type?: {
+              typeName?: string;
+            };
+          };
+          annotatedParameterTypes?: {
+              annotations?: Record<string, never>[];
+              declaredAnnotations?: Record<string, never>[];
+              type?: {
+                typeName?: string;
+              };
+            }[];
+          parameters?: {
+              name?: string;
+              /** Format: int32 */
+              modifiers?: number;
+              synthetic?: boolean;
+              annotations?: Record<string, never>[];
+              declaredAnnotations?: Record<string, never>[];
+              annotatedType?: {
+                annotations?: Record<string, never>[];
+                declaredAnnotations?: Record<string, never>[];
+                type?: {
+                  typeName?: string;
+                };
+              };
+              parameterizedType?: {
+                typeName?: string;
+              };
+              varArgs?: boolean;
+              namePresent?: boolean;
+              declaringExecutable?: {
+                name?: string;
+                /** Format: int32 */
+                modifiers?: number;
+                typeParameters?: {
+                    genericDeclaration?: Record<string, never>;
+                    annotatedBounds?: {
+                        annotations?: Record<string, never>[];
+                        declaredAnnotations?: Record<string, never>[];
+                        type?: {
+                          typeName?: string;
+                        };
+                      }[];
+                    name?: string;
+                    bounds?: {
+                        typeName?: string;
+                      }[];
+                    typeName?: string;
+                    annotations?: Record<string, never>[];
+                    declaredAnnotations?: Record<string, never>[];
+                  }[];
+                synthetic?: boolean;
+                declaredAnnotations?: Record<string, never>[];
+                varArgs?: boolean;
+                annotatedParameterTypes?: {
+                    annotations?: Record<string, never>[];
+                    declaredAnnotations?: Record<string, never>[];
+                    type?: {
+                      typeName?: string;
+                    };
+                  }[];
+                /** Format: int32 */
+                parameterCount?: number;
+                parameterAnnotations?: Record<string, never>[][];
+                genericParameterTypes?: {
+                    typeName?: string;
+                  }[];
+                genericExceptionTypes?: {
+                    typeName?: string;
+                  }[];
+                annotatedReturnType?: {
+                  annotations?: Record<string, never>[];
+                  declaredAnnotations?: Record<string, never>[];
+                  type?: {
+                    typeName?: string;
+                  };
+                };
+                annotatedReceiverType?: {
+                  annotations?: Record<string, never>[];
+                  declaredAnnotations?: Record<string, never>[];
+                  type?: {
+                    typeName?: string;
+                  };
+                };
+                annotatedExceptionTypes?: {
+                    annotations?: Record<string, never>[];
+                    declaredAnnotations?: Record<string, never>[];
+                    type?: {
+                      typeName?: string;
+                    };
+                  }[];
+                annotations?: Record<string, never>[];
+                /** @deprecated */
+                accessible?: boolean;
+              };
+              implicit?: boolean;
+            }[];
+          annotatedReceiverType?: {
+            annotations?: Record<string, never>[];
+            declaredAnnotations?: Record<string, never>[];
+            type?: {
+              typeName?: string;
+            };
+          };
+          annotatedExceptionTypes?: {
+              annotations?: Record<string, never>[];
+              declaredAnnotations?: Record<string, never>[];
+              type?: {
+                typeName?: string;
+              };
+            }[];
+          annotations?: Record<string, never>[];
+        }[];
+    };
+    JsonFactory: Record<string, never>;
     GetRoadmapsResponseBody: {
       itemPage: components["schemas"]["PageDtoRoadmapDto"];
     };
@@ -769,17 +978,22 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetRoadmapsResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
-    RsDataListRoadmapDto: {
+    RoadmapListDto: {
+      title?: string;
+      /** Format: int64 */
+      id?: number;
+    };
+    RsDataListRoadmapListDto: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["RoadmapDto"][];
-      success: boolean;
+      data: components["schemas"]["RoadmapListDto"][];
       fail: boolean;
+      success: boolean;
     };
     GetReportList: {
       itemPage?: components["schemas"]["PageDtoReportDto"];
@@ -810,8 +1024,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetReportList"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetPostsResponseBody: {
       itemPage: components["schemas"]["PageDtoPostDto"];
@@ -833,8 +1047,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostsResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetQnaResponseBody: {
       itemPage: components["schemas"]["PageDtoQnaDto"];
@@ -869,8 +1083,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetQnaResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataQnaDto: {
       resultCode: string;
@@ -878,8 +1092,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["QnaDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetMyPostsResponseBody: {
       itemPage: components["schemas"]["PageDtoPostDto"];
@@ -890,8 +1104,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetMyPostsResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     PointDto: {
       /** Format: int64 */
@@ -910,8 +1124,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["PointDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     AttendDto: {
       /** Format: date-time */
@@ -923,8 +1137,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AttendDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataBoolean: {
       resultCode: string;
@@ -932,8 +1146,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: boolean;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     MyPageDto: {
       learningCourses?: components["schemas"]["CourseDto"][];
@@ -949,8 +1163,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["MyPageResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataMemberDto: {
       resultCode: string;
@@ -958,8 +1172,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["MemberDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     MeResponseBody: {
       item: components["schemas"]["MemberDto"];
@@ -970,8 +1184,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["MeResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataIsLoginResponseBody: {
       resultCode: string;
@@ -979,8 +1193,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["isLoginResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     isLoginResponseBody: {
       isLogin: boolean;
@@ -991,8 +1205,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["isAdminResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     isAdminResponseBody: {
       isAdmin: boolean;
@@ -1014,8 +1228,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetCourseEnrollResponsebody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     CourseListDto: {
       /** Format: int64 */
@@ -1026,8 +1240,9 @@ export interface components {
       /** Format: int32 */
       voteCount: number;
       likedByCurrentUser: boolean;
-      writer: components["schemas"]["Member"];
+      writer: string;
       hashtags: string;
+      confirm: boolean;
     };
     GetCoursesResponseBody: {
       itemPage: components["schemas"]["PageDtoCourseListDto"];
@@ -1049,8 +1264,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetCoursesResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetSummaryNoteResponsebody: {
       items: components["schemas"]["SummaryNoteDto"][];
@@ -1061,8 +1276,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetSummaryNoteResponsebody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataListVideoDto: {
       resultCode: string;
@@ -1070,8 +1285,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["VideoDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     AdminCourseEnrollDto: {
       /** Format: int64 */
@@ -1084,8 +1299,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminCourseEnrollDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     CourseAuthDto: {
       enroll?: boolean;
@@ -1096,12 +1311,12 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CourseAuthDto"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetSummaryandMemberNoteResponsebody: {
       items: components["schemas"]["SummaryNoteDto"][];
-      member: components["schemas"]["Member"];
+      member_nickname: string;
     };
     RsDataGetSummaryandMemberNoteResponsebody: {
       resultCode: string;
@@ -1109,8 +1324,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetSummaryandMemberNoteResponsebody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataListSummaryNoteDto: {
       resultCode: string;
@@ -1118,8 +1333,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["SummaryNoteDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataListCommentDto: {
       resultCode: string;
@@ -1127,8 +1342,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CommentDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetCommentResponseBody: {
       itemPage: components["schemas"]["PageDtoCommentDto"];
@@ -1150,8 +1365,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetCommentResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     AdminSummaryNoteDto: {
       /** Format: int64 */
@@ -1172,8 +1387,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminSummaryNoteDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetNotesResponseBody: {
       itemPage?: components["schemas"]["PageDtoAdminSummaryNoteDto"];
@@ -1195,8 +1410,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetNotesResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     ReportedPostDto: {
       /** Format: int64 */
@@ -1214,8 +1429,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["ReportedPostDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     AdminQnaDto: {
       /** Format: int64 */
@@ -1233,8 +1448,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminQnaDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetAdmQnaResponseBody: {
       itemPage?: components["schemas"]["PageDtoAdminQnaDto"];
@@ -1256,8 +1471,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetAdmQnaResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     AdminMemberDto: {
       /** Format: int64 */
@@ -1273,8 +1488,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminMemberDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     GetMembersResponseBody: {
       itemPage?: components["schemas"]["PageDtoAdminMemberDto"];
@@ -1296,8 +1511,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetMembersResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataGetDeviceResponseBody: {
       resultCode: string;
@@ -1305,8 +1520,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["getDeviceResponseBody"];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     getDeviceResponseBody: {
       isMobile?: boolean;
@@ -1315,7 +1530,6 @@ export interface components {
       /** Format: int64 */
       id: number;
       title: string;
-      grade: string;
       /** Format: int32 */
       enrollCount: number;
     };
@@ -1325,8 +1539,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["AdminCourseDto"][];
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
   };
   responses: never;
@@ -1710,13 +1924,24 @@ export interface operations {
       };
     };
   };
-  /** 글 신고 생성 */
-  createPostReport: {
+  /** 글 신고 목록 조회 */
+  reportedPostList: {
     parameters: {
-      path: {
-        postId: number;
+      query?: {
+        page?: number;
       };
     };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetReportList"];
+        };
+      };
+    };
+  };
+  /** 글 신고 생성 */
+  createPostReport: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateReportDto"];
@@ -1731,13 +1956,24 @@ export interface operations {
       };
     };
   };
-  /** 강좌 신고 생성 */
-  createCourseReport: {
+  /** 강좌 신고 목록 조회 */
+  reportedCourseList: {
     parameters: {
-      path: {
-        courseId: number;
+      query?: {
+        page?: number;
       };
     };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetReportList"];
+        };
+      };
+    };
+  };
+  /** 강좌 신고 생성 */
+  createCourseReport: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateReportDto"];
@@ -1888,6 +2124,22 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataVoid"];
+        };
+      };
+    };
+  };
+  /** 수강신청 취소 */
+  cancelEnroll: {
+    parameters: {
+      path: {
+        courseId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
         };
       };
     };
@@ -2063,6 +2315,97 @@ export interface operations {
       };
     };
   };
+  search: {
+    parameters: {
+      query: {
+        query: string;
+        maxResults?: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["YouTubeResponse"];
+        };
+      };
+    };
+  };
+  hasSubtitles: {
+    parameters: {
+      query: {
+        videoId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": boolean;
+        };
+      };
+    };
+  };
+  runScript: {
+    parameters: {
+      query: {
+        videoId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataString"];
+        };
+      };
+    };
+  };
+  getSubtitle: {
+    parameters: {
+      query: {
+        videoId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": string;
+        };
+      };
+    };
+  };
+  downloadCaption: {
+    parameters: {
+      query: {
+        captionId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": string;
+        };
+      };
+    };
+  };
+  getCaptions: {
+    parameters: {
+      query: {
+        videoId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["Caption"][];
+        };
+      };
+    };
+  };
   /** 로드맵 다건 조회 */
   getRoadmaps: {
     parameters: {
@@ -2119,7 +2462,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListRoadmapDto"];
+          "application/json": components["schemas"]["RsDataListRoadmapListDto"];
         };
       };
     };
@@ -2135,39 +2478,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListRoadmapDto"];
-        };
-      };
-    };
-  };
-  /** 글 신고 목록 조회 */
-  reportedPostList: {
-    parameters: {
-      query?: {
-        page?: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataGetReportList"];
-        };
-      };
-    };
-  };
-  /** 강좌 신고 목록 조회 */
-  reportedCourseList: {
-    parameters: {
-      query?: {
-        page?: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataGetReportList"];
+          "application/json": components["schemas"]["RsDataListRoadmapListDto"];
         };
       };
     };

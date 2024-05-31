@@ -1,16 +1,20 @@
 package com.ll.edubridge.domain.course.summaryNote.dto;
 
 import com.ll.edubridge.domain.course.summaryNote.entity.SummaryNote;
-import com.ll.edubridge.domain.member.member.entity.Member;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class SummaryNoteDto {
     private Long id;
     private LocalDateTime createDate;
-    private Member member;
+    private Long member_id;
+    private String member_nickname;
     private String content;
     private Long score;
     private boolean isPass;
@@ -21,7 +25,8 @@ public class SummaryNoteDto {
     public SummaryNoteDto(SummaryNote summaryNote){
         this.id = summaryNote.getId();
         this.content = summaryNote.getContent();
-        this.member = summaryNote.getWriter();
+        this.member_id = summaryNote.getWriter().getId();
+        this.member_nickname = summaryNote.getWriter().getNickname();
         this.score = summaryNote.getScore();
         this.isPass = summaryNote.getScore() >= 70;
         this.courseId = summaryNote.getVideo().getCourse().getId();

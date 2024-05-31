@@ -25,11 +25,9 @@ public class SummaryNote extends BaseEntity {
     @Column(columnDefinition = "Text")
     private String content;
 
-    @JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Member writer;
 
-    @JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Video video;
 

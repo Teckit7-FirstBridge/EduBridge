@@ -1,7 +1,5 @@
-package com.ll.edubridge.domain.PostVoter.entity;
+package com.ll.edubridge.domain.post.postVoter.entity;
 
-import com.ll.edubridge.domain.CourseVoter.entity.CourseVoter;
-import com.ll.edubridge.domain.course.course.entity.Course;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import jakarta.persistence.*;
@@ -29,13 +27,12 @@ public class PostVoter {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public PostVoter() {
-    }
-
     public PostVoter(Post post, Member member) {
         this.post = post;
         this.member = member;
     }
+
+    public PostVoter() {}
 
     @Override
     public boolean equals(Object obj) {
@@ -49,5 +46,4 @@ public class PostVoter {
     public int hashCode() {
         return Objects.hash(member, post);
     }
-
 }

@@ -1,7 +1,6 @@
 package com.ll.edubridge.domain.post.comment.controller;
 
-import com.ll.edubridge.domain.CommentVoter.entity.CommentVoter;
-import com.ll.edubridge.domain.CommentVoter.service.CommentVoterService;
+import com.ll.edubridge.domain.post.commentVoter.service.CommentVoterService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.notification.entity.NotificationType;
 import com.ll.edubridge.domain.post.comment.dto.CommentDto;
@@ -47,11 +46,10 @@ public class ApiV1CommentController {
     public RsData<CreateCommentDto> createComment(@Valid @RequestBody CreateCommentDto createCommentDto) {
         Comment comment = commentService.create(rq.getMember(), createCommentDto);
 
-
         notificationService.notifyComment(comment.getPost().getWriter().getId()); // 댓글 등록 알림
         if(comment.getPost().isPublished()){
             notificationService.createByComment(NotificationType.COMMENT, comment.getPost().getWriter(), comment.getPost(), rq.getMember(), comment); // 알림 내역 저장
-        }else{
+        } else {
             notificationService.createByComment(NotificationType.ANSWER, comment.getPost().getWriter(), comment.getPost(), rq.getMember(), comment); // 문의 답변 내역 저장
         }
         return RsData.of(Msg.E200_0_CREATE_SUCCEED.getCode(),
@@ -79,7 +77,6 @@ public class ApiV1CommentController {
     public RsData<GetCommentResponseBody> getComments(
             @RequestParam(defaultValue = "1") int page
     ) {
-
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
@@ -170,5 +167,4 @@ public class ApiV1CommentController {
         return RsData.of(Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getCode(),
                 Msg.E200_5_CANCEL_RECOMMEND_SUCCEED.getMsg());
     }
-
 }

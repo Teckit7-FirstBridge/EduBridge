@@ -2,16 +2,18 @@ package com.ll.edubridge.domain.home.admin.dto;
 
 import com.ll.edubridge.domain.course.course.entity.Course;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class AdminCourseDto {
     @NonNull
     private Long id;
     @NonNull
     private String title;
-    @NonNull
-    private String grade;
     @NonNull
     private int enrollCount;
 

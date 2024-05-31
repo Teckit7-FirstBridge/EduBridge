@@ -1,7 +1,6 @@
 package com.ll.edubridge.domain.course.roadmap.service;
 
 import com.ll.edubridge.domain.course.course.entity.Course;
-import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.roadmap.dto.CreateRoadmapDto;
 import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
@@ -27,12 +26,8 @@ import java.util.Optional;
 public class RoadmapService {
     private final RoadmapRepository roadmapRepository;
     private final Rq rq;
-    private final CourseRepository courseRepository;
     private final CourseRoadmapRepository courseRoadmapRepository;
 
-    public List<Roadmap> findAll() {
-        return roadmapRepository.findAll();
-    }
     public Optional<Roadmap> findById(Long id) {
         return roadmapRepository.findById(id);
     }
