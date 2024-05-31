@@ -28,12 +28,9 @@ FROM ghcr.io/graalvm/jdk-community:21
 # 작업 디렉토리 설정
 WORKDIR /app
 
-# Ubuntu 또는 Debian에서 Python 및 관련 패키지 설치
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip
-
-# youtube-transcript-api 설치
-RUN pip3 install youtube-transcript-api
+# 파이썬 설치
+RUN yum update -y
+RUN yum install -y python3
 
 # 첫 번째 스테이지에서 빌드된 JAR 파일 복사
 COPY --from=builder /app/build/libs/*.jar app.jar
