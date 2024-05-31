@@ -28,17 +28,11 @@ FROM ghcr.io/graalvm/jdk-community:21
 # 작업 디렉토리 설정
 WORKDIR /app
 
-# Alpine Linux에서 apk 패키지 관리자 설치
-RUN apk add --no-cache curl
+# Ubuntu 또는 Debian에서 Python 및 관련 패키지 설치
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip
 
-# 필요한 파일 다운로드
-RUN curl -o /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
-    curl -o glibc-2.35-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk && \
-    apk add glibc-2.35-r0.apk && \
-    rm glibc-2.35-r0.apk
-
-# 파이썬 설치
-RUN apk update && apk add --no-cache python3 py3-pip
+# youtube-transcript-api 설치
 RUN pip3 install youtube-transcript-api
 
 # 첫 번째 스테이지에서 빌드된 JAR 파일 복사
