@@ -29,7 +29,7 @@ FROM ghcr.io/graalvm/jdk-community:21
 WORKDIR /app
 
 # 파이썬 설치
-RUN apt-get update && apt-get install -y python3 python3-pip
+RUN apt update && apt install -y python3 python3-pip
 
 RUN pip3 install youtube-transcript-api
 
