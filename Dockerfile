@@ -29,8 +29,11 @@ FROM ghcr.io/graalvm/jdk-community:21
 WORKDIR /app
 
 # Alpine Linux에서 apk 패키지 관리자 설치
-RUN wget -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
-    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk && \
+RUN apk add --no-cache curl
+
+# 필요한 파일 다운로드
+RUN curl -o /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+    curl -o glibc-2.35-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk && \
     apk add glibc-2.35-r0.apk && \
     rm glibc-2.35-r0.apk
 
