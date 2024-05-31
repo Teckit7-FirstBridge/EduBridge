@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+
 @Service
 public class ChatService {
     
@@ -72,5 +75,14 @@ public class ChatService {
                 pointService.addPoint(PointType.SNote, summaryNote.getWriter()); // 포인트 내역 추가
             }
         }
+    }
+
+    @Async
+    @Transactional
+    public Future<String> chat(String prompt) {
+        // create a request
+        ChatRequest request = new ChatRequest(model, prompt);
+        // call the API
+        return CompletableFuture.completedFuture(restTemplate.postForObject(apiUrl, request, ChatResponse.class).getChoices().get(0).getMessage().getContent());
     }
 }

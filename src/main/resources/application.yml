@@ -79,8 +79,16 @@ custom:
     dirPath: c:/temp/eb_dev
 
 openai:
-  model: gpt-4-turbo-preview
+  model: gpt-4o
   secret-key: ON_SECRET
   api:
     key: ON_SECRET
     url: https://api.openai.com/v1/chat/completions
+
+youtube:
+  api:
+    key: ON_SECRET
+  client:
+    id: ON_SECRET
+    secret: ON_SECRET
+
