@@ -28,6 +28,11 @@ FROM ghcr.io/graalvm/jdk-community:21
 # 작업 디렉토리 설정
 WORKDIR /app
 
+# 파이썬 설치
+RUN apt-get update && apt-get install -y python3 python3-pip
+
+RUN pip3 install youtube-transcript-api
+
 # 첫 번째 스테이지에서 빌드된 JAR 파일 복사
 COPY --from=builder /app/build/libs/*.jar app.jar
 
