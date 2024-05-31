@@ -28,7 +28,10 @@ FROM ghcr.io/graalvm/jdk-community:21
 # 작업 디렉토리 설정
 WORKDIR /app
 
-RUN microdnf update && microdnf install python3
+RUN microdnf update && \
+    microdnf install -y python3 && \
+    python3 -m ensurepip && \
+    python3 -m pip install --upgrade pip
 RUN pip install youtube-transcript-api
 
 # 첫 번째 스테이지에서 빌드된 JAR 파일 복사
