@@ -74,6 +74,23 @@ public class ApiV1ReportController {
         );
     }
 
+    @GetMapping("/top5")
+    @Operation(summary = "최신 신고 5개")
+    public RsData<List<ReportDto>> recentReported(
+    ) {
+        List<Report> reportedPosts = reportService.recentReport();
+
+        List<ReportDto> reportedList = reportedPosts.stream()
+                .map(ReportDto::new)
+                .toList();
+
+        return RsData.of(
+                Msg.E200_1_INQUIRY_SUCCEED.getCode(),
+                Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
+                reportedList
+        );
+    }
+
     @GetMapping("/course")
     @Operation(summary = "강좌 신고 목록 조회")
     public RsData<GetReportList> reportedCourseList(
@@ -115,6 +132,9 @@ public class ApiV1ReportController {
     }
 
     public record GetReportList(@NonNull PageDto<ReportDto> itemPage) {
+    }
+
+    public record GetRecentReport(@NonNull List<ReportDto> dto){
     }
 
     private ReportDto getReportToDto(Report report) {

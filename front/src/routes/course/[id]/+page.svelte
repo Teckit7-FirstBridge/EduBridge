@@ -12,14 +12,19 @@
 
   let selectedOverView = writable('');
   let modalenroll;
+  let modalTitle;
   let modal;
   let modalRoadmap;
   let changeNum;
   let selectedRoadmap = '';
 
-  function openModal(overView) {
-    selectedOverView.set(overView);
+  function openModal(keywords) {
+    selectedOverView.set(keywords);
     modal.showModal();
+  }
+
+  function openModalTitle() {
+    modalTitle.showModal();
   }
 
   function handleOutsideClick(event) {
@@ -631,9 +636,8 @@
               viewer={true}
             ></ToastUiEditor>
           </div>
-
           <div class="flex justify-end">
-            {#if rq.member.id === course.writer_id || rq.isAdmin()}
+            {#if rq.member.id === course.writer_id}
               <div class="flex justify-end">
                 <a
                   class="mr-2 h-10 font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
@@ -641,16 +645,46 @@
                   >강의 등록</a
                 >
               </div>
+            {:else}
+              <div>
+                <button
+                  class="font-semibold inline-block mx-2 px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+                  on:click={openModalTitle}>목차</button
+                >
+
+                <dialog
+                  id="my_modal_4"
+                  class="modal"
+                  bind:this={modalTitle}
+                  on:click={handleOutsideClick}
+                >
+                  <div class="modal-box" on:click|stopPropagation>
+                    <form class="flex flex-col p-6">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                        on:click={() => modalTitle.close()}>✕</button
+                      >
+                      <h2 class="flex justify-center text-lg font-bold mb-2">목 차</h2>
+                      <ul>
+                        {#each videos as video, index}
+                          <li>{index + 1}. {video.title}</li>
+                        {/each}
+                      </ul>
+                    </form>
+                  </div>
+                </dialog>
+              </div>
             {/if}
-            <div>
+          </div>
+          {#if auth.enroll || rq.member.id === course.writer_id || rq.isAdmin()}
+            <div class="flex justify-end">
               <a
                 href="/course/{course.id}/notes"
-                class="font-semibold inline-block px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
-                >요약노트</a
+                class="font-semibold inline-block mx-2 px-4 py-2 border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:text-white rounded-md shadow-sm text-sm font-medium focus:outline-none"
+                >요약 노트</a
               >
             </div>
-          </div>
-          {#if auth.enroll || rq.member.id === course.writer_id}
             <div class="border shadow-sm rounded-lg">
               <div class="relative w-full overflow-auto">
                 <table class="w-full table-fixed caption-bottom text-sm">
@@ -667,7 +701,7 @@
                       <th
                         class="h-12 px-4 text-left align-middle font-semi-bold text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell w-32"
                       >
-                        개요
+                        키워드
                       </th>
 
                       <th
@@ -712,7 +746,7 @@
                         <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                           <button
                             class="whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50h-10 px-5 bg-white text-black w-[50px] flex items-center justify-center py-3 rounded-md shadow-md"
-                            onclick={() => openModal(video.overView)}>개요</button
+                            onclick={() => openModal(video.keywords)}>키워드</button
                           >
                           <dialog
                             id="my_modal_3"

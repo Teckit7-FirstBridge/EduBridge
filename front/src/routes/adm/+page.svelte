@@ -6,7 +6,7 @@
 
   let recentCourse: components['schemas']['AdminCourseDto'][] = $state();
   let recentMember: components['schemas']['AdminMemberDto'][] = $state();
-  let reportPost: components['schemas']['ReportedPostDto'][] = $state();
+  let reportList: components['schemas']['ReportDto'][] = $state();
   let recentQna: components['schemas']['AdminQnaDto'][] = $state();
 
   async function load() {
@@ -38,22 +38,21 @@
 
     const responseCourse = await rq.apiEndPoints().GET(`/api/v1/admin/courses`);
     const responseMember = await rq.apiEndPoints().GET(`/api/v1/admin/members`);
-    const responseReportPost = await rq.apiEndPoints().GET(`/api/v1/admin/reports`);
-    const responseNote = await rq.apiEndPoints().GET(`/api/v1/admin/summaryNotes`);
+    const responseReport = await rq.apiEndPoints().GET(`/api/v1/report/top5`);
     const responseQna = await rq.apiEndPoints().GET(`/api/v1/admin/qna`);
 
     recentCourse = responseCourse.data?.data!;
     recentMember = responseMember.data?.data!;
-    reportPost = responseReportPost.data?.data!;
+    reportList = responseReport.data?.data!;
     recentQna = responseQna.data?.data!;
 
-    return { recentCourse, recentMember, reportPost, recentQna };
+    return { recentCourse, recentMember, reportList, recentQna };
   }
 </script>
 
 {#await load()}
   <p class="text-center">loading...</p>
-{:then { recentCourse, recentMember, reportPost, recentQna }}
+{:then { recentCourse, recentMember, reportList, recentQna }}
   <div class="flex">
     <div>
       <AdmNav></AdmNav>
@@ -197,11 +196,11 @@
       </div>
       <div class="px-16">
         <div class="p-4">
-          {#if reportPost && reportPost.length > 0}
+          {#if reportList && reportList.length > 0}
             <div>
               <div class="flex justify-col justify-end">
                 <div>
-                  <h2 class="text-2xl font-semibold text-gray-800">신고 글 관리</h2>
+                  <h2 class="text-2xl font-semibold text-gray-800">신고 관리</h2>
                 </div>
                 <div class="ml-2 mt-1">
                   <a
@@ -219,44 +218,58 @@
                         scope="col"
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        id
+                        글/강좌 번호
                       </th>
                       <th
                         scope="col"
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        제목
+                        신고 타입
                       </th>
                       <th
                         scope="col"
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        작성일
+                        신고 사유
                       </th>
                       <th
                         scope="col"
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        작성자
+                        신고 날짜
                       </th>
                     </tr>
                   </thead>
                   <tbody class="bg-white divide-y divide-gray-200">
-                    {#each reportPost as post}
+                    {#each reportList as report}
                       <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {post.id}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <a href="/qna/{post.id}" class="text-blue-600 hover:text-blue-900">
-                            {post.title}
-                          </a></td
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex justify-center"
                         >
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {`${new Date(post.createDate).getFullYear()}년 ${new Date(post.createDate).getMonth() + 1}월 ${new Date(post.createDate).getDate()}일`}
+                          {#if report.reportType == 'Course'}
+                            <a
+                              href="/course/{report.materialId}"
+                              class="text-blue-600 hover:text-blue-900"
+                            >
+                              Course/{report.materialId}
+                            </a>
+                          {:else}
+                            <a
+                              href="/board/{report.materialId}"
+                              class="text-blue-600 hover:text-blue-900"
+                            >
+                              Post/{report.materialId}
+                            </a>
+                          {/if}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {post.authorName}
+                          {report.reportType}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {report.reportReason}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {`${new Date(report.createDate).getFullYear()}년 ${new Date(report.createDate).getMonth() + 1}월 ${new Date(report.createDate).getDate()}일`}
                         </td>
                       </tr>
                     {/each}
@@ -265,7 +278,7 @@
               </div>
             </div>
           {:else}
-            <p>신고된 글이 없습니다.</p>
+            <p>신고내역이 없습니다.</p>
           {/if}
         </div>
         <div class="p-4">

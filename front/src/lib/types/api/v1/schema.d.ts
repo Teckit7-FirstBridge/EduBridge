@@ -153,24 +153,6 @@ export interface paths {
     /** 게시물 신고 취소 */
     patch: operations["cancelReport"];
   };
-  "/api/v1/youtube/search": {
-    get: operations["search"];
-  };
-  "/api/v1/youtube/has-subtitles": {
-    get: operations["hasSubtitles"];
-  };
-  "/api/v1/youtube/getKeywords": {
-    get: operations["runScript"];
-  };
-  "/api/v1/youtube/get-subtitle": {
-    get: operations["getSubtitle"];
-  };
-  "/api/v1/youtube/downloadCaption": {
-    get: operations["downloadCaption"];
-  };
-  "/api/v1/youtube/captions": {
-    get: operations["getCaptions"];
-  };
   "/api/v1/roadmap": {
     /** 로드맵 다건 조회 */
     get: operations["getRoadmaps"];
@@ -190,6 +172,10 @@ export interface paths {
   "/api/v1/roadmap/byCourse/{courseId}": {
     /** 강좌로 로드맵 목록 조회 */
     get: operations["getRoadmapByCourse"];
+  };
+  "/api/v1/report/top5": {
+    /** 최신 신고 5개 */
+    get: operations["recentReported"];
   };
   "/api/v1/report/all": {
     /** 전체 신고 목록 조회 */
@@ -705,259 +691,6 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    PlaylistResult: {
-      playlistId?: string;
-      videoLinks?: components["schemas"]["VideoLink"][];
-    };
-    VideoLink: {
-      link?: string;
-    };
-    YouTubeResponse: {
-      playlists?: components["schemas"]["PlaylistResult"][];
-    };
-    RsDataString: {
-      resultCode: string;
-      /** Format: int32 */
-      statusCode: number;
-      msg: string;
-      data: string;
-      fail: boolean;
-      success: boolean;
-    };
-    Caption: {
-      classInfo?: components["schemas"]["ClassInfo"];
-      etag?: string;
-      id?: string;
-      kind?: string;
-      snippet?: {
-        classInfo?: components["schemas"]["ClassInfo"];
-        audioTrackType?: string;
-        failureReason?: string;
-        isAutoSynced?: boolean;
-        isCC?: boolean;
-        isDraft?: boolean;
-        isEasyReader?: boolean;
-        isLarge?: boolean;
-        language?: string;
-        lastUpdated?: components["schemas"]["DateTime"];
-        name?: string;
-        status?: string;
-        trackKind?: string;
-        videoId?: string;
-        factory?: components["schemas"]["JsonFactory"];
-        unknownKeys?: {
-          [key: string]: Record<string, never>;
-        };
-        empty?: boolean;
-        [key: string]: Record<string, never> | undefined;
-      };
-      factory?: components["schemas"]["JsonFactory"];
-      unknownKeys?: {
-        [key: string]: Record<string, never>;
-      };
-      empty?: boolean;
-      [key: string]: Record<string, never> | undefined;
-    };
-    ClassInfo: {
-      ignoreCase?: boolean;
-      names?: string[];
-      enum?: boolean;
-      fieldInfos?: components["schemas"]["FieldInfo"][];
-    };
-    DateTime: {
-      /** Format: int64 */
-      value?: number;
-      dateOnly?: boolean;
-      /** Format: int32 */
-      timeZoneShift?: number;
-    };
-    FieldInfo: {
-      field?: {
-        name?: string;
-        /** Format: int32 */
-        modifiers?: number;
-        synthetic?: boolean;
-        declaredAnnotations?: Record<string, never>[];
-        /** @deprecated */
-        accessible?: boolean;
-        genericType?: {
-          typeName?: string;
-        };
-        enumConstant?: boolean;
-        annotatedType?: {
-          annotations?: Record<string, never>[];
-          declaredAnnotations?: Record<string, never>[];
-          type?: {
-            typeName?: string;
-          };
-        };
-        annotations?: Record<string, never>[];
-      };
-      name?: string;
-      primitive?: boolean;
-      final?: boolean;
-      genericType?: {
-        typeName?: string;
-      };
-      classInfo?: components["schemas"]["ClassInfo"];
-      tersMethodForField?: {
-          name?: string;
-          /** Format: int32 */
-          modifiers?: number;
-          typeParameters?: {
-              annotatedBounds?: {
-                  annotations?: Record<string, never>[];
-                  declaredAnnotations?: Record<string, never>[];
-                  type?: {
-                    typeName?: string;
-                  };
-                }[];
-              name?: string;
-              bounds?: {
-                  typeName?: string;
-                }[];
-              typeName?: string;
-              annotations?: Record<string, never>[];
-              declaredAnnotations?: Record<string, never>[];
-            }[];
-          synthetic?: boolean;
-          declaredAnnotations?: Record<string, never>[];
-          /** @deprecated */
-          accessible?: boolean;
-          varArgs?: boolean;
-          /** Format: int32 */
-          parameterCount?: number;
-          parameterAnnotations?: Record<string, never>[][];
-          genericParameterTypes?: {
-              typeName?: string;
-            }[];
-          genericExceptionTypes?: {
-              typeName?: string;
-            }[];
-          default?: boolean;
-          genericReturnType?: {
-            typeName?: string;
-          };
-          bridge?: boolean;
-          defaultValue?: Record<string, never>;
-          annotatedReturnType?: {
-            annotations?: Record<string, never>[];
-            declaredAnnotations?: Record<string, never>[];
-            type?: {
-              typeName?: string;
-            };
-          };
-          annotatedParameterTypes?: {
-              annotations?: Record<string, never>[];
-              declaredAnnotations?: Record<string, never>[];
-              type?: {
-                typeName?: string;
-              };
-            }[];
-          parameters?: {
-              name?: string;
-              /** Format: int32 */
-              modifiers?: number;
-              synthetic?: boolean;
-              annotations?: Record<string, never>[];
-              declaredAnnotations?: Record<string, never>[];
-              annotatedType?: {
-                annotations?: Record<string, never>[];
-                declaredAnnotations?: Record<string, never>[];
-                type?: {
-                  typeName?: string;
-                };
-              };
-              parameterizedType?: {
-                typeName?: string;
-              };
-              varArgs?: boolean;
-              namePresent?: boolean;
-              declaringExecutable?: {
-                name?: string;
-                /** Format: int32 */
-                modifiers?: number;
-                typeParameters?: {
-                    genericDeclaration?: Record<string, never>;
-                    annotatedBounds?: {
-                        annotations?: Record<string, never>[];
-                        declaredAnnotations?: Record<string, never>[];
-                        type?: {
-                          typeName?: string;
-                        };
-                      }[];
-                    name?: string;
-                    bounds?: {
-                        typeName?: string;
-                      }[];
-                    typeName?: string;
-                    annotations?: Record<string, never>[];
-                    declaredAnnotations?: Record<string, never>[];
-                  }[];
-                synthetic?: boolean;
-                declaredAnnotations?: Record<string, never>[];
-                varArgs?: boolean;
-                annotatedParameterTypes?: {
-                    annotations?: Record<string, never>[];
-                    declaredAnnotations?: Record<string, never>[];
-                    type?: {
-                      typeName?: string;
-                    };
-                  }[];
-                /** Format: int32 */
-                parameterCount?: number;
-                parameterAnnotations?: Record<string, never>[][];
-                genericParameterTypes?: {
-                    typeName?: string;
-                  }[];
-                genericExceptionTypes?: {
-                    typeName?: string;
-                  }[];
-                annotatedReturnType?: {
-                  annotations?: Record<string, never>[];
-                  declaredAnnotations?: Record<string, never>[];
-                  type?: {
-                    typeName?: string;
-                  };
-                };
-                annotatedReceiverType?: {
-                  annotations?: Record<string, never>[];
-                  declaredAnnotations?: Record<string, never>[];
-                  type?: {
-                    typeName?: string;
-                  };
-                };
-                annotatedExceptionTypes?: {
-                    annotations?: Record<string, never>[];
-                    declaredAnnotations?: Record<string, never>[];
-                    type?: {
-                      typeName?: string;
-                    };
-                  }[];
-                annotations?: Record<string, never>[];
-                /** @deprecated */
-                accessible?: boolean;
-              };
-              implicit?: boolean;
-            }[];
-          annotatedReceiverType?: {
-            annotations?: Record<string, never>[];
-            declaredAnnotations?: Record<string, never>[];
-            type?: {
-              typeName?: string;
-            };
-          };
-          annotatedExceptionTypes?: {
-              annotations?: Record<string, never>[];
-              declaredAnnotations?: Record<string, never>[];
-              type?: {
-                typeName?: string;
-              };
-            }[];
-          annotations?: Record<string, never>[];
-        }[];
-    };
-    JsonFactory: Record<string, never>;
     GetRoadmapsResponseBody: {
       itemPage: components["schemas"]["PageDtoRoadmapDto"];
     };
@@ -995,6 +728,25 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    ReportDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      reportReason: string;
+      /** Format: int64 */
+      materialId: number;
+      reportType: string;
+    };
+    RsDataListReportDto: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["ReportDto"][];
+      fail: boolean;
+      success: boolean;
+    };
     GetReportList: {
       itemPage?: components["schemas"]["PageDtoReportDto"];
     };
@@ -1008,15 +760,6 @@ export interface components {
       /** Format: int32 */
       number: number;
       content: components["schemas"]["ReportDto"][];
-    };
-    ReportDto: {
-      /** Format: int64 */
-      id: number;
-      /** Format: date-time */
-      createDate: string;
-      reportReason: string;
-      /** Format: int64 */
-      materialId: number;
     };
     RsDataGetReportList: {
       resultCode: string;
@@ -2315,97 +2058,6 @@ export interface operations {
       };
     };
   };
-  search: {
-    parameters: {
-      query: {
-        query: string;
-        maxResults?: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": components["schemas"]["YouTubeResponse"];
-        };
-      };
-    };
-  };
-  hasSubtitles: {
-    parameters: {
-      query: {
-        videoId: string;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": boolean;
-        };
-      };
-    };
-  };
-  runScript: {
-    parameters: {
-      query: {
-        videoId: string;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": components["schemas"]["RsDataString"];
-        };
-      };
-    };
-  };
-  getSubtitle: {
-    parameters: {
-      query: {
-        videoId: string;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": string;
-        };
-      };
-    };
-  };
-  downloadCaption: {
-    parameters: {
-      query: {
-        captionId: string;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": string;
-        };
-      };
-    };
-  };
-  getCaptions: {
-    parameters: {
-      query: {
-        videoId: string;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": components["schemas"]["Caption"][];
-        };
-      };
-    };
-  };
   /** 로드맵 다건 조회 */
   getRoadmaps: {
     parameters: {
@@ -2479,6 +2131,17 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataListRoadmapListDto"];
+        };
+      };
+    };
+  };
+  /** 최신 신고 5개 */
+  recentReported: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListReportDto"];
         };
       };
     };
