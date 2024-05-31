@@ -1,5 +1,6 @@
 # 첫 번째 스테이지: 빌드 스테이지
 FROM gradle:jdk21-graal-jammy as builder
+
 # 작업 디렉토리 설정
 WORKDIR /app
 
@@ -27,12 +28,7 @@ FROM ghcr.io/graalvm/jdk-community:21
 # 작업 디렉토리 설정
 WORKDIR /app
 
-RUN apt-get update && \
-    apt-get install -y apt-utils \
-
-# 파이썬 설치
-RUN /usr/bin/apt-get update && \
-    /usr/bin/apt-get install -y python3 python3-pip
+RUN microdnf update && microdnf install python3
 RUN pip3 install youtube-transcript-api
 
 # 첫 번째 스테이지에서 빌드된 JAR 파일 복사
