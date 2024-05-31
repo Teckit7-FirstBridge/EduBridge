@@ -29,7 +29,7 @@ FROM ghcr.io/graalvm/jdk-community:21
 WORKDIR /app
 
 RUN microdnf update && microdnf install python3
-RUN pip3 install youtube-transcript-api
+RUN pip install youtube-transcript-api
 
 # 첫 번째 스테이지에서 빌드된 JAR 파일 복사
 COPY --from=builder /app/build/libs/*.jar app.jar
