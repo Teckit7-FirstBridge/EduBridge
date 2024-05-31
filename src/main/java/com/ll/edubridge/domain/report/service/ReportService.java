@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -33,5 +35,9 @@ public class ReportService {
 
     public Page<Report> getReportsByMaterial(ReportType reportType, Pageable pageable) {
         return reportRepository.findReportsByReportType(reportType, pageable);
+    }
+
+    public List<Report> recentReport() {
+        return reportRepository.findTop5ByOrderByCreateDateDesc();
     }
 }

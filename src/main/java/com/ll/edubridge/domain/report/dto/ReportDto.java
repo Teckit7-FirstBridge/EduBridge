@@ -20,11 +20,14 @@ public class ReportDto {
     private String reportReason;
     @NonNull
     private Long materialId;
+    @NonNull
+    private String reportType;
 
     public ReportDto(Report report) {
         this.id = report.getId();
         this.createDate = report.getCreateDate();
         this.reportReason = report.getReportReason();
         this.materialId = report.getMaterialId();
+        this.reportType = String.valueOf(report.getReportType());
     }
 }

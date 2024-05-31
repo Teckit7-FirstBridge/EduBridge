@@ -5,12 +5,20 @@
   import Pagination from '$lib/components/Pagination.svelte';
   import CourseNav from '../../../lib/components/AdmNav.svelte';
 
-  let reportPost: components['schemas']['ReportedPostDto'][] = $state();
+  let reportList: components['schemas']['GetReportList'][] = $state();
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
-    const responseReportPost = await rq.apiEndPoints().GET(`/api/v1/admin/reports/list`);
+    const page_ = parseInt($page.url.searchParams.get('page') ?? '1');
+
+    const { data } = await rq.apiEndPoints().GET(`/api/v1/report/all`, {
+      params: {
+        query: {
+          page: page_
+        }
+      }
+    });
 
     const isAdminResponse = await rq.apiEndPoints().GET(`/api/v1/members/isAdmin`);
     const isLoginResponse = await rq.apiEndPoints().GET(`/api/v1/members/isLogin`);
@@ -34,25 +42,25 @@
       rq.goTo('/member/login');
     }
 
-    reportPost = responseReportPost.data?.data;
+    reportList = data!.data.itemPage?.content;
 
-    return { reportPost };
+    return { reportList };
   }
 </script>
 
 {#await load()}
   <p class="text-center">loading...</p>
-{:then { reportPost }}
+{:then { reportList }}
   <div class="flex">
     <div>
       <CourseNav></CourseNav>
     </div>
     <div class="py-8 px-56 w-full">
-      {#if reportPost && reportPost.length > 0}
+      {#if reportList && reportList.length > 0}
         <div>
           <div class="flex justify-col justify-end">
             <div>
-              <h2 class="text-2xl font-semibold text-gray-800">신고 글 관리</h2>
+              <h2 class="text-2xl font-semibold text-gray-800">신고 관리</h2>
             </div>
           </div>
           <div class="mt-3 bg-white shadow overflow-hidden rounded-md">
@@ -63,44 +71,56 @@
                     scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    id
+                    글/강좌 번호
                   </th>
                   <th
                     scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    제목
+                    신고 타입
                   </th>
                   <th
                     scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    작성일
+                    신고 사유
                   </th>
                   <th
                     scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    작성자
+                    신고 날짜
                   </th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                {#each reportPost as post}
+                {#each reportList as report}
                   <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {post.id}
+                      {#if report.reportType == 'Course'}
+                        <a
+                          href="/course/{report.materialId}"
+                          class="text-blue-600 hover:text-blue-900"
+                        >
+                          Course/{report.materialId}
+                        </a>
+                      {:else}
+                        <a
+                          href="/board/{report.materialId}"
+                          class="text-blue-600 hover:text-blue-900"
+                        >
+                          Post/{report.materialId}
+                        </a>
+                      {/if}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <a href="/board/{post.id}" class="text-blue-600 hover:text-blue-900">
-                        {post.title}
-                      </a></td
-                    >
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {`${new Date(post.createDate).getFullYear()}년 ${new Date(post.createDate).getMonth() + 1}월 ${new Date(post.createDate).getDate()}일`}
+                      {report.reportType}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {post.authorName}
+                      {report.reportReason}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {`${new Date(report.createDate).getFullYear()}년 ${new Date(report.createDate).getMonth() + 1}월 ${new Date(report.createDate).getDate()}일`}
                     </td>
                   </tr>
                 {/each}
