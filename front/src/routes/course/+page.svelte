@@ -289,7 +289,8 @@
                             ? 'w-full'
                             : ''} flex text-blue-600 text-sm text-center items-center ml-2"
                         >
-                          #{hashtag}
+                          <a href="/course?tab=course&kwType=HASHTAGS&kw={hashtag}"
+                          >#{hashtag}</a>
                         </div>
                       {/each}
                     </div>

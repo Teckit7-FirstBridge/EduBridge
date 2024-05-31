@@ -464,7 +464,9 @@
             {#each hashtags as hashtag}
               <div class="">
                 <div class="flex text-blue-600 text-sm text-center items-center ml-2">
-                  #{hashtag}
+                  <a href="/course?tab=course&kwType=HASHTAGS&kw={hashtag}"
+                    >#{hashtag}</a
+                  >
                 </div>
               </div>
             {/each}
