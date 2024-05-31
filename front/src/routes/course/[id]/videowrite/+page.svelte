@@ -5,6 +5,7 @@
   let overview = $state('');
   let keywords = $state('');
   let title = $state('');
+  let isLoading = $state(false);
 
   let keywordsAdvice;
 
@@ -22,10 +23,38 @@
   function openModalVidAdvice() {
     videoAdvice.showModal();
   }
-
   function closeModalVidAdvice(event) {
     event.preventDefault();
     videoAdvice.close();
+  }
+
+  function extractVideoId(urll) {
+    const urlParams = new URLSearchParams(new URL(urll).search);
+    return urlParams.get('v');
+  }
+
+  async function getKeywords(event) {
+    event.preventDefault();
+
+    if (!url) {
+      rq.msgWarning('유튜브 URL을 입력해주세요');
+      return;
+    }
+    isLoading = true;
+    const { data, error } = await rq.apiEndPoints().GET(`/api/v1/youtube/getKeywords`, {
+      params: {
+        query: {
+          videoId: extractVideoId(url)
+        }
+      }
+    });
+    if (data) {
+      keywords = data.data;
+    } else {
+      rq.msgError('키워드 추출에 실패했습니다.');
+    }
+
+    isLoading = false;
   }
 
   async function load() {
@@ -71,8 +100,6 @@
       return;
     }
 
-    console.log(title);
-
     const { data, error } = await rq
       .apiEndPoints()
       .POST(`/api/v1/courses/{courseId}/videos/{writer_id}`, {
@@ -117,11 +144,19 @@
             />
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="video-url">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2 flex items-center"
+              for="video-url"
+            >
               강의 Url
               <a href="#" onclick={openModalVidAdvice}>
                 <i class="fa-solid fa-circle-exclamation text-red-500"></i>
               </a>
+              <button class="btn p-1 py-1" on:click={getKeywords}>키워드 자동 추출</button>
+              {#if isLoading}
+                <span class="loading loading-spinner loading-xs m-2"></span>
+              {/if}
+
               <dialog id="my_modal_3" class="modal" bind:this={videoAdvice}>
                 <div class="modal-box modal-box-2">
                   <button
