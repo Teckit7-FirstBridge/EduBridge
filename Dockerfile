@@ -32,7 +32,8 @@ RUN microdnf update && \
     microdnf install -y python3 && \
     python3 -m ensurepip && \
     python3 -m pip install --upgrade pip && \
-    microdnf install -y findutils  # find 명령어 설치 \
+    pip install youtube-transcript-api && \
+    microdnf install -y findutils  # find 명령어 설치
 
 RUN pip install youtube-transcript-api
 
