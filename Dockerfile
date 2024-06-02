@@ -40,6 +40,9 @@ RUN find / -name youtube_transcript2.py
 
 COPY --from=builder /app/src/main/resources/youtube_transcript2.py youtube_transcript2.py
 
+# Python 스크립트에 실행 권한 부여
+RUN chmod +x /app/youtube_transcript2.py
+
 # 첫 번째 스테이지에서 빌드된 JAR 파일 복사
 COPY --from=builder /app/build/libs/*.jar app.jar
 

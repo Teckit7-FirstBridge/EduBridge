@@ -15,7 +15,7 @@ public class PythonScriptService {
         String pythonExecutable = "/usr/bin/python3";
 
         // Python 스크립트 경로 설정
-        String scriptPath = "/youtube_transcript2.py";
+        String scriptPath = "/app/youtube_transcript2.py";
 
 
         String[] command = {
