@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,5 +40,27 @@ public class ReportService {
 
     public List<Report> recentReport() {
         return reportRepository.findTop5ByOrderByCreateDateDesc();
+    }
+
+    public Optional<Report> getReportById(Long id) {
+        return reportRepository.findReportById(id);
+    }
+
+    @Transactional
+    public void deleteReport(Report report) {
+        reportRepository.delete(report);
+    }
+
+    public Optional<List<Report>> getReportsByMaterial(ReportType reportType, Long id) {
+        return reportRepository.findReportsByReportTypeAndMaterialId(reportType, id);
+    }
+
+    @Transactional
+    public void deleteByMaterial(ReportType reportType, Long id) {
+        Optional<List<Report>> reportsOp = this.getReportsByMaterial(reportType, id);
+        if(reportsOp.isPresent()) {
+            List<Report> reports = reportsOp.get();
+            reportRepository.deleteAll(reports);
+        }
     }
 }
