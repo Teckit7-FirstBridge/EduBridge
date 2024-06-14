@@ -8,6 +8,7 @@ import com.ll.edubridge.domain.report.service.ReportService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.msg.Msg;
 import com.ll.edubridge.global.rsData.RsData;
+import com.ll.edubridge.standard.base.Empty;
 import com.ll.edubridge.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -129,6 +131,19 @@ public class ApiV1ReportController {
                 Msg.E200_1_INQUIRY_SUCCEED.getMsg(),
                 new GetReportList(new PageDto<>(reportPage))
         );
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "신고 정보 삭제")
+    public RsData<Empty> delete(@PathVariable("id") Long id) {
+        Optional<Report> reportOp = reportService.getReportById(id);
+        if(reportOp.isPresent()) {
+            Report report = reportOp.get();
+            reportService.deleteReport(report);
+        }
+
+        return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
+                Msg.E200_3_DELETE_SUCCEED.getMsg());
     }
 
     public record GetReportList(@NonNull PageDto<ReportDto> itemPage) {
