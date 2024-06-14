@@ -1,6 +1,5 @@
 package com.ll.edubridge.domain.post.post.controller;
 
-import com.ll.edubridge.domain.post.postVoter.service.PostVoterService;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.post.comment.service.CommentService;
 import com.ll.edubridge.domain.post.post.dto.CreatePostDto;
@@ -8,6 +7,9 @@ import com.ll.edubridge.domain.post.post.dto.PostDto;
 import com.ll.edubridge.domain.post.post.dto.QnaDto;
 import com.ll.edubridge.domain.post.post.entity.Post;
 import com.ll.edubridge.domain.post.post.service.PostService;
+import com.ll.edubridge.domain.post.postVoter.service.PostVoterService;
+import com.ll.edubridge.domain.report.entity.ReportType;
+import com.ll.edubridge.domain.report.service.ReportService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
@@ -42,6 +44,7 @@ public class ApiV1PostController {
     private final Rq rq;
     private final PostVoterService postVoterService;
     private final CommentService commentService;
+    private final ReportService reportService;
 
     public record GetPostsResponseBody(@NonNull PageDto<PostDto> itemPage) {
     }
@@ -119,6 +122,7 @@ public class ApiV1PostController {
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(),CodeMsg.E403_1_NO.getMessage());
 
         commentService.deleteByPostId(id);
+        reportService.deleteByMaterial(ReportType.Post, id);
         postService.delete(id);
 
         return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),

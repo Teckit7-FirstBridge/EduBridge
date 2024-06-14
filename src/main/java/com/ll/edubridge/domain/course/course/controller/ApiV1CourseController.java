@@ -13,6 +13,8 @@ import com.ll.edubridge.domain.course.courseEnroll.service.CourseEnrollService;
 import com.ll.edubridge.domain.home.admin.dto.AdminCourseEnrollDto;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.domain.member.member.service.MemberService;
+import com.ll.edubridge.domain.report.entity.ReportType;
+import com.ll.edubridge.domain.report.service.ReportService;
 import com.ll.edubridge.global.app.AppConfig;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
@@ -48,7 +50,7 @@ public class ApiV1CourseController {
     private final CourseEnrollService courseEnrollService;
     private final MemberService memberService;
     private final CourseVoterService courseVoterService;
-
+    private final ReportService reportService;
 
 
     @PostMapping("/write")
@@ -96,6 +98,7 @@ public class ApiV1CourseController {
         if (!courseService.haveAuthority(writer_id))
             throw new GlobalException(CodeMsg.E403_1_NO.getCode(), CodeMsg.E403_1_NO.getMessage());
 
+        reportService.deleteByMaterial(ReportType.Course, id);
         courseService.delete(id);
 
         return RsData.of(Msg.E200_3_DELETE_SUCCEED.getCode(),
