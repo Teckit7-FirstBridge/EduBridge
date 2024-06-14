@@ -1,6 +1,5 @@
 package com.ll.edubridge;
 
-import com.ll.edubridge.domain.youtube.PythonScriptService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -21,7 +20,6 @@ public class EduBridgeApplication {
     public void init() throws IOException, InterruptedException {
         // 시간대를 'Asia/Seoul'로 설정
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-        PythonScriptService.installPython();
 
     }
 
