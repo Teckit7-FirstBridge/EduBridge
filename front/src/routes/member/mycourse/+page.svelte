@@ -170,6 +170,12 @@
             >
               등록
             </a>
+            <a
+              href="/course"
+              class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+            >
+              전체
+            </a>
           </div>
         </div>
         <div class="flex flex-col flex-1">
@@ -274,6 +280,12 @@
               class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
             >
               등록
+            </a>
+            <a
+              href="/course?tab=roadmap"
+              class="ml-2 btn border border-gray-400 text-gray-800 bg-white hover:bg-gray-700 hover:border-gray-700 hover:text-white active:bg-gray-700 active:text-white active:border-gray-700 px-4 py-2 rounded transition ease-in duration-200 text-center text-base font-semibold shadow-md"
+            >
+              전체
             </a>
           </div>
         </div>
