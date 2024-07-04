@@ -656,28 +656,12 @@
                     })()}
                   </p>
                 </div>
-                <div class="flex justify-end flex gap-2 text-gray-400">
-                  {#if rq.member.id == comment.authorId}
-                    <button
-                      class="text-xs"
-                      on:click={() => {
-                        commentEditOpen = comment.id;
-                      }}>수정</button
-                    >
-                    <p>/</p>
-                  {/if}
-                  {#if rq.member.id == comment.authorId || rq.isAdmin()}
-                    <div>
-                      <button class="text-xs" on:click={() => deleteComment(comment)}>삭제</button>
-                    </div>
-                  {/if}
-                </div>
               </div>
               <div class="flex items-center mx-5 mb-5">
                 <span class="text-gray-600">{comment.body}</span>
               </div>
             </div>
-            <div class="flex items-center mr-5">
+            <div class="flex flex-col items-center mr-5 mt-4">
               <button
                 class="btn btn-outline hover:bg-gray-100 hover:text-black flex-col h-14"
                 on:click={() => clickLikedComment(comment)}
@@ -715,6 +699,22 @@
                 {/if}
                 <span>{commentLikedNum[comments.indexOf(comment)]}</span>
               </button>
+              <div class="flex justify-end flex gap-2 mt-2 text-gray-400">
+                {#if rq.member.id == comment.authorId}
+                  <button
+                    class="text-xs"
+                    on:click={() => {
+                      commentEditOpen = comment.id;
+                    }}>수정</button
+                  >
+                  <p>/</p>
+                {/if}
+                {#if rq.member.id == comment.authorId || rq.isAdmin()}
+                  <div>
+                    <button class="text-xs" on:click={() => deleteComment(comment)}>삭제</button>
+                  </div>
+                {/if}
+              </div>
             </div>
           </div>
         </div>
