@@ -121,6 +121,15 @@ footer {
   z-index: 1000;
 }
 
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  z-index: 1000; /* 다른 요소들 위에 오도록 설정 */
+}
+
 body {
   padding-bottom: 100px; /* 푸터 높이에 맞게 조정 */
   background-color: white;

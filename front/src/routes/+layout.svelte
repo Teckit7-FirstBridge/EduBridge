@@ -55,7 +55,7 @@
 </script>
 
 {#if !exportNote}
-  <header class="navbar bg-gray-50 shadow">
+  <header class="navbar bg-gray-50 shadow top-0 w-full">
     <div class="flex-1">
       <div class="flex-none">
         <div class="dropdown">
@@ -157,7 +157,7 @@
     </div>
   </header>
 
-  <main>{@render children()}</main>
+  <main class="mt-12">{@render children()}</main>
 
   <footer class=" bottom-0 w-full bg-white text-gray-300">
     <div class="container mx-auto flex justify-around items-center">
