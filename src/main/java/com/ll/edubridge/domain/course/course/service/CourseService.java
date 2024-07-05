@@ -7,6 +7,7 @@ import com.ll.edubridge.domain.course.course.repository.CourseRepository;
 import com.ll.edubridge.domain.course.roadmap.entity.CourseRoadmap;
 import com.ll.edubridge.domain.course.roadmap.entity.Roadmap;
 import com.ll.edubridge.domain.course.roadmap.service.RoadmapService;
+import com.ll.edubridge.domain.course.video.entity.Video;
 import com.ll.edubridge.domain.member.member.entity.Member;
 import com.ll.edubridge.global.exceptions.CodeMsg;
 import com.ll.edubridge.global.exceptions.GlobalException;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -135,6 +137,27 @@ public class CourseService {
 
         course.setConfirm(!course.getConfirm());
         return courseRepository.save(course);
+    }
+
+    @Transactional
+    public void checkImg(Course course, Long videoId, boolean isDelete){
+
+        // 첫번째 영상 삭제/수정 시 강좌 썸네일 같이 변경
+        if(Objects.equals(course.getVideoList().getFirst().getId(), videoId)){
+            Video[] videos = course.getVideoList().toArray(new Video[0]);
+
+            String imgUrl;
+
+            if(isDelete){
+                imgUrl = videos[1].getImgUrl();
+            }else{
+                imgUrl = videos[0].getImgUrl();
+            }
+
+            course.setImgUrl(imgUrl);
+        }
+
+        courseRepository.save(course);
     }
 
     public List<Course> findRecentCourse() {

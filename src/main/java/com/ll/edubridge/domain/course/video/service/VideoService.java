@@ -73,12 +73,18 @@ public class VideoService {
         video.setKeywords(videoDto.getKeywords());
         video.setTitle(videoDto.getTitle());
 
+        courseService.checkImg(video.getCourse(), video.getId(), false);
+
         return videoRepository.save(video);
     }
 
     @Transactional
     public void delete(Long id) {
         Video video = this.getVideo(id);
+        Course course = video.getCourse();
+
+        courseService.checkImg(course, video.getId(), true);
+
         videoRepository.delete(video);
     }
 
