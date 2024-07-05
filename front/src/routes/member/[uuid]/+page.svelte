@@ -220,8 +220,8 @@
   <span class="loading loading-spinner loading-xs m-2"></span>
 {:then { learningCourses, favoriteCourses, summaryNotes, dailyAchievement, dailyGoal, member }}
   {#if rq.member.id == member.id || rq.isAdmin()}
-    <div class="max-w-4xl mx-auto">
-      <header class="flex h-16 items-center border-b px-4 md:px-6 justify-between">
+    <div class="max-w-4xl mx-auto mt-5">
+      <div class="flex h-16 items-center border-b px-4 md:px-6 justify-between">
         <a class="flex items-center gap-2"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
@@ -273,7 +273,7 @@
             </div>
           </dialog>
         </div>
-      </header>
+      </div>
       <main class="flex-1 p-4 md:p-6">
         <div class="flex gap-x-4 relative items-center">
           <div class="grid gap-4">

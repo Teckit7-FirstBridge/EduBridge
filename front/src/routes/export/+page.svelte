@@ -33,27 +33,29 @@
       <p class="text-3xl font-semibold mb-4">{memberName} 님의 통과된 요약노트</p>
       <div class="mb-5">
         {#each notes as item, index}
-          {#if index === 0 || item.courseId !== notes[index - 1].courseId}
-            <div class="mt-3">
-              <h2 class="text-2xl font-semibold text-gray-900">
-                {item.courseName}
-              </h2>
-            </div>
-          {/if}
-          <div class="mt-2 bg-white shadow overflow-hidden rounded-lg">
-            <div class="px-4 sm:p-6">
-              <div class="flex items-center justify-between">
-                <div class="text-lg font-semibold text-gray-900">
-                  {item.title}
-                </div>
-                <div class="ml-2 flex-shrink-0 flex">
-                  <p class="text-sm text-gray-500">
-                    수강일: {`${new Date(item.createDate).getFullYear()}년 ${new Date(item.createDate).getMonth() + 1}월 ${new Date(item.createDate).getDate()}일`}
-                  </p>
+          <a href="/course/{item.courseId}/{item.videoId}/summary/{item.id}">
+            {#if index === 0 || item.courseId !== notes[index - 1].courseId}
+              <div class="mt-3">
+                <h2 class="text-2xl font-semibold text-gray-900">
+                  {item.courseName}
+                </h2>
+              </div>
+            {/if}
+            <div class="mt-2 bg-white shadow overflow-hidden rounded-lg">
+              <div class="px-4 sm:p-6">
+                <div class="flex items-center justify-between">
+                  <div class="text-lg font-semibold text-gray-900">
+                    {item.title}
+                  </div>
+                  <div class="ml-2 flex-shrink-0 flex">
+                    <p class="text-sm text-gray-500">
+                      수강일: {`${new Date(item.createDate).getFullYear()}년 ${new Date(item.createDate).getMonth() + 1}월 ${new Date(item.createDate).getDate()}일`}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </a>
         {/each}
       </div>
     </div>
