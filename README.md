@@ -61,14 +61,14 @@ TECH!T back-end 7기 1차 프로젝트 : 교육 영상 플랫폼 EduBridge
 1. 사이트 접속 (도메인 사용 기간 이후에는 접근 불가) <br>
 : https://www.eb.kys.blue/
 
-2. IntelliJ IDEA + Visual Studio Code (윈도우 기준) <br>
+2. IntelliJ IDE + Visual Studio Code (윈도우 기준) <br>
     
     1) **git clone** 
     ```bash
     git clone https://github.com/Teckit7-FirstBridge/EduBridge.git
     ```
     
-    2) **IntelliJ IDEA - 백엔드 서버** <br>
+    2) **IntelliJ IDE - 백엔드 서버** <br>
     ```bash
     # RUN 실행 버튼 눌러 백엔드 서버 먼저 실행
     code front  # VScode로 front 폴더 열기
